@@ -1,0 +1,249 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   Design tokens — light mode (default)
+   ================================================================ */
+:root {
+  color-scheme: light;
+
+  --color-ink: #1f2933;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-paper: #fffaf3;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f8fafc;
+  --shadow-soft-color: rgba(15, 23, 42, 0.08);
+
+  --color-primary: #f97316;
+  --color-secondary: #15803d;
+  --color-accent: #9f1239;
+}
+
+/* ================================================================
+   Design tokens — dark mode
+   ================================================================ */
+.dark {
+  color-scheme: dark;
+
+  --color-ink: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-line: #334155;
+  --color-paper: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-alt: #1e293b;
+  --shadow-soft-color: rgba(0, 0, 0, 0.3);
+}
+
+/* ================================================================
+   Base styles
+   ================================================================ */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+
+/* Light mode background gradient */
+:root:not(.dark) body {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(249, 115, 22, 0.08), transparent 28rem),
+    linear-gradient(180deg, #fffaf3 0%, #ffffff 46%, #f8fafc 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ================================================================
+   Dark mode overrides for elements that use hardcoded bg-white etc.
+   These complement the CSS variable approach for elements that
+   use Tailwind utility classes directly.
+   ================================================================ */
+.dark header {
+  background: rgba(15, 23, 42, 0.92) !important;
+  border-color: var(--color-line) !important;
+}
+
+.dark nav[id="mobile-navigation"] {
+  background: var(--color-surface) !important;
+}
+
+/* Cards and panels */
+.dark .bg-white {
+  background-color: var(--color-surface) !important;
+}
+
+/* The dark hero / banner sections should stay dark */
+.dark .bg-ink {
+  background-color: #0f172a !important;
+}
+
+/* White sections (like areas on homepage) */
+.dark section.bg-white {
+  background-color: var(--color-surface) !important;
+}
+
+/* Form inputs */
+.dark input,
+.dark select {
+  background-color: var(--color-surface-alt);
+  border-color: var(--color-line);
+  color: var(--color-ink);
+}
+
+/* Borders */
+.dark .border-line {
+  border-color: var(--color-line);
+}
+
+/* Category / area cards hover */
+.dark .hover\:bg-orange-50:hover {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+}
+
+.dark .listing-image-save {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  color: #0f172a !important;
+}
+
+.directory-map-cluster {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  background: #f97316;
+  color: white;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.24);
+  font-weight: 800;
+}
+
+.directory-map-cluster span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.dark .leaflet-container {
+  background: #0f172a;
+}
+
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+/* Footer */
+.dark footer {
+  background-color: #020617 !important;
+}
+
+/* ================================================================
+   Print styles — clean single-page output for listing detail pages
+   ================================================================ */
+@media print {
+  /* Hide non-essential chrome */
+  header,
+  footer,
+  nav,
+  aside,
+  .no-print,
+  button,
+  [aria-label="Listing pagination"],
+  .leaflet-container {
+    display: none !important;
+  }
+
+  /* Reset backgrounds for ink-saving */
+  body {
+    background: white !important;
+    color: #000 !important;
+  }
+
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Full width layout */
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Remove card borders shadow */
+  [class*="shadow"] {
+    box-shadow: none !important;
+  }
+
+  /* Ensure images print */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Listing detail: make sidebar full width */
+  .grid {
+    display: block !important;
+  }
+
+  /* Links: show URL after text */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #666;
+    word-break: break-all;
+  }
+
+  /* Don't show URL for internal nav links */
+  nav a::after,
+  header a::after,
+  footer a::after {
+    content: none !important;
+  }
+
+  /* Page break control */
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  section {
+    page-break-inside: avoid;
+  }
+}

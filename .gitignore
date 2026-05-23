@@ -1,0 +1,16 @@
+.next/
+node_modules/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env*.local
+npm-debug.log*
+next-*.log
+next-*.out.log
+next-*.err.log
+codex-review-*.log
+scratch/
+homepage.html
+/*.png
