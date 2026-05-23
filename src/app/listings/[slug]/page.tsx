@@ -43,6 +43,7 @@ import { ListingGrid } from "@/components/ListingGrid";
 import { ShareButton } from "@/components/ShareButton";
 import { SaveListingButton } from "@/components/SaveListingButton";
 import { ListingPrivateNote } from "@/components/ListingPrivateNote";
+import { ListingComments } from "@/components/ListingComments";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
 import { listings } from "@/data/listings";
@@ -297,6 +298,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
           {hasTransportSection ? <TransportSection listing={listing} /> : null}
           {hasNearbySection ? <NearbySection listing={listing} /> : null}
+          <ListingComments slug={listing.slug} />
         </article>
 
         {hasContactSection ? (
