@@ -21,9 +21,16 @@ Ensure query/filter permutations are noindex and canonicalized to the strongest 
 ---
 
 ## Execution status
-- [ ] Step 1
-- [ ] Step 2
-- [ ] Step 3
-- [ ] Step 3.1
-- [ ] Step 4
-- [ ] Step 5
+- [x] Step 1 - Route-level metadata indexation guards
+- [x] Step 2 - Listing quality score and detail-page gating
+- [x] Step 3 - Homepage crawl architecture
+- [x] Step 3.1 - Homepage refinement follow-up
+- [x] Step 4 - Information-gain content modules
+- [x] Step 5 - Parameter URL crawl control
+
+## Completion notes
+- Central SEO policy now controls thresholds, high-intent facets, canonical behavior, noindex behavior, sitemap inclusion, listing quality scoring, and permanent-closed listing handling.
+- Homepage crawl links now include top areas, top cuisines, strong area+cuisine pages, and approved high-intent facet pages near the top of the homepage.
+- SEO landing pages now include reusable information-gain blocks with price, review, practical visit, dietary, service, and transport signals.
+- Query/filter permutations remain usable for visitors but are noindex and canonicalized toward the strongest clean hub URL.
+- Verification completed with `npm test`, `npm run typecheck`, `npm run lint`, `npm run audit:seo`, `npm run audit:links`, and `npm run build`.

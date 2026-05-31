@@ -1,18 +1,17 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getHomepageSeoFeatureGroups } from "@/lib/directory-ux";
+import { homepageHeadings } from "@/lib/homepage-headings";
 
 export function HomepageSeoLinks() {
   const groups = getHomepageSeoFeatureGroups();
   if (!groups.length) return null;
 
   return (
-    <section className="mt-12 rounded-lg border border-line bg-white p-6 shadow-soft">
+    <section className="mb-8 rounded-lg border border-line bg-white p-6 shadow-soft">
       <div className="max-w-3xl">
-        <h2 className="text-2xl font-bold text-ink">Browse restaurants by need</h2>
-        <p className="mt-2 text-sm leading-6 text-muted">
-          Use these shortcuts for common restaurant searches with dedicated pages, filters, summaries, and related listings.
-        </p>
+        <h2 className="text-2xl font-bold text-ink">{homepageHeadings.seoLinksTitle}</h2>
+        <p className="mt-2 text-sm leading-6 text-muted">{homepageHeadings.seoLinksDescription}</p>
       </div>
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         {groups.map((group) => (

@@ -3,15 +3,22 @@
 import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAccount } from "@/components/AccountProvider";
+import {
+  inferDirectoryPageTypeFromPath,
+  trackDirectoryEvent,
+  type DirectoryPageType
+} from "@/lib/directory-analytics";
 
 type SaveListingButtonProps = {
   slug: string;
   label?: string;
   compact?: boolean;
   className?: string;
+  pageType?: DirectoryPageType;
+  route?: string;
 };
 
-export function SaveListingButton({ slug, label = "Save", compact = false, className = "" }: SaveListingButtonProps) {
+export function SaveListingButton({ slug, label = "Save", compact = false, className = "", pageType, route }: SaveListingButtonProps) {
   const { savedSlugs, toggleSavedSlug, refreshSavedSlugs } = useAccount();
   const [isSaved, setIsSaved] = useState(false);
 
@@ -34,7 +41,16 @@ export function SaveListingButton({ slug, label = "Save", compact = false, class
 
   async function toggleSaved() {
     const next = await toggleSavedSlug(slug);
-    setIsSaved(next.includes(slug));
+    const nextIsSaved = next.includes(slug);
+    const pathname = typeof window === "undefined" ? route : window.location.pathname;
+
+    setIsSaved(nextIsSaved);
+    trackDirectoryEvent({
+      pageType: pageType ?? inferDirectoryPageTypeFromPath(pathname ?? "/"),
+      action: nextIsSaved ? "save_listing" : "remove_saved_listing",
+      route: route ?? pathname,
+      listingSlug: slug
+    });
   }
 
   return (

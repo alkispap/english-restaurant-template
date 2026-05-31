@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
 import { listings, type Listing } from "@/data/listings";
+import { getAreaGuideModel, type AreaGuideModel } from "@/lib/area-guide";
 import {
   filterListings,
   getAreas,
   getCategories,
   getFacetLabels,
-  getFacetTitle,
   getFeaturedAreas,
   getFeaturedCategoryCards,
   getNeighborhoods,
@@ -35,6 +35,12 @@ import {
   type MapPoint
 } from "@/lib/listings-page";
 import {
+  SEO_POLICY,
+  getNoindexFollowRobots,
+  isApprovedHighIntentFacet,
+  shouldNoindexSearchParams
+} from "@/lib/seo-policy";
+import {
   areaCategoryPath,
   areaPath,
   categoryPath,
@@ -45,6 +51,7 @@ import {
   servicePath,
   typePath
 } from "@/lib/routes";
+import { seoLandingHeadings } from "@/lib/seo-landing-headings";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/structured-data";
 
 export type SeoPageSearchParams = Record<string, string | string[] | undefined>;
@@ -70,6 +77,12 @@ export type SeoFaq = {
   answer: string;
 };
 
+export type SeoInformationGainBlock = {
+  title: string;
+  body: string;
+  items: string[];
+};
+
 export type SeoPageModel = {
   kind: "area" | "neighborhood" | "category" | "areaCategory" | "best" | "facet";
   metadata: {
@@ -90,6 +103,8 @@ export type SeoPageModel = {
     title: string;
     body: string;
   };
+  areaGuide?: AreaGuideModel;
+  informationGainBlocks: SeoInformationGainBlock[];
   faqs: SeoFaq[];
   summaryStats: SeoSummaryStat[];
   relatedLinkGroups: SeoRelatedLinkGroup[];
@@ -124,23 +139,18 @@ type BasePageInput = {
   faqs: SeoFaq[];
   defaultSort?: SortKey;
   forceNoindex?: boolean;
+  areaGuide?: AreaGuideModel;
 };
 
-const highIntentFacetSlugs: Record<FacetKey, readonly string[]> = {
-  dietary: ["halal", "vegan", "vegetarian", "gluten-free"],
-  service: ["takeaway", "delivery", "dine-in", "outdoor-seating"],
-  type: ["fine-dining", "casual-dining", "cafe", "bar"],
-  offering: ["halal-food", "vegan-options", "vegetarian-options", "organic-dishes", "small-plates"]
-};
-
-const stableLastCheckedLabel = "Updated restaurant details";
+type SeoLandingHeadingSet = ReturnType<typeof seoLandingHeadings.area>;
 
 export function getAreaSeoPage(areaSlug: string, searchParams: SeoPageSearchParams) {
   const label = getAreas().find((item) => slugify(item) === areaSlug);
   if (!label) return undefined;
 
   const canonical = areaPath(areaSlug);
-  const title = `${directoryConfig.listingPluralLabel} in ${label}`;
+  const headings = seoLandingHeadings.area(label);
+  const title = headings.heroTitle;
   const description = `${introCount("area", label)} in ${label}, ${siteConfig.cityOrRegion}. Compare ratings, prices, service options, and opening details before choosing where to eat.`;
   const categoryLinks = getAreaCategoryCombinationsForArea(areaSlug, 8).map((item) => ({
     label: `${item.categoryLabel} in ${item.areaLabel}`,
@@ -150,14 +160,15 @@ export function getAreaSeoPage(areaSlug: string, searchParams: SeoPageSearchPara
 
   return buildSeoPage({
     kind: "area",
-    eyebrow: "Area guide",
+    eyebrow: headings.eyebrow,
     title,
     description,
     introSubject: label,
-    guideTitle: `Choosing restaurants in ${label}`,
-    guideBody: `Restaurants around ${label} can be compared by cuisine, review strength, budget, and practical details such as takeaway, delivery, and opening hours. The local results connect broad area research with detailed restaurant pages.`,
+    guideTitle: headings.guideTitle,
+    guideBody: headings.guideBody,
+    areaGuide: getAreaGuideModel(areaSlug),
     canonical,
-    minIndexableResults: 5,
+    minIndexableResults: SEO_POLICY.routeThresholds.area,
     baseFilters: { area: areaSlug, sort: directoryConfig.defaultSort },
     searchParams,
     breadcrumbs: [
@@ -165,11 +176,11 @@ export function getAreaSeoPage(areaSlug: string, searchParams: SeoPageSearchPara
       { name: label, href: canonical }
     ],
     relatedLinkGroups: [
-      { title: `Popular ${directoryConfig.categoryPluralLabel.toLowerCase()} in ${label}`, links: categoryLinks },
-      { title: "Explore other areas", links: areaLinks(areaSlug) },
-      { title: "Useful searches", links: usefulSearchLinks() }
+      { title: headings.related.areaCategoryLinksTitle, links: categoryLinks },
+      { title: headings.related.areaLinksTitle, links: areaLinks(areaSlug) },
+      { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
     ],
-    faqs: areaFaqs(label)
+    faqs: areaFaqs(headings)
   });
 }
 
@@ -178,7 +189,8 @@ export function getNeighborhoodSeoPage(neighborhoodSlug: string, searchParams: S
   if (!label) return undefined;
 
   const canonical = neighborhoodPath(neighborhoodSlug);
-  const title = `${directoryConfig.listingPluralLabel} in ${label}`;
+  const headings = seoLandingHeadings.neighborhood(label);
+  const title = headings.heroTitle;
   const description = `${introCount("neighborhood", label)} in ${label}, ${siteConfig.cityOrRegion}. Compare local restaurants by rating, cuisine, price, and service options.`;
   const matchingAreas = topValues(
     listings
@@ -189,14 +201,14 @@ export function getNeighborhoodSeoPage(neighborhoodSlug: string, searchParams: S
 
   return buildSeoPage({
     kind: "neighborhood",
-    eyebrow: "Neighborhood guide",
+    eyebrow: headings.eyebrow,
     title,
     description,
     introSubject: label,
-    guideTitle: `Finding a local option in ${label}`,
-    guideBody: `${label} pages are designed for local intent: compare nearby restaurants, scan ratings and review volume, then use filters for dietary needs, takeaway, delivery, price, and opening status.`,
+    guideTitle: headings.guideTitle,
+    guideBody: headings.guideBody,
     canonical,
-    minIndexableResults: 5,
+    minIndexableResults: SEO_POLICY.routeThresholds.neighborhood,
     baseFilters: { neighborhood: neighborhoodSlug, sort: directoryConfig.defaultSort },
     searchParams,
     breadcrumbs: [
@@ -205,13 +217,13 @@ export function getNeighborhoodSeoPage(neighborhoodSlug: string, searchParams: S
     ],
     relatedLinkGroups: [
       {
-        title: "Related areas",
+        title: headings.related.areaLinksTitle,
         links: matchingAreas.map((area) => ({ label: area.label, href: areaPath(slugify(area.label)), count: area.count }))
       },
-      { title: `Browse by ${directoryConfig.categoryLabel.toLowerCase()}`, links: categoryLinks() },
-      { title: "Useful searches", links: usefulSearchLinks() }
+      { title: headings.related.categoryLinksTitle, links: categoryLinks() },
+      { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
     ],
-    faqs: localFaqs(label)
+    faqs: localFaqs(headings)
   });
 }
 
@@ -220,20 +232,21 @@ export function getCategorySeoPage(categorySlug: string, searchParams: SeoPageSe
   if (!label) return undefined;
 
   const canonical = categoryPath(categorySlug);
-  const title = `Best ${label} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${siteConfig.cityOrRegion}`;
+  const headings = seoLandingHeadings.category(label);
+  const title = headings.heroTitle;
   const description = `${introCount("category", label)} for ${label.toLowerCase()} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${siteConfig.cityOrRegion}. Compare ratings, reviews, areas, and practical restaurant details.`;
 
   return buildSeoPage({
     kind: "category",
-    eyebrow: `${directoryConfig.categoryLabel} guide`,
+    eyebrow: headings.eyebrow,
     title,
     description,
     introSubject: label,
     introCategory: label,
-    guideTitle: `How to compare ${label.toLowerCase()} restaurants`,
-    guideBody: `Start with the highest-rated matches, then refine by area, price, opening status, and service options. The area links below help you move from a broad cuisine search into local pages with matching restaurants.`,
+    guideTitle: headings.guideTitle,
+    guideBody: headings.guideBody,
     canonical,
-    minIndexableResults: 10,
+    minIndexableResults: SEO_POLICY.routeThresholds.category,
     baseFilters: { category: categorySlug, sort: "rating" },
     searchParams,
     breadcrumbs: [
@@ -242,17 +255,17 @@ export function getCategorySeoPage(categorySlug: string, searchParams: SeoPageSe
     ],
     relatedLinkGroups: [
       {
-        title: `Popular areas for ${label.toLowerCase()} ${directoryConfig.listingPluralLabel.toLowerCase()}`,
+        title: headings.related.areaCategoryLinksTitle,
         links: getAreaCategoryCombinationsForCategory(categorySlug, 8).map((item) => ({
           label: item.areaLabel,
           href: item.href,
           count: item.count
         }))
       },
-      { title: `More ${directoryConfig.categoryPluralLabel.toLowerCase()}`, links: categoryLinks(categorySlug) },
-      { title: "Useful searches", links: usefulSearchLinks() }
+      { title: headings.related.categoryLinksTitle, links: categoryLinks(categorySlug) },
+      { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
     ],
-    faqs: categoryFaqs(label)
+    faqs: categoryFaqs(label, headings)
   });
 }
 
@@ -265,20 +278,21 @@ export function getAreaCategorySeoPage(
   if (!combination) return undefined;
 
   const canonical = areaCategoryPath(areaSlug, categorySlug);
-  const title = `${combination.categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${combination.areaLabel}`;
+  const headings = seoLandingHeadings.areaCategory(combination.areaLabel, combination.categoryLabel);
+  const title = headings.heroTitle;
   const description = `${introCount("areaCategory", combination.categoryLabel, combination.areaLabel)} for ${combination.categoryLabel.toLowerCase()} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${combination.areaLabel}. Compare ratings, prices, opening details, and service options.`;
 
   return buildSeoPage({
     kind: "areaCategory",
-    eyebrow: "Area and cuisine guide",
+    eyebrow: headings.eyebrow,
     title,
     description,
     introSubject: combination.areaLabel,
     introCategory: combination.categoryLabel,
-    guideTitle: `Comparing ${combination.categoryLabel.toLowerCase()} restaurants in ${combination.areaLabel}`,
-    guideBody: `This page narrows the directory to one area and one cuisine or category. Use it when you already know the part of London you want and need a faster way to compare restaurant quality, review strength, and practical details.`,
+    guideTitle: headings.guideTitle,
+    guideBody: headings.guideBody,
     canonical,
-    minIndexableResults: 5,
+    minIndexableResults: SEO_POLICY.routeThresholds.areaCategory,
     baseFilters: { area: areaSlug, category: categorySlug, sort: "rating" },
     searchParams,
     breadcrumbs: [
@@ -288,37 +302,38 @@ export function getAreaCategorySeoPage(
     ],
     relatedLinkGroups: [
       {
-        title: `More in ${combination.areaLabel}`,
+        title: headings.related.categoryLinksTitle,
         links: getAreaCategoryCombinationsForArea(areaSlug, 8)
           .filter((item) => item.categorySlug !== categorySlug)
           .map((item) => ({ label: item.categoryLabel, href: item.href, count: item.count }))
       },
       {
-        title: `More ${combination.categoryLabel.toLowerCase()} areas`,
+        title: headings.related.areaLinksTitle,
         links: getAreaCategoryCombinationsForCategory(categorySlug, 8)
           .filter((item) => item.areaSlug !== areaSlug)
           .map((item) => ({ label: item.areaLabel, href: item.href, count: item.count }))
       },
-      { title: "Useful searches", links: usefulSearchLinks() }
+      { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
     ],
-    faqs: areaCategoryFaqs(combination.areaLabel, combination.categoryLabel)
+    faqs: areaCategoryFaqs(headings)
   });
 }
 
 export function getPopularSearchSeoPage(slug: string, searchParams: SeoPageSearchParams) {
   const search = getPopularSearchBySlug(slug);
   if (!search) return undefined;
+  const headings = seoLandingHeadings.best(search.title);
 
   return buildSeoPage({
     kind: "best",
-    eyebrow: "Popular search",
-    title: search.title,
+    eyebrow: headings.eyebrow,
+    title: headings.heroTitle,
     description: `${search.description} Compare matching ${directoryConfig.listingPluralLabel.toLowerCase()} by rating, review volume, price, and location.`,
     introSubject: search.title,
-    guideTitle: "How this shortlist is assembled",
-    guideBody: `This shortlist starts with a specific search intent and ranks matching restaurants by available rating, review, price, service, and category details. Filters narrow the list further by area, dietary needs, service options, price, and opening status.`,
+    guideTitle: headings.guideTitle,
+    guideBody: headings.guideBody,
     canonical: search.href,
-    minIndexableResults: 5,
+    minIndexableResults: SEO_POLICY.routeThresholds.best,
     baseFilters: { ...search.filters, sort: search.sort ?? directoryConfig.defaultSort },
     searchParams,
     defaultSort: search.sort,
@@ -327,16 +342,16 @@ export function getPopularSearchSeoPage(slug: string, searchParams: SeoPageSearc
       { name: search.title, href: search.href }
     ],
     relatedLinkGroups: [
-      { title: "Browse by area", links: areaLinks() },
-      { title: `Browse by ${directoryConfig.categoryLabel.toLowerCase()}`, links: categoryLinks() },
+      { title: headings.related.areaLinksTitle, links: areaLinks() },
+      { title: headings.related.categoryLinksTitle, links: categoryLinks() },
       {
-        title: "Useful combinations",
+        title: headings.related.areaCategoryLinksTitle,
         links: getAreaCategoryCombinations()
           .slice(0, 8)
           .map((item) => ({ label: `${item.categoryLabel} in ${item.areaLabel}`, href: item.href, count: item.count }))
       }
     ],
-    faqs: bestFaqs(search.title)
+    faqs: bestFaqs(headings)
   });
 }
 
@@ -346,20 +361,21 @@ export function getFacetSeoPage(facet: FacetKey, valueSlug: string, searchParams
   if (!label) return undefined;
 
   const canonical = facetPath(facet, valueSlug);
-  const title = `${label} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${siteConfig.cityOrRegion}`;
+  const headings = seoLandingHeadings.facet(label);
+  const title = headings.heroTitle;
   const description = `${introCount("facet", label)} with ${label.toLowerCase()} in ${siteConfig.cityOrRegion}. Compare matching restaurants by area, rating, price, and practical details.`;
 
   return buildSeoPage({
     kind: "facet",
-    eyebrow: getFacetTitle(facet),
+    eyebrow: headings.eyebrow,
     title,
     description,
     introSubject: `${label} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${siteConfig.cityOrRegion}`,
-    guideTitle: `When ${label.toLowerCase()} matters`,
-    guideBody: `This feature-led list focuses on restaurants where ${label.toLowerCase()} is available. Results can still be refined by location, cuisine, price, rating, opening status, and other practical filters.`,
+    guideTitle: headings.guideTitle,
+    guideBody: headings.guideBody,
     canonical,
-    minIndexableResults: 10,
-    forceNoindex: !highIntentFacetSlugs[facet].includes(valueSlug),
+    minIndexableResults: SEO_POLICY.routeThresholds.facet,
+    forceNoindex: !isApprovedHighIntentFacet(facet, valueSlug),
     baseFilters: { [facet]: valueSlug, sort: "rating" },
     searchParams,
     breadcrumbs: [
@@ -367,11 +383,11 @@ export function getFacetSeoPage(facet: FacetKey, valueSlug: string, searchParams
       { name: label, href: canonical }
     ],
     relatedLinkGroups: [
-      { title: "Popular areas", links: areaLinks() },
-      { title: `Browse by ${directoryConfig.categoryLabel.toLowerCase()}`, links: categoryLinks() },
-      { title: "Useful searches", links: usefulSearchLinks() }
+      { title: headings.related.areaLinksTitle, links: areaLinks() },
+      { title: headings.related.categoryLinksTitle, links: categoryLinks() },
+      { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
     ],
-    faqs: facetFaqs(label)
+    faqs: facetFaqs(headings)
   });
 }
 
@@ -450,7 +466,8 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
     ? filteredResults.filter((listing) => isOpenNow(listing.details?.workingHours))
     : filteredResults;
   const page = paginateListings(results, requestedPage, LISTINGS_PAGE_SIZE);
-  const isIndexable = !input.forceNoindex && filteredResults.length >= input.minIndexableResults;
+  const queryModified = shouldNoindexSearchParams(input.searchParams);
+  const isIndexable = !queryModified && !input.forceNoindex && filteredResults.length >= input.minIndexableResults;
   const linkValues: ListingsPageLinkValues = {
     ...filters,
     basePath: input.canonical,
@@ -466,7 +483,7 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
       title: input.title,
       description,
       canonical: input.canonical,
-      robots: isIndexable ? undefined : { index: false, follow: true }
+      robots: isIndexable ? undefined : getNoindexFollowRobots()
     },
     isIndexable,
     breadcrumbItems: input.breadcrumbs,
@@ -474,12 +491,14 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
       eyebrow: input.eyebrow,
       title: input.title,
       description,
-      checkedLabel: stableLastCheckedLabel
+      checkedLabel: SEO_POLICY.lastCheckedLabel
     },
     guide: {
       title: input.guideTitle,
       body: input.guideBody
     },
+    areaGuide: input.areaGuide,
+    informationGainBlocks: informationGainBlocks(input, filteredResults),
     faqs: input.faqs,
     summaryStats: summaryStats(filteredResults),
     relatedLinkGroups: input.relatedLinkGroups.filter((group) => group.links.length),
@@ -547,6 +566,64 @@ function summaryStats(results: Listing[]): SeoSummaryStat[] {
     { label: "Takeaway options", value: takeawayCount.toLocaleString() },
     { label: "Vegetarian or vegan", value: vegetarianCount.toLocaleString() }
   ].filter((stat) => stat.value !== "0");
+}
+
+function informationGainBlocks(input: BasePageInput, results: Listing[]): SeoInformationGainBlock[] {
+  const reviewedCount = countWithReviews(results);
+  const pricedCount = countWithPrice(results);
+  const takeawayCount = countWithService(results, "takeaway");
+  const deliveryCount = countWithService(results, "delivery");
+  const vegetarianCount = results.filter((listing) =>
+    listing.dietaryOptions.some((item) => ["vegetarian", "vegan"].includes(slugify(item)))
+  ).length;
+  const halalCount = results.filter((listing) =>
+    [...listing.dietaryOptions, ...(listing.details?.offerings ?? [])].some((item) => slugify(item).includes("halal"))
+  ).length;
+  const topPriceLevels = topValuesFromResults(results, (listing) => [listing.priceLevel], 3).map((item) => item.label);
+  const topAreas = topValuesFromResults(results, (listing) => [listing.area, listing.neighborhood].filter(isString), 3).map(
+    (item) => item.label
+  );
+  const topCategories = topValuesFromResults(results, (listing) => listing.categories, 3).map((item) => item.label);
+  const topServices = topValuesFromResults(results, (listing) => listing.details?.serviceOptions ?? [], 3).map(
+    (item) => item.label
+  );
+  const stations = topTubeStations(results, 3);
+  const subject = input.introCategory ? `${input.introCategory} options` : input.introSubject;
+
+  return [
+    {
+      title: "Price and review signals",
+      body: pricedCount
+        ? `${subject} include visible price data on ${pricedCount.toLocaleString()} listings, with ${formatList(topPriceLevels)} appearing most often.`
+        : `${subject} can still be compared by rating and review strength where price data is not available.`,
+      items: [
+        countPhrase(reviewedCount, "have Google reviews"),
+        countPhrase(pricedCount, "show price data"),
+        topPriceLevels.length ? `Common price bands: ${formatList(topPriceLevels)}` : undefined
+      ].filter(isString)
+    },
+    {
+      title: "Best-fit guidance",
+      body: topCategories.length
+        ? `The strongest matches often overlap with ${formatList(topCategories)}, so visitors can compare by cuisine style as well as location.`
+        : `The strongest matches can be compared by rating, review volume, location, and practical service details.`,
+      items: [
+        topAreas.length ? `Useful local focus: ${formatList(topAreas)}` : undefined,
+        topServices.length ? `Common service signals: ${formatList(topServices)}` : undefined,
+        countPhrase(vegetarianCount, "mention vegetarian or vegan options")
+      ].filter(isString)
+    },
+    {
+      title: "Practical visit notes",
+      body: `Use practical signals such as takeaway, delivery, dietary options, and nearby transport to narrow ${directoryConfig.listingPluralLabel.toLowerCase()} before opening a detail page.`,
+      items: [
+        countPhrase(takeawayCount, "offer takeaway"),
+        countPhrase(deliveryCount, "offer delivery"),
+        countPhrase(halalCount, "mention halal food or halal options"),
+        stations.length ? `Frequent nearby stations: ${formatList(stations)}` : undefined
+      ].filter(isString)
+    }
+  ].filter((block) => block.items.length);
 }
 
 function buildDataLedDescription(input: BasePageInput, results: Listing[]) {
@@ -698,103 +775,103 @@ function usefulSearchLinks(): SeoRelatedLink[] {
     .map((search) => ({ label: search.title, href: search.href }));
 }
 
-function areaFaqs(label: string): SeoFaq[] {
+function areaFaqs(headings: SeoLandingHeadingSet): SeoFaq[] {
   return [
     {
-      question: `How do I choose a restaurant in ${label}?`,
+      question: headings.faq.chooseQuestion,
       answer: `Start with the rating and review count, then narrow by cuisine, price, opening status, and service options such as takeaway or delivery.`
     },
     {
-      question: `Can I filter ${label} restaurants by dietary needs?`,
+      question: headings.faq.filterQuestion,
       answer: `Yes. Dietary filters show options such as halal, vegetarian, vegan, or gluten-free when those details are available.`
     },
     {
-      question: `Are the ${label} results linked to restaurant profiles?`,
+      question: headings.faq.exploreQuestion,
       answer: `Yes. Each result links to a profile with address, rating, review count, contact options, opening details, and related local pages.`
     }
   ];
 }
 
-function localFaqs(label: string): SeoFaq[] {
+function localFaqs(headings: SeoLandingHeadingSet): SeoFaq[] {
   return [
     {
-      question: `What is the fastest way to compare restaurants in ${label}?`,
+      question: headings.faq.chooseQuestion,
       answer: `Use the list view for ratings and review volume, or switch to map view when location is the main decision factor.`
     },
     {
-      question: `Can I find restaurants open now in ${label}?`,
+      question: headings.faq.filterQuestion,
       answer: `Use the open-now control to narrow the page to restaurants whose opening hours indicate they are currently open.`
     },
     {
-      question: `Can I browse nearby areas from this page?`,
+      question: headings.faq.exploreQuestion,
       answer: `Yes. Related area and category links help you continue exploring nearby local options.`
     }
   ];
 }
 
-function categoryFaqs(label: string): SeoFaq[] {
+function categoryFaqs(label: string, headings: SeoLandingHeadingSet): SeoFaq[] {
   return [
     {
-      question: `What makes a ${label.toLowerCase()} restaurant stand out?`,
+      question: headings.faq.chooseQuestion,
       answer: `Look for a strong rating, a meaningful number of reviews, clear service options, and location details that fit your visit.`
     },
     {
-      question: `Can I find ${label.toLowerCase()} restaurants by area?`,
+      question: headings.faq.filterQuestion,
       answer: `Yes. The related area links narrow this category to specific parts of ${siteConfig.cityOrRegion}.`
     },
     {
-      question: `Can I sort ${label.toLowerCase()} restaurants by rating or reviews?`,
+      question: headings.faq.exploreQuestion,
       answer: `Yes. Use the sort control to compare by rating, review volume, price, or featured order.`
     }
   ];
 }
 
-function areaCategoryFaqs(area: string, category: string): SeoFaq[] {
+function areaCategoryFaqs(headings: SeoLandingHeadingSet): SeoFaq[] {
   return [
     {
-      question: `How many ${category.toLowerCase()} restaurants are listed in ${area}?`,
+      question: headings.faq.chooseQuestion,
       answer: `The result count shows how many matching restaurants are currently listed for this area and cuisine.`
     },
     {
-      question: `Can I compare ${category.toLowerCase()} restaurants in nearby areas?`,
-      answer: `Yes. Use the related links to browse the same category in other areas or different categories in ${area}.`
+      question: headings.faq.filterQuestion,
+      answer: "Yes. Use the related links to browse the same category in other areas or different categories in the selected area."
     },
     {
-      question: `Can I filter this page further?`,
+      question: headings.faq.exploreQuestion,
       answer: `Yes. You can refine by rating, price, dietary needs, service options, and opening status.`
     }
   ];
 }
 
-function bestFaqs(title: string): SeoFaq[] {
+function bestFaqs(headings: SeoLandingHeadingSet): SeoFaq[] {
   return [
     {
-      question: `How are results selected for ${title}?`,
+      question: headings.faq.chooseQuestion,
       answer: `The shortlist starts from a predefined search intent and uses available details such as ratings, reviews, prices, services, and categories.`
     },
     {
-      question: "Can I narrow this shortlist by area?",
+      question: headings.faq.filterQuestion,
       answer: `Yes. Use the area filter or the related area links to focus on a specific part of ${siteConfig.cityOrRegion}.`
     },
     {
-      question: "Can I switch this page to map view?",
+      question: headings.faq.exploreQuestion,
       answer: "Yes. Use the map view control to compare matching restaurants by location when coordinates are available."
     }
   ];
 }
 
-function facetFaqs(label: string): SeoFaq[] {
+function facetFaqs(headings: SeoLandingHeadingSet): SeoFaq[] {
   return [
     {
-      question: `What does ${label.toLowerCase()} mean on this directory?`,
+      question: headings.faq.chooseQuestion,
       answer: `It is a feature or service attached to restaurants where that detail is available.`
     },
     {
-      question: `Can I combine ${label.toLowerCase()} with other filters?`,
+      question: headings.faq.filterQuestion,
       answer: "Yes. You can combine it with area, cuisine, rating, price, and other practical filters."
     },
     {
-      question: `Are all ${label.toLowerCase()} details verified by the restaurant?`,
+      question: headings.faq.exploreQuestion,
       answer: "The page reflects the available restaurant details, so check the restaurant profile and official links before making plans."
     }
   ];

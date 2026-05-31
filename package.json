@@ -9,6 +9,10 @@
     "lint": "eslint .",
     "test": "tsx scripts/run-tests.ts",
     "typecheck": "tsc --noEmit",
+    "audit:seo": "tsx scripts/check-seo-policy.ts",
+    "audit:links": "tsx scripts/check-internal-link-governance.ts",
+    "audit:freshness": "tsx scripts/check-freshness.ts",
+    "audit:template": "tsx scripts/check-template-readiness.ts",
     "import:directory": "tsx scripts/import-directory.ts"
   },
   "dependencies": {

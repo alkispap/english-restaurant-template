@@ -29,7 +29,7 @@ import {
   Dog,
   ArrowRight
 } from "lucide-react";
-import { FaFacebookF, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import { DirectoryImage } from "@/components/DirectoryImage";
@@ -44,6 +44,10 @@ import { ShareButton } from "@/components/ShareButton";
 import { SaveListingButton } from "@/components/SaveListingButton";
 import { ListingPrivateNote } from "@/components/ListingPrivateNote";
 import { ListingComments } from "@/components/ListingComments";
+import { FactAnswer } from "@/components/FactAnswer";
+import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
+import { TrackedActionLink } from "@/components/TrackedActionLink";
+import { buildListingEavSummary } from "@/lib/listing-eav-summary";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
 import { listings } from "@/data/listings";
@@ -59,7 +63,7 @@ import {
 } from "@/lib/listing-detail-nav";
 import { directoryIndexPath } from "@/lib/routes";
 import { localBusinessJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
-import { cleanListingUrl } from "@/lib/listing-links";
+import { getListingMapsUrl } from "@/lib/listing-links";
 import { getListingExploreLinks } from "@/lib/directory-growth";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { buildDetailFilterHref, type DetailFilterName } from "@/lib/listing-detail-filter-links";
@@ -112,6 +116,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const related = getRelatedListings(listing, 8);
   const gallery = listing.images.slice(0, 3);
+  const eavSummary = buildListingEavSummary(listing);
   const tags = [...listing.categories, ...listing.listingTypes, ...listing.dietaryOptions];
   const status = listing.businessStatus;
   const isClosed = Boolean(status && status !== "OPERATIONAL");
@@ -126,6 +131,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const actionLabels = directoryConfig.actionLabels;
   const detailLabels = directoryConfig.detailLabels;
   const share = listingShareMetadata(listing);
+  const route = `/${siteConfig.listingBasePath}/${listing.slug}`;
 
   const breadcrumbs = [
     { name: directoryConfig.listingPluralLabel, href: directoryIndexPath() },
@@ -136,6 +142,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   return (
     <main>
       <ListingNav name={listing.name} tabs={tabs} />
+      <DirectoryAnalyticsTracker pageType="listing_detail" route={route} listingSlug={listing.slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(listing)) }}
@@ -268,6 +275,15 @@ export default async function ListingPage({ params }: ListingPageProps) {
             ) : null}
           </div>
 
+          <section id="quick-facts" className="mt-10 scroll-mt-20 rounded-lg border border-line bg-white p-6">
+            <h2 className="text-2xl font-bold text-ink">Quick facts about {listing.name}</h2>
+            <div className="mt-5 flex flex-col">
+              {eavSummary.blocks.map((block) => (
+                <FactAnswer key={block.group} block={block} />
+              ))}
+            </div>
+          </section>
+
           {hasServiceFeaturesSection ? (
             <div id="services" className="scroll-mt-20">
               <ValueSection title={detailLabels.servicesTitle}>
@@ -307,18 +323,18 @@ export default async function ListingPage({ params }: ListingPageProps) {
             {listing.fullAddress ? <p className="mt-3 text-sm leading-6 text-muted">{listing.fullAddress}</p> : null}
 
             <div className="mt-5 grid gap-3">
-              <ActionLink href={listing.location?.googleMapsUrl} label={actionLabels.googleMaps} icon={<ExternalLink className="h-4 w-4" />} primary />
-              <ActionLink href={listing.contact?.googleReviewsUrl} label={actionLabels.googleReviews} icon={<Star className="h-4 w-4" />} />
-              <ActionLink href={listing.contact?.website} label={actionLabels.website} icon={<ExternalLink className="h-4 w-4" />} />
-              <ActionLink href={listing.contact?.reserveUrl} label={actionLabels.reserve} icon={<CalendarCheck className="h-4 w-4" />} />
-              <ActionLink href={listing.contact?.orderOnlineUrl} label={actionLabels.orderOnline} icon={<ExternalLink className="h-4 w-4" />} />
-              <ActionLink href={listing.contact?.appointmentUrl} label={actionLabels.appointment} icon={<CalendarCheck className="h-4 w-4" />} />
-              <ActionLink href={listing.contact?.menuUrl} label={actionLabels.menu} icon={<MenuIcon className="h-4 w-4" />} />
+              <TrackedActionLink href={getListingMapsUrl(listing)} label={actionLabels.googleMaps} icon={<ExternalLink className="h-4 w-4" />} pageType="listing_detail" action="maps_click" route={route} listingSlug={listing.slug} primary />
+              <TrackedActionLink href={listing.contact?.googleReviewsUrl} label={actionLabels.googleReviews} icon={<Star className="h-4 w-4" />} pageType="listing_detail" action="reviews_click" route={route} listingSlug={listing.slug} />
+              <TrackedActionLink href={listing.contact?.website} label={actionLabels.website} icon={<ExternalLink className="h-4 w-4" />} pageType="listing_detail" action="website_click" route={route} listingSlug={listing.slug} />
+              <TrackedActionLink href={listing.contact?.reserveUrl} label={actionLabels.reserve} icon={<CalendarCheck className="h-4 w-4" />} pageType="listing_detail" action="reserve_click" route={route} listingSlug={listing.slug} />
+              <TrackedActionLink href={listing.contact?.orderOnlineUrl} label={actionLabels.orderOnline} icon={<ExternalLink className="h-4 w-4" />} pageType="listing_detail" action="order_click" route={route} listingSlug={listing.slug} />
+              <TrackedActionLink href={listing.contact?.appointmentUrl} label={actionLabels.appointment} icon={<CalendarCheck className="h-4 w-4" />} pageType="listing_detail" action="appointment_click" route={route} listingSlug={listing.slug} />
+              <TrackedActionLink href={listing.contact?.menuUrl} label={actionLabels.menu} icon={<MenuIcon className="h-4 w-4" />} pageType="listing_detail" action="menu_click" route={route} listingSlug={listing.slug} />
               {listing.contact?.phone ? (
-                <ActionLink href={`tel:${listing.contact.phone.replace(/\s+/g, "")}`} label={listing.contact.phone} icon={<Phone className="h-4 w-4" />} />
+                <TrackedActionLink href={`tel:${listing.contact.phone.replace(/\s+/g, "")}`} label={listing.contact.phone} icon={<Phone className="h-4 w-4" />} pageType="listing_detail" action="phone_click" route={route} listingSlug={listing.slug} />
               ) : null}
               {listing.contact?.email ? (
-                <ActionLink href={`mailto:${listing.contact.email}`} label={actionLabels.email} icon={<Mail className="h-4 w-4" />} />
+                <TrackedActionLink href={`mailto:${listing.contact.email}`} label={actionLabels.email} icon={<Mail className="h-4 w-4" />} pageType="listing_detail" action="email_click" route={route} listingSlug={listing.slug} />
               ) : null}
               <div className="mt-2 border-t border-line pt-4">
                 <ShareButton 
@@ -370,14 +386,22 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
       {exploreLinks.length ? (
         <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
-          <div className="rounded-lg border border-line bg-white p-6">
-            <h2 className="text-2xl font-bold text-ink">Explore more</h2>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {exploreLinks.map((link) => (
-                <Link key={link.href} href={link.href} className="inline-flex items-center justify-between gap-3 rounded-md bg-slate-50 px-4 py-3 text-sm font-bold text-ink hover:bg-orange-50 hover:text-accent">
-                  {link.label}
-                  <ArrowRight className="h-4 w-4 text-primary" aria-hidden />
-                </Link>
+          <div className="rounded-lg border border-line bg-white p-8">
+            <h2 className="mb-8 text-2xl font-bold text-ink">Explore contextually</h2>
+            <div className="grid gap-10 md:grid-cols-3">
+              {exploreLinks.map((group) => (
+                <div key={group.title}>
+                  <h3 className="mb-4 text-lg font-bold text-ink">{group.title}</h3>
+                  <p className="mb-4 text-sm leading-6 text-muted">{group.description}</p>
+                  <div className="grid gap-3">
+                    {group.links.map((link) => (
+                      <Link key={link.href} href={link.href} className="inline-flex items-center justify-between gap-3 rounded-md bg-slate-50 px-4 py-3 text-sm font-bold text-ink transition hover:bg-orange-50 hover:text-accent">
+                        <span className="line-clamp-2">{link.label}</span>
+                        <ArrowRight className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -564,30 +588,13 @@ function transportFilterHref(name: "tube" | "bus" | "nearby", value: string) {
   return directoryIndexPath(`?${name}=${slugify(value)}`);
 }
 
-function ActionLink({ href, label, icon, primary = false }: { href?: string; label: string; icon: React.ReactNode; primary?: boolean }) {
-  const safeHref = cleanListingUrl(href);
-  if (!safeHref) return null;
-
-  return (
-    <a
-      href={safeHref}
-      target={safeHref.startsWith("http") ? "_blank" : undefined}
-      rel={safeHref.startsWith("http") ? "noreferrer" : undefined}
-      className={`focus-ring inline-flex items-center justify-center gap-2 rounded-md px-4 py-3 text-sm font-bold ${
-        primary ? "bg-primary text-white" : "border border-line text-ink"
-      }`}
-    >
-      {label} {icon}
-    </a>
-  );
-}
-
 const socialIconByPlatform: Record<SocialPlatformId, React.ComponentType<{ className?: string; "aria-hidden"?: boolean }>> = {
   facebook: FaFacebookF,
   instagram: FaInstagram,
   tiktok: FaTiktok,
   youtube: FaYoutube,
   x: FaXTwitter,
+  whatsapp: FaWhatsapp,
   external: ExternalLink
 };
 

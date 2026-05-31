@@ -1,6 +1,8 @@
 import { directoryConfig } from "@/config/directory";
 import { listings } from "@/data/listings";
 import type { Listing } from "@/data/listings";
+import { directorySemanticMap } from "@/lib/directory-semantic-map";
+import { homepageHeadings } from "@/lib/homepage-headings";
 import {
   getBestRatedListings,
   getFeaturedAreas,
@@ -14,6 +16,7 @@ import {
 import { getPopularSearches, resolveDirectoryTemplate } from "@/lib/directory-growth";
 import { getEnabledHomeSections, getEnabledSidebarBlocks, isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import {
+  areaCategoryPath,
   categoryPath,
   dietaryPath,
   directoryIndexPath,
@@ -22,6 +25,7 @@ import {
   servicePath,
   typePath
 } from "@/lib/routes";
+import { SEO_POLICY } from "@/lib/seo-policy";
 
 export type DirectoryShortcutSource =
   | "localEats"
@@ -65,6 +69,17 @@ export type DirectoryShortcutLink = {
   count?: number;
 };
 
+export type HomepageSourceContextPoint = {
+  title: string;
+  copy: string;
+};
+
+export type HomepageSourceContextGuide = {
+  title: string;
+  intro: string;
+  points: HomepageSourceContextPoint[];
+};
+
 export type ResolvedDirectoryHomeSection = DirectoryHomeSection & {
   links: DirectoryShortcutLink[];
 };
@@ -83,6 +98,7 @@ export type ResolvedDirectorySidebarBlock = DirectorySidebarBlock & {
 
 const configHomeSections = directoryConfig.homeSections satisfies readonly DirectoryHomeSection[];
 const configSidebarBlocks = directoryConfig.sidebarBlocks satisfies readonly DirectorySidebarBlock[];
+const homepageSidebarDuplicateSources = new Set<DirectoryShortcutSource>(["topAreas", "topCategories", "seoFeatures"]);
 
 export function getDirectoryHomeSections(
   sections: readonly DirectoryHomeSection[] = configHomeSections
@@ -120,8 +136,8 @@ export function getDirectoryListingsPageRows(currentListings: Listing[], limit =
   const rowConfigs: DirectoryHomeSection[] = [
     {
       id: "local-eats",
-      title: "Local eats",
-      copy: "More strong all-round listings to explore.",
+      title: homepageHeadings.listingRowTitles.highlyReviewed,
+      copy: homepageHeadings.listingRowCopy.highlyReviewed,
       source: "localEats",
       display: "listingRow",
       limit,
@@ -129,8 +145,8 @@ export function getDirectoryListingsPageRows(currentListings: Listing[], limit =
     },
     {
       id: "budget-friendly",
-      title: "Budget-friendly",
-      copy: "Lower-priced options from the directory.",
+      title: homepageHeadings.listingRowTitles.budgetFriendly,
+      copy: homepageHeadings.listingRowCopy.budgetFriendly,
       source: "budgetFriendly",
       display: "listingRow",
       limit,
@@ -167,6 +183,28 @@ export function getDirectorySidebarBlocks(
       links: getShortcutLinksForSource(block.source, block.limit)
     }))
     .filter((block) => block.links.length);
+}
+
+export function getHomepageSidebarBlocks(
+  blocks: readonly DirectorySidebarBlock[] = configSidebarBlocks
+): ResolvedDirectorySidebarBlock[] {
+  return getDirectorySidebarBlocks(blocks)
+    .filter((block) => !homepageSidebarDuplicateSources.has(block.source))
+    .map((block) => ({
+      ...block,
+      title: getHomepageSidebarTitle(block)
+    }));
+}
+
+function getHomepageSidebarTitle(block: ResolvedDirectorySidebarBlock): string {
+  if (block.source === "popularSearches") return homepageHeadings.sidebarTitles.popularSearches;
+  if (block.source === "recentListings") return homepageHeadings.sidebarTitles.recentListings;
+  if (block.source === "usefulShortcuts") return homepageHeadings.sidebarTitles.usefulShortcuts;
+  if (block.source === "topAreas") return `Top ${directorySemanticMap.location} areas`;
+  if (block.source === "topCategories") return `Top ${directoryConfig.categoryLabel.toLowerCase()} hubs`;
+  if (block.source === "seoFeatures") return `${directoryConfig.listingLabel} needs`;
+
+  return block.title;
 }
 
 export function getShortcutLinksForSource(source: DirectoryShortcutSource, limit = 6): DirectoryShortcutLink[] {
@@ -230,18 +268,33 @@ function userNeedLinks(limit: number): DirectoryShortcutLink[] {
 export function getHomepageSeoFeatureGroups(): { title: string; copy: string; links: DirectoryShortcutLink[] }[] {
   const groups = [
     {
-      title: "Browse by service",
-      copy: "Jump straight to practical restaurant needs with clean, indexable pages.",
+      title: homepageHeadings.seoFeatureGroupTitles.area,
+      copy: homepageHeadings.seoFeatureGroupCopy.area,
+      links: getFeaturedAreas(6).map(cardToAreaLink)
+    },
+    {
+      title: homepageHeadings.seoFeatureGroupTitles.category,
+      copy: homepageHeadings.seoFeatureGroupCopy.category,
+      links: getFeaturedCategoryCards(6).map(cardToCategoryLink)
+    },
+    {
+      title: homepageHeadings.seoFeatureGroupTitles.areaCategory,
+      copy: homepageHeadings.seoFeatureGroupCopy.areaCategory,
+      links: areaCategoryLinks(6)
+    },
+    {
+      title: homepageHeadings.seoFeatureGroupTitles.service,
+      copy: homepageHeadings.seoFeatureGroupCopy.service,
       links: seoServiceLinks()
     },
     {
-      title: "Browse by dietary need",
-      copy: "Find restaurants with dietary details that matter before choosing a place.",
+      title: homepageHeadings.seoFeatureGroupTitles.dietary,
+      copy: homepageHeadings.seoFeatureGroupCopy.dietary,
       links: seoDietaryLinks()
     },
     {
-      title: "Browse by dining style",
-      copy: "Use restaurant-type pages when the kind of visit matters.",
+      title: homepageHeadings.seoFeatureGroupTitles.diningStyle,
+      copy: homepageHeadings.seoFeatureGroupCopy.diningStyle,
       links: seoTypeLinks()
     }
   ];
@@ -249,15 +302,77 @@ export function getHomepageSeoFeatureGroups(): { title: string; copy: string; li
   return groups.filter((group) => group.links.length);
 }
 
+export function getHomepageSourceContextGuide(): HomepageSourceContextGuide {
+  const categoryLabelLower = directoryConfig.categoryLabel.toLowerCase();
+
+  return {
+    title: homepageHeadings.sourceContextTitle,
+    intro: `This ${directorySemanticMap.sourceContext} uses the current directory dataset for ${directorySemanticMap.centralEntity}, so visitors can compare practical signals before choosing where to eat.`,
+    points: [
+      {
+        title: homepageHeadings.sourceContextQuestionTitles.data,
+        copy: `Listings are grouped by area, neighbourhood, ${categoryLabelLower}, service options, dining style, transport details, and contact actions where those fields are available.`
+      },
+      {
+        title: homepageHeadings.sourceContextQuestionTitles.freshness,
+        copy: "The template keeps imported details usable for visitors and supports updated freshness audits for opening hours, status, images, ratings, review counts, service options, and contact details."
+      },
+      {
+        title: homepageHeadings.sourceContextQuestionTitles.choose,
+        copy: `Compare ratings, review counts, prices, location signals, and available services, then open the listing page for contact links, maps, menus, and booking or ordering actions.`
+      }
+    ]
+  };
+}
+
+function areaCategoryLinks(limit: number): DirectoryShortcutLink[] {
+  const counts = new Map<string, { areaLabel: string; areaSlug: string; categoryLabel: string; categorySlug: string; count: number }>();
+
+  listings.forEach((listing) => {
+    if (!listing.area) return;
+
+    listing.categories.forEach((category) => {
+      const areaSlug = slugify(listing.area as string);
+      const categorySlug = slugify(category);
+      const key = `${areaSlug}:${categorySlug}`;
+      const existing = counts.get(key);
+
+      if (existing) {
+        existing.count += 1;
+        return;
+      }
+
+      counts.set(key, {
+        areaLabel: listing.area as string,
+        areaSlug,
+        categoryLabel: category,
+        categorySlug,
+        count: 1
+      });
+    });
+  });
+
+  return Array.from(counts.values())
+    .filter((item) => item.count >= SEO_POLICY.routeThresholds.areaCategory)
+    .sort((a, b) => b.count - a.count || a.areaLabel.localeCompare(b.areaLabel))
+    .slice(0, limit)
+    .map((item) => ({
+      label: `${item.categoryLabel} in ${item.areaLabel}`,
+      href: areaCategoryPath(item.areaSlug, item.categorySlug),
+      count: item.count
+    }));
+}
+
 function seoFeatureLinks(limit: number): DirectoryShortcutLink[] {
   return dedupeLinks([...seoServiceLinks(), ...seoDietaryLinks(), ...seoTypeLinks()]).slice(0, limit);
 }
 
 function seoServiceLinks(): DirectoryShortcutLink[] {
+  const listingPluralLabelLower = directoryConfig.listingPluralLabel.toLowerCase();
   const wanted = [
-    { slug: "takeaway", label: "Takeaway restaurants" },
-    { slug: "delivery", label: "Delivery restaurants" },
-    { slug: "dine-in", label: "Dine-in restaurants" },
+    { slug: "takeaway", label: `Takeaway ${listingPluralLabelLower}` },
+    { slug: "delivery", label: `Delivery ${listingPluralLabelLower}` },
+    { slug: "dine-in", label: `Dine-in ${listingPluralLabelLower}` },
     { slug: "outdoor-seating", label: "Outdoor seating" }
   ];
   const available = new Set(getServiceOptions().map(slugify));
@@ -272,10 +387,11 @@ function seoServiceLinks(): DirectoryShortcutLink[] {
 }
 
 function seoDietaryLinks(): DirectoryShortcutLink[] {
+  const listingPluralLabelLower = directoryConfig.listingPluralLabel.toLowerCase();
   const wanted = [
-    { slug: "vegetarian", label: "Vegetarian restaurants" },
-    { slug: "vegan", label: "Vegan restaurants" },
-    { slug: "halal", label: "Halal restaurants" },
+    { slug: "vegetarian", label: `Vegetarian ${listingPluralLabelLower}` },
+    { slug: "vegan", label: `Vegan ${listingPluralLabelLower}` },
+    { slug: "halal", label: `Halal ${listingPluralLabelLower}` },
     { slug: "gluten-free", label: "Gluten-free options" }
   ];
   const available = new Set(listings.flatMap((listing) => listing.dietaryOptions).map(slugify));
@@ -290,11 +406,12 @@ function seoDietaryLinks(): DirectoryShortcutLink[] {
 }
 
 function seoTypeLinks(): DirectoryShortcutLink[] {
+  const listingPluralLabelLower = directoryConfig.listingPluralLabel.toLowerCase();
   const wanted = [
     { slug: "casual-dining", label: "Casual dining" },
     { slug: "fine-dining", label: "Fine dining" },
-    { slug: "cafe", label: "Cafe-style restaurants" },
-    { slug: "bar", label: "Bar restaurants" }
+    { slug: "cafe", label: `Cafe-style ${listingPluralLabelLower}` },
+    { slug: "bar", label: `Bar ${listingPluralLabelLower}` }
   ];
   const available = new Set(getListingTypes().map(slugify));
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
 import { getFacetSeoPage, toSeoMetadata, type SeoPageSearchParams } from "@/lib/seo-pages";
 
@@ -10,9 +11,9 @@ type OfferingPageProps = {
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: OfferingPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: OfferingPageProps): Promise<Metadata> {
   const { offering } = await params;
-  return toSeoMetadata(getFacetSeoPage("offering", offering, {}));
+  return toSeoMetadata(getFacetSeoPage("offering", offering, await searchParams));
 }
 
 export default async function OfferingPage({ params, searchParams }: OfferingPageProps) {
@@ -20,5 +21,10 @@ export default async function OfferingPage({ params, searchParams }: OfferingPag
   const page = getFacetSeoPage("offering", offering, await searchParams);
   if (!page) notFound();
 
-  return <SeoLandingPage page={page} />;
+  return (
+    <>
+      <DirectoryAnalyticsTracker pageType="facet_hub" route={page.metadata.canonical} />
+      <SeoLandingPage page={page} />
+    </>
+  );
 }

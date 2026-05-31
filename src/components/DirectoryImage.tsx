@@ -72,7 +72,7 @@ export function DirectoryImage({
   );
 }
 
-export const IMAGE_FALLBACK_TIMEOUT_MS = 8000;
+export const IMAGE_FALLBACK_TIMEOUT_MS = 3000;
 
 export function shouldBypassImageOptimization(src?: string) {
   if (!src) return false;

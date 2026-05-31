@@ -81,7 +81,8 @@ function listingExploreLinksAreUsefulAndUnique() {
   const listing = listings.find((item) => item.area && item.categories.length && item.details?.serviceOptions?.length);
   assert.ok(listing, "expected a listing with area, category, and service data");
 
-  const links = getListingExploreLinks(listing);
+  const groups = getListingExploreLinks(listing);
+  const links = groups.flatMap((group) => group.links);
   const hrefs = links.map((link) => link.href);
 
   assert.ok(links.some((link) => link.href.startsWith("/areas/")));
@@ -90,7 +91,7 @@ function listingExploreLinksAreUsefulAndUnique() {
   assert.ok(links.some((link) => link.href.startsWith("/services/")));
   assert.equal(new Set(hrefs).size, hrefs.length, "explore links should not contain duplicate hrefs");
   assert.ok(links.every((link) => !link.label.includes("{")));
-  assert.ok(links.length >= 16, "listing detail pages should expose a broad set of internal links");
+  assert.ok(links.length >= 10, "listing detail pages should expose a broad set of internal links");
 }
 
 function sitemapIncludesGeneratedGrowthRoutes() {

@@ -1,6 +1,8 @@
 import { directoryConfig } from "@/config/directory";
 import { listings } from "@/data/listings";
 import type { Listing } from "@/data/listings";
+import { compareByReviewStrength } from "@/lib/review-strength";
+import { searchableTextMatches } from "@/lib/search-quality";
 import { slugify } from "@/lib/slug";
 
 export { slugify };
@@ -197,7 +199,7 @@ export function filterListings(filters: ListingFilters) {
       ...(listing.details?.offerings ?? []),
       ...(listing.tags ?? [])
     ];
-    const matchesQuery = !query || searchable.join(" ").toLowerCase().includes(query);
+    const matchesQuery = !query || searchableTextMatches(query, searchable);
     const matchesArea = matchesMulti(listing.area ? [listing.area] : [], filters.area);
     const matchesNeighborhood = matchesMulti(
       listing.neighborhood ? [listing.neighborhood] : [],
@@ -269,7 +271,7 @@ export function filterListings(filters: ListingFilters) {
 
   const sort = filters.sort ?? directoryConfig.defaultSort;
   result = [...result].sort((a, b) => {
-    if (sort === "rating") return Number(b.rating ?? 0) - Number(a.rating ?? 0);
+    if (sort === "rating") return compareByReviewStrength(a, b);
     if (sort === "reviews") return Number(b.reviewCount ?? 0) - Number(a.reviewCount ?? 0);
     if (sort === "price") return priceWeight(a.priceLevel) - priceWeight(b.priceLevel);
     return (
@@ -293,11 +295,7 @@ export function getFeaturedListings(limit = 4) {
 
 export function getBestRatedListings(limit = 4) {
   return [...listings]
-    .sort(
-      (a, b) =>
-        Number(b.rating ?? 0) - Number(a.rating ?? 0) ||
-        Number(b.reviewCount ?? 0) - Number(a.reviewCount ?? 0)
-    )
+    .sort(compareByReviewStrength)
     .slice(0, limit);
 }
 

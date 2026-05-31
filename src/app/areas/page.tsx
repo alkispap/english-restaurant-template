@@ -1,9 +1,10 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { SearchableCardGrid } from "@/components/SearchableCardGrid";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
-import { getFeaturedAreas } from "@/lib/directory";
+import { getAreaDirectoryCards } from "@/lib/area-guide";
 import { getPopularSearches } from "@/lib/directory-growth";
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default function AreasPage() {
-  const areas = getFeaturedAreas(100);
+  const areas = getAreaDirectoryCards(100);
   const searches = getPopularSearches().slice(0, 6);
 
   return (
@@ -29,25 +30,12 @@ export default function AreasPage() {
         </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {areas.map((area) => (
-          <Link
-            key={area.slug}
-            href={`/areas/${area.slug}`}
-            className="focus-ring group flex min-h-32 flex-col justify-between rounded-lg border border-line bg-white p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-primary"
-          >
-            <span>
-              <span className="flex items-start justify-between gap-3">
-                <span className="text-xl font-bold text-ink group-hover:text-accent">{area.label}</span>
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
-              </span>
-              <span className="mt-2 block text-sm leading-6 text-muted">
-                Compare {area.count.toLocaleString()} {directoryConfig.listingPluralLabel.toLowerCase()} in {area.label}.
-              </span>
-            </span>
-          </Link>
-        ))}
-      </section>
+      <SearchableCardGrid
+        items={areas}
+        searchPlaceholder="Search areas"
+        emptyMessage="No areas match this search."
+        alphabetLabel="Filter areas by first letter"
+      />
 
       {searches.length ? (
         <section className="mt-12 rounded-lg border border-line bg-white p-6">

@@ -2,28 +2,53 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Share2, Facebook, Twitter, MessageCircle, Copy, Check, X } from "lucide-react";
+import {
+  inferDirectoryPageTypeFromPath,
+  trackDirectoryEvent,
+  type DirectoryPageType
+} from "@/lib/directory-analytics";
 
 interface ShareButtonProps {
   title: string;
   text: string;
   url: string;
   className?: string;
+  pageType?: DirectoryPageType;
+  route?: string;
+  listingSlug?: string;
 }
 
-export function ShareButton({ title, text, url, className = "" }: ShareButtonProps) {
+export function ShareButton({ title, text, url, className = "", pageType, route, listingSlug }: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const canNativeShare = typeof navigator !== "undefined" && !!navigator.share;
+  const resolvedRoute = route ?? (typeof window === "undefined" ? undefined : window.location.pathname);
+  const resolvedPageType = pageType ?? inferDirectoryPageTypeFromPath(resolvedRoute ?? "/");
 
   const handleShare = async () => {
+    trackDirectoryEvent({
+      pageType: resolvedPageType,
+      action: "share_open",
+      route: resolvedRoute,
+      listingSlug,
+      targetUrl: url
+    });
+
     if (canNativeShare) {
       try {
         await navigator.share({
           title,
           text,
           url,
+        });
+        trackDirectoryEvent({
+          pageType: resolvedPageType,
+          action: "share_native",
+          route: resolvedRoute,
+          listingSlug,
+          targetUrl: url
         });
       } catch (error) {
         if ((error as Error).name !== "AbortError") {
@@ -39,6 +64,13 @@ export function ShareButton({ title, text, url, className = "" }: ShareButtonPro
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(url);
+      trackDirectoryEvent({
+        pageType: resolvedPageType,
+        action: "share_copy",
+        route: resolvedRoute,
+        listingSlug,
+        targetUrl: url
+      });
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -112,6 +144,16 @@ export function ShareButton({ title, text, url, className = "" }: ShareButtonPro
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackDirectoryEvent({
+                    pageType: resolvedPageType,
+                    action: "share_social",
+                    route: resolvedRoute,
+                    listingSlug,
+                    label: link.name,
+                    targetUrl: link.url
+                  })
+                }
                 className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted transition-colors dark:hover:bg-slate-800 ${link.color}`}
               >
                 {link.icon}

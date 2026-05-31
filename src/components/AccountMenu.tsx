@@ -3,6 +3,7 @@
 import { LogIn, LogOut, Mail, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useAccount } from "@/components/AccountProvider";
+import { directoryConfig } from "@/config/directory";
 
 export function AccountMenu() {
   const { authEnabled, loading, user, signInWithProvider, signInWithEmail, signOut } = useAccount();
@@ -48,7 +49,7 @@ export function AccountMenu() {
             </div>
           ) : (
             <div>
-              <p className="font-bold text-ink">Sync saved restaurants</p>
+              <p className="font-bold text-ink">Sync saved {directoryConfig.listingPluralLabel.toLowerCase()}</p>
               <p className="mt-1 text-muted">Sign in to keep saved listings and private notes across devices.</p>
               <div className="mt-4 grid gap-2">
                 <button

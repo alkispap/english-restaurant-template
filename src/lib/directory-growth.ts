@@ -14,7 +14,6 @@ import {
   areaCategoryPath,
   areaPath,
   categoryPath,
-  directoryIndexPath,
   dietaryPath,
   neighborhoodPath,
   offeringPath,
@@ -22,6 +21,16 @@ import {
   servicePath,
   typePath
 } from "@/lib/routes";
+import { SEO_POLICY, isApprovedHighIntentFacet } from "@/lib/seo-policy";
+
+const filterCountCache = new Map<string, number>();
+function getFilterCount(filters: ListingFilters): number {
+  const key = JSON.stringify(filters);
+  if (!filterCountCache.has(key)) {
+    filterCountCache.set(key, filterListings(filters).length);
+  }
+  return filterCountCache.get(key)!;
+}
 
 export type PopularSearchPreset = {
   slug: string;
@@ -42,6 +51,12 @@ export type DirectoryLink = {
 
 export type FooterGroup = {
   title: string;
+  links: DirectoryLink[];
+};
+
+export type ContextualBridgeGroup = {
+  title: string;
+  description: string;
   links: DirectoryLink[];
 };
 
@@ -113,8 +128,11 @@ export function getPopularSearchResults(slug: string, filters: ListingFilters = 
   });
 }
 
+let areaCategoryCombinationsCache: AreaCategoryCombination[] | null = null;
+
 export function getAreaCategoryCombinations(): AreaCategoryCombination[] {
   if (!isDirectoryFeatureEnabled("areaCategoryPages")) return [];
+  if (areaCategoryCombinationsCache) return areaCategoryCombinationsCache;
 
   const counts = new Map<string, AreaCategoryCombination>();
 
@@ -143,12 +161,14 @@ export function getAreaCategoryCombinations(): AreaCategoryCombination[] {
     });
   });
 
-  return Array.from(counts.values()).sort(
+  areaCategoryCombinationsCache = Array.from(counts.values()).sort(
     (a, b) =>
       b.count - a.count ||
       a.areaLabel.localeCompare(b.areaLabel) ||
       a.categoryLabel.localeCompare(b.categoryLabel)
   );
+
+  return areaCategoryCombinationsCache;
 }
 
 export function getAreaCategoryCombinationsForArea(areaSlug: string, limit = 8) {
@@ -219,81 +239,124 @@ export function getRatingFilterOptions() {
   });
 }
 
-export function getListingExploreLinks(listing: Listing): DirectoryLink[] {
-  const links: DirectoryLink[] = [];
+export function getListingExploreLinks(listing: Listing): ContextualBridgeGroup[] {
   const listingPlural = directoryConfig.listingPluralLabel.toLowerCase();
   const area = listing.area;
   const areaSlug = area ? slugify(area) : "";
 
+  const localAreaLinks: DirectoryLink[] = [];
+  const cuisineLinks: DirectoryLink[] = [];
+  const featuresLinks: DirectoryLink[] = [];
+
   if (area && areaSlug) {
-    links.push({
-      label: `More ${listingPlural} in ${area}`,
-      href: areaPath(areaSlug)
-    });
+    if (getFilterCount({ area: areaSlug }) >= SEO_POLICY.routeThresholds.area) {
+      localAreaLinks.push({
+        label: `More ${listingPlural} in ${area}`,
+        href: areaPath(areaSlug)
+      });
+    }
   }
 
   if (listing.neighborhood) {
-    links.push({
-      label: `More ${listingPlural} in ${listing.neighborhood}`,
-      href: neighborhoodPath(slugify(listing.neighborhood))
-    });
+    const nSlug = slugify(listing.neighborhood);
+    if (getFilterCount({ neighborhood: nSlug }) >= SEO_POLICY.routeThresholds.neighborhood) {
+      localAreaLinks.push({
+        label: `More ${listingPlural} in ${listing.neighborhood}`,
+        href: neighborhoodPath(nSlug)
+      });
+    }
   }
 
   listing.categories.forEach((category) => {
     const categorySlug = slugify(category);
-    links.push({
-      label: `${category} ${listingPlural}`,
-      href: categoryPath(categorySlug)
-    });
-
-    if (isDirectoryFeatureEnabled("areaCategoryPages") && areaSlug && getAreaCategoryCombination(areaSlug, categorySlug)) {
-      links.push({
-        label: `${category} ${listingPlural} in ${area}`,
-        href: areaCategoryPath(areaSlug, categorySlug)
+    if (getFilterCount({ category: categorySlug }) >= SEO_POLICY.routeThresholds.category) {
+      cuisineLinks.push({
+        label: `${category} ${listingPlural}`,
+        href: categoryPath(categorySlug)
       });
+    }
+
+    if (isDirectoryFeatureEnabled("areaCategoryPages") && areaSlug) {
+      const combo = getAreaCategoryCombination(areaSlug, categorySlug);
+      if (combo && combo.count >= SEO_POLICY.routeThresholds.areaCategory) {
+        cuisineLinks.push({
+          label: `${category} ${listingPlural} in ${area}`,
+          href: areaCategoryPath(areaSlug, categorySlug)
+        });
+      }
     }
   });
 
   listing.listingTypes.slice(0, 4).forEach((type) => {
     if (!isDirectoryFeatureEnabled("listingTypePages")) return;
-    links.push({
-      label: `${type} ${listingPlural}`,
-      href: typePath(slugify(type))
-    });
+    const typeSlug = slugify(type);
+    if (isApprovedHighIntentFacet("type", typeSlug) && getFilterCount({ type: typeSlug }) >= SEO_POLICY.routeThresholds.facet) {
+      featuresLinks.push({
+        label: `${type} ${listingPlural}`,
+        href: typePath(typeSlug)
+      });
+    }
   });
 
   listing.dietaryOptions.slice(0, 3).forEach((dietary) => {
     if (!isDirectoryFeatureEnabled("dietaryPages")) return;
-    links.push({
-      label: `${dietary} ${listingPlural}`,
-      href: dietaryPath(slugify(dietary))
-    });
+    const dietSlug = slugify(dietary);
+    if (isApprovedHighIntentFacet("dietary", dietSlug) && getFilterCount({ dietary: dietSlug }) >= SEO_POLICY.routeThresholds.facet) {
+      featuresLinks.push({
+        label: `${dietary} ${listingPlural}`,
+        href: dietaryPath(dietSlug)
+      });
+    }
   });
 
   (listing.details?.serviceOptions ?? []).slice(0, 4).forEach((service) => {
     if (!isDirectoryFeatureEnabled("servicePages")) return;
-    links.push({
-      label: `${service} ${listingPlural}`,
-      href: servicePath(slugify(service))
-    });
+    const serviceSlug = slugify(service);
+    if (isApprovedHighIntentFacet("service", serviceSlug) && getFilterCount({ service: serviceSlug }) >= SEO_POLICY.routeThresholds.facet) {
+      featuresLinks.push({
+        label: `${service} ${listingPlural}`,
+        href: servicePath(serviceSlug)
+      });
+    }
   });
 
   (listing.details?.offerings ?? []).slice(0, 6).forEach((offering) => {
     if (!isDirectoryFeatureEnabled("offeringPages")) return;
-    links.push({
-      label: `${offering} ${listingPlural}`,
-      href: offeringPath(slugify(offering))
-    });
+    const offeringSlug = slugify(offering);
+    if (isApprovedHighIntentFacet("offering", offeringSlug) && getFilterCount({ offering: offeringSlug }) >= SEO_POLICY.routeThresholds.facet) {
+      featuresLinks.push({
+        label: `${offering} ${listingPlural}`,
+        href: offeringPath(offeringSlug)
+      });
+    }
   });
 
-  if (listing.priceLevel) {
-    links.push({
-      label: `${listing.priceLevel} ${listingPlural}`,
-      href: directoryIndexPath(`?price=${encodeURIComponent(listing.priceLevel)}`)
+
+  const groups: ContextualBridgeGroup[] = [];
+
+  if (localAreaLinks.length > 0) {
+    groups.push({
+      title: "Local area",
+      description: "These local hubs keep the search focused on the same area or neighborhood.",
+      links: dedupeLinks(localAreaLinks).slice(0, 8)
+    });
+  }
+  if (cuisineLinks.length > 0) {
+    groups.push({
+      title: "Similar cuisine",
+      description: "These category hubs help compare restaurants with similar cuisine signals.",
+      links: dedupeLinks(cuisineLinks).slice(0, 8)
+    });
+  }
+  if (featuresLinks.length > 0) {
+    groups.push({
+      title: "Features & dietary",
+      description: "These feature-led searches match the services, dining options, or dietary signals in this listing.",
+      links: dedupeLinks(featuresLinks).slice(0, 8)
     });
   }
 
-  return dedupeLinks(links).slice(0, 24);
+  return groups;
 }
 
 function sourceLinks(source: FooterSource, limit = 6): DirectoryLink[] {
@@ -321,8 +384,11 @@ function dedupeLinks(links: DirectoryLink[]) {
   const result: DirectoryLink[] = [];
 
   links.forEach((link) => {
-    if (!link.href || seen.has(link.href)) return;
-    seen.add(link.href);
+    const key = `${link.href}::${link.label.toLowerCase()}`;
+    const labelKey = `label::${link.label.toLowerCase()}`;
+    if (!link.href || seen.has(key) || seen.has(labelKey)) return;
+    seen.add(key);
+    seen.add(labelKey);
     result.push(link);
   });
 

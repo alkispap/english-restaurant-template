@@ -3,6 +3,7 @@ import sitemap from "../src/app/sitemap";
 import { siteConfig } from "../src/config/site";
 import { getAreas, getCategories, getServiceOptions, slugify } from "../src/lib/directory";
 import { getAreaCategoryCombinations } from "../src/lib/directory-growth";
+import { seoLandingHeadings } from "../src/lib/seo-landing-headings";
 import {
   getAreaSeoPage,
   getAreaCategorySeoPage,
@@ -128,6 +129,66 @@ function seoPagesExposeReusableContentBlocks() {
   assert.ok(page.structuredData.length >= 2, "SEO pages should expose breadcrumb and ItemList structured data");
 }
 
+function seoPagesUseReusableLandingHeadings() {
+  const area = getAreas()[0];
+  const category = getCategories().find((item) => slugify(item) === "indian") ?? getCategories()[0];
+  const combination = getAreaCategoryCombinations().find((item) => item.count >= 5);
+  const service = getServiceOptions().find((item) => slugify(item) === "takeaway");
+  assert.ok(area, "expected area data");
+  assert.ok(category, "expected category data");
+  assert.ok(combination, "expected area/category combination data");
+  assert.ok(service, "expected service data");
+
+  const areaHeadings = seoLandingHeadings.area(area);
+  const areaPage = getAreaSeoPage(slugify(area), {});
+  assert.equal(areaPage?.hero.eyebrow, areaHeadings.eyebrow);
+  assert.equal(areaPage?.hero.title, areaHeadings.heroTitle);
+  assert.equal(areaPage?.guide.title, areaHeadings.guideTitle);
+  assert.deepEqual(areaPage?.faqs.map((faq) => faq.question), [
+    areaHeadings.faq.chooseQuestion,
+    areaHeadings.faq.filterQuestion,
+    areaHeadings.faq.exploreQuestion
+  ]);
+
+  const categoryHeadings = seoLandingHeadings.category(category);
+  const categoryPage = getCategorySeoPage(slugify(category), {});
+  assert.equal(categoryPage?.hero.title, categoryHeadings.heroTitle);
+  assert.equal(categoryPage?.guide.title, categoryHeadings.guideTitle);
+  assert.ok(categoryPage?.relatedLinkGroups.some((group) => group.title === categoryHeadings.related.areaCategoryLinksTitle));
+  assert.ok(categoryPage?.relatedLinkGroups.some((group) => group.title === categoryHeadings.related.categoryLinksTitle));
+
+  const areaCategoryHeadings = seoLandingHeadings.areaCategory(combination.areaLabel, combination.categoryLabel);
+  const areaCategoryPage = getAreaCategorySeoPage(combination.areaSlug, combination.categorySlug, {});
+  assert.equal(areaCategoryPage?.hero.eyebrow, areaCategoryHeadings.eyebrow);
+  assert.equal(areaCategoryPage?.hero.title, areaCategoryHeadings.heroTitle);
+  assert.ok(
+    areaCategoryPage?.relatedLinkGroups.some((group) => group.title === areaCategoryHeadings.related.usefulSearchesTitle)
+  );
+
+  const bestHeadings = seoLandingHeadings.best("Best-rated Indian restaurants in London");
+  const bestPage = getPopularSearchSeoPage("best-rated", {});
+  assert.equal(bestPage?.hero.eyebrow, bestHeadings.eyebrow);
+  assert.equal(bestPage?.guide.title, bestHeadings.guideTitle);
+  assert.ok(bestPage?.relatedLinkGroups.some((group) => group.title === bestHeadings.related.areaLinksTitle));
+
+  const facetHeadings = seoLandingHeadings.facet(service);
+  const facetPage = getFacetSeoPage("service", slugify(service), {});
+  assert.equal(facetPage?.hero.eyebrow, facetHeadings.eyebrow);
+  assert.equal(facetPage?.hero.title, facetHeadings.heroTitle);
+  assert.equal(facetPage?.guide.title, facetHeadings.guideTitle);
+
+  const controlledRelatedTitles = [
+    ...(areaPage?.relatedLinkGroups ?? []),
+    ...(categoryPage?.relatedLinkGroups ?? []),
+    ...(areaCategoryPage?.relatedLinkGroups ?? []),
+    ...(bestPage?.relatedLinkGroups ?? []),
+    ...(facetPage?.relatedLinkGroups ?? [])
+  ].map((group) => group.title);
+  ["Related areas", "Useful searches", "Browse by area", "Useful combinations"].forEach((genericTitle) => {
+    assert.ok(!controlledRelatedTitles.includes(genericTitle), `SEO page related headings should not include "${genericTitle}"`);
+  });
+}
+
 function includesCount(copy: string, count: number) {
   return copy.includes(String(count)) || copy.includes(count.toLocaleString());
 }
@@ -139,5 +200,6 @@ popularSearchCopyUsesCorrectAgreement();
 thinCombinationsAreNoindexedAndExcludedFromSitemap();
 highValuePagesStayIndexable();
 seoPagesExposeReusableContentBlocks();
+seoPagesUseReusableLandingHeadings();
 
 console.log("SEO page behavior tests passed");

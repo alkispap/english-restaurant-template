@@ -12,6 +12,7 @@ import {
 } from "@/lib/directory";
 import { getAreaCategoryCombinations, getPopularSearches } from "@/lib/directory-growth";
 import { getEnabledSitemapRouteKinds } from "@/lib/directory-features";
+import { SEO_POLICY, isApprovedHighIntentFacet, isListingIndexable } from "@/lib/seo-policy";
 import {
   areaCategoryPath,
   areaPath,
@@ -25,7 +26,7 @@ import {
   typePath
 } from "@/lib/routes";
 
-const directoryLastModified = new Date("2026-05-18T00:00:00.000Z");
+const directoryLastModified = SEO_POLICY.directoryLastModified;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
@@ -35,22 +36,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: directoryLastModified
   }));
 
-  const listingRoutes = listings.map((listing) => ({
+  const listingRoutes = listings.filter(isListingIndexable).map((listing) => ({
     url: `${baseUrl}${listingDetailPath(listing.slug)}`,
     lastModified: directoryLastModified
   }));
 
-  const areaRoutes = getAreas().filter((area) => filterListings({ area: slugify(area) }).length >= 5).map((area) => ({
+  const areaRoutes = getAreas().filter((area) => filterListings({ area: slugify(area) }).length >= SEO_POLICY.routeThresholds.area).map((area) => ({
     url: `${baseUrl}${areaPath(slugify(area))}`,
     lastModified: directoryLastModified
   }));
 
-  const categoryRoutes = getCategories().filter((category) => filterListings({ category: slugify(category) }).length >= 10).map((category) => ({
+  const categoryRoutes = getCategories().filter((category) => filterListings({ category: slugify(category) }).length >= SEO_POLICY.routeThresholds.category).map((category) => ({
     url: `${baseUrl}${categoryPath(slugify(category))}`,
     lastModified: directoryLastModified
   }));
 
-  const neighborhoodRoutes = getNeighborhoods().filter((neighborhood) => filterListings({ neighborhood: slugify(neighborhood) }).length >= 5).map((neighborhood) => ({
+  const neighborhoodRoutes = getNeighborhoods().filter((neighborhood) => filterListings({ neighborhood: slugify(neighborhood) }).length >= SEO_POLICY.routeThresholds.neighborhood).map((neighborhood) => ({
     url: `${baseUrl}${neighborhoodPath(slugify(neighborhood))}`,
     lastModified: directoryLastModified
   }));
@@ -62,12 +63,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(enabledRoutes.offerings ? facetSitemapRoutes("offering", baseUrl) : [])
   ];
 
-  const popularSearchRoutes = enabledRoutes.popularSearches ? getPopularSearches().filter((search) => filterListings(search.filters).length >= 5).map((search) => ({
+  const popularSearchRoutes = enabledRoutes.popularSearches ? getPopularSearches().filter((search) => filterListings(search.filters).length >= SEO_POLICY.routeThresholds.best).map((search) => ({
     url: `${baseUrl}${popularSearchPath(search.slug)}`,
     lastModified: directoryLastModified
   })) : [];
 
-  const areaCategoryRoutes = enabledRoutes.areaCategories ? getAreaCategoryCombinations().filter((combination) => combination.count >= 5).map((combination) => ({
+  const areaCategoryRoutes = enabledRoutes.areaCategories ? getAreaCategoryCombinations().filter((combination) => combination.count >= SEO_POLICY.routeThresholds.areaCategory).map((combination) => ({
     url: `${baseUrl}${areaCategoryPath(combination.areaSlug, combination.categorySlug)}`,
     lastModified: directoryLastModified
   })) : [];
@@ -89,7 +90,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 function facetSitemapRoutes(facet: FacetKey, baseUrl: string) {
   return getFacetLabels(facet)
     .filter((label) => isHighIntentFacet(facet, slugify(label)))
-    .filter((label) => filterListings({ [facet]: slugify(label) }).length >= 10)
+    .filter((label) => filterListings({ [facet]: slugify(label) }).length >= SEO_POLICY.routeThresholds.facet)
     .map((label) => ({
       url: `${baseUrl}${facetPath(facet, slugify(label))}`,
       lastModified: directoryLastModified
@@ -97,14 +98,7 @@ function facetSitemapRoutes(facet: FacetKey, baseUrl: string) {
 }
 
 function isHighIntentFacet(facet: FacetKey, slug: string) {
-  const highIntentFacetSlugs: Record<FacetKey, readonly string[]> = {
-    dietary: ["halal", "vegan", "vegetarian", "gluten-free"],
-    service: ["takeaway", "delivery", "dine-in", "outdoor-seating"],
-    type: ["fine-dining", "casual-dining", "cafe", "bar"],
-    offering: ["halal-food", "vegan-options", "vegetarian-options", "organic-dishes", "small-plates"]
-  };
-
-  return highIntentFacetSlugs[facet].includes(slug);
+  return isApprovedHighIntentFacet(facet, slug);
 }
 
 function facetPath(facet: FacetKey, slug: string) {

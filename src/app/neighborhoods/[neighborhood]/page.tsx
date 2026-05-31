@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
 import { getNeighborhoodSeoPage, toSeoMetadata, type SeoPageSearchParams } from "@/lib/seo-pages";
 
@@ -10,9 +11,9 @@ type NeighborhoodPageProps = {
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: NeighborhoodPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: NeighborhoodPageProps): Promise<Metadata> {
   const { neighborhood } = await params;
-  return toSeoMetadata(getNeighborhoodSeoPage(neighborhood, {}));
+  return toSeoMetadata(getNeighborhoodSeoPage(neighborhood, await searchParams));
 }
 
 export default async function NeighborhoodPage({ params, searchParams }: NeighborhoodPageProps) {
@@ -20,5 +21,10 @@ export default async function NeighborhoodPage({ params, searchParams }: Neighbo
   const page = getNeighborhoodSeoPage(neighborhood, await searchParams);
   if (!page) notFound();
 
-  return <SeoLandingPage page={page} />;
+  return (
+    <>
+      <DirectoryAnalyticsTracker pageType="neighborhood_hub" route={page.metadata.canonical} />
+      <SeoLandingPage page={page} />
+    </>
+  );
 }

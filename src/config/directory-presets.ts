@@ -338,13 +338,13 @@ const sharedFooterGroups = [
     limit: 6
   },
   {
-    title: "Restaurant needs",
+    title: "{listingLabel} needs",
     links: [
-      { label: "Takeaway restaurants", href: "/services/takeaway" },
-      { label: "Delivery restaurants", href: "/services/delivery" },
-      { label: "Vegetarian restaurants", href: "/dietary/vegetarian" },
-      { label: "Vegan restaurants", href: "/dietary/vegan" },
-      { label: "Halal restaurants", href: "/dietary/halal" },
+      { label: "Takeaway {listingPluralLabelLower}", href: "/services/takeaway" },
+      { label: "Delivery {listingPluralLabelLower}", href: "/services/delivery" },
+      { label: "Vegetarian {listingPluralLabelLower}", href: "/dietary/vegetarian" },
+      { label: "Vegan {listingPluralLabelLower}", href: "/dietary/vegan" },
+      { label: "Halal {listingPluralLabelLower}", href: "/dietary/halal" },
       { label: "Casual dining", href: "/types/casual-dining" }
     ]
   },
@@ -355,6 +355,17 @@ const sharedFooterGroups = [
       { label: "Best rated", href: "/?sort=rating" },
       { label: "Most reviewed", href: "/?sort=reviews" },
       { label: "Lowest price", href: "/?sort=price" }
+    ]
+  },
+  {
+    title: "Trust",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms", href: "/terms" },
+      { label: "How We Rank", href: "/methodology" },
+      { label: "Suggest an Update", href: "/suggest-update" }
     ]
   }
 ] as const satisfies readonly DirectoryFooterGroupConfig[];

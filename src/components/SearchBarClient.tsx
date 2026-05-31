@@ -41,7 +41,7 @@ export function SearchBarClient({ compact = false, defaultQuery = "", defaultAre
     );
   }
 
-  function findRestaurantsNearUser() {
+  function findListingsNearUser() {
     if (!navigator.geolocation) {
       setLocateStatus("unavailable");
       return;
@@ -117,12 +117,14 @@ export function SearchBarClient({ compact = false, defaultQuery = "", defaultAre
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
-          onClick={findRestaurantsNearUser}
+          onClick={findListingsNearUser}
           disabled={locateStatus === "locating"}
           className="focus-ring inline-flex items-center justify-center gap-2 rounded-md border border-line px-4 py-2.5 text-sm font-bold text-ink transition hover:border-primary hover:text-primary disabled:cursor-wait disabled:text-muted"
         >
           <LocateFixed className="h-4 w-4 text-primary" aria-hidden />
-          {locateStatus === "locating" ? "Finding your area..." : "Find Indian restaurants near you"}
+          {locateStatus === "locating"
+            ? "Finding your area..."
+            : `Find ${directoryConfig.listingPluralLabel.toLowerCase()} near you`}
         </button>
         {locateStatus !== "idle" && locateStatus !== "locating" ? (
           <p className="text-sm font-semibold text-muted">{locateStatusMessage[locateStatus]}</p>

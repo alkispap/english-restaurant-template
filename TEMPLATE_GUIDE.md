@@ -62,6 +62,21 @@ cityOrRegion: "London"
 
 After applying settings, import your CSV with the command workflow below.
 
+## Copy Readiness Workflow
+
+When creating a new directory copy, use this sequence:
+
+1. Copy the project folder.
+2. Update `src/config/site.ts` and `src/config/directory.ts`.
+3. Import the new CSV.
+4. Run `npm run audit:template`.
+5. Run `npm run audit:seo`.
+6. Run `npm run audit:links`.
+7. Run `npm run audit:freshness`.
+8. Run `npm test`, `npm run typecheck`, `npm run lint`, and `npm run build`.
+
+The template readiness audit is advisory. It checks for old niche wording, local production URLs, import report risks, weak listing quality, weak hub coverage, Supabase setup state, and SEO policy items that should be reviewed before launching a copied directory.
+
 ## Import CSV Data
 
 The importer is flexible. Your CSV does not need to follow one strict format, but clearer column names produce better results. Good column names include:
@@ -138,7 +153,11 @@ After changing a niche or importing new data, run:
 npm run lint
 npm run typecheck
 npm test
+npm run audit:template
+npm run audit:seo
+npm run audit:links
+npm run audit:freshness
 npm run build
 ```
 
-Then open the site locally and spot-check `/`, `/listings` redirect behavior, `/areas`, `/categories`, `/compare`, and a listing detail page. Confirm the visible copy, page titles, sitemap, and robots output match the new niche and configured public URL.
+Then open the site locally and spot-check `/`, `/listings` redirect behavior, `/areas`, `/categories`, `/compare`, a listing detail page, and a few natural searches such as `halal delivery ilford`. Confirm the visible copy, page titles, sitemap, link audit, and robots output match the new niche and configured public URL.

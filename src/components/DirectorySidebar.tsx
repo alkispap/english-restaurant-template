@@ -1,15 +1,23 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getDirectorySidebarBlocks } from "@/lib/directory-ux";
+import { getDirectorySidebarBlocks, getHomepageSidebarBlocks } from "@/lib/directory-ux";
 
-export function DirectorySidebar() {
-  const blocks = getDirectorySidebarBlocks();
+type DirectorySidebarProps = {
+  context?: "default" | "homepage" | "seoLanding";
+};
+
+export function DirectorySidebar({ context = "default" }: DirectorySidebarProps) {
+  const blocks = context === "homepage" ? getHomepageSidebarBlocks() : getDirectorySidebarBlocks();
 
   return (
     <div className="mt-5 space-y-5">
       {blocks.map((block) => (
         <section key={block.id} className="rounded-lg border border-line bg-white p-5 shadow-soft">
-          <h2 className="text-lg font-bold text-ink">{block.title}</h2>
+          {context === "homepage" || context === "seoLanding" ? (
+            <h3 className="text-lg font-bold text-ink">{block.title}</h3>
+          ) : (
+            <h2 className="text-lg font-bold text-ink">{block.title}</h2>
+          )}
           <div className="mt-4 grid gap-2">
             {block.links.map((link) => (
               <Link

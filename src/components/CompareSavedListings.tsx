@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ExternalLink, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "@/components/AccountProvider";
 import { OpenStatusBadge } from "@/components/OpenStatusBadge";
 import {
@@ -10,16 +10,14 @@ import {
   DEFAULT_SHORTLIST_LIMIT,
   type ShortlistListingSummary
 } from "@/lib/shortlist";
+import { trackDirectoryEvent } from "@/lib/directory-analytics";
+import { directoryConfig } from "@/config/directory";
 
-type CompareSavedListingsProps = {
-  listings: ShortlistListingSummary[];
-};
-
-export function CompareSavedListings({ listings }: CompareSavedListingsProps) {
+export function CompareSavedListings() {
   const { authEnabled, user, savedSlugs, noteBySlug, removeSavedSlug, refreshSavedSlugs, loadNotesForSlugs } = useAccount();
   const [isReady, setIsReady] = useState(false);
-  const listingBySlug = useMemo(() => new Map(listings.map((listing) => [listing.slug, listing])), [listings]);
-  const savedListings = savedSlugs.map((slug) => listingBySlug.get(slug)).filter((listing): listing is ShortlistListingSummary => Boolean(listing));
+  const [isLoadingSummaries, setIsLoadingSummaries] = useState(false);
+  const [savedListings, setSavedListings] = useState<ShortlistListingSummary[]>([]);
   const missingCount = savedSlugs.length - savedListings.length;
 
   useEffect(() => {
@@ -43,11 +41,54 @@ export function CompareSavedListings({ listings }: CompareSavedListingsProps) {
     }
   }, [user, savedSlugs, loadNotesForSlugs]);
 
+  useEffect(() => {
+    if (!isReady) return;
+    if (!savedSlugs.length) {
+      setSavedListings([]);
+      setIsLoadingSummaries(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    setIsLoadingSummaries(true);
+
+    fetch("/api/shortlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ slugs: savedSlugs }),
+      signal: controller.signal
+    })
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("Unable to load saved listings"))))
+      .then((payload: { listings?: ShortlistListingSummary[] }) => {
+        setSavedListings(Array.isArray(payload.listings) ? payload.listings : []);
+      })
+      .catch((error) => {
+        if ((error as Error).name !== "AbortError") {
+          setSavedListings([]);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setIsLoadingSummaries(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, [isReady, savedSlugs]);
+
   async function removeListing(slug: string) {
     await removeSavedSlug(slug);
+    trackDirectoryEvent({
+      pageType: "compare",
+      action: "remove_saved_listing",
+      route: "/compare",
+      listingSlug: slug
+    });
   }
 
-  if (!isReady) {
+  if (!isReady || isLoadingSummaries) {
     return (
       <section className="rounded-lg border border-line bg-white p-8 text-center shadow-soft">
         <h2 className="text-2xl font-bold text-ink">Loading saved listings</h2>
@@ -64,7 +105,7 @@ export function CompareSavedListings({ listings }: CompareSavedListingsProps) {
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted">Sign in from the header to keep saved listings across devices.</p>
         ) : null}
         <Link href="/" className="mt-6 inline-flex rounded-md bg-ink px-5 py-3 text-sm font-bold text-white">
-          Browse restaurants
+          Browse {directoryConfig.listingPluralLabel.toLowerCase()}
         </Link>
       </section>
     );
@@ -90,7 +131,19 @@ export function CompareSavedListings({ listings }: CompareSavedListingsProps) {
               {savedListings.map((listing) => (
                 <th key={listing.slug} className="min-w-64 border-b border-line p-4 align-top">
                   <div className="flex items-start justify-between gap-3">
-                    <Link href={listing.href} className="font-bold text-ink hover:text-primary">
+                    <Link
+                      href={listing.href}
+                      onClick={() =>
+                        trackDirectoryEvent({
+                          pageType: "compare",
+                          action: "compare_listing_click",
+                          route: "/compare",
+                          listingSlug: listing.slug,
+                          label: listing.name
+                        })
+                      }
+                      className="font-bold text-ink hover:text-primary"
+                    >
                       {listing.name}
                     </Link>
                     <button
@@ -148,18 +201,33 @@ function CompareValue({
 
   return (
     <div className="flex flex-wrap gap-2">
-      <CompareLink href={listing.websiteUrl} label="Website" />
-      <CompareLink href={listing.menuUrl} label="Menu" />
-      <CompareLink href={listing.bookingUrl} label="Book" />
+      <CompareLink href={listing.websiteUrl} label="Website" listingSlug={listing.slug} />
+      <CompareLink href={listing.menuUrl} label="Menu" listingSlug={listing.slug} />
+      <CompareLink href={listing.bookingUrl} label="Book" listingSlug={listing.slug} />
     </div>
   );
 }
 
-function CompareLink({ href, label }: { href?: string; label: string }) {
+function CompareLink({ href, label, listingSlug }: { href?: string; label: string; listingSlug: string }) {
   if (!href) return null;
 
   return (
-    <a href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-md border border-line px-2.5 py-1.5 text-xs font-bold text-ink hover:border-primary">
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() =>
+        trackDirectoryEvent({
+          pageType: "compare",
+          action: "compare_action_click",
+          route: "/compare",
+          listingSlug,
+          label,
+          targetUrl: href
+        })
+      }
+      className="inline-flex items-center gap-1 rounded-md border border-line px-2.5 py-1.5 text-xs font-bold text-ink hover:border-primary"
+    >
       {label}
       <ExternalLink className="h-3 w-3" aria-hidden />
     </a>

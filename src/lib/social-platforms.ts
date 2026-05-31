@@ -1,4 +1,14 @@
-export type SocialPlatformId = "facebook" | "instagram" | "tiktok" | "youtube" | "x" | "external";
+export const SOCIAL_PLATFORM_IDS = [
+  "facebook",
+  "instagram",
+  "tiktok",
+  "youtube",
+  "x",
+  "whatsapp",
+  "external"
+] as const;
+
+export type SocialPlatformId = (typeof SOCIAL_PLATFORM_IDS)[number];
 
 export type SocialPlatform = {
   id: SocialPlatformId;
@@ -10,7 +20,8 @@ const platformMatchers: Array<{ id: SocialPlatformId; label: string; patterns: R
   { id: "instagram", label: "Instagram", patterns: [/instagram/i] },
   { id: "tiktok", label: "TikTok", patterns: [/tiktok/i] },
   { id: "youtube", label: "YouTube", patterns: [/youtube/i, /youtu\.be/i] },
-  { id: "x", label: "X", patterns: [/\bx\b/i, /twitter/i] }
+  { id: "x", label: "X", patterns: [/\bx\b/i, /twitter/i] },
+  { id: "whatsapp", label: "WhatsApp", patterns: [/whatsapp/i, /wa\.me/i] }
 ];
 
 export function getSocialPlatform(label: string, href: string): SocialPlatform {

@@ -6,6 +6,7 @@ import { DirectoryListingRows } from "@/components/DirectoryListingRows";
 import { HomepageSeoLinks } from "@/components/HomepageSeoLinks";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
+import { homepageHeadings } from "@/lib/homepage-headings";
 import { filterListings, SortKey } from "@/lib/directory";
 import { isOpenNow } from "@/lib/opening-hours";
 import {
@@ -15,7 +16,7 @@ import {
   type ListingsPageLinkValues,
   type ListingsViewMode
 } from "@/lib/listings-page";
-import { getDirectoryListingsPageRows } from "@/lib/directory-ux";
+import { getDirectoryListingsPageRows, getHomepageSourceContextGuide } from "@/lib/directory-ux";
 
 export type DirectoryListingsSearchParams = Record<string, string | string[] | undefined>;
 
@@ -84,6 +85,8 @@ export function DirectoryListingsPage({
     view: viewMode
   };
   const relatedRows = getDirectoryListingsPageRows(page.items);
+  const sourceContextGuide = basePath === "/" ? getHomepageSourceContextGuide() : null;
+  const sidebarContext = basePath === "/" ? "homepage" : "default";
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -94,18 +97,18 @@ export function DirectoryListingsPage({
           <SearchBar compact defaultQuery={filters.q} defaultArea={first(filters.area)} basePath={basePath} />
         </div>
       </div>
+      {basePath === "/" ? <HomepageSeoLinks /> : null}
       <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <details className="rounded-lg border border-line bg-white p-4 shadow-soft lg:hidden">
-            <summary className="cursor-pointer text-sm font-bold text-ink">Filters and guides</summary>
+            <summary className="cursor-pointer text-sm font-bold text-ink">Filters</summary>
             <div className="mt-5">
               <FilterPanel values={filterPanelValues} />
-              <DirectorySidebar />
             </div>
           </details>
           <div className="hidden lg:block">
             <FilterPanel values={filterPanelValues} />
-            <DirectorySidebar />
+            <DirectorySidebar context={sidebarContext} />
           </div>
         </aside>
         <div className="min-w-0">
@@ -119,8 +122,22 @@ export function DirectoryListingsPage({
             viewMode={viewMode}
             openOnly={openOnly}
             linkValues={linkValues}
+            headingContext={basePath === "/" ? homepageHeadings.resultsHeadingContext : undefined}
           />
-          {basePath === "/" ? <HomepageSeoLinks /> : null}
+          {sourceContextGuide ? (
+            <section className="mt-10 rounded-lg border border-line bg-slate-50 p-5">
+              <h2 className="text-lg font-bold text-ink">{sourceContextGuide.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-muted">{sourceContextGuide.intro}</p>
+              <div className="mt-4 grid gap-3 md:grid-cols-3">
+                {sourceContextGuide.points.map((point) => (
+                  <div key={point.title} className="text-sm leading-6 text-muted">
+                    <h3 className="font-bold text-ink">{point.title}</h3>
+                    <p className="mt-1">{point.copy}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
           <DirectoryListingRows rows={relatedRows} className="mt-12" />
         </div>
       </div>

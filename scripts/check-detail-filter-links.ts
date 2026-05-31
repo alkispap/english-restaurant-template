@@ -3,8 +3,8 @@ import { buildDetailFilterHref } from "../src/lib/listing-detail-filter-links";
 
 assert.equal(
   buildDetailFilterHref("service", "Delivery", "Redbridge"),
-  "/?area=redbridge&service=delivery",
-  "Service links should include area and selected service"
+  "/services/delivery",
+  "Service links should prefer clean service hub URLs"
 );
 
 assert.equal(
@@ -21,7 +21,7 @@ assert.equal(
 
 assert.equal(
   buildDetailFilterHref("service", "Delivery"),
-  "/?service=delivery",
+  "/services/delivery",
   "Links should still work when no area is available"
 );
 

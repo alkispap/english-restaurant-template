@@ -1,3 +1,5 @@
+import type { Listing } from "@/data/listings";
+
 export function cleanListingUrl(value: unknown): string | undefined {
   const candidates = splitUrlCandidates(value);
 
@@ -8,6 +10,17 @@ export function cleanListingUrl(value: unknown): string | undefined {
   }
 
   return undefined;
+}
+
+export function getListingMapsUrl(listing: Pick<Listing, "name" | "fullAddress" | "address" | "postcode" | "city" | "location">) {
+  const explicitMapsUrl = cleanListingUrl(listing.location?.googleMapsUrl);
+  if (explicitMapsUrl) return explicitMapsUrl;
+
+  const query = [listing.name, listing.fullAddress ?? [listing.address, listing.postcode, listing.city].filter(Boolean).join(", ")]
+    .filter(Boolean)
+    .join(" ");
+
+  return query ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}` : undefined;
 }
 
 function splitUrlCandidates(value: unknown) {

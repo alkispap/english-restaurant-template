@@ -4,7 +4,9 @@ import { DirectorySidebar } from "@/components/DirectorySidebar";
 import { FilterPanel } from "@/components/FilterPanel";
 import { ListingsResults } from "@/components/ListingsResults";
 import { SearchBar } from "@/components/SearchBar";
+import { SearchableCardGrid } from "@/components/SearchableCardGrid";
 import { SectionHeading } from "@/components/SectionHeading";
+import { seoLandingHeadings } from "@/lib/seo-landing-headings";
 import type { SeoPageModel } from "@/lib/seo-pages";
 
 type SeoLandingPageProps = {
@@ -42,16 +44,18 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
             <summary className="cursor-pointer text-sm font-bold text-ink">Filters and guides</summary>
             <div className="mt-5">
               <FilterPanel action={page.metadata.canonical} values={page.filterPanelValues} />
-              <DirectorySidebar />
+              <DirectorySidebar context="seoLanding" />
             </div>
           </details>
           <div className="hidden lg:block">
             <FilterPanel action={page.metadata.canonical} values={page.filterPanelValues} />
-            <DirectorySidebar />
+            <DirectorySidebar context="seoLanding" />
           </div>
         </aside>
 
         <div className="min-w-0">
+          <AreaGuideSection page={page} />
+
           <ListingsResults
             listings={page.listings}
             mapPoints={page.mapPoints}
@@ -65,11 +69,65 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
           />
 
           <GuideSection page={page} />
+          <InformationGain page={page} />
           <RelatedLinks groups={page.relatedLinkGroups} />
           <Faqs faqs={page.faqs} />
         </div>
       </div>
     </main>
+  );
+}
+
+function AreaGuideSection({ page }: { page: SeoPageModel }) {
+  if (!page.areaGuide) return null;
+
+  const { areaLabel, neighborhoods, categories } = page.areaGuide;
+  if (!neighborhoods.length && !categories.length) return null;
+
+  return (
+    <section className="mb-10" aria-label={`Explore ${areaLabel}`}>
+      <div>
+        <p className="text-sm font-bold uppercase tracking-wide text-primary">Area guide</p>
+        <h2 className="mt-2 text-2xl font-bold text-ink">Choose a neighborhood or cuisine in {areaLabel}</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
+          Use these shortcuts to narrow the area before comparing the restaurant results below.
+        </p>
+      </div>
+
+      <div className="mt-6 grid gap-10">
+        {neighborhoods.length ? (
+          <section>
+            <h3 className="text-xl font-bold text-ink">Neighborhoods in {areaLabel}</h3>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Pick a smaller local area when location is the first decision.
+            </p>
+            <SearchableCardGrid
+              items={neighborhoods}
+              searchPlaceholder={`Search neighborhoods in ${areaLabel}`}
+              emptyMessage="No neighborhoods match this search."
+              alphabetLabel={`Filter ${areaLabel} neighborhoods by first letter`}
+              className="mt-4"
+            />
+          </section>
+        ) : null}
+
+        {categories.length ? (
+          <section>
+            <h3 className="text-xl font-bold text-ink">Cuisine types in {areaLabel}</h3>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Choose a cuisine or category when you know what you want to eat.
+            </p>
+            <SearchableCardGrid
+              items={categories}
+              searchPlaceholder={`Search cuisine types in ${areaLabel}`}
+              emptyMessage="No cuisine types match this search."
+              alphabetLabel={`Filter ${areaLabel} cuisine types by first letter`}
+              className="mt-4"
+            />
+          </section>
+        ) : null}
+      </div>
+    </section>
   );
 }
 
@@ -98,6 +156,29 @@ function GuideSection({ page }: { page: SeoPageModel }) {
   return (
     <section className="mt-12 rounded-lg border border-line bg-white p-6">
       <SectionHeading title={page.guide.title} copy={page.guide.body} />
+    </section>
+  );
+}
+
+function InformationGain({ page }: { page: SeoPageModel }) {
+  if (!page.informationGainBlocks.length) return null;
+
+  return (
+    <section className="mt-12 rounded-lg border border-line bg-white p-6" aria-label="Local restaurant insights">
+      <h2 className="text-2xl font-bold text-ink">{seoLandingHeadings.sectionTitles.informationGain}</h2>
+      <div className="mt-5 grid gap-5 lg:grid-cols-3">
+        {page.informationGainBlocks.map((block) => (
+          <article key={block.title} className="rounded-md bg-slate-50 p-5">
+            <h3 className="text-base font-bold text-ink">{block.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-muted">{block.body}</p>
+            <ul className="mt-4 grid gap-2 text-sm font-semibold text-ink">
+              {block.items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }
@@ -138,7 +219,7 @@ function Faqs({ faqs }: { faqs: SeoPageModel["faqs"] }) {
 
   return (
     <section className="mt-12 rounded-lg border border-line bg-white p-6">
-      <h2 className="text-2xl font-bold text-ink">Questions people ask</h2>
+      <h2 className="text-2xl font-bold text-ink">{seoLandingHeadings.sectionTitles.faqs}</h2>
       <div className="mt-5 divide-y divide-line">
         {faqs.map((faq) => (
           <details key={faq.question} className="py-4">

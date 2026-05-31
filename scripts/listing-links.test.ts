@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { cleanListingUrl } from "../src/lib/listing-links";
+import type { Listing } from "../src/data/listings";
+import { cleanListingUrl, getListingMapsUrl } from "../src/lib/listing-links";
 
 function googleRedirectsAreUnwrapped() {
   assert.equal(
@@ -21,8 +22,44 @@ function unsafeProtocolsAreRejected() {
   assert.equal(cleanListingUrl("javascript:alert(1), data:text/html,test"), undefined);
 }
 
+function mapsUrlUsesExplicitGoogleMapsUrl() {
+  assert.equal(
+    getListingMapsUrl({
+      name: "Asha",
+      slug: "asha",
+      images: [],
+      categories: [],
+      listingTypes: [],
+      dietaryOptions: [],
+      tags: [],
+      location: {
+        googleMapsUrl: "https://maps.google.com/?cid=123"
+      }
+    } as Listing),
+    "https://maps.google.com/?cid=123"
+  );
+}
+
+function mapsUrlFallsBackToSearchFromNameAndAddress() {
+  assert.equal(
+    getListingMapsUrl({
+      name: "Asha",
+      slug: "asha",
+      images: [],
+      categories: [],
+      listingTypes: [],
+      dietaryOptions: [],
+      tags: [],
+      fullAddress: "1 High Street, London"
+    } as Listing),
+    "https://www.google.com/maps/search/?api=1&query=Asha%201%20High%20Street%2C%20London"
+  );
+}
+
 googleRedirectsAreUnwrapped();
 commaSeparatedUrlListsUseFirstValidUrl();
 unsafeProtocolsAreRejected();
+mapsUrlUsesExplicitGoogleMapsUrl();
+mapsUrlFallsBackToSearchFromNameAndAddress();
 
 console.log("listing link cleanup tests passed");

@@ -22,6 +22,7 @@ type ListingsResultsProps = {
   viewMode: ListingsViewMode;
   openOnly: boolean;
   linkValues: ListingsPageLinkValues;
+  headingContext?: string;
 };
 
 export function ListingsResults({
@@ -33,9 +34,13 @@ export function ListingsResults({
   totalPages,
   viewMode,
   openOnly,
-  linkValues
+  linkValues,
+  headingContext
 }: ListingsResultsProps) {
   const pluralLabel = directoryConfig.listingPluralLabel.toLowerCase();
+  const headingText = headingContext
+    ? `${totalCount.toLocaleString()} ${headingContext} Found`
+    : `${totalCount.toLocaleString()} ${pluralLabel} found`;
   const showingStart = totalCount ? (currentPage - 1) * pageSize + 1 : 0;
   const showingEnd = Math.min(currentPage * pageSize, totalCount);
 
@@ -44,7 +49,7 @@ export function ListingsResults({
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold text-ink dark:text-white">
-            {totalCount.toLocaleString()} {pluralLabel} found
+            {headingText}
           </h2>
           <p className="text-sm text-muted">
             {viewMode === "map"
