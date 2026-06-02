@@ -4,6 +4,7 @@ export type TemplatePageCategory =
   | "listing-detail"
   | "directory-index"
   | "dynamic-seo"
+  | "article-guide"
   | "utility"
   | "trust-support"
   | "system-seo"
@@ -218,6 +219,32 @@ const pageInventory = [
     notes: "Restaurant type pages should stay reusable for future restaurant directory niches."
   },
   {
+    id: "guides-index",
+    category: "article-guide",
+    urlPattern: "/guides",
+    routeFile: "src/app/guides/page.tsx",
+    componentOrModel: "getPublicGuideArticles + article content files",
+    headingSource: "src/app/guides/page.tsx inline guide headings",
+    metadataSource: "src/app/guides/page.tsx generateMetadata + siteConfig",
+    reusableStatus: "helper-backed",
+    staleWordingRisk: "low",
+    upgradePriority: "none",
+    notes: "Public guide index for reviewed topical-authority articles; empty state is noindex until articles are published."
+  },
+  {
+    id: "guide-article",
+    category: "article-guide",
+    urlPattern: "/guides/[slug]",
+    routeFile: "src/app/guides/[slug]/page.tsx",
+    componentOrModel: "getPublishedArticleBySlug + article content files",
+    headingSource: "Article sections from content/articles",
+    metadataSource: "getArticleRouteMetadata(article)",
+    reusableStatus: "helper-backed",
+    staleWordingRisk: "low",
+    upgradePriority: "none",
+    notes: "Article detail page only renders published guide content and emits Article/FAQ schema."
+  },
+  {
     id: "compare",
     category: "utility",
     urlPattern: "/compare",
@@ -374,12 +401,13 @@ export function getPublicSeoUpgradeTargets(): TemplatePageInventoryItem[] {
     "dynamic-seo": 0,
     "listing-detail": 1,
     "directory-index": 2,
-    "trust-support": 3,
-    utility: 4,
-    "homepage-search": 5,
-    redirect: 6,
-    "system-seo": 7,
-    api: 8
+    "article-guide": 3,
+    "trust-support": 4,
+    utility: 5,
+    "homepage-search": 6,
+    redirect: 7,
+    "system-seo": 8,
+    api: 9
   };
 
   return getTemplatePageInventory()

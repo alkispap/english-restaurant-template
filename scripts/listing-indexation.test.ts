@@ -11,6 +11,11 @@ if (!indexableListing) {
   throw new Error("expected at least one indexable listing");
 }
 const activeListing = indexableListing;
+const noindexListingCandidate = listings.find((listing) => !isListingIndexable(listing));
+if (!noindexListingCandidate) {
+  throw new Error("expected at least one non-indexable listing");
+}
+const noindexListing = noindexListingCandidate;
 
 async function listingMetadataUsesQualityGate() {
   const metadata = await listingMetadata({ params: Promise.resolve({ slug: activeListing.slug }) });
@@ -18,6 +23,15 @@ async function listingMetadataUsesQualityGate() {
   assert.equal(metadata.robots, undefined);
   assert.deepEqual(metadata.alternates, {
     canonical: `${siteConfig.url}${listingDetailPath(activeListing.slug)}`
+  });
+}
+
+async function listingMetadataNoindexesWeakListings() {
+  const metadata = await listingMetadata({ params: Promise.resolve({ slug: noindexListing.slug }) });
+
+  assert.deepEqual(metadata.robots, { index: false, follow: true });
+  assert.deepEqual(metadata.alternates, {
+    canonical: `${siteConfig.url}${listingDetailPath(noindexListing.slug)}`
   });
 }
 
@@ -35,6 +49,8 @@ function sitemapUsesListingQualityGate() {
 }
 
 listingMetadataUsesQualityGate().then(() => {
-  sitemapUsesListingQualityGate();
-  console.log("listing indexation tests passed");
+  listingMetadataNoindexesWeakListings().then(() => {
+    sitemapUsesListingQualityGate();
+    console.log("listing indexation tests passed");
+  });
 });

@@ -70,6 +70,7 @@ import { buildDetailFilterHref, type DetailFilterName } from "@/lib/listing-deta
 import { buildListingImageAlt } from "@/lib/listing-image-alt";
 import { getSocialPlatform, type SocialPlatformId } from "@/lib/social-platforms";
 import { listingShareMetadata } from "@/lib/share-metadata";
+import { getListingRobots } from "@/lib/seo-policy";
 
 type ListingPageProps = {
   params: Promise<{ slug: string }>;
@@ -100,6 +101,7 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
     alternates: {
       canonical: share.url,
     },
+    robots: getListingRobots(listing),
     twitter: {
       card: "summary_large_image",
       title,

@@ -1,6 +1,7 @@
 ﻿import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { listings } from "@/data/listings";
+import { articleSitemapRoutes } from "@/lib/articles";
 import {
   filterListings,
   getAreas,
@@ -72,6 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${areaCategoryPath(combination.areaSlug, combination.categorySlug)}`,
     lastModified: directoryLastModified
   })) : [];
+  const guideRoutes = articleSitemapRoutes(baseUrl);
 
   const allRoutes = [
     ...routes,
@@ -81,7 +83,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...neighborhoodRoutes,
     ...facetRoutes,
     ...popularSearchRoutes,
-    ...areaCategoryRoutes
+    ...areaCategoryRoutes,
+    ...guideRoutes
   ];
 
   return Array.from(new Map(allRoutes.map((route) => [route.url, route])).values());

@@ -1,0 +1,95 @@
+[
+  {
+    "id": "template-core-topic-overview",
+    "cluster": "core-topic-authority",
+    "title": "What Is Indian Food?",
+    "slug": "what-is-indian-food",
+    "primaryKeyword": "what is Indian food",
+    "supportingKeywords": ["Indian cuisine guide", "Indian food for beginners"],
+    "intent": "informational",
+    "priority": 1,
+    "status": "planned",
+    "plannedPublishDate": "2026-06-10",
+    "draftPath": "content/articles/what-is-indian-food.json",
+    "internalLinks": [
+      {
+        "label": "Indian restaurants in London",
+        "href": "/",
+        "reason": "Connect the broad food topic to the main directory."
+      },
+      {
+        "label": "Restaurant categories",
+        "href": "/categories",
+        "reason": "Help readers move from cuisine research to category browsing."
+      }
+    ],
+    "researchNotesPath": "content/research/what-is-indian-food.md",
+    "similarTopicIds": []
+  },
+  {
+    "id": "template-local-topic-context",
+    "cluster": "local-context",
+    "title": "Indian Food in London: A Beginner's Guide",
+    "slug": "indian-food-in-london-guide",
+    "primaryKeyword": "Indian food in London",
+    "supportingKeywords": ["London Indian food guide", "Indian restaurants London guide"],
+    "intent": "informational-local",
+    "priority": 2,
+    "status": "idea",
+    "plannedPublishDate": "2026-06-11",
+    "draftPath": "content/articles/indian-food-in-london-guide.json",
+    "internalLinks": [
+      {
+        "label": "Areas",
+        "href": "/areas",
+        "reason": "Support the local map of London restaurant areas."
+      }
+    ],
+    "researchNotesPath": "content/research/indian-food-in-london-guide.md",
+    "similarTopicIds": []
+  },
+  {
+    "id": "template-cuisine-depth",
+    "cluster": "cuisine-and-dishes",
+    "title": "North Indian vs South Indian Food",
+    "slug": "north-indian-vs-south-indian-food",
+    "primaryKeyword": "North Indian vs South Indian food",
+    "supportingKeywords": ["North Indian food", "South Indian food", "Indian regional food"],
+    "intent": "informational-comparison",
+    "priority": 3,
+    "status": "idea",
+    "plannedPublishDate": "2026-06-12",
+    "draftPath": "content/articles/north-indian-vs-south-indian-food.json",
+    "internalLinks": [
+      {
+        "label": "Restaurant categories",
+        "href": "/categories",
+        "reason": "Connect regional food education to category pages."
+      }
+    ],
+    "researchNotesPath": "content/research/north-indian-vs-south-indian-food.md",
+    "similarTopicIds": []
+  },
+  {
+    "id": "template-visitor-intent",
+    "cluster": "restaurant-choice-intent",
+    "title": "How to Choose an Indian Restaurant in London",
+    "slug": "how-to-choose-indian-restaurant-london",
+    "primaryKeyword": "how to choose an Indian restaurant in London",
+    "supportingKeywords": ["best Indian restaurant London tips", "Indian restaurant guide London"],
+    "intent": "decision-support",
+    "priority": 4,
+    "status": "idea",
+    "plannedPublishDate": "2026-06-13",
+    "draftPath": "content/articles/how-to-choose-indian-restaurant-london.json",
+    "internalLinks": [
+      {
+        "label": "Indian restaurants in London",
+        "href": "/",
+        "reason": "Move readers from advice to comparison."
+      }
+    ],
+    "researchNotesPath": "content/research/how-to-choose-indian-restaurant-london.md",
+    "similarTopicIds": []
+  }
+]

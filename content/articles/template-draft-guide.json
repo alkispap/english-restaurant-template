@@ -1,0 +1,30 @@
+{
+  "slug": "template-draft-guide",
+  "status": "drafted",
+  "title": "Template Draft Guide",
+  "metaTitle": "Template Draft Guide",
+  "metaDescription": "A non-public sample draft showing the article content structure.",
+  "publishedAt": "",
+  "updatedAt": "2026-06-02",
+  "cluster": "template-sample",
+  "primaryKeyword": "template draft guide",
+  "sections": [
+    {
+      "heading": "Sample Section",
+      "body": ["This draft is intentionally excluded from public guide lists and sitemap output."]
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Is this sample public?",
+      "answer": "No. Drafted articles are not included in public guide output."
+    }
+  ],
+  "internalLinks": [
+    {
+      "label": "Directory homepage",
+      "href": "/"
+    }
+  ],
+  "researchSources": []
+}

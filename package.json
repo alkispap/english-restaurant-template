@@ -13,7 +13,12 @@
     "audit:links": "tsx scripts/check-internal-link-governance.ts",
     "audit:freshness": "tsx scripts/check-freshness.ts",
     "audit:template": "tsx scripts/check-template-readiness.ts",
-    "import:directory": "tsx scripts/import-directory.ts"
+    "import:directory": "tsx scripts/import-directory.ts",
+    "article:duplicates": "tsx scripts/article-duplicate-report.ts",
+    "article:next-planned": "tsx scripts/article-next-planned.ts",
+    "article:research": "tsx scripts/article-live-research.ts",
+    "article:create-draft": "tsx scripts/article-create-draft.ts",
+    "article:next-draft": "tsx scripts/article-next-draft.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

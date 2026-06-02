@@ -6,5 +6,6 @@ const urls = sitemap().map((entry) => entry.url);
 
 assert.ok(urls.includes(siteConfig.url), "homepage should be the canonical directory URL");
 assert.ok(!urls.includes(`${siteConfig.url}/listings`), "/listings should not be listed as a duplicate canonical URL");
+assert.ok(!urls.includes(`${siteConfig.url}/guides/template-draft-guide`), "draft guides should not be listed in the sitemap");
 
 console.log("sitemap behavior tests passed");
