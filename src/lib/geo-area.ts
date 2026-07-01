@@ -1,5 +1,5 @@
 import type { MapPoint } from "@/lib/listings-page";
-import { slugify } from "@/lib/directory";
+import { slugify } from "@/lib/slug";
 
 export type BrowserCoordinates = {
   latitude: number;

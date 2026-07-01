@@ -111,13 +111,17 @@ assert(richBlocks.location.available === true, "location block should be availab
 assert(richBlocks.location.question.includes("Test Spice House"), "location question should include the listing name");
 assert(richBlocks.location.answer.includes("10 High St"), "location answer should include the street address");
 assert(richBlocks.location.answer.includes("Ilford"), "location answer should include the neighborhood");
-assert(richBlocks.location.answer.includes("London"), "location answer should include the city");
+assert(richBlocks.location.answer.includes("London"), "location answer should include the city from the address");
+assert(!/London in .*London/i.test(richBlocks.location.answer), "location answer should not repeat London awkwardly");
+assert(!/London in /i.test(richBlocks.location.answer), "location answer should use punctuation before the local area phrase");
 
 // Category block
 assert(richBlocks.category.available === true, "category block should be available when categories are present");
 assert(richBlocks.category.question.includes("Test Spice House"), "category question should include the listing name");
 assert(richBlocks.category.answer.includes("Indian"), "category answer should include primary category");
 assert(richBlocks.category.answer.includes("Punjabi"), "category answer should include all categories");
+assert(!/\ba Indian\b/i.test(richBlocks.category.answer), "category answer should use 'an Indian', not 'a Indian'");
+assert(/an Indian and Punjabi restaurant/i.test(richBlocks.category.answer), "category answer should read naturally for Indian restaurant categories");
 
 // Services block
 assert(richBlocks.services.available === true, "services block should be available when serviceOptions are present");
@@ -161,6 +165,8 @@ const sparseBlocks = Object.fromEntries(sparseSummary.blocks.map((b) => [b.group
 // Location: fullAddress is present in sparse listing, should still be available
 assert(sparseBlocks.location.available === true, "location block should be available when fullAddress is present in sparse listing");
 assert(sparseBlocks.location.answer.includes("5 Station Rd"), "location answer should include address from sparse listing");
+assert(!/London in/i.test(sparseBlocks.location.answer), "sparse location answer should not add a repeated London locality phrase");
+assert(!/\ba Indian\b/i.test(sparseBlocks.category.answer), "category answer should not use 'a Indian'");
 
 // Services: no serviceOptions in sparse listing
 assert(sparseBlocks.services.available === false, "services block should be unavailable when no serviceOptions are listed");

@@ -1,0 +1,319 @@
+{
+  "slug": "how-to-choose-indian-restaurant-london",
+  "status": "drafted",
+  "title": "How to Choose an Indian Restaurant in London",
+  "metaTitle": "How to Choose an Indian Restaurant in London | Guide",
+  "metaDescription": "Learn how to choose an Indian restaurant in London by comparing cuisine style, area, reviews, service options, and real directory signals from the current dataset.",
+  "answer": "To choose an Indian restaurant in London, first match the restaurant's food style and location to your occasion, then compare ratings, review volume, service options, and directory details before you book or order.",
+  "publishedAt": "",
+  "updatedAt": "2026-06-17",
+  "cluster": "restaurant-choice-intent",
+  "primaryKeyword": "how to choose an Indian restaurant in London",
+  "heroImage": {
+    "src": "/images/articles/how-to-choose-indian-restaurant-london/hero.png",
+    "alt": "London diner comparing Indian restaurant options on a phone while deciding between different menus and neighbourhoods",
+    "caption": "Generated hero image brief: show a realistic London dining decision scene with a person comparing Indian restaurant options on a phone beside menus or dishes representing different styles; include subtle London context, no text, no logos."
+  },
+  "keyFacts": [
+    {
+      "label": "Best first filter",
+      "value": "Style plus area",
+      "detail": "Decide what kind of meal you want and how far you want to travel before looking at long ranked lists."
+    },
+    {
+      "label": "Strong review signal",
+      "value": "2,252 listings with 100+ reviews",
+      "detail": "The directory has enough review depth that readers can compare proof, not just marketing copy."
+    },
+    {
+      "label": "Service coverage",
+      "value": "2,721 delivery signals",
+      "detail": "Delivery, dine-in, and booking options are common enough to use as real decision filters."
+    }
+  ],
+  "visualBlocks": [
+    {
+      "title": "Use a simple decision order",
+      "image": {
+        "src": "/images/articles/how-to-choose-indian-restaurant-london/decision-flow.svg",
+        "alt": "Decision flow for choosing an Indian restaurant in London",
+        "caption": "Generated visual brief: create a clean decision-flow diagram for choosing an Indian restaurant in London with four steps labeled occasion, food style, local proof, and service fit; use icons for group dining, map location, star reviews, and delivery or booking."
+      },
+      "body": "This visual should show that the smartest shortlist starts with occasion and cuisine fit, then narrows through proof and logistics."
+    },
+    {
+      "title": "What to compare once you have a shortlist",
+      "image": {
+        "src": "/images/articles/how-to-choose-indian-restaurant-london/comparison-checklist.svg",
+        "alt": "Checklist graphic for comparing Indian restaurant listings in London",
+        "caption": "Generated visual brief: create a side-by-side checklist graphic for comparing Indian restaurant listings with rows for cuisine style, area, rating, review count, delivery, dine-in, and reservation options; no branding or body text paragraphs."
+      },
+      "body": "This visual should reinforce that readers do not need a perfect restaurant, only the best match for their specific meal."
+    }
+  ],
+  "dataBlocks": [
+    {
+      "title": "What the current London directory lets you compare",
+      "description": "These counts come from the project's live restaurant dataset and show why readers can make evidence-based choices instead of relying on one editorial list.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Total listings",
+          "value": "3,187",
+          "detail": "The current directory is large enough that readers should narrow the list before comparing individual restaurants."
+        },
+        {
+          "label": "Listings rated 4.5+",
+          "value": "1,432",
+          "detail": "About 45% of the directory has a rating of 4.5 or higher, so strong rating signals are common."
+        },
+        {
+          "label": "Listings with 100+ reviews",
+          "value": "2,252",
+          "detail": "Review depth is broad enough to distinguish between a high score with little proof and a high score with sustained volume."
+        },
+        {
+          "label": "Listings with 500+ reviews",
+          "value": "1,008",
+          "detail": "Large review footprints are common, especially in busy dining areas and well-known brands."
+        },
+        {
+          "label": "Reservation links",
+          "value": "1,270",
+          "detail": "Booking intent is a practical filter for date nights, weekend dinners, and larger groups."
+        }
+      ]
+    },
+    {
+      "title": "Practical filters readers can use immediately",
+      "description": "These local signals help explain which directory fields matter most when the goal is to choose quickly.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Delivery signals",
+          "value": "2,721",
+          "detail": "Delivery is common enough to filter hard when the meal is for home rather than dine-in."
+        },
+        {
+          "label": "Dine-in signals",
+          "value": "3,024",
+          "detail": "Almost the whole dataset supports dine-in comparison, so occasion and room feel still matter."
+        },
+        {
+          "label": "Top borough pools",
+          "value": "Harrow, Hounslow, Westminster",
+          "detail": "These boroughs currently have the largest restaurant pools in the dataset, with Redbridge and Hillingdon close behind."
+        },
+        {
+          "label": "Specialist style labels",
+          "value": "154 South Indian, 77 Punjabi, 68 North Indian",
+          "detail": "Cuisine style is a stronger starting filter than a generic 'best Indian restaurant' search."
+        },
+        {
+          "label": "High-rated delivery overlap",
+          "value": "1,204",
+          "detail": "A large number of listings combine delivery with ratings of 4.5 or higher, so takeaway does not mean settling for weak options."
+        }
+      ]
+    }
+  ],
+  "comparisonTables": [
+    {
+      "title": "How to choose by dining situation",
+      "columns": [
+        "Situation",
+        "Prioritise this first",
+        "Then compare these signals"
+      ],
+      "rows": [
+        {
+          "label": "First-time visit",
+          "values": [
+            "Cuisine style and menu fit",
+            "Check whether the restaurant leans South Indian, North Indian, Punjabi, grill-led, or broad curry-house before comparing ratings and photos."
+          ]
+        },
+        {
+          "label": "Takeaway or delivery",
+          "values": [
+            "Delivery coverage and review depth",
+            "Filter for delivery first, then compare rating, review count, and whether the menu still looks strong for the dishes you want."
+          ]
+        },
+        {
+          "label": "Date night or planned dinner",
+          "values": [
+            "Reservation option and area",
+            "Use booking availability, location, rating consistency, and the room or occasion fit rather than only the biggest review count."
+          ]
+        },
+        {
+          "label": "Group meal",
+          "values": [
+            "Menu breadth and service flexibility",
+            "Look for restaurants with enough variety, clear dine-in signals, and dependable review volume for larger parties."
+          ]
+        },
+        {
+          "label": "Stay local",
+          "values": [
+            "Borough or area pool",
+            "Browse area pages first, then shortlist the restaurants whose style and review profile still match the occasion."
+          ]
+        }
+      ]
+    }
+  ],
+  "ctaBlocks": [
+    {
+      "title": "Compare the full directory",
+      "copy": "Use the main directory once you know your occasion and cuisine style so you can compare ratings, reviews, area, and service options in one place.",
+      "href": "/",
+      "label": "Browse Indian restaurants in London"
+    },
+    {
+      "title": "Start with local areas",
+      "copy": "If distance matters more than prestige, move into area pages and narrow the list before comparing individual restaurants.",
+      "href": "/areas",
+      "label": "Browse London areas"
+    },
+    {
+      "title": "Browse by cuisine style",
+      "copy": "Use category pages when you already know you want a regional or style-led shortlist rather than a general directory view.",
+      "href": "/categories",
+      "label": "Browse restaurant categories"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "The Short Answer",
+      "body": [
+        "The best way to choose an Indian restaurant in London is to avoid starting with a giant 'best restaurants' list. Start by deciding what kind of meal you want, where you want it, and whether the priority is dine-in, takeaway, delivery, or a booked occasion.",
+        "Once that is clear, compare only the listings that fit those basics. Ratings, review count, cuisine style, area, and service options are more useful together than any single signal on its own."
+      ]
+    },
+    {
+      "heading": "Start With Occasion Before Ratings",
+      "body": [
+        "Many diners reverse the order and start by sorting for the highest score. That usually creates noise because a date night, quick takeaway, family dinner, and first-time cuisine exploration do not all need the same restaurant.",
+        "Choose the occasion first. If you need a quick delivery meal, service coverage matters more than a prestige dining room. If you are planning a booked dinner, reservation options and area matter more than whether the restaurant is one point ahead on a crowded ranking list."
+      ]
+    },
+    {
+      "heading": "Use Cuisine Style As Your First Real Filter",
+      "body": [
+        "After the occasion, the most useful filter is usually food style. A diner who wants dosa, idli, and rice-led meals should not compare the same shortlist as someone who wants tandoor cooking, paneer, breads, or Punjabi-style menu cues.",
+        "The current directory data supports that approach because it already contains meaningful specialist labels, including 154 South Indian listings, 77 Punjabi listings, and 68 North Indian listings. That is why category pages and menu cues are more useful than generic 'best Indian' searches."
+      ]
+    },
+    {
+      "heading": "Read Ratings Together With Review Volume",
+      "body": [
+        "A high rating only becomes a strong decision signal when it has enough review volume behind it. In the current dataset, 2,252 listings have at least 100 reviews and 1,008 have at least 500 reviews, so readers can often choose between several well-proven options instead of trusting a small sample.",
+        "That does not mean smaller restaurants should be ignored. It means a 4.8 score with limited proof should be judged differently from a 4.6 score backed by hundreds or thousands of reviews. The strongest shortlist usually mixes score quality with volume rather than maximising one metric."
+      ]
+    },
+    {
+      "heading": "Check Service Fit Before You Decide",
+      "body": [
+        "Service fit is one of the easiest ways to cut the list fast. The current directory shows 2,721 delivery signals, 3,024 dine-in signals, and 1,270 reservation links, which means readers can compare restaurants around the actual way they plan to use them.",
+        "If the meal is for home, filter aggressively for delivery or takeaway and then inspect the menu strength. If the meal is for the room and the atmosphere, focus on bookable listings, area convenience, and the style of restaurant that matches the occasion."
+      ]
+    },
+    {
+      "heading": "Use Area To Narrow, Not To Override Everything Else",
+      "body": [
+        "Area matters because London is large, but it should narrow a shortlist rather than replace food-style decisions completely. The biggest restaurant pools in the current directory are Harrow, Hounslow, Westminster, Redbridge, and Hillingdon, so some boroughs naturally offer more variety and easier comparison than others.",
+        "A practical workflow is to decide the meal type first, then open the relevant area page and compare only the restaurants that still match the cuisine style and service profile you want. That saves time and avoids ending up with a nearby restaurant that is wrong for the meal."
+      ]
+    },
+    {
+      "heading": "A Good Choice Framework Beats A Best-Of List",
+      "body": [
+        "Editorial lists can be useful for ideas, but they usually optimise for notable names and destination restaurants. A reusable choice framework is more useful because it works whether you are choosing a famous restaurant in Westminster or a delivery option closer to home.",
+        "In practice, the framework is simple: pick the occasion, narrow by cuisine style, choose the right area, compare rating with review depth, then confirm the service details before booking or ordering. That process is easier to reuse across any future restaurant search in London."
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What should I check first when choosing an Indian restaurant in London?",
+      "answer": "Check the occasion first, then the cuisine style and area. Once those fit, compare ratings, review count, and service details to make the final choice."
+    },
+    {
+      "question": "Are ratings more important than review count?",
+      "answer": "Neither should be used alone. A strong rating becomes more trustworthy when it is backed by enough reviews, so compare the score and the review volume together."
+    },
+    {
+      "question": "Should I choose by area or by food style?",
+      "answer": "Food style is usually the better first filter because it determines the kind of meal you will actually get. Area should narrow the shortlist after you know what style of restaurant you want."
+    },
+    {
+      "question": "Is delivery easy to compare in this directory?",
+      "answer": "Yes. The current dataset includes 2,721 delivery signals, so delivery is common enough to use as a hard filter before you compare ratings and menus."
+    },
+    {
+      "question": "How do I avoid wasting time on giant best-of lists?",
+      "answer": "Use them only for ideas. For a real decision, move into the directory and filter by style, area, review depth, and service fit so the shortlist matches your actual meal."
+    }
+  ],
+  "internalLinks": [
+    {
+      "label": "Indian restaurants in London",
+      "href": "/",
+      "reason": "Move readers from advice into the main comparison directory."
+    },
+    {
+      "label": "Areas",
+      "href": "/areas",
+      "reason": "Help readers stay local after they choose their main filters."
+    },
+    {
+      "label": "Restaurant categories",
+      "href": "/categories",
+      "reason": "Help readers browse by style once they know the kind of Indian food they want."
+    }
+  ],
+  "researchSources": [
+    {
+      "title": "The Best Indian Restaurants in London - MICHELIN Guide",
+      "url": "https://guide.michelin.com/gb/en/best-of/the-best-indian-restaurants-in-london",
+      "note": "Used for understanding how expert-led restaurant lists frame standout restaurants and occasion-based choice."
+    },
+    {
+      "title": "THE 10 BEST Indian Restaurants in London (Updated 2026)",
+      "url": "https://www.tripadvisor.com/Restaurants-g186338-c24-London_England.html",
+      "note": "Used for broad user-led trust signals around ratings and review volume."
+    },
+    {
+      "title": "The 25 best Indian restaurants in London - CN Traveller",
+      "url": "https://www.cntraveller.com/gallery/best-indian-restaurants-in-london",
+      "note": "Used for editorial framing around destination dining and notable restaurant types."
+    },
+    {
+      "title": "The 20 Best Indian Restaurants in London - The Desi Directory",
+      "url": "https://thedesidirectory.co.uk/best/indian-restaurants-in-london",
+      "note": "Used to compare community-facing curation with broader editorial shortlist patterns."
+    },
+    {
+      "title": "The 21 Best Indian Restaurants In London - The Infatuation",
+      "url": "https://www.theinfatuation.com/london/guides/best-indian-restaurants-london",
+      "note": "Used for practical diner-facing recommendation patterns."
+    },
+    {
+      "title": "Best Indian Restaurants London 2025 | olivemagazine",
+      "url": "https://www.olivemagazine.com/restaurants/london/best-indian-restaurants-london/",
+      "note": "Used for food-media framing around restaurant quality, value, and style."
+    },
+    {
+      "title": "The 10 Best Indian Restaurants in London - TheFork",
+      "url": "https://www.thefork.co.uk/restaurants/london-c665790/indian-t451",
+      "note": "Used for reservation-led shortlist behaviour."
+    },
+    {
+      "title": "29 Must-Try Indian Restaurants in London, From Michelin Stars to Street ...",
+      "url": "https://www.cntraveler.com/gallery/best-indian-restaurants-london",
+      "note": "Used to reinforce the split between prestige dining and broader practical restaurant choice."
+    }
+  ]
+}

@@ -45,7 +45,7 @@ export function DirectoryImage({
 
   if (!src || failed || timedOut) {
     return (
-      <div className="grid h-full min-h-full w-full place-items-center bg-[linear-gradient(135deg,#fff7ed,#fef3c7_55%,#f8fafc)] p-6 text-center dark:bg-none dark:bg-slate-800">
+      <div className="grid h-full min-h-full w-full place-items-center bg-[linear-gradient(135deg,#fff7ed,#fef3c7_55%,#f8fafc)] p-6 text-center">
         <div>
           <Utensils className="mx-auto mb-3 h-9 w-9 text-primary" aria-hidden />
           <span className="text-sm font-bold text-accent">{fallbackLabel}</span>

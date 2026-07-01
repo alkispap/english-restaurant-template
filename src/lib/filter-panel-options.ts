@@ -1,32 +1,32 @@
 import { directoryConfig } from "@/config/directory";
 import {
-  getAccessibilityOptions,
-  getAmenities,
-  getAreas,
-  getAtmospheres,
-  getBusStops,
-  getCategories,
-  getChildrenOptions,
-  getCrowdOptions,
-  getDietaryOptions,
-  getDiningOptions,
-  getHighlightOptions,
-  getListingTypes,
-  getNeighborhoods,
-  getNearbyPlaces,
-  getOfferings,
-  getParkingOptions,
-  getPaymentOptions,
-  getPetOptions,
-  getPlanningOptions,
-  getPopularForOptions,
-  getServiceOptions,
-  getTubeStations,
-  slugify
-} from "@/lib/directory";
+  getSearchAccessibilityOptions,
+  getSearchAmenities,
+  getSearchAreas,
+  getSearchAtmospheres,
+  getSearchBusStops,
+  getSearchCategories,
+  getSearchChildrenOptions,
+  getSearchCrowdOptions,
+  getSearchDietaryOptions,
+  getSearchDiningOptions,
+  getSearchHighlightOptions,
+  getSearchListingTypes,
+  getSearchNeighborhoods,
+  getSearchNearbyPlaces,
+  getSearchOfferings,
+  getSearchParkingOptions,
+  getSearchPaymentOptions,
+  getSearchPetOptions,
+  getSearchPlanningOptions,
+  getSearchPopularForOptions,
+  getSearchRatingFilterOptions,
+  getSearchServiceOptions,
+  getSearchTubeStations
+} from "@/lib/listing-search";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
-import { getRatingFilterOptions } from "@/lib/directory-growth";
 import type { ListingsPageLinkValues } from "@/lib/listings-page";
+import { slugify } from "@/lib/slug";
 
 export type FilterOption = {
   label: string;
@@ -51,42 +51,42 @@ const DEFAULT_MAX_INITIAL_OPTIONS = 16;
 export function getFilterPanelOptionGroups(values: ListingsPageLinkValues = {}) {
   const labels = directoryConfig.filterLabels;
   const groups: OptionGroupConfig[] = [
-    { label: "Area", name: "area", options: getAreas().map(toOption), maxInitialOptions: 40 },
-    { label: "Neighborhood", name: "neighborhood", options: getNeighborhoods().map(toOption) },
-    { label: directoryConfig.categoryPluralLabel, name: "category", options: getCategories().map(toOption), maxInitialOptions: 24 },
+    { label: "Area", name: "area", options: getSearchAreas().map(toOption), maxInitialOptions: 40 },
+    { label: "Neighborhood", name: "neighborhood", options: getSearchNeighborhoods().map(toOption) },
+    { label: directoryConfig.categoryPluralLabel, name: "category", options: getSearchCategories().map(toOption), maxInitialOptions: 24 },
     ...(isDirectoryFeatureEnabled("listingTypePages")
-      ? [{ label: labels.type, modalLabel: labels.typeModal, name: "type", options: getListingTypes().map(toOption) }]
+      ? [{ label: labels.type, modalLabel: labels.typeModal, name: "type", options: getSearchListingTypes().map(toOption) }]
       : []),
     ...(isDirectoryFeatureEnabled("dietaryPages")
-      ? [{ label: labels.dietary, name: "dietary", options: getDietaryOptions().map(toOption) }]
+      ? [{ label: labels.dietary, name: "dietary", options: getSearchDietaryOptions().map(toOption) }]
       : []),
     ...(isDirectoryFeatureEnabled("servicePages")
-      ? [{ label: labels.service, name: "service", options: getServiceOptions().map(toOption) }]
+      ? [{ label: labels.service, name: "service", options: getSearchServiceOptions().map(toOption) }]
       : []),
     ...(isDirectoryFeatureEnabled("offeringPages")
-      ? [{ label: labels.offering, name: "offering", options: getOfferings().map(toOption) }]
+      ? [{ label: labels.offering, name: "offering", options: getSearchOfferings().map(toOption) }]
       : []),
-    { label: labels.highlight, name: "highlight", options: getHighlightOptions().map(toOption) },
-    { label: labels.popularFor, name: "popularFor", options: getPopularForOptions().map(toOption) },
-    { label: labels.dining, name: "dining", options: getDiningOptions().map(toOption) },
-    { label: "Amenity", name: "amenity", options: getAmenities().map(toOption), maxInitialOptions: 12 },
-    { label: "Accessibility", name: "accessibility", options: getAccessibilityOptions().map(toOption), maxInitialOptions: 12 },
-    { label: "Atmosphere", name: "atmosphere", options: getAtmospheres().map(toOption), maxInitialOptions: 12 },
-    { label: "Crowd", name: "crowd", options: getCrowdOptions().map(toOption), maxInitialOptions: 12 },
-    { label: "Planning", name: "planning", options: getPlanningOptions().map(toOption), maxInitialOptions: 12 },
-    { label: "Payment", name: "payment", options: getPaymentOptions().map(toOption), maxInitialOptions: 12 },
-    { label: "Children", name: "children", options: getChildrenOptions().map(toOption), maxInitialOptions: 12 },
-    { label: "Parking", name: "parking", options: getParkingOptions().map(toOption), maxInitialOptions: 12 },
-    { label: "Pets", name: "pets", options: getPetOptions().map(toOption), maxInitialOptions: 12 },
+    { label: labels.highlight, name: "highlight", options: getSearchHighlightOptions().map(toOption) },
+    { label: labels.popularFor, name: "popularFor", options: getSearchPopularForOptions().map(toOption) },
+    { label: labels.dining, name: "dining", options: getSearchDiningOptions().map(toOption) },
+    { label: "Amenity", name: "amenity", options: getSearchAmenities().map(toOption), maxInitialOptions: 12 },
+    { label: "Accessibility", name: "accessibility", options: getSearchAccessibilityOptions().map(toOption), maxInitialOptions: 12 },
+    { label: "Atmosphere", name: "atmosphere", options: getSearchAtmospheres().map(toOption), maxInitialOptions: 12 },
+    { label: "Crowd", name: "crowd", options: getSearchCrowdOptions().map(toOption), maxInitialOptions: 12 },
+    { label: "Planning", name: "planning", options: getSearchPlanningOptions().map(toOption), maxInitialOptions: 12 },
+    { label: "Payment", name: "payment", options: getSearchPaymentOptions().map(toOption), maxInitialOptions: 12 },
+    { label: "Children", name: "children", options: getSearchChildrenOptions().map(toOption), maxInitialOptions: 12 },
+    { label: "Parking", name: "parking", options: getSearchParkingOptions().map(toOption), maxInitialOptions: 12 },
+    { label: "Pets", name: "pets", options: getSearchPetOptions().map(toOption), maxInitialOptions: 12 },
     ...(isDirectoryFeatureEnabled("transport")
       ? [
-          { label: "Underground station", modalLabel: "Underground stations", name: "tube", options: getTubeStations().map(toOption), maxInitialOptions: 12 },
-          { label: "Bus stop", name: "bus", options: getBusStops().map(toOption), maxInitialOptions: 12 },
-          { label: "Nearby place", name: "nearby", options: getNearbyPlaces().map(toOption), maxInitialOptions: 12 }
+          { label: "Underground station", modalLabel: "Underground stations", name: "tube", options: getSearchTubeStations().map(toOption), maxInitialOptions: 12 },
+          { label: "Bus stop", name: "bus", options: getSearchBusStops().map(toOption), maxInitialOptions: 12 },
+          { label: "Nearby place", name: "nearby", options: getSearchNearbyPlaces().map(toOption), maxInitialOptions: 12 }
         ]
       : []),
-    { label: "Price", name: "price", options: directoryConfig.priceLevels.map((price) => ({ label: price, value: price })) },
-    { label: "Minimum rating", name: "rating", options: getRatingFilterOptions() }
+    { label: "Price", name: "price", options: directoryConfig.priceLevels.map(toPriceOption) },
+    { label: "Minimum rating", name: "rating", options: getSearchRatingFilterOptions() }
   ];
 
   return groups.map((group) => {
@@ -124,4 +124,8 @@ function normalizeValues(value?: string | string[]) {
 
 function toOption(label: string) {
   return { label, value: slugify(label) };
+}
+
+function toPriceOption(label: string) {
+  return { label, value: `price-${label.length}` };
 }

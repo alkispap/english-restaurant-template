@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { DirectorySidebar } from "@/components/DirectorySidebar";
+import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
 import { FilterPanel } from "@/components/FilterPanel";
 import { ListingsResults } from "@/components/ListingsResults";
 import { SearchBar } from "@/components/SearchBar";
 import { SearchableCardGrid } from "@/components/SearchableCardGrid";
 import { SectionHeading } from "@/components/SectionHeading";
+import { buildDirectoryListingsChrome } from "@/lib/directory-listings-model";
 import { seoLandingHeadings } from "@/lib/seo-landing-headings";
 import type { SeoPageModel } from "@/lib/seo-pages";
 
@@ -14,6 +16,8 @@ type SeoLandingPageProps = {
 };
 
 export function SeoLandingPage({ page }: SeoLandingPageProps) {
+  const chrome = buildDirectoryListingsChrome(page.filterPanelValues, "seoLanding");
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       {page.structuredData.map((item, index) => (
@@ -29,12 +33,16 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
         <p className="mb-2 text-sm font-bold uppercase tracking-wide text-primary">{page.hero.eyebrow}</p>
         <h1 className="text-4xl font-bold text-ink">{page.hero.title}</h1>
         <p className="mt-3 max-w-3xl text-muted">{page.hero.description}</p>
-        <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-emerald-900">
-          <CheckCircle2 className="h-4 w-4" aria-hidden />
-          <span>{page.hero.checkedLabel}</span>
-        </div>
+        <DirectoryFreshnessLabel className="mt-4" />
         <div className="mt-6">
-          <SearchBar compact defaultQuery={page.linkValues.q} defaultArea={first(page.linkValues.area)} basePath={page.metadata.canonical} />
+          <SearchBar
+            compact
+            defaultQuery={page.linkValues.q}
+            defaultArea={first(page.linkValues.area)}
+            basePath={page.metadata.canonical}
+            areas={chrome.searchAreas}
+            mapPoints={chrome.searchMapPoints}
+          />
         </div>
       </section>
 
@@ -43,13 +51,21 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
           <details className="rounded-lg border border-line bg-white p-4 shadow-soft lg:hidden">
             <summary className="cursor-pointer text-sm font-bold text-ink">Filters and guides</summary>
             <div className="mt-5">
-              <FilterPanel action={page.metadata.canonical} values={page.filterPanelValues} />
-              <DirectorySidebar context="seoLanding" />
+              <FilterPanel
+                action={page.metadata.canonical}
+                values={page.filterPanelValues}
+                optionGroups={chrome.filterOptionGroups}
+              />
+              <DirectorySidebar context="seoLanding" blocks={chrome.sidebarBlocks} />
             </div>
           </details>
           <div className="hidden lg:block">
-            <FilterPanel action={page.metadata.canonical} values={page.filterPanelValues} />
-            <DirectorySidebar context="seoLanding" />
+            <FilterPanel
+              action={page.metadata.canonical}
+              values={page.filterPanelValues}
+              optionGroups={chrome.filterOptionGroups}
+            />
+            <DirectorySidebar context="seoLanding" blocks={chrome.sidebarBlocks} />
           </div>
         </aside>
 
@@ -66,6 +82,7 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
             viewMode={page.viewMode}
             openOnly={page.openOnly}
             linkValues={page.linkValues}
+            headingContext={page.resultsHeadingContext}
           />
 
           <GuideSection page={page} />
@@ -88,7 +105,7 @@ function AreaGuideSection({ page }: { page: SeoPageModel }) {
     <section className="mb-10" aria-label={`Explore ${areaLabel}`}>
       <div>
         <p className="text-sm font-bold uppercase tracking-wide text-primary">Area guide</p>
-        <h2 className="mt-2 text-2xl font-bold text-ink">Choose a neighborhood or cuisine in {areaLabel}</h2>
+        <h2 className="mt-2 text-2xl font-bold text-ink">{areaGuideHeading(page, areaLabel)}</h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
           Use these shortcuts to narrow the area before comparing the restaurant results below.
         </p>
@@ -150,6 +167,14 @@ function Breadcrumbs({ items }: { items: SeoPageModel["breadcrumbItems"] }) {
       ))}
     </nav>
   );
+}
+
+function areaGuideHeading(page: SeoPageModel, areaLabel: string) {
+  if (page.resultsHeadingContext) {
+    return `Explore ${page.resultsHeadingContext} by Neighborhood and Cuisine`;
+  }
+
+  return `Choose a neighborhood or cuisine in ${areaLabel}`;
 }
 
 function GuideSection({ page }: { page: SeoPageModel }) {

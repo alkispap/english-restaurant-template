@@ -8,6 +8,8 @@ import {
   getRecentlyAddedShortcutLinks,
   getShortcutLinksForSource
 } from "../src/lib/directory-ux";
+import { directorySearchPath } from "../src/lib/routes";
+import { getClientSidebarBlocks } from "../src/lib/listing-search";
 
 function homeSectionsResolveFromConfigAndSkipDisabledSections() {
   const sections = getDirectoryHomeSections([
@@ -40,7 +42,7 @@ function recentlyAddedUsesImportedListingOrder() {
 
   assert.deepEqual(
     links.map((link) => link.href),
-    listings.slice(0, 3).map((listing) => `/listings/${listing.slug}`)
+    listings.slice(0, 3).map((listing) => `/restaurants/${listing.slug}`)
   );
 }
 
@@ -87,11 +89,27 @@ function homepageListingRowsResolveExpectedUrlsAndListings() {
   const rated = rows.find((row) => row.id === "highly-rated");
   const recent = rows.find((row) => row.id === "recently-added");
 
-  assert.equal(budget?.seeAllHref, "/?sort=price");
-  assert.equal(rated?.seeAllHref, "/?sort=rating");
+  assert.equal(budget?.seeAllHref, "/restaurants?sort=price");
+  assert.equal(rated?.seeAllHref, "/restaurants?sort=rating");
   assert.deepEqual(
     recent?.listings.slice(0, 3).map((listing) => listing.slug),
     listings.slice(0, 3).map((listing) => listing.slug)
+  );
+}
+
+function directorySearchPathTargetsRestaurantsWorkspace() {
+  assert.equal(directorySearchPath(), "/restaurants");
+  assert.equal(directorySearchPath("?open=1"), "/restaurants?open=1");
+}
+
+function clientUserFilterLinksUseListingsWorkspace() {
+  const links = getClientSidebarBlocks("default").flatMap((block) => block.links);
+  const filterLinks = links.filter((link) => link.href.includes("?"));
+
+  assert.ok(filterLinks.length > 0, "expected default sidebar to expose user filter links");
+  assert.ok(
+    filterLinks.every((link) => link.href.startsWith("/restaurants?")),
+    "user filter links should point at the restaurants workspace"
   );
 }
 
@@ -112,6 +130,8 @@ shortcutSourcesReturnLinks();
 topNeighborhoodsUseMostListingCounts();
 defaultHomepageSeparatesListingRowsFromLinkSections();
 homepageListingRowsResolveExpectedUrlsAndListings();
+directorySearchPathTargetsRestaurantsWorkspace();
+clientUserFilterLinksUseListingsWorkspace();
 listingsPageRowsAvoidCurrentResultSetWhenPossible();
 
 console.log("directory UX behavior tests passed");

@@ -1,15 +1,17 @@
 import assert from "node:assert/strict";
 import { generateMetadata as homepageMetadata } from "../src/app/page";
 import { getAreas, getCategories, slugify } from "../src/lib/directory";
+import {
+  normalizeSearchParams,
+  searchParamsRecordFromUrlSearchParams
+} from "../src/lib/directory-listings-search-params";
 import { getAreaSeoPage, getCategorySeoPage } from "../src/lib/seo-pages";
 
-async function homepageQueryStatesAreNoindexed() {
-  const metadata = await homepageMetadata({
-    searchParams: Promise.resolve({ area: "redbridge", service: "takeaway", open: "1" })
-  });
+async function homepageMetadataStaysStaticForExport() {
+  const metadata = await homepageMetadata();
 
-  assert.deepEqual(metadata.alternates, { canonical: "/areas/redbridge" });
-  assert.deepEqual(metadata.robots, { index: false, follow: true });
+  assert.deepEqual(metadata.alternates, { canonical: "/" });
+  assert.equal(metadata.robots, undefined);
 }
 
 function seoHubQueryStatesAreNoindexed() {
@@ -30,7 +32,16 @@ function seoHubQueryStatesAreNoindexed() {
   assert.equal(queriedCategoryPage?.metadata.canonical, `/categories/${slugify(category)}`);
 }
 
-homepageQueryStatesAreNoindexed().then(() => {
+function unknownHomepageQueryParamsDoNotWakeDirectoryDataset() {
+  const ignoredOnly = searchParamsRecordFromUrlSearchParams(new URLSearchParams("verify=20260621&utm_source=test"));
+  assert.equal(normalizeSearchParams(ignoredOnly), "");
+
+  const mixed = searchParamsRecordFromUrlSearchParams(new URLSearchParams("verify=20260621&q=dosa"));
+  assert.equal(normalizeSearchParams(mixed), "q=dosa");
+}
+
+homepageMetadataStaysStaticForExport().then(() => {
   seoHubQueryStatesAreNoindexed();
+  unknownHomepageQueryParamsDoNotWakeDirectoryDataset();
   console.log("query URL governance tests passed");
 });

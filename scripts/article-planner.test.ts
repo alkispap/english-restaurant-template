@@ -33,6 +33,7 @@ function article(overrides: Partial<ArticleContent>): ArticleContent {
     title: "Sample Guide",
     metaTitle: "Sample Guide",
     metaDescription: "A sample guide used by tests.",
+    answer: "Sample guide answers the query directly.",
     publishedAt: "",
     updatedAt: "2026-06-02",
     cluster: "core-topic-authority",

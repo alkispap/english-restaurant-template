@@ -1,11 +1,11 @@
-import { directoryIndexPath } from "@/lib/routes";
+import { directorySearchPath } from "@/lib/routes";
 
 type SearchValues = {
   q?: string;
   area?: string;
 };
 
-export function buildSearchHref(values: SearchValues, basePath = directoryIndexPath()) {
+export function buildSearchHref(values: SearchValues, basePath = directorySearchPath()) {
   const params = new URLSearchParams();
   const query = values.q?.trim();
   const area = values.area?.trim();

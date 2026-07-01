@@ -4,7 +4,7 @@ import type { FormEvent } from "react";
 import { LocateFixed, MapPin, Search } from "lucide-react";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
-import { directoryIndexPath } from "@/lib/routes";
+import { directorySearchPath } from "@/lib/routes";
 import { buildSearchHref } from "@/lib/search-url";
 import { nearestAreaFromCoordinates } from "@/lib/geo-area";
 import type { MapPoint } from "@/lib/listings-page";
@@ -26,7 +26,7 @@ type SearchBarClientProps = {
 
 type LocateStatus = "idle" | "locating" | "denied" | "unavailable" | "not-found";
 
-export function SearchBarClient({ compact = false, defaultQuery = "", defaultArea = "", basePath = directoryIndexPath(), areas, mapPoints }: SearchBarClientProps) {
+export function SearchBarClient({ compact = false, defaultQuery = "", defaultArea = "", basePath = directorySearchPath(), areas, mapPoints }: SearchBarClientProps) {
   const [locateStatus, setLocateStatus] = useState<LocateStatus>("idle");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -82,7 +82,7 @@ export function SearchBarClient({ compact = false, defaultQuery = "", defaultAre
   }
 
   return (
-    <div className="rounded-lg bg-white p-3 shadow-soft dark:bg-slate-800">
+    <div className="rounded-lg bg-white p-3 shadow-soft">
       <form
         action={basePath}
         onSubmit={handleSubmit}

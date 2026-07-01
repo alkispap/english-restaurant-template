@@ -7,7 +7,7 @@ const root = process.cwd();
 const renderedFiles = [
   "src/app/page.tsx",
   "src/app/listings/page.tsx",
-  "src/app/listings/[slug]/page.tsx",
+  "src/app/restaurants/[slug]/page.tsx",
   "src/components/DirectorySidebar.tsx"
 ];
 

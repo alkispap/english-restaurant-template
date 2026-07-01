@@ -75,7 +75,7 @@ export function buildHomepageHeadings(
     seoLinksTitle: `Find ${niche} by Area, ${categoryPluralLabel}, and Need`,
     seoLinksDescription: `Use these shortcuts for common ${city} ${listingLabelLower} searches with dedicated pages, filters, summaries, and related listings.`,
     resultsHeadingContext: niche,
-    sourceContextTitle: `How This ${listingLabel} Directory Works`,
+    sourceContextTitle: `How Our ${niche} Directory Works`,
     sourceContextQuestionTitles: {
       data: "What data does this directory cover?",
       freshness: "How are listing details kept fresh?",

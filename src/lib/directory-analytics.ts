@@ -1,5 +1,6 @@
 export const DIRECTORY_PAGE_TYPES = [
   "homepage",
+  "directory_search",
   "listing_detail",
   "area_hub",
   "category_hub",
@@ -70,8 +71,9 @@ export function trackDirectoryEvent(event: DirectoryAnalyticsEvent) {
 
 export function inferDirectoryPageTypeFromPath(pathname: string): DirectoryPageType {
   if (pathname === "/") return "homepage";
+  if (pathname === "/restaurants" || pathname === "/listings") return "directory_search";
   if (pathname === "/compare") return "compare";
-  if (pathname.startsWith("/listings/")) return "listing_detail";
+  if (pathname.startsWith("/restaurants/")) return "listing_detail";
   if (/^\/areas\/[^/]+\/categories\/[^/]+/.test(pathname)) return "area_category_hub";
   if (pathname.startsWith("/areas/")) return "area_hub";
   if (pathname.startsWith("/categories/")) return "category_hub";

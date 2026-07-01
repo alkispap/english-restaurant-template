@@ -1,16 +1,17 @@
 import type { Listing } from "@/data/listings";
 import { siteConfig } from "@/config/site";
-import { cleanListingUrl } from "@/lib/listing-links";
+import { cleanListingUrl, getListingMapsUrl } from "@/lib/listing-links";
 
 export function localBusinessJsonLd(listing: Listing) {
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "Restaurant",
     name: listing.name,
     url: `${siteConfig.url}/${siteConfig.listingBasePath}/${listing.slug}`
   };
 
   if (listing.description) schema.description = listing.description;
+  if (listing.categories.length) schema.servesCuisine = listing.categories;
 
   if (listing.images.length) {
     schema.image = listing.images.length === 1 ? listing.images[0] : listing.images;
@@ -34,6 +35,10 @@ export function localBusinessJsonLd(listing: Listing) {
   }
 
   if (listing.contact?.phone) schema.telephone = listing.contact.phone;
+  if (listing.contact?.menuUrl) schema.menu = listing.contact.menuUrl;
+  if (listing.contact?.reserveUrl) schema.acceptsReservations = listing.contact.reserveUrl;
+  const mapUrl = getListingMapsUrl(listing);
+  if (mapUrl) schema.hasMap = mapUrl;
   const sameAs = [
     cleanListingUrl(listing.contact?.website),
     ...Object.values(listing.contact?.socials ?? {}).map((url) => cleanListingUrl(url))
@@ -76,6 +81,31 @@ export function localBusinessJsonLd(listing: Listing) {
   }
 
   return schema;
+}
+
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: schemaDescription()
+  };
+}
+
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: schemaDescription(),
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url
+    }
+  };
 }
 
 export function breadcrumbJsonLd(items: { name: string; href: string }[]) {
@@ -162,4 +192,8 @@ function to24h(hours: number, minutes: number, period?: string): string | undefi
 
   if (h < 0 || h > 23 || minutes < 0 || minutes > 59) return undefined;
   return `${String(h).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+function schemaDescription() {
+  return `${siteConfig.name} is a directory for comparing Indian restaurants in London using imported local business data, ratings, review counts, areas, services, and contact links where available.`;
 }

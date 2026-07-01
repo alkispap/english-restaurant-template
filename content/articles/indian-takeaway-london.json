@@ -1,0 +1,319 @@
+{
+  "slug": "indian-takeaway-london",
+  "status": "drafted",
+  "title": "Indian Takeaway in London: How to Choose Delivery-Friendly Restaurants",
+  "metaTitle": "Indian Takeaway in London: How to Choose Delivery-Friendly Restaurants | Guide",
+  "metaDescription": "Learn how to choose Indian takeaway in London by comparing delivery coverage, review depth, cuisine style, and local area signals from the current directory.",
+  "answer": "Indian takeaway in London is easiest to choose by filtering for delivery or takeaway first, then comparing cuisine style, review depth, and local area strength before you order.",
+  "publishedAt": "",
+  "updatedAt": "2026-06-18",
+  "cluster": "restaurant-choice-intent",
+  "primaryKeyword": "Indian takeaway in London",
+  "heroImage": {
+    "src": "/images/articles/indian-takeaway-london/hero.png",
+    "alt": "London home-ordering scene with Indian takeaway dishes, delivery containers, and a phone comparing restaurant options",
+    "caption": "Generated hero image brief: show a realistic London home-ordering scene with Indian takeaway dishes, delivery containers, a phone comparing restaurant options, and subtle London context; no text, no logos."
+  },
+  "keyFacts": [
+    {
+      "label": "Best first filter",
+      "value": "Delivery or takeaway first",
+      "detail": "The shortlist gets easier once readers decide whether they need food brought to them or are happy to collect."
+    },
+    {
+      "label": "Current delivery pool",
+      "value": "1,770 listings",
+      "detail": "About 89% of Indian-labelled listings in the current directory mention delivery, so delivery is a real comparison layer rather than a niche extra."
+    },
+    {
+      "label": "Proof depth",
+      "value": "1,463 takeaway listings with 100+ reviews",
+      "detail": "Readers can usually compare home-order options with meaningful review volume rather than guessing from a small sample."
+    }
+  ],
+  "visualBlocks": [
+    {
+      "title": "Use a simple takeaway decision order",
+      "image": {
+        "src": "/images/articles/indian-takeaway-london/takeaway-decision-flow.svg",
+        "alt": "Decision flow for choosing Indian takeaway in London",
+        "caption": "Generated visual brief: create a clean decision-flow diagram for Indian takeaway in London with four steps labeled service mode, cuisine style, proof, and local fit; use simple icons for delivery, takeaway bag, menu style, star reviews, and map location."
+      },
+      "body": "This visual should reinforce that takeaway decisions get better when service fit comes first and restaurant prestige comes later."
+    },
+    {
+      "title": "Where the strongest takeaway pools appear",
+      "image": {
+        "src": "/images/articles/indian-takeaway-london/borough-hotspots.svg",
+        "alt": "Borough hotspot summary for Indian takeaway in London",
+        "caption": "Generated visual brief: create a simple London borough hotspot graphic showing the strongest Indian delivery and takeaway pools in Harrow, Newham, Hounslow, Brent, Tower Hamlets, Ealing, Hillingdon, and Westminster; keep it educational, clean, and label-led."
+      },
+      "body": "This visual should connect the article to real local browsing behaviour by showing that takeaway choice depth is uneven across London."
+    }
+  ],
+  "dataBlocks": [
+    {
+      "title": "What the current takeaway-friendly directory looks like",
+      "description": "These counts are based on the current Indian-labelled restaurant dataset in this project, so they show whether takeaway intent is broad enough to support real filtering.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Indian-labelled listings",
+          "value": "1,983",
+          "detail": "This is the current pool used for the local takeaway and delivery comparison in the directory."
+        },
+        {
+          "label": "Delivery signals",
+          "value": "1,770",
+          "detail": "Delivery appears on roughly 89% of Indian-labelled listings, so home ordering is a mainstream path rather than an edge case."
+        },
+        {
+          "label": "Takeaway signals",
+          "value": "1,886",
+          "detail": "Takeaway appears on roughly 95% of the same pool, which means collection-friendly restaurants are even more common than delivery-labelled ones."
+        },
+        {
+          "label": "Both delivery and takeaway",
+          "value": "1,754",
+          "detail": "Most readers do not need separate restaurant pools because the same listings often support both home-order paths."
+        },
+        {
+          "label": "No-contact delivery",
+          "value": "820",
+          "detail": "A large secondary subset still exposes a more specific delivery signal for readers who want minimal handoff."
+        }
+      ]
+    },
+    {
+      "title": "Where readers can narrow the shortlist fastest",
+      "description": "These local signals explain why area and proof still matter after the service filter is applied.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Strongest delivery borough pool",
+          "value": "Harrow",
+          "detail": "Harrow currently leads the Indian delivery subset with 110 listings, ahead of Newham, Hounslow, Brent, and Tower Hamlets."
+        },
+        {
+          "label": "Strongest takeaway area pool",
+          "value": "Harrow",
+          "detail": "Harrow also leads the takeaway subset with 117 listings, with Brent, Newham, Ealing, and Hounslow close behind."
+        },
+        {
+          "label": "High-rated delivery overlap",
+          "value": "731 listings rated 4.5+",
+          "detail": "A large share of delivery-friendly listings also have strong visible ratings, so convenience does not automatically mean lower quality."
+        },
+        {
+          "label": "Takeaway proof depth",
+          "value": "1,463 listings with 100+ reviews",
+          "detail": "Readers can filter for service fit first and still keep a large evidence-backed pool for final comparison."
+        },
+        {
+          "label": "Combined delivery review footprint",
+          "value": "1,393,242 reviews",
+          "detail": "The delivery subset has enough review volume to support shortlist decisions based on proof, not only on menu claims."
+        }
+      ]
+    }
+  ],
+  "comparisonTables": [
+    {
+      "title": "How to compare Indian takeaway options in London",
+      "columns": [
+        "Signal",
+        "What it tells you",
+        "How to use it"
+      ],
+      "rows": [
+        {
+          "label": "Delivery vs takeaway",
+          "values": [
+            "Whether the restaurant matches the way you want to get the food",
+            "Filter for delivery when speed and convenience matter most, or for takeaway when you can collect and want a wider pool."
+          ]
+        },
+        {
+          "label": "Cuisine style",
+          "values": [
+            "Whether the menu is broad, regional, grill-led, dosa-led, or more specialist",
+            "Use style cues before ratings so you do not compare dosa specialists against richer curry-house menus when the meal goal is different."
+          ]
+        },
+        {
+          "label": "Rating with review depth",
+          "values": [
+            "Whether the quality signal has enough proof behind it",
+            "A slightly lower score backed by hundreds of reviews is often safer for takeaway than a higher score with almost no volume."
+          ]
+        },
+        {
+          "label": "Area pool",
+          "values": [
+            "How much real choice exists around your local search zone",
+            "If your borough has a large pool, narrow by cuisine style and proof; if it is smaller, widen to nearby areas before settling."
+          ]
+        },
+        {
+          "label": "Home-order fit",
+          "values": [
+            "Whether the menu looks like it will still work well outside the dining room",
+            "Check for dishes, portion logic, service clarity, and whether the listing still shows strong proof for home ordering."
+          ]
+        }
+      ]
+    }
+  ],
+  "ctaBlocks": [
+    {
+      "title": "Browse delivery-first listings",
+      "copy": "Move straight into the delivery page when you already know the food needs to come to you.",
+      "href": "/services/delivery",
+      "label": "Browse delivery restaurants"
+    },
+    {
+      "title": "Browse takeaway-first listings",
+      "copy": "Use the takeaway page when collection is fine and you want the broadest service-ready shortlist.",
+      "href": "/services/takeaway",
+      "label": "Browse takeaway restaurants"
+    },
+    {
+      "title": "Widen the shortlist if your area is thin",
+      "copy": "Use the main directory or area pages when you want to compare beyond one narrow service page.",
+      "href": "/",
+      "label": "Browse Indian restaurants in London"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "The Short Answer",
+      "body": [
+        "The easiest way to choose Indian takeaway in London is to avoid starting with a generic best-of list. Start by deciding whether the meal needs delivery or whether takeaway collection is acceptable, because that immediately changes the pool you should compare.",
+        "Once the service mode is clear, narrow the shortlist by cuisine style, review depth, and local area strength. That gives a faster and more reusable framework than scanning one long list of famous restaurants."
+      ]
+    },
+    {
+      "heading": "Why Service Fit Comes Before Prestige",
+      "body": [
+        "Takeaway intent is different from dine-in intent. A famous dining room can still be the wrong answer if the listing does not match the way you actually want to get the food, while a less famous local option can be a better fit for a weeknight order because the service mode is clearer and the proof is stronger for home use.",
+        "The current directory supports that distinction because delivery appears on 1,770 Indian-labelled listings and takeaway appears on 1,886. Readers do not need to begin with editorial prestige when the service data already narrows the field so quickly."
+      ]
+    },
+    {
+      "heading": "Delivery And Takeaway Are Similar, But Not The Same Search",
+      "body": [
+        "Delivery-first readers usually care most about convenience, travel distance, and whether the order still feels dependable when it arrives at home. Takeaway-first readers can accept collection, which often gives them a slightly larger pool and more flexibility when browsing by area.",
+        "In the current dataset, 1,754 Indian-labelled listings support both delivery and takeaway, so the overlap is large. That means the smartest workflow is not to treat them as separate worlds, but to decide which mode matters most and then keep the other as a fallback."
+      ]
+    },
+    {
+      "heading": "Use Cuisine Style Before Ratings",
+      "body": [
+        "Ratings matter, but they should come after style fit. A reader who wants dosa, idli, and rice-led dishes is solving a different problem from someone who wants tandoor items, naan, paneer, or richer curry-house mains, so the first comparison should be menu direction rather than score alone.",
+        "This matters even more for home ordering because menu style strongly affects what feels satisfying outside the restaurant. The service page helps with delivery or takeaway intent, but category and menu cues still decide whether the order matches the meal you had in mind."
+      ]
+    },
+    {
+      "heading": "What The London Directory Currently Shows",
+      "body": [
+        "The local evidence is strong enough to support filtering. The project currently holds 1,983 Indian-labelled listings, including 1,770 with delivery signals, 1,886 with takeaway signals, and 731 delivery-friendly listings rated 4.5 or higher. That is a large enough pool to choose by fit rather than by one editorial ranking.",
+        "The proof depth is also meaningful. The takeaway subset includes 1,463 listings with at least 100 reviews, and the delivery subset carries a combined visible review footprint of 1,393,242. In practical terms, readers can filter aggressively for service mode without running out of restaurants that still have strong public proof."
+      ]
+    },
+    {
+      "heading": "Local Area Still Changes The Quality Of The Shortlist",
+      "body": [
+        "Takeaway intent is still local intent. Harrow currently leads the delivery pool with 110 listings and the takeaway pool with 117, while Newham, Hounslow, Brent, Tower Hamlets, Ealing, Hillingdon, and Westminster also show deep service-ready pools. That means some boroughs let readers stay very specific, while others may need a wider search radius.",
+        "A practical workflow is to choose service mode first, then move into borough or area browsing only if the shortlist still feels too long. This keeps the search grounded in the meal need instead of forcing location to do all the work."
+      ]
+    },
+    {
+      "heading": "How To Make The Final Takeaway Decision",
+      "body": [
+        "Once the shortlist is small, compare the rating together with the review count, then check whether the style of food still looks right for home ordering. A slightly lower score backed by substantial proof is often safer than a newer listing with almost no review depth.",
+        "After that, use the directory details the same way you would for any other decision: confirm the area, the service options, and whether the listing gives enough confidence to order. The goal is not to find the single best Indian takeaway in London for everyone, but the best-fit option for this specific order."
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What should I check first when choosing Indian takeaway in London?",
+      "answer": "Check whether you need delivery or whether takeaway collection is acceptable. That first filter cuts down the shortlist faster than starting with ratings alone."
+    },
+    {
+      "question": "Is takeaway broader than delivery in the current directory?",
+      "answer": "Yes. The current dataset shows 1,886 Indian-labelled listings with takeaway signals and 1,770 with delivery signals, so takeaway currently covers a slightly larger pool."
+    },
+    {
+      "question": "Should I choose by rating or by cuisine style first?",
+      "answer": "Choose by cuisine style first, then use rating and review volume to make the final decision. Style decides whether the meal matches what you actually want; proof decides whether the restaurant looks dependable."
+    },
+    {
+      "question": "Which London areas currently have strong Indian takeaway pools?",
+      "answer": "Harrow is the strongest current pool in this dataset, with Newham, Hounslow, Brent, Tower Hamlets, Ealing, Hillingdon, and Westminster also showing deep service-ready coverage."
+    },
+    {
+      "question": "Can I use the same framework for other restaurant directories?",
+      "answer": "Yes. This is a reusable service-intent framework: choose service mode first, narrow by cuisine style, compare proof, then use area to make the final shortlist manageable."
+    }
+  ],
+  "internalLinks": [
+    {
+      "label": "Delivery restaurants",
+      "href": "/services/delivery",
+      "reason": "Move readers directly into delivery-intent directory pages."
+    },
+    {
+      "label": "Takeaway restaurants",
+      "href": "/services/takeaway",
+      "reason": "Support collection-first searches and hybrid service browsing."
+    },
+    {
+      "label": "Indian restaurants in London",
+      "href": "/",
+      "reason": "Keep a broad comparison route when readers want to widen the shortlist."
+    },
+    {
+      "label": "Areas",
+      "href": "/areas",
+      "reason": "Help readers narrow by borough once they know the service mode they want."
+    },
+    {
+      "label": "Restaurant categories",
+      "href": "/categories",
+      "reason": "Let readers browse cuisine style after they settle the service filter."
+    }
+  ],
+  "researchSources": [
+    {
+      "title": "Best Indian Takeaway in London | Holy Cow | Fine Indian Food",
+      "url": "https://www.holycowonline.com/",
+      "note": "Used to confirm that takeaway-intent pages are commonly framed around direct ordering, convenience, and house specialties."
+    },
+    {
+      "title": "THE 10 BEST Indian Restaurants with Delivery in London - Tripadvisor",
+      "url": "https://www.tripadvisor.com/Restaurants-g186338-c24-zfp19-London_England.html",
+      "note": "Used for review-led delivery browsing patterns and visible trust-signal framing."
+    },
+    {
+      "title": "The 10 Best Indian Restaurants in South London, London | TheFork",
+      "url": "https://www.thefork.co.uk/restaurants/london-c665790/south-london-a5937/indian-t451",
+      "note": "Used to compare area-led Indian restaurant browsing with rating and booking filters."
+    },
+    {
+      "title": "London's Best Indian Food Delivery & Takeaway - Masala Zone",
+      "url": "https://www.masalazone.com/online-delivery-collection/",
+      "note": "Used for takeaway landing-page framing around regional food range and delivery or collection convenience."
+    },
+    {
+      "title": "Indian Delivery & Takeaway Near Me in London | Just Eat",
+      "url": "https://www.just-eat.co.uk/takeaway/london/indian",
+      "note": "Used to confirm marketplace-style search intent around area breadth and immediate ordering."
+    },
+    {
+      "title": "Indian delivery options near Islington/North London with proper portion sizes?",
+      "url": "https://www.reddit.com/r/LondonFood/comments/1qhdcu0/indian_delivery_options_near_islingtonnorth/",
+      "note": "Used to capture recurring user pain points around portion size, value, and whether delivery still feels worthwhile."
+    }
+  ]
+}

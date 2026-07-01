@@ -1,4 +1,3 @@
-import { siteConfig } from "@/config/site";
 import type { Listing } from "@/data/listings";
 import type { EavGroup } from "@/lib/directory-semantic-map";
 
@@ -49,6 +48,14 @@ function joinList(items: string[]): string {
   return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
 }
 
+function joinLocationParts(items: string[]): string {
+  return items.join(", ");
+}
+
+function articleFor(value: string): "a" | "an" {
+  return /^[aeiou]/i.test(value.trim()) ? "an" : "a";
+}
+
 /**
  * Formats tube line names correctly.
  * ["Central"]           → "Central line"
@@ -78,15 +85,15 @@ function buildLocationBlock(listing: Listing): EavBlock {
     };
   }
 
-  // Build a rich sentence using whatever sub-fields are available.
-  // fullAddress already includes postcode + city in the data, so prefer it.
+  // fullAddress usually already includes postcode + city, so add only smaller locality signals.
   const parts: string[] = [];
   if (listing.neighborhood) parts.push(listing.neighborhood);
-  if (listing.borough && listing.borough !== listing.neighborhood) parts.push(listing.borough);
-  const cityLabel = listing.city ?? siteConfig.city;
-  if (cityLabel) parts.push(cityLabel);
+  if (listing.area && listing.area !== listing.neighborhood) parts.push(listing.area);
+  if (listing.borough && listing.borough !== listing.neighborhood && listing.borough !== listing.area) {
+    parts.push(listing.borough);
+  }
 
-  const locationPhrase = parts.length > 0 ? ` in ${parts.join(", ")}` : "";
+  const locationPhrase = parts.length > 0 ? `, in ${joinLocationParts(parts)}` : "";
 
   return {
     group: "location",
@@ -111,6 +118,7 @@ function buildCategoryBlock(listing: Listing): EavBlock {
   }
 
   const categoryPhrase = joinList(categories);
+  const restaurantPhrase = `${articleFor(categories[0])} ${categoryPhrase} restaurant`;
   const suffix = listing.listingTypes && listing.listingTypes.length > 0
     ? ` It is listed under the dining type: ${joinList(listing.listingTypes)}.`
     : "";
@@ -118,7 +126,7 @@ function buildCategoryBlock(listing: Listing): EavBlock {
   return {
     group: "category",
     question,
-    answer: `${name} is categorised as a ${categoryPhrase} restaurant.${suffix}`,
+    answer: `${name} is categorised as ${restaurantPhrase}.${suffix}`,
     available: true,
   };
 }

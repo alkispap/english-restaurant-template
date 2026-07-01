@@ -176,7 +176,10 @@ function computeInternalHrefIndexability(href: string) {
   }
 
   if (href.match(/^\/best\/[^/?]+$/)) return true;
-  if (href.match(/^\/listings\/[^/?]+$/)) return true;
+  if (href.match(/^\/restaurants\/[^/?]+$/)) return true;
+  if (["/restaurants", "/areas", "/categories", "/guides"].includes(href)) return true;
+  if (href.match(/^\/guides\/[^/?]+$/)) return true;
+  if (["/about", "/contact", "/privacy-policy", "/terms", "/methodology", "/suggest-update"].includes(href)) return true;
   if (href === "/") return true;
 
   return false;
@@ -184,7 +187,13 @@ function computeInternalHrefIndexability(href: string) {
 
 function pageTypeForHref(href: string): DirectoryPageTypeBrief | undefined {
   if (href === "/") return "homepage";
-  if (href.match(/^\/listings\/[^/?]+$/)) return "listing_detail";
+  if (href === "/restaurants") return "directory_search";
+  if (href === "/areas") return "area_index";
+  if (href === "/categories") return "category_index";
+  if (href === "/guides") return "guide_index";
+  if (href.match(/^\/guides\/[^/?]+$/)) return "guide_article";
+  if (["/about", "/contact", "/privacy-policy", "/terms", "/methodology", "/suggest-update"].includes(href)) return "trust_page";
+  if (href.match(/^\/restaurants\/[^/?]+$/)) return "listing_detail";
   if (href.match(/^\/areas\/[^/?]+\/categories\/[^/?]+$/)) return "area_category_hub";
   if (href.match(/^\/areas\/[^/?]+$/)) return "area_hub";
   if (href.match(/^\/neighborhoods\/[^/?]+$/)) return "neighborhood_hub";

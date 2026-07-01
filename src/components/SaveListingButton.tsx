@@ -58,8 +58,8 @@ export function SaveListingButton({ slug, label = "Save", compact = false, class
       type="button"
       className={`focus-ring inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold transition ${
         isSaved
-          ? "border-accent bg-orange-50 text-accent dark:bg-orange-950/30"
-          : "border-line bg-white text-ink hover:border-primary dark:bg-slate-800 dark:text-slate-100"
+          ? "border-accent bg-orange-50 text-accent"
+          : "border-line bg-white text-ink hover:border-primary"
       } ${className}`}
       aria-pressed={isSaved}
       aria-label={isSaved ? `Remove ${slug} from saved listings` : `Save ${slug}`}

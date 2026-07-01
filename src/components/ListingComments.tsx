@@ -15,7 +15,7 @@ function commentsStorageKey(slug: string) {
   return `listing-comments:${slug}`;
 }
 
-export function ListingComments({ slug }: { slug: string }) {
+export function ListingComments({ slug, heading = "Comments" }: { slug: string; heading?: string }) {
   const [comments, setComments] = useState<ListingComment[]>([]);
   const [value, setValue] = useState("");
 
@@ -64,7 +64,7 @@ export function ListingComments({ slug }: { slug: string }) {
     <section id="comments" className="mt-10 scroll-mt-20 rounded-lg border border-line bg-white p-6">
       <div className="flex items-center gap-2">
         <MessageSquare className="h-5 w-5 text-primary" aria-hidden />
-        <h2 className="text-2xl font-bold text-ink">Comments</h2>
+        <h2 className="text-2xl font-bold text-ink">{heading}</h2>
       </div>
       <p className="mt-2 text-sm text-muted">Share your thoughts about this listing. Comments are saved in this browser only.</p>
 

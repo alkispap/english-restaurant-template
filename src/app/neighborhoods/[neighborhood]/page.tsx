@@ -2,23 +2,25 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
-import { getNeighborhoodSeoPage, toSeoMetadata, type SeoPageSearchParams } from "@/lib/seo-pages";
+import { getNeighborhoodSeoPage, toSeoMetadata } from "@/lib/seo-pages";
+import { getStaticNeighborhoodParams } from "@/lib/static-route-params";
 
 type NeighborhoodPageProps = {
   params: Promise<{ neighborhood: string }>;
-  searchParams: Promise<SeoPageSearchParams>;
 };
 
-export const dynamic = "force-dynamic";
-
-export async function generateMetadata({ params, searchParams }: NeighborhoodPageProps): Promise<Metadata> {
-  const { neighborhood } = await params;
-  return toSeoMetadata(getNeighborhoodSeoPage(neighborhood, await searchParams));
+export function generateStaticParams() {
+  return getStaticNeighborhoodParams();
 }
 
-export default async function NeighborhoodPage({ params, searchParams }: NeighborhoodPageProps) {
+export async function generateMetadata({ params }: NeighborhoodPageProps): Promise<Metadata> {
   const { neighborhood } = await params;
-  const page = getNeighborhoodSeoPage(neighborhood, await searchParams);
+  return toSeoMetadata(getNeighborhoodSeoPage(neighborhood, {}));
+}
+
+export default async function NeighborhoodPage({ params }: NeighborhoodPageProps) {
+  const { neighborhood } = await params;
+  const page = getNeighborhoodSeoPage(neighborhood, {});
   if (!page) notFound();
 
   return (

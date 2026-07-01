@@ -4,6 +4,9 @@ import process from "node:process";
 import {
   analyzeDirectoryFile,
   renderListingsFile,
+  renderListingsJsonFile,
+  renderListingSearchRecordsJsonFile,
+  renderMissingCategoryReview,
   renderReport,
   renderReportForListings,
   selectCuratedRestaurantSample
@@ -16,8 +19,11 @@ const sampleArg = args.find((arg) => arg.startsWith("--sample"));
 const sampleSize = sampleArg ? parseSampleSize(sampleArg) : undefined;
 const inputArg = args.find((arg) => !arg.startsWith("--"));
 const inputPath = path.resolve(root, inputArg ?? "data/directory.csv");
-const outputPath = path.resolve(root, "src/data/listings.ts");
+const listingsSourcePath = path.resolve(root, "src/data/listings.ts");
+const listingsJsonPath = path.resolve(root, "data/listings.json");
+const listingSearchRecordsJsonPath = path.resolve(root, "data/listing-search-records.json");
 const reportPath = path.resolve(root, "data/import-report.md");
+const categoryReviewPath = path.resolve(root, "data/category-inference-review.md");
 
 if (!fs.existsSync(inputPath)) {
   console.error(`CSV file not found: ${inputPath}`);
@@ -36,13 +42,28 @@ if (dryRun) {
   console.log(report);
   console.log("Dry run complete. No files were changed.");
 } else {
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, sampleSize ? renderListingsFile(importedListings) : result.listingsFile, "utf8");
+  fs.mkdirSync(path.dirname(listingsSourcePath), { recursive: true });
+  fs.writeFileSync(listingsSourcePath, sampleSize ? renderListingsFile() : result.listingsFile, "utf8");
+  fs.mkdirSync(path.dirname(listingsJsonPath), { recursive: true });
+  fs.writeFileSync(
+    listingsJsonPath,
+    sampleSize ? renderListingsJsonFile(importedListings) : result.listingsJsonFile,
+    "utf8"
+  );
+  fs.writeFileSync(
+    listingSearchRecordsJsonPath,
+    sampleSize ? renderListingSearchRecordsJsonFile(importedListings) : result.listingSearchRecordsJsonFile,
+    "utf8"
+  );
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
   fs.writeFileSync(reportPath, report, "utf8");
+  fs.writeFileSync(categoryReviewPath, renderMissingCategoryReview(result.categoryReview), "utf8");
   console.log(`Imported ${importedListings.length} listings from ${path.relative(root, inputPath)}`);
-  console.log(`Updated ${path.relative(root, outputPath)}`);
+  console.log(`Updated ${path.relative(root, listingsSourcePath)}`);
+  console.log(`Updated ${path.relative(root, listingsJsonPath)}`);
+  console.log(`Updated ${path.relative(root, listingSearchRecordsJsonPath)}`);
   console.log(`Wrote ${path.relative(root, reportPath)}`);
+  console.log(`Wrote ${path.relative(root, categoryReviewPath)}`);
 }
 
 function parseSampleSize(value: string) {

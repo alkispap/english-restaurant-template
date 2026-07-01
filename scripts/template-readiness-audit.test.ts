@@ -146,9 +146,52 @@ assert.equal(issue(result, "import_report_non_operational").severity, "warning")
 assert.equal(issue(result, "import_report_missing_images").severity, "warning");
 assert.equal(issue(result, "import_report_missing_categories").severity, "warning");
 
+result = report({
+  importReportText: `# Import Report
+
+- Source rows: 10
+- Imported listings: 9
+- Skipped rows: 0
+- Duplicate rows merged: 1
+- Non-operational rows flagged: 0
+
+## Warnings
+
+- None
+`
+});
+assert.ok(!codes(result).includes("import_report_skipped_rows"));
+assert.ok(!codes(result).includes("import_report_duplicates"));
+
 result = report({ listings: Array.from({ length: 20 }, (_, index) => ({ ...weakListing, slug: `weak-${index}` })) });
 assert.equal(issue(result, "listing_quality_risk").severity, "warning");
 assert.equal(issue(result, "freshness_high_risk").severity, "warning");
+
+result = report({
+  listings: [
+    completeListing,
+    {
+      ...completeListing,
+      name: "Bad Coordinate",
+      slug: "bad-coordinate",
+      details: { ...completeListing.details, placeId: "bad-coordinate-place" },
+      location: { latitude: 47.73855, longitude: 12.5088275 }
+    },
+    {
+      ...completeListing,
+      name: "Missing Location",
+      slug: "missing-location",
+      address: undefined,
+      postcode: undefined,
+      area: undefined,
+      neighborhood: undefined,
+      borough: undefined,
+      details: { ...completeListing.details, placeId: "missing-location-place" }
+    }
+  ]
+});
+assert.equal(issue(result, "data_quality_coordinates_outside_london").severity, "warning");
+assert.equal(issue(result, "data_quality_core_location_fields_missing").severity, "warning");
 
 result = report({ listings: [] });
 assert.equal(issue(result, "weak_hub_coverage").severity, "warning");

@@ -2,6 +2,7 @@ import { listings } from "../src/data/listings";
 import { filterListings, getAreas, getCategories, getFacetLabels, getNeighborhoods, slugify, type FacetKey } from "../src/lib/directory";
 import { getAreaCategoryCombinations, getPopularSearches } from "../src/lib/directory-growth";
 import { isDirectoryFeatureEnabled } from "../src/lib/directory-features";
+import { getIndexedListingFilterCount, getListingFilterCount } from "../src/lib/listing-filter-counts";
 import { SEO_POLICY, isApprovedHighIntentFacet, isListingIndexable } from "../src/lib/seo-policy";
 
 type AuditRow = {
@@ -9,6 +10,8 @@ type AuditRow = {
   indexable: number;
   noindex: number;
 };
+
+const BASE_INDEXABLE_ROUTES = ["/", "/restaurants", "/areas", "/categories"];
 
 export function buildSeoAuditReport() {
   const listingIndexable = listings.filter(isListingIndexable).length;
@@ -18,26 +21,26 @@ export function buildSeoAuditReport() {
       indexable: listingIndexable,
       noindex: listings.length - listingIndexable
     },
-    countRows("Area hubs", getAreas(), (area) => filterListings({ area: slugify(area) }).length >= SEO_POLICY.routeThresholds.area),
+    countRows("Area hubs", getAreas(), (area) => getListingFilterCount("area", slugify(area)) >= SEO_POLICY.routeThresholds.area),
     countRows(
       "Neighborhood hubs",
       getNeighborhoods(),
-      (neighborhood) => filterListings({ neighborhood: slugify(neighborhood) }).length >= SEO_POLICY.routeThresholds.neighborhood
+      (neighborhood) => getListingFilterCount("neighborhood", slugify(neighborhood)) >= SEO_POLICY.routeThresholds.neighborhood
     ),
     countRows(
       "Category hubs",
       getCategories(),
-      (category) => filterListings({ category: slugify(category) }).length >= SEO_POLICY.routeThresholds.category
+      (category) => getListingFilterCount("category", slugify(category)) >= SEO_POLICY.routeThresholds.category
     ),
     countRows("Area+category hubs", getAreaCategoryCombinations(), (item) => item.count >= SEO_POLICY.routeThresholds.areaCategory),
     countRows(
       "Popular search hubs",
       getPopularSearches(),
-      (search) => filterListings(search.filters).length >= SEO_POLICY.routeThresholds.best
+      (search) => routeFilterCount(search.filters) >= SEO_POLICY.routeThresholds.best
     ),
     countFacetRows()
   ];
-  const totalIndexable = rows.reduce((sum, row) => sum + row.indexable, 3);
+  const totalIndexable = rows.reduce((sum, row) => sum + row.indexable, BASE_INDEXABLE_ROUTES.length);
   const totalNoindex = rows.reduce((sum, row) => sum + row.noindex, 0);
 
   return [
@@ -80,8 +83,14 @@ function countFacetRows(): AuditRow {
     values,
     (value) =>
       isApprovedHighIntentFacet(value.facet, value.slug) &&
-      filterListings({ [value.facet]: value.slug }).length >= SEO_POLICY.routeThresholds.facet
+      getListingFilterCount(value.facet, value.slug) >= SEO_POLICY.routeThresholds.facet
   );
+}
+
+function routeFilterCount(filters: Parameters<typeof getIndexedListingFilterCount>[0]) {
+  const indexedCount = getIndexedListingFilterCount(filters);
+  if (indexedCount !== undefined) return indexedCount;
+  return filterListings(filters).length;
 }
 
 if (require.main === module) {

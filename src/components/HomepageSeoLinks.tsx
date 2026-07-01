@@ -1,10 +1,22 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getHomepageSeoFeatureGroups } from "@/lib/directory-ux";
 import { homepageHeadings } from "@/lib/homepage-headings";
 
-export function HomepageSeoLinks() {
-  const groups = getHomepageSeoFeatureGroups();
+type HomepageSeoLinkGroup = {
+  title: string;
+  copy?: string;
+  links: Array<{
+    label: string;
+    href: string;
+    count?: number;
+  }>;
+};
+
+type HomepageSeoLinksProps = {
+  groups: HomepageSeoLinkGroup[];
+};
+
+export function HomepageSeoLinks({ groups }: HomepageSeoLinksProps) {
   if (!groups.length) return null;
 
   return (

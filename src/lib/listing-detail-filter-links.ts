@@ -1,4 +1,4 @@
-import { directoryIndexPath, offeringPath, servicePath } from "@/lib/routes";
+import { directorySearchPath, offeringPath, servicePath } from "@/lib/routes";
 import { slugify } from "@/lib/slug";
 
 export type DetailFilterName =
@@ -28,5 +28,5 @@ export function buildDetailFilterHref(filterName: DetailFilterName, value: strin
   if (areaSlug) params.set("area", areaSlug);
   params.set(filterName, valueSlug);
 
-  return directoryIndexPath(`?${params.toString()}`);
+  return directorySearchPath(`?${params.toString()}`);
 }

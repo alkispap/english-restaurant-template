@@ -9,18 +9,25 @@ import {
   updatePlanItem
 } from "./article-script-utils";
 
-const { plan, articles } = loadArticleWorkflowState();
-const requestedId = argValue("id");
-const item = requestedId ? plan.find((topic) => topic.id === requestedId) : findNextPlannedArticle(plan, articles);
+async function main() {
+  const { plan, articles } = loadArticleWorkflowState();
+  const requestedId = argValue("id");
+  const item = requestedId ? plan.find((topic) => topic.id === requestedId) : findNextPlannedArticle(plan, articles);
 
-if (!item) {
-  console.error("No matching planned article found for live research.");
-  process.exit(1);
+  if (!item) {
+    console.error("No matching planned article found for live research.");
+    process.exit(1);
+  }
+
+  const results = await fetchLiveSearchResults(item.primaryKeyword);
+  const research = buildResearchNotesFromSearchResults(item, results);
+  const researchPath = saveResearchMarkdown(item.slug, researchNotesToMarkdown(research));
+  saveArticlePlan(updatePlanItem(plan, item.id, { status: "researched", researchNotesPath: relativeContentPath(researchPath) }));
+
+  console.log(`Saved live research notes for "${item.title}" to ${relativeContentPath(researchPath)}.`);
 }
 
-const results = await fetchLiveSearchResults(item.primaryKeyword);
-const research = buildResearchNotesFromSearchResults(item, results);
-const researchPath = saveResearchMarkdown(item.slug, researchNotesToMarkdown(research));
-saveArticlePlan(updatePlanItem(plan, item.id, { status: "researched", researchNotesPath: relativeContentPath(researchPath) }));
-
-console.log(`Saved live research notes for "${item.title}" to ${relativeContentPath(researchPath)}.`);
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

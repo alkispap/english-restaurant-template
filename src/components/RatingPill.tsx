@@ -11,7 +11,7 @@ export function RatingPill({ rating, reviewCount, href }: RatingPillProps) {
     <>
       <Star className="h-3.5 w-3.5 fill-current" aria-hidden />
       {rating.toFixed(1)}
-      {reviewCount ? <span className="font-medium opacity-85">({reviewCount.toLocaleString()})</span> : null}
+      {reviewCount ? <span className="font-medium">({reviewCount.toLocaleString()})</span> : null}
     </>
   );
 

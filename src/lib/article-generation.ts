@@ -1,4 +1,6 @@
-import type { ArticleContent, ArticlePlanItem, ArticleResearchNotes } from "@/lib/article-types";
+import { siteConfig } from "@/config/site";
+import { listings } from "@/data/listings";
+import type { ArticleContent, ArticleDataItem, ArticlePlanItem, ArticleResearchNotes } from "@/lib/article-types";
 
 export type SearchResult = {
   title: string;
@@ -39,10 +41,80 @@ export function buildDraftArticleFromPlanAndResearch(
     title: plan.title,
     metaTitle: `${plan.title} | Guide`,
     metaDescription: `Learn ${sentenceCase(plan.primaryKeyword)} with practical context, live-search themes, and useful directory links.`,
+    answer: directAnswer(plan),
     publishedAt: "",
     updatedAt,
     cluster: plan.cluster,
     primaryKeyword: plan.primaryKeyword,
+    heroImage: {
+      src: `/images/articles/${plan.slug}/hero.png`,
+      alt: `${plan.title} visual guide`,
+      caption: imageBrief(plan, "hero")
+    },
+    keyFacts: [
+      {
+        label: "Intent",
+        value: sentenceCase(plan.intent.replace(/-/g, " ")),
+        detail: "The opening sentence should answer the search query before supporting detail appears."
+      },
+      {
+        label: "Directory link",
+        value: plan.internalLinks[0]?.label ?? siteConfig.niche,
+        detail: "The article should move readers from learning into local comparison."
+      },
+      {
+        label: "Visual plan",
+        value: "Generated image",
+        detail: "Use a meaningful generated visual or diagram instead of decorative stock imagery."
+      }
+    ],
+    visualBlocks: [
+      {
+        title: "Visual Summary",
+        image: {
+          src: `/images/articles/${plan.slug}/visual-summary.svg`,
+          alt: `${plan.title} visual summary`,
+          caption: imageBrief(plan, "visual")
+        },
+        body: "This visual should explain the core concept in one glance and reinforce the first-sentence answer."
+      }
+    ],
+    dataBlocks: [
+      {
+        title: `How this topic connects to ${siteConfig.city}`,
+        description: "A small local signal block generated from the current directory dataset.",
+        sourceLabel: "Based on current directory listings",
+        items: directoryDataItems()
+      }
+    ],
+    comparisonTables: [
+      {
+        title: "How to compare the main options",
+        columns: ["Signal", "What it tells you", "How to use it"],
+        rows: [
+          {
+            label: "Menu focus",
+            values: ["Whether the restaurant is broad or specialist", "Look for regional dishes, grills, breads, dosa, thali, or house specials."]
+          },
+          {
+            label: "Dining need",
+            values: ["Whether it fits the occasion", "Compare dine-in, takeaway, delivery, group suitability, and opening hours."]
+          },
+          {
+            label: "Local proof",
+            values: ["How strong the listing evidence is", "Use review count, rating, area, photos, and transport details together."]
+          }
+        ]
+      }
+    ],
+    ctaBlocks: [
+      {
+        title: `Compare ${siteConfig.niche}`,
+        copy: "Use the directory to move from this guide into local restaurants, categories, areas, ratings, and service options.",
+        href: plan.internalLinks[0]?.href ?? "/",
+        label: `Browse ${siteConfig.niche}`
+      }
+    ],
     sections: [
       {
         heading: `What ${plan.title.replace(/[?!.]+$/, "")} Covers`,
@@ -84,6 +156,84 @@ export function buildDraftArticleFromPlanAndResearch(
     internalLinks: plan.internalLinks,
     researchSources: research.sources
   };
+}
+
+function directAnswer(plan: ArticlePlanItem) {
+  if (/what is indian food/i.test(plan.primaryKeyword)) {
+    return "Indian food is a wide collection of regional cuisines shaped by local ingredients, religion, trade, climate, migration, and family traditions across India and the Indian diaspora.";
+  }
+
+  if (/in london/i.test(plan.primaryKeyword)) {
+    return `${sentenceCase(plan.primaryKeyword)} is best understood by comparing restaurant style, area, regional focus, dietary options, ratings, and service choices across ${siteConfig.city}.`;
+  }
+
+  if (/vs|versus|compare/i.test(plan.primaryKeyword)) {
+    return `${plan.title.replace(/[?!.]+$/, "")} compares the main differences readers need to understand before choosing a restaurant, dish, or dining style.`;
+  }
+
+  if (/how to/i.test(plan.primaryKeyword)) {
+    return `${sentenceCase(plan.primaryKeyword)} means matching the restaurant's food style, location, reviews, services, price, and occasion to what you need.`;
+  }
+
+  return `${sentenceCase(plan.primaryKeyword)} is a topic readers should understand through a direct definition, visual examples, local data, and clear next steps.`;
+}
+
+function imageBrief(plan: ArticlePlanItem, kind: "hero" | "visual") {
+  if (kind === "hero") {
+    return `Generated hero image brief: show ${plan.primaryKeyword} with concrete visual details, no text, no logos, and enough context to support the opening answer.`;
+  }
+
+  return `Generated visual brief: summarize ${plan.primaryKeyword} as a simple educational diagram or comparison graphic with clear labels.`;
+}
+
+function directoryDataItems(): ArticleDataItem[] {
+  const total = listings.length;
+  const withImages = listings.filter((listing) => listing.images.length > 0).length;
+  const withRatings = listings.filter((listing) => typeof listing.rating === "number").length;
+  const withDelivery = listings.filter((listing) => listing.details?.serviceOptions?.some((option) => /delivery/i.test(option))).length;
+  const topCategory = mostCommon(listings.flatMap((listing) => listing.categories.filter((category) => !/^indian$/i.test(category))));
+
+  return [
+    {
+      label: "Directory listings",
+      value: total.toLocaleString(),
+      detail: `Current ${siteConfig.city} restaurant records in this project.`
+    },
+    {
+      label: "Listings with photos",
+      value: percentage(withImages, total),
+      detail: `${withImages.toLocaleString()} listings include at least one image.`
+    },
+    {
+      label: "Listings with ratings",
+      value: percentage(withRatings, total),
+      detail: `${withRatings.toLocaleString()} listings include a rating value.`
+    },
+    {
+      label: "Delivery signal",
+      value: percentage(withDelivery, total),
+      detail: `${withDelivery.toLocaleString()} listings mention delivery.`
+    },
+    {
+      label: "Common related category",
+      value: topCategory || "Regional cuisine",
+      detail: "Useful for turning article readers into category browsers."
+    }
+  ];
+}
+
+function mostCommon(values: string[]) {
+  const counts = new Map<string, number>();
+  for (const value of values) {
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+
+  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0];
+}
+
+function percentage(value: number, total: number) {
+  if (!total) return "0%";
+  return `${Math.round((value / total) * 100)}%`;
 }
 
 export async function fetchLiveSearchResults(query: string, fetcher: typeof fetch = fetch): Promise<SearchResult[]> {

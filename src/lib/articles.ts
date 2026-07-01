@@ -2,7 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Metadata, MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
-import type { ArticleContent, ArticlePlanItem } from "@/lib/article-types";
+import type { ArticleContent, ArticleImage, ArticlePlanItem } from "@/lib/article-types";
+import { pageShareMetadata } from "@/lib/share-metadata";
 
 export const ARTICLE_PLAN_FILE = path.join(process.cwd(), "content", "article-plan.json");
 export const ARTICLES_DIR = path.join(process.cwd(), "content", "articles");
@@ -10,6 +11,10 @@ export const RESEARCH_DIR = path.join(process.cwd(), "content", "research");
 
 export function guidePath(slug?: string) {
   return slug ? `/guides/${slug}` : "/guides";
+}
+
+export function guidePreviewPath(slug?: string) {
+  return slug ? `/guides/preview/${slug}` : "/guides/preview";
 }
 
 export function getArticlePlan() {
@@ -26,6 +31,12 @@ export function getPublicGuideArticles(articles: ArticleContent[] = getAllArticl
     .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.title.localeCompare(b.title));
 }
 
+export function getDraftPreviewArticles(articles: ArticleContent[] = getAllArticles()) {
+  return articles
+    .filter((article) => article.status === "drafted")
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
 export function getArticleBySlug(slug: string, articles: ArticleContent[] = getAllArticles()) {
   return articles.find((article) => article.slug === slug);
 }
@@ -35,13 +46,58 @@ export function getPublishedArticleBySlug(slug: string, articles: ArticleContent
   return article?.status === "published" ? article : undefined;
 }
 
+export function getPreviewArticleBySlug(slug: string, articles: ArticleContent[] = getAllArticles()) {
+  const article = getArticleBySlug(slug, articles);
+  return article?.status === "drafted" ? article : undefined;
+}
+
+export function buildArticlePageTitle(article: Pick<ArticleContent, "metaTitle">) {
+  return article.metaTitle.replace(/\s+\|\s+Guide$/i, "");
+}
+
 export function getArticleRouteMetadata(article: ArticleContent): Metadata {
+  const title = buildArticlePageTitle(article);
+  const canonical = guidePath(article.slug);
+  const primaryImage = getArticleImages(article)[0];
+
   return {
-    title: article.metaTitle,
+    title,
     description: article.metaDescription,
     alternates: {
-      canonical: guidePath(article.slug)
-    }
+      canonical
+    },
+    ...pageShareMetadata({
+      title,
+      description: article.metaDescription,
+      path: canonical,
+      image: primaryImage?.src,
+      imageAlt: primaryImage?.alt
+    })
+  };
+}
+
+export function getDraftPreviewRouteMetadata(article: ArticleContent): Metadata {
+  const title = buildArticlePageTitle(article);
+  const canonical = guidePreviewPath(article.slug);
+  const primaryImage = getArticleImages(article)[0];
+
+  return {
+    title,
+    description: article.metaDescription,
+    alternates: {
+      canonical
+    },
+    robots: {
+      index: false,
+      follow: false
+    },
+    ...pageShareMetadata({
+      title,
+      description: article.metaDescription,
+      path: canonical,
+      image: primaryImage?.src,
+      imageAlt: primaryImage?.alt
+    })
   };
 }
 
@@ -53,6 +109,8 @@ export function articleSitemapRoutes(baseUrl: string, articles: ArticleContent[]
 }
 
 export function buildArticleJsonLd(article: ArticleContent): Record<string, unknown> {
+  const images = getArticleImages(article).map((image) => absoluteUrl(image.src));
+
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -69,6 +127,7 @@ export function buildArticleJsonLd(article: ArticleContent): Record<string, unkn
       "@type": "Organization",
       name: siteConfig.name
     },
+    ...(images.length ? { image: images } : {}),
     keywords: [article.primaryKeyword, article.cluster].filter(Boolean)
   };
 }
@@ -96,6 +155,24 @@ export function articleContentPath(slug: string) {
 
 export function articleResearchNotesPath(slug: string) {
   return path.join(RESEARCH_DIR, `${slug}.md`);
+}
+
+export function getArticleImages(article: ArticleContent): ArticleImage[] {
+  const images = [
+    article.heroImage,
+    ...(article.visualBlocks ?? []).map((block) => block.image)
+  ].filter(Boolean) as ArticleImage[];
+
+  return images.filter((image, index) => images.findIndex((candidate) => candidate.src === image.src) === index);
+}
+
+export function getArticlePrimaryImage(article: ArticleContent) {
+  return getArticleImages(article)[0]?.src;
+}
+
+function absoluteUrl(src: string) {
+  if (/^https?:\/\//i.test(src)) return src;
+  return `${siteConfig.url}${src.startsWith("/") ? src : `/${src}`}`;
 }
 
 function readJsonDirectory<T>(dir: string) {

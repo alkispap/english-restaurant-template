@@ -28,8 +28,10 @@ import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { isOpenNow } from "@/lib/opening-hours";
 import {
   LISTINGS_PAGE_SIZE,
+  listingResultSummaryFromListing,
   mapPointsFromListings,
   paginateListings,
+  type ListingResultSummary,
   type ListingsPageLinkValues,
   type ListingsViewMode,
   type MapPoint
@@ -52,6 +54,7 @@ import {
   typePath
 } from "@/lib/routes";
 import { seoLandingHeadings } from "@/lib/seo-landing-headings";
+import { pageShareMetadata } from "@/lib/share-metadata";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/structured-data";
 
 export type SeoPageSearchParams = Record<string, string | string[] | undefined>;
@@ -103,12 +106,13 @@ export type SeoPageModel = {
     title: string;
     body: string;
   };
+  resultsHeadingContext?: string;
   areaGuide?: AreaGuideModel;
   informationGainBlocks: SeoInformationGainBlock[];
   faqs: SeoFaq[];
   summaryStats: SeoSummaryStat[];
   relatedLinkGroups: SeoRelatedLinkGroup[];
-  listings: Listing[];
+  listings: ListingResultSummary[];
   mapPoints: MapPoint[];
   totalCount: number;
   currentPage: number;
@@ -130,6 +134,7 @@ type BasePageInput = {
   introCategory?: string;
   guideTitle: string;
   guideBody: string;
+  resultsHeadingContext?: string;
   canonical: string;
   minIndexableResults: number;
   baseFilters: ListingFilters;
@@ -152,11 +157,14 @@ export function getAreaSeoPage(areaSlug: string, searchParams: SeoPageSearchPara
   const headings = seoLandingHeadings.area(label);
   const title = headings.heroTitle;
   const description = `${introCount("area", label)} in ${label}, ${siteConfig.cityOrRegion}. Compare ratings, prices, service options, and opening details before choosing where to eat.`;
-  const categoryLinks = getAreaCategoryCombinationsForArea(areaSlug, 8).map((item) => ({
-    label: `${item.categoryLabel} in ${item.areaLabel}`,
-    href: item.href,
-    count: item.count
-  }));
+  const categoryLinks = getAreaCategoryCombinationsForArea(areaSlug, 12)
+    .filter(isIndexableAreaCategoryCombination)
+    .slice(0, 8)
+    .map((item) => ({
+      label: areaCategoryAnchorLabel(item.categoryLabel, item.areaLabel),
+      href: item.href,
+      count: item.count
+    }));
 
   return buildSeoPage({
     kind: "area",
@@ -166,6 +174,7 @@ export function getAreaSeoPage(areaSlug: string, searchParams: SeoPageSearchPara
     introSubject: label,
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
+    resultsHeadingContext: headings.resultsHeadingContext,
     areaGuide: getAreaGuideModel(areaSlug),
     canonical,
     minIndexableResults: SEO_POLICY.routeThresholds.area,
@@ -207,6 +216,7 @@ export function getNeighborhoodSeoPage(neighborhoodSlug: string, searchParams: S
     introSubject: label,
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
+    resultsHeadingContext: headings.resultsHeadingContext,
     canonical,
     minIndexableResults: SEO_POLICY.routeThresholds.neighborhood,
     baseFilters: { neighborhood: neighborhoodSlug, sort: directoryConfig.defaultSort },
@@ -218,7 +228,11 @@ export function getNeighborhoodSeoPage(neighborhoodSlug: string, searchParams: S
     relatedLinkGroups: [
       {
         title: headings.related.areaLinksTitle,
-        links: matchingAreas.map((area) => ({ label: area.label, href: areaPath(slugify(area.label)), count: area.count }))
+        links: matchingAreas.map((area) => ({
+          label: areaAnchorLabel(area.label),
+          href: areaPath(slugify(area.label)),
+          count: area.count
+        }))
       },
       { title: headings.related.categoryLinksTitle, links: categoryLinks() },
       { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
@@ -245,6 +259,7 @@ export function getCategorySeoPage(categorySlug: string, searchParams: SeoPageSe
     introCategory: label,
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
+    resultsHeadingContext: headings.resultsHeadingContext,
     canonical,
     minIndexableResults: SEO_POLICY.routeThresholds.category,
     baseFilters: { category: categorySlug, sort: "rating" },
@@ -256,11 +271,14 @@ export function getCategorySeoPage(categorySlug: string, searchParams: SeoPageSe
     relatedLinkGroups: [
       {
         title: headings.related.areaCategoryLinksTitle,
-        links: getAreaCategoryCombinationsForCategory(categorySlug, 8).map((item) => ({
-          label: item.areaLabel,
-          href: item.href,
-          count: item.count
-        }))
+        links: getAreaCategoryCombinationsForCategory(categorySlug, 12)
+          .filter(isIndexableAreaCategoryCombination)
+          .slice(0, 8)
+          .map((item) => ({
+            label: areaCategoryAnchorLabel(label, item.areaLabel),
+            href: item.href,
+            count: item.count
+          }))
       },
       { title: headings.related.categoryLinksTitle, links: categoryLinks(categorySlug) },
       { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
@@ -291,6 +309,7 @@ export function getAreaCategorySeoPage(
     introCategory: combination.categoryLabel,
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
+    resultsHeadingContext: headings.resultsHeadingContext,
     canonical,
     minIndexableResults: SEO_POLICY.routeThresholds.areaCategory,
     baseFilters: { area: areaSlug, category: categorySlug, sort: "rating" },
@@ -303,15 +322,19 @@ export function getAreaCategorySeoPage(
     relatedLinkGroups: [
       {
         title: headings.related.categoryLinksTitle,
-        links: getAreaCategoryCombinationsForArea(areaSlug, 8)
+        links: getAreaCategoryCombinationsForArea(areaSlug, 12)
           .filter((item) => item.categorySlug !== categorySlug)
-          .map((item) => ({ label: item.categoryLabel, href: item.href, count: item.count }))
+          .filter(isIndexableAreaCategoryCombination)
+          .slice(0, 8)
+          .map((item) => ({ label: areaCategoryAnchorLabel(item.categoryLabel, item.areaLabel), href: item.href, count: item.count }))
       },
       {
         title: headings.related.areaLinksTitle,
-        links: getAreaCategoryCombinationsForCategory(categorySlug, 8)
+        links: getAreaCategoryCombinationsForCategory(categorySlug, 12)
           .filter((item) => item.areaSlug !== areaSlug)
-          .map((item) => ({ label: item.areaLabel, href: item.href, count: item.count }))
+          .filter(isIndexableAreaCategoryCombination)
+          .slice(0, 8)
+          .map((item) => ({ label: areaCategoryAnchorLabel(item.categoryLabel, item.areaLabel), href: item.href, count: item.count }))
       },
       { title: headings.related.usefulSearchesTitle, links: usefulSearchLinks() }
     ],
@@ -332,6 +355,7 @@ export function getPopularSearchSeoPage(slug: string, searchParams: SeoPageSearc
     introSubject: search.title,
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
+    resultsHeadingContext: headings.resultsHeadingContext,
     canonical: search.href,
     minIndexableResults: SEO_POLICY.routeThresholds.best,
     baseFilters: { ...search.filters, sort: search.sort ?? directoryConfig.defaultSort },
@@ -347,8 +371,9 @@ export function getPopularSearchSeoPage(slug: string, searchParams: SeoPageSearc
       {
         title: headings.related.areaCategoryLinksTitle,
         links: getAreaCategoryCombinations()
+          .filter(isIndexableAreaCategoryCombination)
           .slice(0, 8)
-          .map((item) => ({ label: `${item.categoryLabel} in ${item.areaLabel}`, href: item.href, count: item.count }))
+          .map((item) => ({ label: areaCategoryAnchorLabel(item.categoryLabel, item.areaLabel), href: item.href, count: item.count }))
       }
     ],
     faqs: bestFaqs(headings)
@@ -361,7 +386,7 @@ export function getFacetSeoPage(facet: FacetKey, valueSlug: string, searchParams
   if (!label) return undefined;
 
   const canonical = facetPath(facet, valueSlug);
-  const headings = seoLandingHeadings.facet(label);
+  const headings = seoLandingHeadings.facet(facet, label);
   const title = headings.heroTitle;
   const description = `${introCount("facet", label)} with ${label.toLowerCase()} in ${siteConfig.cityOrRegion}. Compare matching restaurants by area, rating, price, and practical details.`;
 
@@ -373,6 +398,7 @@ export function getFacetSeoPage(facet: FacetKey, valueSlug: string, searchParams
     introSubject: `${label} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${siteConfig.cityOrRegion}`,
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
+    resultsHeadingContext: headings.resultsHeadingContext,
     canonical,
     minIndexableResults: SEO_POLICY.routeThresholds.facet,
     forceNoindex: !isApprovedHighIntentFacet(facet, valueSlug),
@@ -400,7 +426,12 @@ export function toSeoMetadata(page?: SeoPageModel): Metadata {
     alternates: {
       canonical: page.metadata.canonical
     },
-    robots: page.metadata.robots
+    robots: page.metadata.robots,
+    ...pageShareMetadata({
+      title: page.metadata.title,
+      description: page.metadata.description,
+      path: page.metadata.canonical
+    })
   };
 }
 
@@ -468,6 +499,10 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
   const page = paginateListings(results, requestedPage, LISTINGS_PAGE_SIZE);
   const queryModified = shouldNoindexSearchParams(input.searchParams);
   const isIndexable = !queryModified && !input.forceNoindex && filteredResults.length >= input.minIndexableResults;
+  const structuredData = [
+    breadcrumbJsonLd(input.breadcrumbs),
+    ...(isIndexable ? [itemListJsonLd(page.items, input.canonical)] : [])
+  ];
   const linkValues: ListingsPageLinkValues = {
     ...filters,
     basePath: input.canonical,
@@ -481,7 +516,7 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
     kind: input.kind,
     metadata: {
       title: input.title,
-      description,
+      description: buildSeoMetaDescription(input, filteredResults),
       canonical: input.canonical,
       robots: isIndexable ? undefined : getNoindexFollowRobots()
     },
@@ -495,14 +530,15 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
     },
     guide: {
       title: input.guideTitle,
-      body: input.guideBody
+      body: buildUniqueGuideBody(input, filteredResults)
     },
+    resultsHeadingContext: input.resultsHeadingContext,
     areaGuide: input.areaGuide,
     informationGainBlocks: informationGainBlocks(input, filteredResults),
     faqs: input.faqs,
     summaryStats: summaryStats(filteredResults),
     relatedLinkGroups: input.relatedLinkGroups.filter((group) => group.links.length),
-    listings: page.items,
+    listings: page.items.map(listingResultSummaryFromListing),
     mapPoints: viewMode === "map" ? mapPointsFromListings(results) : [],
     totalCount: results.length,
     currentPage: page.currentPage,
@@ -512,7 +548,7 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
     openOnly,
     linkValues,
     filterPanelValues: linkValues,
-    structuredData: [breadcrumbJsonLd(input.breadcrumbs), itemListJsonLd(page.items, input.canonical)]
+    structuredData
   };
 }
 
@@ -589,10 +625,12 @@ function informationGainBlocks(input: BasePageInput, results: Listing[]): SeoInf
   );
   const stations = topTubeStations(results, 3);
   const subject = input.introCategory ? `${input.introCategory} options` : input.introSubject;
+  const localNiche = localNicheTitle();
+  const localSingularNiche = singularRestaurantPhrase(localNiche);
 
   return [
     {
-      title: "Price and review signals",
+      title: `${localSingularNiche} Price and Review Signals`,
       body: pricedCount
         ? `${subject} include visible price data on ${pricedCount.toLocaleString()} listings, with ${formatList(topPriceLevels)} appearing most often.`
         : `${subject} can still be compared by rating and review strength where price data is not available.`,
@@ -603,7 +641,7 @@ function informationGainBlocks(input: BasePageInput, results: Listing[]): SeoInf
       ].filter(isString)
     },
     {
-      title: "Best-fit guidance",
+      title: `How to Choose the Right ${localSingularNiche}`,
       body: topCategories.length
         ? `The strongest matches often overlap with ${formatList(topCategories)}, so visitors can compare by cuisine style as well as location.`
         : `The strongest matches can be compared by rating, review volume, location, and practical service details.`,
@@ -614,7 +652,7 @@ function informationGainBlocks(input: BasePageInput, results: Listing[]): SeoInf
       ].filter(isString)
     },
     {
-      title: "Practical visit notes",
+      title: `Practical Visit Notes for ${localNiche}`,
       body: `Use practical signals such as takeaway, delivery, dietary options, and nearby transport to narrow ${directoryConfig.listingPluralLabel.toLowerCase()} before opening a detail page.`,
       items: [
         countPhrase(takeawayCount, "offer takeaway"),
@@ -649,6 +687,197 @@ function buildDataLedDescription(input: BasePageInput, results: Listing[]) {
 
   const secondSentence = descriptionDataSentence(input, results);
   return secondSentence ? `${firstSentence} ${secondSentence}` : firstSentence;
+}
+
+function localNicheTitle() {
+  return titleCase(
+    siteConfig.niche
+      .replace(new RegExp(`\\s+in\\s+${escapeRegExp(siteConfig.cityOrRegion)}$`, "i"), "")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+}
+
+function singularRestaurantPhrase(value: string) {
+  return value.replace(/\bRestaurants\b/i, "Restaurant");
+}
+
+function titleCase(value: string) {
+  const smallWords = new Set(["a", "an", "and", "as", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to"]);
+  return value
+    .trim()
+    .split(/\s+/)
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      if (index > 0 && smallWords.has(lower)) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(" ");
+}
+
+function buildSeoMetaDescription(input: BasePageInput, results: Listing[]) {
+  const count = results.length.toLocaleString();
+  const phrase = metadataTitlePhrase(input.title);
+
+  if (input.kind === "area") {
+    return `Compare ${count} ${phrase} by rating, reviews, cuisine, takeaway, delivery, price data, and nearby transport.`;
+  }
+
+  if (input.kind === "neighborhood") {
+    return `Compare ${count} ${phrase} by rating, reviews, cuisine, takeaway, delivery, price data, and local area.`;
+  }
+
+  if (input.kind === "category") {
+    return `Compare ${count} ${phrase} by rating, reviews, area, takeaway, delivery, and price data.`;
+  }
+
+  if (input.kind === "areaCategory") {
+    return `Compare ${count} ${phrase} by rating, reviews, takeaway, delivery, price data, and local details.`;
+  }
+
+  if (input.kind === "best") {
+    return `Compare ${lowerFirst(phrase)} by rating, reviews, cuisine, area, takeaway, delivery, and price data.`;
+  }
+
+  if (input.baseFilters.service) {
+    return `Compare ${phrase} by rating, reviews, area, cuisine, delivery options, and price data.`;
+  }
+
+  return `Compare ${phrase} by rating, reviews, area, cuisine, takeaway, delivery, and price data.`;
+}
+
+function buildUniqueGuideBody(input: BasePageInput, results: Listing[]) {
+  const count = results.length.toLocaleString();
+  const reviewedCount = countWithReviews(results);
+  const takeawayCount = countWithService(results, "takeaway");
+  const deliveryCount = countWithService(results, "delivery");
+  const pricedCount = countWithPrice(results);
+  const topAreas = topValuesFromResults(results, (listing) => [listing.area, listing.neighborhood].filter(isString), 3).map(
+    (item) => item.label
+  );
+  const topNeighborhoods = topValuesFromResults(results, (listing) => [listing.neighborhood], 3).map((item) => item.label);
+  const topCategories = topValuesFromResults(results, (listing) => listing.categories, 3).map((item) => item.label);
+  const topServices = topValuesFromResults(results, (listing) => listing.details?.serviceOptions ?? [], 3).map(
+    (item) => item.label
+  );
+  const topDietary = topValuesFromResults(results, (listing) => listing.dietaryOptions, 2).map((item) => item.label);
+  const topStations = topTubeStations(results, 2);
+  const subject = input.resultsHeadingContext ?? input.introSubject;
+  const reviewPhrase = countPhrase(reviewedCount, "include Google review data");
+
+  if (input.kind === "area") {
+    const localSignals = [
+      topNeighborhoods.length ? `local clusters in ${formatList(topNeighborhoods)}` : undefined,
+      topCategories.length ? `cuisine overlaps such as ${formatList(topCategories)}` : undefined,
+      topStations.length ? `transport signals around ${formatList(topStations)}` : undefined
+    ].filter(isString);
+
+    return `${subject} currently covers ${count} listings${reviewPhrase ? `, and ${reviewPhrase}` : ""}. ${
+      localSignals.length ? `Use the page to compare ${formatList(localSignals)}.` : input.guideBody
+    }`;
+  }
+
+  if (input.kind === "neighborhood") {
+    const details = [
+      topCategories.length ? `${formatList(topCategories)} category signals` : undefined,
+      topServices.length ? `${formatList(topServices)} service signals` : undefined,
+      topStations.length ? `nearby transport around ${formatList(topStations)}` : undefined
+    ].filter(isString);
+
+    return `${subject} has ${count} matching listings${reviewPhrase ? `, and ${reviewPhrase}` : ""}. ${
+      details.length ? `The local comparison is strongest for ${formatList(details)}.` : input.guideBody
+    }`;
+  }
+
+  if (input.kind === "category") {
+    const categorySignals = [
+      topAreas.length ? `busy areas such as ${formatList(topAreas)}` : undefined,
+      countPhrase(takeawayCount, "mention takeaway"),
+      countPhrase(deliveryCount, "mention delivery"),
+      countPhrase(pricedCount, "show price data")
+    ].filter(isString);
+
+    return `${subject} includes ${count} matching listings across ${siteConfig.cityOrRegion}${
+      reviewPhrase ? `, and ${reviewPhrase}` : ""
+    }. ${categorySignals.length ? `Compare ${formatList(categorySignals)} before choosing a local page.` : input.guideBody}`;
+  }
+
+  if (input.kind === "areaCategory") {
+    const localCategorySignals = [
+      topNeighborhoods.length ? `neighborhood coverage in ${formatList(topNeighborhoods)}` : undefined,
+      countPhrase(takeawayCount, "takeaway matches"),
+      countPhrase(deliveryCount, "delivery matches"),
+      countPhrase(pricedCount, "priced listings")
+    ].filter(isString);
+
+    return `${subject} has ${count} matching listings${reviewPhrase ? `, and ${reviewPhrase}` : ""}. ${
+      localCategorySignals.length ? `This combined page is useful for ${formatList(localCategorySignals)}.` : input.guideBody
+    }`;
+  }
+
+  if (input.kind === "facet") {
+    const facetValue = facetValueFromFilters(input.baseFilters);
+    const facetSignals = [
+      topAreas.length ? `area demand in ${formatList(topAreas)}` : undefined,
+      topCategories.length ? `category overlap with ${formatList(topCategories)}` : undefined,
+      topDietary.length ? `dietary signals such as ${formatList(topDietary)}` : undefined,
+      countPhrase(takeawayCount, "also mention takeaway"),
+      countPhrase(deliveryCount, "also mention delivery")
+    ].filter(isString);
+
+    if (input.baseFilters.service) {
+      return `${subject} covers ${count} listings for the ${facetValue} service intent${
+        reviewPhrase ? `, and ${reviewPhrase}` : ""
+      }. Compare ordering practicalities such as ${formatList([
+        countPhrase(takeawayCount, "takeaway matches"),
+        countPhrase(deliveryCount, "delivery matches"),
+        topAreas.length ? `strong areas like ${formatList(topAreas)}` : undefined
+      ].filter(isString))}.`;
+    }
+
+    if (input.baseFilters.dietary) {
+      return `${subject} covers ${count} listings for dietary-led searches${
+        reviewPhrase ? `, and ${reviewPhrase}` : ""
+      }. Check cuisine overlap, area concentration, and restaurant profiles before relying on ${facetValue} details.`;
+    }
+
+    if (input.baseFilters.type) {
+      return `${subject} covers ${count} listings for visit-style searches${
+        reviewPhrase ? `, and ${reviewPhrase}` : ""
+      }. Compare dining context, popular areas, review strength, and services before choosing a ${facetValue} option.`;
+    }
+
+    return `${subject} covers ${count} listings${reviewPhrase ? `, and ${reviewPhrase}` : ""}. ${
+      facetSignals.length ? `Use these results to compare ${formatList(facetSignals)}.` : input.guideBody
+    }`;
+  }
+
+  const bestSignals = [
+    topAreas.length ? `top local areas such as ${formatList(topAreas)}` : undefined,
+    topCategories.length ? `category patterns including ${formatList(topCategories)}` : undefined,
+    countPhrase(reviewedCount, "review-backed listings")
+  ].filter(isString);
+
+  return `${subject} includes ${count} listings in this shortlist. ${
+    bestSignals.length ? `Compare ${formatList(bestSignals)} before opening individual restaurant profiles.` : input.guideBody
+  }`;
+}
+
+function facetValueFromFilters(filters: ListingFilters) {
+  const value = firstString(filters.service) ?? firstString(filters.dietary) ?? firstString(filters.type) ?? firstString(filters.offering);
+  return value ? value.replace(/-/g, " ") : "selected";
+}
+
+function firstString(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function metadataTitlePhrase(title: string) {
+  return title.replace(/\bRestaurants\b/g, "restaurants");
+}
+
+function lowerFirst(value: string) {
+  return value ? `${value[0].toLowerCase()}${value.slice(1)}` : value;
 }
 
 function descriptionTraits(input: BasePageInput, results: Listing[]) {
@@ -732,6 +961,13 @@ function localListingPhrase() {
   return `${directoryConfig.listingPluralLabel.toLowerCase()} listings`;
 }
 
+function localNicheLabel() {
+  return siteConfig.niche
+    .replace(new RegExp(`\\s+in\\s+${escapeRegExp(siteConfig.cityOrRegion)}$`, "i"), "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function formatList(items: string[]) {
   if (items.length <= 1) return items[0] ?? "";
   if (items.length === 2) return `${items[0]} and ${items[1]}`;
@@ -760,13 +996,29 @@ function introCount(kind: SeoPageModel["kind"], label: string, secondaryLabel?: 
 function areaLinks(excludeSlug?: string): SeoRelatedLink[] {
   return getFeaturedAreas(8)
     .filter((area) => area.slug !== excludeSlug)
-    .map((area) => ({ label: area.label, href: areaPath(area.slug), count: area.count }));
+    .map((area) => ({ label: areaAnchorLabel(area.label), href: areaPath(area.slug), count: area.count }));
 }
 
 function categoryLinks(excludeSlug?: string): SeoRelatedLink[] {
   return getFeaturedCategoryCards(8)
     .filter((category) => category.slug !== excludeSlug)
-    .map((category) => ({ label: category.label, href: categoryPath(category.slug), count: category.count }));
+    .map((category) => ({ label: categoryAnchorLabel(category.label), href: categoryPath(category.slug), count: category.count }));
+}
+
+function areaAnchorLabel(areaLabel: string) {
+  return `${localNicheLabel()} in ${areaLabel}`;
+}
+
+function categoryAnchorLabel(categoryLabel: string) {
+  return `${categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${siteConfig.cityOrRegion}`;
+}
+
+function areaCategoryAnchorLabel(categoryLabel: string, areaLabel: string) {
+  return `${categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${areaLabel}`;
+}
+
+function isIndexableAreaCategoryCombination(item: { count: number }) {
+  return item.count >= SEO_POLICY.routeThresholds.areaCategory;
 }
 
 function usefulSearchLinks(): SeoRelatedLink[] {

@@ -8,30 +8,32 @@ export const siteConfig = {
   city: "London",
   cityOrRegion: "London",
   url: getSiteUrl(),
-  listingBasePath: "listings",
+  listingBasePath: "restaurants",
   heroEyebrow: "London Indian restaurant directory",
   heroImage:
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80",
-  heroImageAlt: "London buildings and local restaurants",
+    "/images/homepage/indian-restaurants-london-hero.webp",
+  heroImageMobile:
+    "/images/homepage/indian-restaurants-london-hero-mobile.webp",
+  heroImageAlt: "Indian family sharing curry and naan in a London restaurant with Big Ben outside",
   heroCopy:
     "Find Indian restaurants across London by area, cuisine, service options, ratings, transport links, and dining style.",
   description:
     "A searchable directory of Indian restaurants in London with filters for areas, cuisines, ratings, services, transport, and dining options.",
   navigation: [
-    { label: "Restaurants", href: "/" },
+    { label: "Restaurants", href: "/restaurants" },
     { label: "Areas", href: "/areas" },
     { label: "Categories", href: "/categories" }
   ],
   footerLinks: [
-    { label: "All restaurants", href: "/" },
-    { label: "Best rated", href: "/?sort=rating" },
+    { label: "All restaurants", href: "/restaurants" },
+    { label: "Best rated", href: "/restaurants?sort=rating" },
     { label: "Categories", href: "/categories" }
   ],
   footerGroups: [
     {
       title: "Browse",
       links: [
-        { label: "All {listingPluralLabelLower}", href: "/" },
+        { label: "All {listingPluralLabelLower}", href: "/restaurants" },
         { label: "Areas", href: "/areas" },
         { label: "{categoryPluralLabel}", href: "/categories" }
       ]
@@ -49,10 +51,10 @@ export const siteConfig = {
     {
       title: "Useful filters",
       links: [
-        { label: "Open now", href: "/?open=1" },
-        { label: "Best rated", href: "/?sort=rating" },
-        { label: "Most reviewed", href: "/?sort=reviews" },
-        { label: "Lowest price", href: "/?sort=price" }
+        { label: "Open now", href: "/restaurants?open=1" },
+        { label: "Best rated", href: "/restaurants?sort=rating" },
+        { label: "Most reviewed", href: "/restaurants?sort=reviews" },
+        { label: "Lowest price", href: "/restaurants?sort=price" }
       ]
     }
   ]

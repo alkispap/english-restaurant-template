@@ -23,19 +23,16 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
   const [modalOpen, setModalOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedValues, setSelectedValues] = useState(() => normalizeValues(value));
-  const [draftValues, setDraftValues] = useState(() => normalizeValues(value));
 
   useEffect(() => {
     const nextValues = normalizeValues(value);
     setSelectedValues(nextValues);
-    setDraftValues(nextValues);
   }, [value]);
 
   if (!options.length) return null;
 
   const title = modalLabel ?? label;
   const selectedSet = new Set(selectedValues);
-  const draftSet = new Set(draftValues);
   const selectedOptions = options.filter((option) => selectedSet.has(option.value));
   const unselectedOptions = options.filter((option) => !selectedSet.has(option.value));
   const visibleOptions = [
@@ -88,8 +85,8 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
               <CheckboxOption
                 key={option.value}
                 option={option}
-                checked={draftSet.has(option.value)}
-                onChange={() => toggleDraftValue(option.value)}
+                checked={selectedSet.has(option.value)}
+                onChange={() => toggleValue(option.value)}
               />
             ))}
           </div>
@@ -106,13 +103,6 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
           >
             Reset
           </button>
-          <button
-            type="button"
-            className="focus-ring rounded-full bg-emerald-950 px-5 py-3 text-sm font-bold text-white hover:bg-emerald-900"
-            onClick={() => applyFilterValues(draftValues)}
-          >
-            Apply
-          </button>
         </div>
       </div>
     </div>
@@ -127,24 +117,17 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
     applyFilterValues(nextValues);
   }
 
-  function toggleDraftValue(optionValue: string) {
-    setDraftValues((currentValues) =>
-      currentValues.includes(optionValue)
-        ? currentValues.filter((item) => item !== optionValue)
-        : [...currentValues, optionValue]
-    );
-  }
-
   function openModal() {
-    setDraftValues(selectedValues);
     setModalOpen(true);
   }
 
   function resetDraftGroup() {
-    setDraftValues([]);
+    setSelectedValues([]);
+    applyFilterValues([]);
   }
 
   function applyFilterValues(nextValues: string[]) {
+    const scrollY = window.scrollY;
     const params = new URLSearchParams(window.location.search);
     params.delete(name);
     params.delete("page");
@@ -153,7 +136,10 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
     });
 
     const query = params.toString();
-    window.location.assign(query ? `${window.location.pathname}?${query}` : window.location.pathname);
+    const nextUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+    window.history.pushState({}, "", nextUrl);
+    window.dispatchEvent(new Event("directory-url-change"));
+    window.requestAnimationFrame(() => window.scrollTo({ top: scrollY }));
   }
 
   return (

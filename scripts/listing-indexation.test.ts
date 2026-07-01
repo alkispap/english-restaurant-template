@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import sitemap from "../src/app/sitemap";
-import { generateMetadata as listingMetadata } from "../src/app/listings/[slug]/page";
+import { generateMetadata as listingMetadata } from "../src/app/restaurants/[slug]/page";
 import { siteConfig } from "../src/config/site";
 import { listings } from "../src/data/listings";
 import { isListingIndexable } from "../src/lib/seo-policy";

@@ -10,13 +10,19 @@ import { siteConfig } from "@/config/site";
  */
 export type DirectoryPageTypeBrief =
   | "homepage"
+  | "directory_search"
+  | "area_index"
+  | "category_index"
   | "listing_detail"
   | "area_hub"
   | "category_hub"
   | "area_category_hub"
   | "neighborhood_hub"
   | "best_hub"
-  | "facet_hub";
+  | "facet_hub"
+  | "guide_index"
+  | "guide_article"
+  | "trust_page";
 
 /**
  * The recognised EAV attribute groups used by listing templates.
@@ -125,7 +131,37 @@ export const directorySemanticMap = {
       networkRole: "core" as const,
       searchIntent: "compare all Indian restaurants across London",
       requiredEavGroups: ["identity", "location", "category", "freshness"] as EavGroup[],
-      allowedLinkTargets: ["area_hub", "category_hub", "area_category_hub", "best_hub", "facet_hub"] as DirectoryPageTypeBrief[],
+      allowedLinkTargets: ["directory_search", "area_index", "category_index", "area_hub", "category_hub", "area_category_hub", "best_hub", "facet_hub", "trust_page"] as DirectoryPageTypeBrief[],
+      indexationRole: "canonical_target" as const
+    },
+    {
+      pageType: "directory_search" as const,
+      primaryEntity: "restaurant search page",
+      macroContext: "citywide directory search",
+      networkRole: "core" as const,
+      searchIntent: "search and filter Indian restaurants across London",
+      requiredEavGroups: ["identity", "location", "category"] as EavGroup[],
+      allowedLinkTargets: ["listing_detail", "area_hub", "category_hub", "area_category_hub", "best_hub", "facet_hub"] as DirectoryPageTypeBrief[],
+      indexationRole: "canonical_target" as const
+    },
+    {
+      pageType: "area_index" as const,
+      primaryEntity: "area index",
+      macroContext: "browse restaurant areas",
+      networkRole: "core" as const,
+      searchIntent: "choose a London area before comparing Indian restaurants",
+      requiredEavGroups: ["location", "freshness"] as EavGroup[],
+      allowedLinkTargets: ["area_hub", "neighborhood_hub", "area_category_hub"] as DirectoryPageTypeBrief[],
+      indexationRole: "canonical_target" as const
+    },
+    {
+      pageType: "category_index" as const,
+      primaryEntity: "category index",
+      macroContext: "browse restaurant cuisines",
+      networkRole: "core" as const,
+      searchIntent: "choose a cuisine or category before comparing Indian restaurants",
+      requiredEavGroups: ["category", "freshness"] as EavGroup[],
+      allowedLinkTargets: ["category_hub", "area_category_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "canonical_target" as const
     },
     {
@@ -197,6 +233,36 @@ export const directorySemanticMap = {
       requiredEavGroups: ["services", "dietary", "category", "location"] as EavGroup[],
       allowedLinkTargets: ["listing_detail", "area_hub", "category_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
+    },
+    {
+      pageType: "guide_index" as const,
+      primaryEntity: "guide index",
+      macroContext: "restaurant education hub",
+      networkRole: "supporting" as const,
+      searchIntent: "learn before choosing an Indian restaurant in London",
+      requiredEavGroups: ["identity", "category"] as EavGroup[],
+      allowedLinkTargets: ["guide_article", "directory_search", "category_index", "area_index"] as DirectoryPageTypeBrief[],
+      indexationRole: "canonical_target" as const
+    },
+    {
+      pageType: "guide_article" as const,
+      primaryEntity: "restaurant guide article",
+      macroContext: "topic education with directory next steps",
+      networkRole: "supporting" as const,
+      searchIntent: "understand an Indian food or restaurant topic before comparing local options",
+      requiredEavGroups: ["identity", "category"] as EavGroup[],
+      allowedLinkTargets: ["directory_search", "category_index", "category_hub", "area_hub", "facet_hub"] as DirectoryPageTypeBrief[],
+      indexationRole: "canonical_target" as const
+    },
+    {
+      pageType: "trust_page" as const,
+      primaryEntity: "trust and support page",
+      macroContext: "directory trust and support",
+      networkRole: "supporting" as const,
+      searchIntent: "understand, contact, or use the directory safely",
+      requiredEavGroups: ["identity"] as EavGroup[],
+      allowedLinkTargets: ["homepage", "directory_search", "area_index", "category_index"] as DirectoryPageTypeBrief[],
+      indexationRole: "canonical_target" as const
     }
   ] satisfies PageBrief[]
 } as const;

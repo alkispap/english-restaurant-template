@@ -13,11 +13,13 @@ import {
 } from "@/lib/directory";
 import { getAreaCategoryCombinations, getPopularSearches } from "@/lib/directory-growth";
 import { getEnabledSitemapRouteKinds } from "@/lib/directory-features";
+import { getIndexedListingFilterCount, getListingFilterCount } from "@/lib/listing-filter-counts";
 import { SEO_POLICY, isApprovedHighIntentFacet, isListingIndexable } from "@/lib/seo-policy";
 import {
   areaCategoryPath,
   areaPath,
   categoryPath,
+  directorySearchPath,
   dietaryPath,
   listingDetailPath,
   neighborhoodPath,
@@ -29,10 +31,12 @@ import {
 
 const directoryLastModified = SEO_POLICY.directoryLastModified;
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
   const enabledRoutes = getEnabledSitemapRouteKinds();
-  const routes = ["", "/areas", "/categories"].map((route) => ({
+  const routes = ["", directorySearchPath(), "/areas", "/categories"].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: directoryLastModified
   }));
@@ -42,17 +46,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: directoryLastModified
   }));
 
-  const areaRoutes = getAreas().filter((area) => filterListings({ area: slugify(area) }).length >= SEO_POLICY.routeThresholds.area).map((area) => ({
+  const areaRoutes = getAreas().filter((area) => getListingFilterCount("area", slugify(area)) >= SEO_POLICY.routeThresholds.area).map((area) => ({
     url: `${baseUrl}${areaPath(slugify(area))}`,
     lastModified: directoryLastModified
   }));
 
-  const categoryRoutes = getCategories().filter((category) => filterListings({ category: slugify(category) }).length >= SEO_POLICY.routeThresholds.category).map((category) => ({
+  const categoryRoutes = getCategories().filter((category) => getListingFilterCount("category", slugify(category)) >= SEO_POLICY.routeThresholds.category).map((category) => ({
     url: `${baseUrl}${categoryPath(slugify(category))}`,
     lastModified: directoryLastModified
   }));
 
-  const neighborhoodRoutes = getNeighborhoods().filter((neighborhood) => filterListings({ neighborhood: slugify(neighborhood) }).length >= SEO_POLICY.routeThresholds.neighborhood).map((neighborhood) => ({
+  const neighborhoodRoutes = getNeighborhoods().filter((neighborhood) => getListingFilterCount("neighborhood", slugify(neighborhood)) >= SEO_POLICY.routeThresholds.neighborhood).map((neighborhood) => ({
     url: `${baseUrl}${neighborhoodPath(slugify(neighborhood))}`,
     lastModified: directoryLastModified
   }));
@@ -64,7 +68,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(enabledRoutes.offerings ? facetSitemapRoutes("offering", baseUrl) : [])
   ];
 
-  const popularSearchRoutes = enabledRoutes.popularSearches ? getPopularSearches().filter((search) => filterListings(search.filters).length >= SEO_POLICY.routeThresholds.best).map((search) => ({
+  const popularSearchRoutes = enabledRoutes.popularSearches ? getPopularSearches().filter((search) => routeFilterCount(search.filters) >= SEO_POLICY.routeThresholds.best).map((search) => ({
     url: `${baseUrl}${popularSearchPath(search.slug)}`,
     lastModified: directoryLastModified
   })) : [];
@@ -93,11 +97,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
 function facetSitemapRoutes(facet: FacetKey, baseUrl: string) {
   return getFacetLabels(facet)
     .filter((label) => isHighIntentFacet(facet, slugify(label)))
-    .filter((label) => filterListings({ [facet]: slugify(label) }).length >= SEO_POLICY.routeThresholds.facet)
+    .filter((label) => getListingFilterCount(facet, slugify(label)) >= SEO_POLICY.routeThresholds.facet)
     .map((label) => ({
       url: `${baseUrl}${facetPath(facet, slugify(label))}`,
       lastModified: directoryLastModified
     }));
+}
+
+function routeFilterCount(filters: Parameters<typeof getIndexedListingFilterCount>[0]) {
+  const indexedCount = getIndexedListingFilterCount(filters);
+  if (indexedCount !== undefined) return indexedCount;
+  if (Object.keys(filters).length === 0) return listings.length;
+  return filterListings(filters).length;
 }
 
 function isHighIntentFacet(facet: FacetKey, slug: string) {

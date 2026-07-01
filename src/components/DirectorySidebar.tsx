@@ -1,14 +1,24 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getDirectorySidebarBlocks, getHomepageSidebarBlocks } from "@/lib/directory-ux";
+
+type SidebarLinkGroup = {
+  id?: string;
+  title: string;
+  copy?: string;
+  links: Array<{
+    label: string;
+    href: string;
+    description?: string;
+    count?: number;
+  }>;
+};
 
 type DirectorySidebarProps = {
   context?: "default" | "homepage" | "seoLanding";
+  blocks: SidebarLinkGroup[];
 };
 
-export function DirectorySidebar({ context = "default" }: DirectorySidebarProps) {
-  const blocks = context === "homepage" ? getHomepageSidebarBlocks() : getDirectorySidebarBlocks();
-
+export function DirectorySidebar({ context = "default", blocks }: DirectorySidebarProps) {
   return (
     <div className="mt-5 space-y-5">
       {blocks.map((block) => (

@@ -19,7 +19,7 @@ const mexicanText = JSON.stringify(mexicanHeadings);
 assert.equal(mexicanHeadings.heroTitle, "Mexican Restaurants in London");
 assert.equal(mexicanHeadings.seoLinksTitle, "Find Mexican Restaurants in London by Area, Cuisines, and Need");
 assert.equal(mexicanHeadings.resultsHeadingContext, "Mexican Restaurants in London");
-assert.equal(mexicanHeadings.sourceContextTitle, "How This Restaurant Directory Works");
+assert.equal(mexicanHeadings.sourceContextTitle, "How Our Mexican Restaurants in London Directory Works");
 assert.equal(mexicanHeadings.sourceContextQuestionTitles.choose, "How should visitors choose a restaurant?");
 assert.equal(mexicanHeadings.sidebarTitles.popularSearches, "Best Restaurant Searches");
 assert.equal(mexicanHeadings.sidebarTitles.recentListings, "Recently Added Restaurants");
@@ -33,5 +33,20 @@ assert.equal(mexicanHeadings.seoFeatureGroupTitles.service, "Mexican Restaurants
 assert.equal(mexicanHeadings.seoFeatureGroupTitles.dietary, "Mexican Restaurants in London by Dietary Need");
 assert.equal(mexicanHeadings.seoFeatureGroupTitles.diningStyle, "Mexican Restaurants in London by Dining Style");
 assert.ok(!mexicanText.includes("Indian"), "copied homepage headings should not keep stale Indian wording");
+
+const indianHeadings = buildHomepageHeadings(
+  {
+    niche: "Indian restaurants in London",
+    cityOrRegion: "London"
+  },
+  {
+    listingLabel: "Restaurant",
+    listingPluralLabel: "Restaurants",
+    categoryLabel: "Cuisine",
+    categoryPluralLabel: "Cuisines"
+  }
+);
+
+assert.equal(indianHeadings.sourceContextTitle, "How Our Indian Restaurants in London Directory Works");
 
 console.log("homepage heading helper tests passed");

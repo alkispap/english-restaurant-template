@@ -6,14 +6,14 @@ import { SortSelect } from "@/components/SortSelect";
 import { directoryConfig } from "@/config/directory";
 import {
   buildListingsPageHref,
+  type ListingResultSummary,
   type ListingsPageLinkValues,
   type ListingsViewMode,
   type MapPoint
 } from "@/lib/listings-page";
-import type { Listing } from "@/data/listings";
 
 type ListingsResultsProps = {
-  listings: Listing[];
+  listings: ListingResultSummary[];
   mapPoints: MapPoint[];
   totalCount: number;
   currentPage: number;
@@ -48,7 +48,7 @@ export function ListingsResults({
     <section>
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-ink dark:text-white">
+          <h2 className="text-2xl font-bold text-ink">
             {headingText}
           </h2>
           <p className="text-sm text-muted">
@@ -85,7 +85,6 @@ function OpenNowLink({ values, openOnly }: { values: ListingsPageLinkValues; ope
           ? "border-primary bg-orange-50 text-ink"
           : "border-line bg-white text-ink hover:border-primary"
       }`}
-      aria-pressed={openOnly}
     >
       <Clock className="h-4 w-4 text-primary" aria-hidden />
       <span className="text-sm font-bold">Open now</span>
@@ -95,16 +94,16 @@ function OpenNowLink({ values, openOnly }: { values: ListingsPageLinkValues; ope
 
 function ViewToggle({ values, mode }: { values: ListingsPageLinkValues; mode: ListingsViewMode }) {
   return (
-    <div className="inline-flex overflow-hidden rounded-lg border border-line shadow-soft dark:border-slate-700">
+    <div className="inline-flex overflow-hidden rounded-lg border border-line shadow-soft">
       <Link
         href={buildListingsPageHref(values, { view: "grid", page: 1 })}
         className={`flex items-center gap-2 px-4 py-3 text-sm font-bold transition ${
           mode === "grid"
             ? "bg-ink text-white"
-            : "bg-white text-muted hover:text-ink dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white"
+            : "bg-white text-muted hover:text-ink"
         }`}
-        aria-label="Grid view"
-        aria-pressed={mode === "grid"}
+        aria-label="List view"
+        aria-current={mode === "grid" ? "page" : undefined}
       >
         <List className="h-4 w-4" aria-hidden />
         List
@@ -114,10 +113,10 @@ function ViewToggle({ values, mode }: { values: ListingsPageLinkValues; mode: Li
         className={`flex items-center gap-2 px-4 py-3 text-sm font-bold transition ${
           mode === "map"
             ? "bg-ink text-white"
-            : "bg-white text-muted hover:text-ink dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white"
+            : "bg-white text-muted hover:text-ink"
         }`}
         aria-label="Map view"
-        aria-pressed={mode === "map"}
+        aria-current={mode === "map" ? "page" : undefined}
       >
         <MapIcon className="h-4 w-4" aria-hidden />
         Map

@@ -118,7 +118,7 @@ export function ShareButton({ title, text, url, className = "", pageType, route,
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={handleShare}
-        className={`focus-ring inline-flex items-center justify-center gap-2 rounded-md border border-line bg-white px-4 py-3 text-sm font-bold text-ink transition hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 ${className}`}
+        className={`focus-ring inline-flex items-center justify-center gap-2 rounded-md border border-line bg-white px-4 py-3 text-sm font-bold text-ink transition hover:bg-slate-50 ${className}`}
         aria-label="Share restaurant"
       >
         <Share2 className="h-4 w-4" />
@@ -126,7 +126,7 @@ export function ShareButton({ title, text, url, className = "", pageType, route,
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-64 origin-top-right rounded-lg border border-line bg-white p-2 shadow-xl ring-1 ring-black ring-opacity-5 animate-in fade-in zoom-in duration-200 dark:bg-slate-900">
+        <div className="absolute right-0 top-full z-50 mt-2 w-64 origin-top-right rounded-lg border border-line bg-white p-2 shadow-xl ring-1 ring-black ring-opacity-5 animate-in fade-in zoom-in duration-200">
           <div className="flex items-center justify-between border-b border-line px-3 py-2">
             <span className="text-sm font-bold text-ink">Share this listing</span>
             <button
@@ -154,7 +154,7 @@ export function ShareButton({ title, text, url, className = "", pageType, route,
                     targetUrl: link.url
                   })
                 }
-                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted transition-colors dark:hover:bg-slate-800 ${link.color}`}
+                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted transition-colors ${link.color}`}
               >
                 {link.icon}
                 {link.name}
@@ -163,7 +163,7 @@ export function ShareButton({ title, text, url, className = "", pageType, route,
             
             <button
               onClick={copyToClipboard}
-              className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-slate-100 hover:text-ink dark:hover:bg-slate-800 dark:hover:text-white"
+              className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-slate-100 hover:text-ink"
             >
               {copied ? (
                 <>

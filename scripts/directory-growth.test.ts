@@ -64,10 +64,18 @@ function footerGroupsGenerateMixedLinks() {
   const links = groups.flatMap((group) => group.links);
 
   assert.ok(groups.length >= 3, "expected grouped footer sections");
-  assert.ok(links.some((link) => link.href === "/"));
+  assert.ok(links.some((link) => link.href === "/restaurants"));
   assert.ok(links.some((link) => link.href.startsWith("/best/")));
   assert.ok(links.some((link) => link.href.startsWith("/areas/")));
   assert.ok(links.every((link) => !link.label.includes("{")));
+  assert.ok(
+    links.some((link) => link.href === "/areas" && /restaurant areas/i.test(link.label)),
+    "footer should use descriptive area anchor text"
+  );
+  assert.ok(
+    links.some((link) => link.href === "/categories" && /restaurant cuisines/i.test(link.label)),
+    "footer should use descriptive cuisine anchor text"
+  );
 }
 
 function ratingOptionsComeFromImportedListings() {
@@ -91,6 +99,14 @@ function listingExploreLinksAreUsefulAndUnique() {
   assert.ok(links.some((link) => link.href.startsWith("/services/")));
   assert.equal(new Set(hrefs).size, hrefs.length, "explore links should not contain duplicate hrefs");
   assert.ok(links.every((link) => !link.label.includes("{")));
+  assert.ok(
+    links.every((link) => !/^More restaurants in /i.test(link.label)),
+    "restaurant detail local anchors should mention Indian restaurants, not generic restaurants"
+  );
+  assert.ok(
+    groups.every((group) => !/Indian restaurants in London in /i.test(group.description)),
+    "restaurant detail bridge descriptions should not repeat 'in London in [area]'"
+  );
   assert.ok(links.length >= 10, "listing detail pages should expose a broad set of internal links");
 }
 

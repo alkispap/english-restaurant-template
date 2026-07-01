@@ -58,9 +58,11 @@ export function getCategories() {
   return unique(listings.flatMap((listing) => listing.categories)).sort();
 }
 
+let categorySlugSetCache: Set<string> | null = null;
+
 export function isCategoryTag(tag: string) {
-  const tagSlug = slugify(tag);
-  return getCategories().some((category) => slugify(category) === tagSlug);
+  categorySlugSetCache ??= new Set(getCategories().map(slugify));
+  return categorySlugSetCache.has(slugify(tag));
 }
 
 export function getListingTypes() {
@@ -237,7 +239,7 @@ export function filterListings(filters: ListingFilters) {
       filters.nearby
     );
 
-    const matchesPrice = matchesMulti(listing.priceLevel ? [listing.priceLevel] : [], filters.price);
+    const matchesPrice = matchesExactMulti(listing.priceLevel ? [listing.priceLevel] : [], filters.price);
     const matchesRating = !filters.rating || Number(listing.rating ?? 0) >= filters.rating;
 
     return (
@@ -327,15 +329,7 @@ export function getRecentlyAddedListings(limit = 4) {
 }
 
 export function getRelatedListings(current: Listing, limit = 3) {
-  return listings
-    .filter((listing) => listing.slug !== current.slug)
-    .filter(
-      (listing) =>
-        listing.area === current.area ||
-        listing.neighborhood === current.neighborhood ||
-        listing.categories.some((category) => current.categories.includes(category)) ||
-        listing.listingTypes.some((type) => current.listingTypes.includes(type))
-    )
+  return getRelatedListingCandidates(current)
     .sort((a, b) => Number(b.rating ?? 0) - Number(a.rating ?? 0))
     .slice(0, limit);
 }
@@ -413,6 +407,12 @@ function matchesMulti(values: string[], filter?: string | string[]) {
   return values.some((value) => filterArray.includes(slugify(value)));
 }
 
+function matchesExactMulti(values: string[], filter?: string | string[]) {
+  if (!filter || (Array.isArray(filter) && filter.length === 0)) return true;
+  const filterArray = Array.isArray(filter) ? filter : [filter];
+  return values.some((value) => filterArray.includes(value));
+}
+
 function countLabels(labels: string[]) {
   const counts = new Map<string, { label: string; count: number }>();
   labels.filter(Boolean).forEach((label) => {
@@ -452,5 +452,62 @@ function unique(items: string[]) {
 
 function isString(value: string | undefined): value is string {
   return Boolean(value);
+}
+
+type RelatedListingIndexes = {
+  area: Map<string, Listing[]>;
+  neighborhood: Map<string, Listing[]>;
+  category: Map<string, Listing[]>;
+  type: Map<string, Listing[]>;
+};
+
+let relatedListingIndexesCache: RelatedListingIndexes | null = null;
+
+function getRelatedListingCandidates(current: Listing) {
+  const indexes = getRelatedListingIndexes();
+  const candidates = new Map<string, Listing>();
+
+  addCandidates(candidates, indexes.area.get(current.area ?? ""));
+  addCandidates(candidates, indexes.neighborhood.get(current.neighborhood ?? ""));
+  current.categories.forEach((category) => addCandidates(candidates, indexes.category.get(category)));
+  current.listingTypes.forEach((type) => addCandidates(candidates, indexes.type.get(type)));
+  candidates.delete(current.slug);
+
+  return Array.from(candidates.values());
+}
+
+function getRelatedListingIndexes() {
+  if (relatedListingIndexesCache) return relatedListingIndexesCache;
+
+  const indexes: RelatedListingIndexes = {
+    area: new Map(),
+    neighborhood: new Map(),
+    category: new Map(),
+    type: new Map()
+  };
+
+  listings.forEach((listing) => {
+    addIndexValue(indexes.area, listing.area, listing);
+    addIndexValue(indexes.neighborhood, listing.neighborhood, listing);
+    listing.categories.forEach((category) => addIndexValue(indexes.category, category, listing));
+    listing.listingTypes.forEach((type) => addIndexValue(indexes.type, type, listing));
+  });
+
+  relatedListingIndexesCache = indexes;
+  return indexes;
+}
+
+function addIndexValue(index: Map<string, Listing[]>, value: string | undefined, listing: Listing) {
+  if (!value) return;
+  const existing = index.get(value);
+  if (existing) {
+    existing.push(listing);
+    return;
+  }
+  index.set(value, [listing]);
+}
+
+function addCandidates(candidates: Map<string, Listing>, listingsToAdd: Listing[] | undefined) {
+  listingsToAdd?.forEach((listing) => candidates.set(listing.slug, listing));
 }
 

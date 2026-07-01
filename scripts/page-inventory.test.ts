@@ -14,6 +14,8 @@ const byId = new Map(inventory.map((page) => [page.id, page]));
 const expectedIds = [
   "homepage",
   "listings-redirect",
+  "restaurants-index",
+  "legacy-listing-detail-redirect",
   "listing-detail",
   "areas-index",
   "categories-index",
@@ -28,6 +30,7 @@ const expectedIds = [
   "type-facet",
   "guides-index",
   "guide-article",
+  "guide-preview",
   "compare",
   "about",
   "contact",
@@ -36,8 +39,7 @@ const expectedIds = [
   "methodology",
   "suggest-update",
   "sitemap",
-  "robots",
-  "shortlist-api"
+  "robots"
 ];
 
 assert.deepEqual(
@@ -48,7 +50,9 @@ assert.deepEqual(
 
 assert.equal(byId.get("homepage")?.urlPattern, "/", "homepage route should be inventoried");
 assert.equal(byId.get("listings-redirect")?.category, "redirect", "/listings should be marked as a redirect");
-assert.equal(byId.get("shortlist-api")?.category, "api", "shortlist API should not be treated as an SEO page");
+assert.equal(byId.get("restaurants-index")?.urlPattern, "/restaurants", "restaurant search route should use /restaurants");
+assert.equal(byId.get("legacy-listing-detail-redirect")?.category, "redirect", "/listings/[slug] should be marked as a redirect");
+assert.equal(byId.get("listing-detail")?.urlPattern, "/restaurants/[slug]", "restaurant detail route should use /restaurants/[slug]");
 assert.equal(byId.get("sitemap")?.category, "system-seo", "sitemap should be classified as system SEO");
 assert.equal(byId.get("robots")?.category, "system-seo", "robots should be classified as system SEO");
 
@@ -81,8 +85,8 @@ assert.ok(
   "dynamic SEO pages should no longer be remaining upgrade targets after helper upgrade"
 );
 assert.ok(
-  publicUpgradeTargets.every((page) => page.category !== "api" && page.category !== "system-seo"),
-  "API and system SEO routes should not be included as public content upgrade targets"
+  publicUpgradeTargets.every((page) => page.category !== "system-seo"),
+  "system SEO routes should not be included as public content upgrade targets"
 );
 
 const grouped = groupTemplatePagesByCategory();
@@ -95,8 +99,7 @@ const expectedCategories: TemplatePageCategory[] = [
   "article-guide",
   "utility",
   "trust-support",
-  "system-seo",
-  "api"
+  "system-seo"
 ];
 assert.deepEqual(
   [...grouped.keys()].sort(),

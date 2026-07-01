@@ -1,0 +1,246 @@
+{
+  "slug": "north-indian-vs-south-indian-food",
+  "status": "drafted",
+  "title": "North Indian vs South Indian Food",
+  "metaTitle": "North Indian vs South Indian Food | Guide",
+  "metaDescription": "Compare North Indian and South Indian food by staples, dishes, flavours, and real London directory signals that help beginners choose the right restaurant.",
+  "answer": "North Indian food usually leans more on breads, tandoor cooking, dairy, paneer, and richer gravies, while South Indian food more often centres rice, dosa, idli, lentils, coconut, tamarind, and region-specific dishes from southern India.",
+  "publishedAt": "",
+  "updatedAt": "2026-06-16",
+  "cluster": "cuisine-and-dishes",
+  "primaryKeyword": "North Indian vs South Indian food",
+  "heroImage": {
+    "src": "/images/articles/north-indian-vs-south-indian-food/hero.png",
+    "alt": "North Indian breads and curries beside South Indian dosa, rice, and chutneys",
+    "caption": "Generated hero image brief: split the frame into two realistic table settings, one with naan, paneer or tandoori dishes and rich gravies, the other with dosa, idli, sambar, rice, chutneys, and stainless steel South Indian service ware; no text or logos."
+  },
+  "keyFacts": [
+    {
+      "label": "Direct answer",
+      "value": "Bread and tandoor vs rice and dosa",
+      "detail": "The quickest beginner shortcut is to look for the staple base and the cooking style before comparing individual dishes."
+    },
+    {
+      "label": "London directory signal",
+      "value": "154 South vs 68 North",
+      "detail": "The current directory data shows more South Indian-labelled listings than North Indian-labelled listings."
+    },
+    {
+      "label": "Delivery coverage",
+      "value": "90%+ in both",
+      "detail": "Delivery appears on 138 South Indian listings and 62 North Indian listings, so both styles are widely available for takeaway decisions."
+    }
+  ],
+  "visualBlocks": [
+    {
+      "title": "The fastest way to tell the two styles apart",
+      "image": {
+        "src": "/images/articles/north-indian-vs-south-indian-food/visual-summary.svg",
+        "alt": "Comparison graphic for North Indian versus South Indian food",
+        "caption": "Generated visual brief: create a clean side-by-side comparison graphic for North Indian versus South Indian food with labeled rows for staple base, common dishes, flavour builders, restaurant clues, and best fit; use simple icons and readable labels."
+      },
+      "body": "This visual should reinforce the opening answer by showing that the difference is easier to spot through staples, ingredients, and menu patterns than through a single dish name."
+    }
+  ],
+  "dataBlocks": [
+    {
+      "title": "What the London directory currently shows",
+      "description": "These are live counts from the current project dataset, so the article can connect cuisine education to actual London restaurant choice.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "South Indian listings",
+          "value": "154",
+          "detail": "South Indian labels currently appear more than twice as often as North Indian labels in this directory."
+        },
+        {
+          "label": "North Indian listings",
+          "value": "68",
+          "detail": "North Indian labels are still well represented, especially when readers want breads, grills, paneer, or Punjabi-leaning menus."
+        },
+        {
+          "label": "Review footprint",
+          "value": "153,488 vs 38,090",
+          "detail": "Combined review counts are much larger for South Indian-labelled listings, which suggests a deeper pool of heavily reviewed options."
+        },
+        {
+          "label": "South Indian hotspot",
+          "value": "Newham",
+          "detail": "Newham has 26 South Indian listings in the current dataset, ahead of Redbridge, Harrow, Croydon, and Brent."
+        },
+        {
+          "label": "North Indian hotspots",
+          "value": "Redbridge and Hounslow",
+          "detail": "Each currently has 6 North Indian listings, with Kingston upon Thames, Westminster, and Brent close behind."
+        }
+      ]
+    }
+  ],
+  "comparisonTables": [
+    {
+      "title": "North Indian vs South Indian restaurant signals",
+      "columns": [
+        "Signal",
+        "North Indian",
+        "South Indian"
+      ],
+      "rows": [
+        {
+          "label": "Staple base",
+          "values": [
+            "More breads such as naan, roti, kulcha, and paratha, plus grilled dishes and rice-based mains like biryani.",
+            "More rice, dosa, idli, vada, uthappam, lemon rice, curd rice, and other rice-led or lentil-led meals."
+          ]
+        },
+        {
+          "label": "Typical flavour clues",
+          "values": [
+            "Ghee, butter, paneer, creamier gravies, tandoor smoke, onion-tomato sauces, and Punjabi or Mughlai menu language.",
+            "Coconut, tamarind, curry leaves, mustard seeds, lentils, fermented batters, sharper tang, and regional labels such as Kerala or Andhra."
+          ]
+        },
+        {
+          "label": "Common dishes",
+          "values": [
+            "Butter chicken, paneer tikka, dal makhani, chole, kebabs, tandoori platters, rich curries, and breads.",
+            "Masala dosa, idli, vada, sambar, rasam, thali meals, biryani in some regional styles, and vegetarian tiffin dishes."
+          ]
+        },
+        {
+          "label": "Menu-reading shortcut",
+          "values": [
+            "If the menu leads with grills, naan, paneer, kebabs, or rich curry-house mains, it is often North Indian-leaning.",
+            "If the menu leads with dosa, idli, sambar, chutneys, and rice combinations, it is usually South Indian-leaning."
+          ]
+        },
+        {
+          "label": "Best fit for diners",
+          "values": [
+            "Useful when you want breads, smoky grilled food, richer sauces, or a familiar curry-house experience.",
+            "Useful when you want crisp dosa, vegetarian range, lighter-feeling rice-led meals, or a clearer regional specialism."
+          ]
+        }
+      ]
+    }
+  ],
+  "ctaBlocks": [
+    {
+      "title": "Compare by food style",
+      "copy": "Move from this explainer into category pages when you want to browse cuisine styles rather than one long list of restaurants.",
+      "href": "/categories",
+      "label": "Browse restaurant categories"
+    },
+    {
+      "title": "Check the full London directory",
+      "copy": "Use the main directory when you want to compare ratings, reviews, areas, transport links, and service options after deciding which style sounds right.",
+      "href": "/",
+      "label": "Browse Indian restaurants in London"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "The Short Answer",
+      "body": [
+        "North Indian and South Indian food are not strict opposites, but they do point beginners toward different staples, textures, and restaurant experiences. In practice, North Indian menus often feel more bread-and-grill led, while South Indian menus often feel more rice-and-dosa led.",
+        "That matters in London because these labels can help you narrow a restaurant quickly. If you know you want naan, paneer, kebabs, and smoky tandoor dishes, you are usually looking in a different direction from someone who wants dosa, idli, sambar, coconut chutney, or a vegetarian tiffin-style meal."
+      ]
+    },
+    {
+      "heading": "What North Indian Food Usually Means",
+      "body": [
+        "North Indian restaurant menus commonly feature breads such as naan, roti, kulcha, and paratha alongside paneer dishes, kebabs, tandoori chicken, richer gravies, and Punjabi or Mughlai influences. Dairy, ghee, butter, and onion-tomato-based sauces often show up more clearly in this style.",
+        "That does not mean every North Indian dish is heavy, but it does mean the menu often feels built around grills, breads, and sauces that pair well with them. If a London restaurant highlights tandoor cooking, house curries, kebabs, paneer, or dal makhani, it often leans North Indian."
+      ]
+    },
+    {
+      "heading": "What South Indian Food Usually Means",
+      "body": [
+        "South Indian food usually points readers toward rice, lentils, fermented batters, coconut, tamarind, curry leaves, mustard seeds, and regional cuisines from states such as Tamil Nadu, Karnataka, Andhra Pradesh, Telangana, and Kerala. Dosa, idli, vada, sambar, rasam, and rice meals are common signals.",
+        "South Indian menus can still include meat and biryani, but many beginners first notice the texture and format differences: crisp dosa instead of bread baskets, chutneys and sambar instead of rich creamy gravies, and more explicitly vegetarian or tiffin-style combinations."
+      ]
+    },
+    {
+      "heading": "The Biggest Differences On A Menu",
+      "body": [
+        "The fastest way to tell the difference is to read the first third of the menu rather than the dessert section or a few familiar curry names. A menu packed with naan, paneer tikka, kebabs, butter chicken, and tandoori platters usually signals North Indian influence.",
+        "A menu led by dosa, idli, uthappam, vada, chutneys, sambar, lemon rice, or set meals served as thali or tiffin usually signals South Indian influence. Some London restaurants mix the two, so the label is best used as a direction, not as a rigid rule."
+      ]
+    },
+    {
+      "heading": "What London Directory Data Shows",
+      "body": [
+        "The current directory data shows more South Indian-labelled listings than North Indian-labelled listings: 154 versus 68. South Indian labels are especially concentrated in Newham, Redbridge, Harrow, Croydon, and Brent, while North Indian labels cluster more in Redbridge, Hounslow, Kingston upon Thames, Westminster, and Brent.",
+        "The review footprint also differs sharply. South Indian-labelled listings account for 153,488 combined reviews in the current dataset, compared with 38,090 for North Indian-labelled listings. That gives readers a larger pool of heavily reviewed South Indian options when they want to compare proof, not just menu wording."
+      ]
+    },
+    {
+      "heading": "How To Choose The Right Style In London",
+      "body": [
+        "Choose North Indian-leaning restaurants when you want breads, smoky grilled food, paneer, richer gravies, or a more familiar curry-house feel for a group meal. Choose South Indian-leaning restaurants when you want dosa, idli, rice-led meals, stronger vegetarian range, or a restaurant with a tighter regional identity.",
+        "After that, use the directory the same way you would for any other comparison: check the area, ratings, review count, dietary options, service options, opening hours, and whether the menu language actually matches the style you want. The regional label helps you narrow the list, but the listing details help you choose the restaurant."
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Is dosa North Indian or South Indian?",
+      "answer": "Dosa is a South Indian dish. If a menu strongly features dosa, idli, vada, sambar, and chutneys, that is one of the clearest signs the restaurant leans South Indian."
+    },
+    {
+      "question": "Is butter chicken North Indian or South Indian?",
+      "answer": "Butter chicken is generally treated as a North Indian-style dish. It fits the richer gravy, dairy, and tandoor-adjacent menu patterns that many diners associate with North Indian restaurant cooking."
+    },
+    {
+      "question": "Which style is better for vegetarians?",
+      "answer": "Both can work well, but South Indian restaurants often make the vegetarian range more visible through dosa, idli, vada, rice meals, and tiffin-style combinations. North Indian menus also offer strong vegetarian dishes such as paneer, chole, aloo, and dal."
+    },
+    {
+      "question": "How should I use this when choosing a London restaurant?",
+      "answer": "Use the regional label as a first filter, then compare reviews, ratings, area, transport, dietary options, and service options in the directory. The style tells you what kind of meal to expect; the listing details tell you whether the place fits your occasion."
+    }
+  ],
+  "internalLinks": [
+    {
+      "label": "Restaurant categories",
+      "href": "/categories",
+      "reason": "Connect regional cuisine education to category browsing."
+    },
+    {
+      "label": "Indian restaurants in London",
+      "href": "/",
+      "reason": "Move readers from the comparison into the main directory."
+    },
+    {
+      "label": "Areas",
+      "href": "/areas",
+      "reason": "Help readers compare where each style appears across London."
+    }
+  ],
+  "researchSources": [
+    {
+      "title": "Indian cuisine | History, Regions, Dishes, & Facts | Britannica",
+      "url": "https://www.britannica.com/topic/Indian-cuisine",
+      "note": "Used for broad regional cuisine context and south-versus-north staple differences."
+    },
+    {
+      "title": "The Differences Between Northern & Southern Indian Food - Sukhi's",
+      "url": "https://sukhis.com/the-differences-between-northern-southern-indian-food/",
+      "note": "Used to frame bread, dairy, meat, and tandoor signals in the north versus rice, vegetables, and coastal influences in the south."
+    },
+    {
+      "title": "A Guide To South Indian Food - Sukhi's",
+      "url": "https://sukhis.com/a-guide-to-south-indian-food/",
+      "note": "Used for dosa, idli, fermented batter, coconut, tamarind, and rice-led menu explanations."
+    },
+    {
+      "title": "South Indian Food - 12 Dishes and Cuisines of South India - Holidify",
+      "url": "https://www.holidify.com/pages/south-indian-food-3726.html",
+      "note": "Used to reinforce that South Indian food is a family of regional cuisines rather than a single dish category."
+    },
+    {
+      "title": "Indian Food 101: Your Guide to an Indian Restaurant Menu - Sukhi's",
+      "url": "https://sukhis.com/indian-food-101-guide/",
+      "note": "Used for beginner-facing menu reading and ordering context."
+    }
+  ]
+}

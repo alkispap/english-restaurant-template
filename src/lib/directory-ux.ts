@@ -19,7 +19,7 @@ import {
   areaCategoryPath,
   categoryPath,
   dietaryPath,
-  directoryIndexPath,
+  directorySearchPath,
   listingDetailPath,
   neighborhoodPath,
   servicePath,
@@ -126,7 +126,7 @@ export function getDirectoryHomeListingRows(
       title: resolveDirectoryTemplate(section.title),
       copy: section.copy ? resolveDirectoryTemplate(section.copy) : undefined,
       listings: getListingsForRowSource(section.source, section.limit),
-      seeAllHref: section.seeAllHref ?? defaultSeeAllHref(section.source)
+      seeAllHref: normalizeDirectorySearchHref(section.seeAllHref) ?? defaultSeeAllHref(section.source)
     }))
     .filter((section) => section.listings.length);
 }
@@ -150,7 +150,7 @@ export function getDirectoryListingsPageRows(currentListings: Listing[], limit =
       source: "budgetFriendly",
       display: "listingRow",
       limit,
-      seeAllHref: directoryIndexPath("?sort=price")
+      seeAllHref: directorySearchPath("?sort=price")
     }
   ];
 
@@ -165,7 +165,7 @@ export function getDirectoryListingsPageRows(currentListings: Listing[], limit =
         title: section.title,
         copy: section.copy,
         listings: listingsForRow,
-        seeAllHref: section.seeAllHref ?? defaultSeeAllHref(section.source)
+      seeAllHref: normalizeDirectorySearchHref(section.seeAllHref) ?? defaultSeeAllHref(section.source)
       };
     })
     .filter((section) => section.listings.length);
@@ -251,10 +251,17 @@ function getLocalEatsListings(limit: number) {
 }
 
 function defaultSeeAllHref(source: DirectoryShortcutSource) {
-  if (source === "budgetFriendly") return directoryIndexPath("?sort=price");
-  if (source === "highlyRated") return directoryIndexPath("?sort=rating");
-  if (source === "recentListings") return directoryIndexPath();
-  return directoryIndexPath("?sort=reviews");
+  if (source === "budgetFriendly") return directorySearchPath("?sort=price");
+  if (source === "highlyRated") return directorySearchPath("?sort=rating");
+  if (source === "recentListings") return directorySearchPath();
+  return directorySearchPath("?sort=reviews");
+}
+
+function normalizeDirectorySearchHref(href: string | undefined) {
+  if (!href) return undefined;
+  if (href === "/") return directorySearchPath();
+  if (href.startsWith("/?")) return directorySearchPath(href.slice(1));
+  return href;
 }
 
 export function getRecentlyAddedShortcutLinks(limit = 6): DirectoryShortcutLink[] {
@@ -357,7 +364,7 @@ function areaCategoryLinks(limit: number): DirectoryShortcutLink[] {
     .sort((a, b) => b.count - a.count || a.areaLabel.localeCompare(b.areaLabel))
     .slice(0, limit)
     .map((item) => ({
-      label: `${item.categoryLabel} in ${item.areaLabel}`,
+      label: `${item.categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${item.areaLabel}`,
       href: areaCategoryPath(item.areaSlug, item.categorySlug),
       count: item.count
     }));
@@ -368,12 +375,12 @@ function seoFeatureLinks(limit: number): DirectoryShortcutLink[] {
 }
 
 function seoServiceLinks(): DirectoryShortcutLink[] {
-  const listingPluralLabelLower = directoryConfig.listingPluralLabel.toLowerCase();
+  const localNiche = localNicheLabel();
   const wanted = [
-    { slug: "takeaway", label: `Takeaway ${listingPluralLabelLower}` },
-    { slug: "delivery", label: `Delivery ${listingPluralLabelLower}` },
-    { slug: "dine-in", label: `Dine-in ${listingPluralLabelLower}` },
-    { slug: "outdoor-seating", label: "Outdoor seating" }
+    { slug: "takeaway", label: `Takeaway ${localNiche} in ${cityLabel()}` },
+    { slug: "delivery", label: `Delivery ${localNiche} in ${cityLabel()}` },
+    { slug: "dine-in", label: `Dine-in ${localNiche} in ${cityLabel()}` },
+    { slug: "outdoor-seating", label: `Outdoor seating ${localNiche} in ${cityLabel()}` }
   ];
   const available = new Set(getServiceOptions().map(slugify));
 
@@ -387,12 +394,12 @@ function seoServiceLinks(): DirectoryShortcutLink[] {
 }
 
 function seoDietaryLinks(): DirectoryShortcutLink[] {
-  const listingPluralLabelLower = directoryConfig.listingPluralLabel.toLowerCase();
+  const localNiche = localNicheLabel();
   const wanted = [
-    { slug: "vegetarian", label: `Vegetarian ${listingPluralLabelLower}` },
-    { slug: "vegan", label: `Vegan ${listingPluralLabelLower}` },
-    { slug: "halal", label: `Halal ${listingPluralLabelLower}` },
-    { slug: "gluten-free", label: "Gluten-free options" }
+    { slug: "vegetarian", label: `Vegetarian ${localNiche} in ${cityLabel()}` },
+    { slug: "vegan", label: `Vegan ${localNiche} in ${cityLabel()}` },
+    { slug: "halal", label: `Halal ${localNiche} in ${cityLabel()}` },
+    { slug: "gluten-free", label: `Gluten-free ${localNiche} in ${cityLabel()}` }
   ];
   const available = new Set(listings.flatMap((listing) => listing.dietaryOptions).map(slugify));
 
@@ -406,12 +413,12 @@ function seoDietaryLinks(): DirectoryShortcutLink[] {
 }
 
 function seoTypeLinks(): DirectoryShortcutLink[] {
-  const listingPluralLabelLower = directoryConfig.listingPluralLabel.toLowerCase();
+  const localNiche = localNicheLabel();
   const wanted = [
-    { slug: "casual-dining", label: "Casual dining" },
-    { slug: "fine-dining", label: "Fine dining" },
-    { slug: "cafe", label: `Cafe-style ${listingPluralLabelLower}` },
-    { slug: "bar", label: `Bar ${listingPluralLabelLower}` }
+    { slug: "casual-dining", label: `Casual dining ${localNiche} in ${cityLabel()}` },
+    { slug: "fine-dining", label: `Fine dining ${localNiche} in ${cityLabel()}` },
+    { slug: "cafe", label: `Cafe-style ${localNiche} in ${cityLabel()}` },
+    { slug: "bar", label: `Bar ${localNiche} in ${cityLabel()}` }
   ];
   const available = new Set(getListingTypes().map(slugify));
 
@@ -426,10 +433,10 @@ function seoTypeLinks(): DirectoryShortcutLink[] {
 
 function usefulShortcutLinks(limit: number): DirectoryShortcutLink[] {
   return [
-    { label: "Open now", href: directoryIndexPath("?open=1") },
-    { label: "Best rated", href: directoryIndexPath("?sort=rating") },
-    { label: "Most reviewed", href: directoryIndexPath("?sort=reviews") },
-    { label: "Lowest price", href: directoryIndexPath("?sort=price") }
+    { label: "Open now", href: directorySearchPath("?open=1") },
+    { label: "Best rated", href: directorySearchPath("?sort=rating") },
+    { label: "Most reviewed", href: directorySearchPath("?sort=reviews") },
+    { label: "Lowest price", href: directorySearchPath("?sort=price") }
   ].slice(0, limit);
 }
 
@@ -438,7 +445,7 @@ function transportLinks(limit: number): DirectoryShortcutLink[] {
     listings.map((listing) => listing.location?.tubeStation).filter(isString)
   ).map((item) => ({
     label: `Near ${item.label}`,
-    href: directoryIndexPath(`?tube=${slugify(item.label)}`),
+    href: directorySearchPath(`?tube=${slugify(item.label)}`),
     count: item.count
   }));
 
@@ -446,7 +453,7 @@ function transportLinks(limit: number): DirectoryShortcutLink[] {
     listings.map((listing) => listing.location?.busStop).filter(isString)
   ).map((item) => ({
     label: `Near ${item.label}`,
-    href: directoryIndexPath(`?bus=${slugify(item.label)}`),
+    href: directorySearchPath(`?bus=${slugify(item.label)}`),
     count: item.count
   }));
 
@@ -474,7 +481,7 @@ function topNeighborhoodLinks(limit: number): DirectoryShortcutLink[] {
 
 function cardToAreaLink(card: { label: string; slug: string; count: number; description?: string }) {
   return {
-    label: card.label,
+    label: `${localNicheLabel()} in ${card.label}`,
     href: `/areas/${card.slug}`,
     count: card.count,
     description: card.description
@@ -483,7 +490,7 @@ function cardToAreaLink(card: { label: string; slug: string; count: number; desc
 
 function cardToCategoryLink(card: { label: string; slug: string; count: number; description?: string }) {
   return {
-    label: card.label,
+    label: `${card.label} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${cityLabel()}`,
     href: categoryPath(card.slug),
     count: card.count,
     description: card.description
@@ -518,4 +525,19 @@ function dedupeLinks(links: DirectoryShortcutLink[]) {
 
 function isString(value: string | undefined): value is string {
   return Boolean(value);
+}
+
+function localNicheLabel() {
+  return directorySemanticMap.centralEntity
+    .replace(new RegExp(`\\s+in\\s+${escapeRegExp(cityLabel())}$`, "i"), "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function cityLabel() {
+  return directorySemanticMap.location;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

@@ -14,6 +14,9 @@ type ListingMapProps = {
   listings: MapPoint[];
 };
 
+const mapStyleHrefs = ["/vendor/leaflet/leaflet.css", "/vendor/leaflet/directory-map.css"];
+const mapStylePromises = new Map<string, Promise<void>>();
+
 export function ListingMap({ listings }: ListingMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -30,7 +33,7 @@ export function ListingMap({ listings }: ListingMapProps) {
     let isMounted = true;
     setLoaded(false);
 
-    import("leaflet").then((L) => {
+    loadMapStyles().then(() => import("leaflet")).then((L) => {
       if (!isMounted || !mapRef.current) return;
 
       const container = mapRef.current as HTMLDivElement & { _leaflet_id?: number | null };
@@ -118,6 +121,44 @@ export function ListingMap({ listings }: ListingMapProps) {
       ) : null}
     </div>
   );
+}
+
+function loadMapStyles() {
+  return Promise.all(mapStyleHrefs.map(loadStylesheet)).then(() => undefined);
+}
+
+function loadStylesheet(href: string) {
+  if (typeof document === "undefined") return Promise.resolve();
+
+  const existingPromise = mapStylePromises.get(href);
+  if (existingPromise) return existingPromise;
+
+  const existingLink = Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'))
+    .find((link) => new URL(link.href, window.location.origin).pathname === href);
+  if (existingLink?.dataset.loaded === "true" || existingLink?.sheet) {
+    return Promise.resolve();
+  }
+
+  const promise = new Promise<void>((resolve) => {
+    const link = existingLink ?? document.createElement("link");
+    const finish = () => {
+      link.dataset.loaded = "true";
+      resolve();
+    };
+
+    link.addEventListener("load", finish, { once: true });
+    link.addEventListener("error", finish, { once: true });
+
+    if (!existingLink) {
+      link.rel = "stylesheet";
+      link.href = href;
+      link.dataset.directoryMapStyle = "true";
+      document.head.appendChild(link);
+    }
+  });
+
+  mapStylePromises.set(href, promise);
+  return promise;
 }
 
 function createMarker(

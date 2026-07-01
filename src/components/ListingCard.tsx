@@ -10,15 +10,15 @@ import { RatingPill } from "@/components/RatingPill";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import { SaveListingButton } from "@/components/SaveListingButton";
 import { directoryConfig } from "@/config/directory";
-import type { Listing } from "@/data/listings";
 import { openStatus } from "@/lib/opening-hours";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { slugify } from "@/lib/slug";
-import { directoryIndexPath, listingDetailPath } from "@/lib/routes";
+import { directorySearchPath, listingDetailPath } from "@/lib/routes";
 import { buildListingImageAlt } from "@/lib/listing-image-alt";
+import type { ListingResultSummary } from "@/lib/listings-page";
 
 type ListingCardProps = {
-  listing: Listing;
+  listing: ListingResultSummary;
   compact?: boolean;
 };
 
@@ -29,8 +29,8 @@ export function ListingCard({ listing, compact = false }: ListingCardProps) {
   const hasCarousel = imageCount > 1;
   const currentImageIndex = imageCount ? imageIndex % imageCount : 0;
   const image = listing.images[currentImageIndex];
-  const location = [listing.neighborhood, listing.area, listing.postcode].filter(Boolean).join(", ");
-  const tags = [...listing.categories, ...listing.listingTypes, ...listing.dietaryOptions].slice(0, 4);
+  const location = [listing.neighborhood, listing.area].filter(Boolean).join(", ");
+  const tags = [...listing.categories, ...listing.dietaryOptions].slice(0, 4);
   const workingHours = listing.details?.workingHours;
   const statusBorderClass = isOpen === null ? "border-line" : isOpen ? "border-emerald-500" : "border-red-500";
 
@@ -139,7 +139,7 @@ export function ListingCard({ listing, compact = false }: ListingCardProps) {
             {tags.map((tag) => (
               <Link
                 key={tag}
-                href={listing.categories.includes(tag) ? `/categories/${slugify(tag)}` : directoryIndexPath(`?q=${encodeURIComponent(tag)}`)}
+                href={listing.categories.includes(tag) ? `/categories/${slugify(tag)}` : directorySearchPath(`?q=${encodeURIComponent(tag)}`)}
                 className="rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-accent"
               >
                 {tag}

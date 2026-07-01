@@ -1,0 +1,209 @@
+{
+  "slug": "indian-food-in-london-guide",
+  "status": "drafted",
+  "title": "Indian Food in London: A Beginner's Guide",
+  "metaTitle": "Indian Food in London: A Beginner's Guide | Guide",
+  "metaDescription": "Learn Indian food in London with practical context, live-search themes, and useful directory links.",
+  "answer": "Indian food in London is best understood by comparing restaurant style, area, regional focus, dietary options, ratings, and service choices across London.",
+  "publishedAt": "",
+  "updatedAt": "2026-06-14",
+  "cluster": "local-context",
+  "primaryKeyword": "Indian food in London",
+  "heroImage": {
+    "src": "/images/articles/indian-food-in-london-guide/hero.png",
+    "alt": "Indian dishes in London showing curries, rice, naan, chutneys, and shared dining",
+    "caption": "Generated hero image brief: show Indian food in London with concrete visual details, no text, no logos, and enough context to support the opening answer."
+  },
+  "keyFacts": [
+    {
+      "label": "Intent",
+      "value": "Informational local",
+      "detail": "The opening sentence should answer the search query before supporting detail appears."
+    },
+    {
+      "label": "Directory link",
+      "value": "Areas",
+      "detail": "The article should move readers from learning into local comparison."
+    },
+    {
+      "label": "Visual plan",
+      "value": "Generated image",
+      "detail": "Use a meaningful generated visual or diagram instead of decorative stock imagery."
+    }
+  ],
+  "visualBlocks": [
+    {
+      "title": "Visual Summary",
+      "image": {
+        "src": "/images/articles/indian-food-in-london-guide/visual-summary.svg",
+        "alt": "Diagram comparing Indian restaurant styles, London areas, dietary options, and service choices",
+        "caption": "Generated visual brief: summarize Indian food in London as a simple educational diagram or comparison graphic with clear labels."
+      },
+      "body": "This visual should explain the core concept in one glance and reinforce the first-sentence answer."
+    }
+  ],
+  "dataBlocks": [
+    {
+      "title": "How this topic connects to London",
+      "description": "A small local signal block generated from the current directory dataset.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Directory listings",
+          "value": "3,187",
+          "detail": "Current London restaurant records in this project."
+        },
+        {
+          "label": "Listings with photos",
+          "value": "2%",
+          "detail": "50 listings include at least one image."
+        },
+        {
+          "label": "Listings with ratings",
+          "value": "98%",
+          "detail": "3,119 listings include a rating value."
+        },
+        {
+          "label": "Delivery signal",
+          "value": "85%",
+          "detail": "2,721 listings mention delivery."
+        },
+        {
+          "label": "Common related category",
+          "value": "Middle Eastern",
+          "detail": "Useful for turning article readers into category browsers."
+        }
+      ]
+    }
+  ],
+  "comparisonTables": [
+    {
+      "title": "How to compare the main options",
+      "columns": [
+        "Signal",
+        "What it tells you",
+        "How to use it"
+      ],
+      "rows": [
+        {
+          "label": "Menu focus",
+          "values": [
+            "Whether the restaurant is broad or specialist",
+            "Look for regional dishes, grills, breads, dosa, thali, or house specials."
+          ]
+        },
+        {
+          "label": "Dining need",
+          "values": [
+            "Whether it fits the occasion",
+            "Compare dine-in, takeaway, delivery, group suitability, and opening hours."
+          ]
+        },
+        {
+          "label": "Local proof",
+          "values": [
+            "How strong the listing evidence is",
+            "Use review count, rating, area, photos, and transport details together."
+          ]
+        }
+      ]
+    }
+  ],
+  "ctaBlocks": [
+    {
+      "title": "Compare Indian restaurants in London",
+      "copy": "Use the directory to move from this guide into local restaurants, categories, areas, ratings, and service options.",
+      "href": "/areas",
+      "label": "Browse Indian restaurants in London"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "What Indian Food in London: A Beginner's Guide Covers",
+      "body": [
+        "This draft is prepared for the topic \"Indian food in London\" and should be reviewed before publication.",
+        "It is designed to support topical authority by explaining the subject clearly before linking readers into relevant directory pages."
+      ]
+    },
+    {
+      "heading": "What Live Search Results Commonly Cover",
+      "body": [
+        "Current competing pages commonly cover ordering advice.",
+        "The final version should add useful context rather than repeating competitor structures."
+      ]
+    },
+    {
+      "heading": "Content Gaps To Use",
+      "body": [
+        "Add a stronger angle around local directory connection.",
+        "Add a stronger angle around clear internal links to relevant directory pages.",
+        "Add a stronger angle around practical next steps for choosing a local business."
+      ]
+    },
+    {
+      "heading": "Useful Directory Links",
+      "body": [
+        "Link to Areas at /areas because Support the local map of London restaurant areas.."
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What should this local context guide help readers understand?",
+      "answer": "It should explain Indian food in London in plain language and connect the topic to useful directory pages."
+    },
+    {
+      "question": "Should this draft be published automatically?",
+      "answer": "No. The article workflow keeps generated articles as drafts until they have been reviewed."
+    }
+  ],
+  "internalLinks": [
+    {
+      "label": "Areas",
+      "href": "/areas",
+      "reason": "Support the local map of London restaurant areas."
+    }
+  ],
+  "researchSources": [
+    {
+      "title": "The 25 best Indian restaurants in London - CN Traveller",
+      "url": "https://www.cntraveller.com/gallery/best-indian-restaurants-in-london",
+      "note": ""
+    },
+    {
+      "title": "THE 10 BEST Indian Restaurants in London (Updated 2026)",
+      "url": "https://www.tripadvisor.com/Restaurants-g186338-c24-London_England.html",
+      "note": ""
+    },
+    {
+      "title": "The Best Indian Restaurants in London - MICHELIN Guide",
+      "url": "https://guide.michelin.com/gb/en/best-of/the-best-indian-restaurants-in-london",
+      "note": ""
+    },
+    {
+      "title": "15 Of The Best Indian Restaurants In London To Turn Up The Heat",
+      "url": "https://secretldn.com/best-indian-restaurants-london/",
+      "note": ""
+    },
+    {
+      "title": "The 21 Best Indian Restaurants In London - The Infatuation",
+      "url": "https://www.theinfatuation.com/london/guides/best-indian-restaurants-london",
+      "note": ""
+    },
+    {
+      "title": "Best Indian Restaurants London 2025 | olivemagazine",
+      "url": "https://www.olivemagazine.com/restaurants/london/best-indian-restaurants-london/",
+      "note": ""
+    },
+    {
+      "title": "Best 10 Indian restaurants in London - visitlondon.com",
+      "url": "https://www.visitlondon.com/things-to-do/food-and-drink/restaurant/asian/indian",
+      "note": ""
+    },
+    {
+      "title": "The Best Indian and South Asian Restaurants in London",
+      "url": "https://www.timeout.com/london/restaurants/londons-best-indian-restaurants",
+      "note": ""
+    }
+  ]
+}

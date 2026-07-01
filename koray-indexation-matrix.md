@@ -14,7 +14,7 @@ This matrix turns the strategy into concrete implementation rules for your curre
 - `/listings` -> Keep redirect behavior to avoid duplicate listing surface
 
 ## 2) Listing Detail Pages
-- `/listings/[slug]` -> Conditional index
+- `/restaurants/[slug]` -> Conditional index
 - Index only when listing quality score >= threshold and not permanently closed
 - Otherwise: noindex,follow + canonical remains stable
 

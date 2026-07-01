@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-const source = fs.readFileSync(path.join(process.cwd(), "src/app/listings/[slug]/page.tsx"), "utf8");
+const source = fs.readFileSync(path.join(process.cwd(), "src/app/restaurants/[slug]/page.tsx"), "utf8");
 
 assert.ok(
   source.includes("getRelatedListings(listing, 8)"),

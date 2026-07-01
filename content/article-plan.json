@@ -5,10 +5,13 @@
     "title": "What Is Indian Food?",
     "slug": "what-is-indian-food",
     "primaryKeyword": "what is Indian food",
-    "supportingKeywords": ["Indian cuisine guide", "Indian food for beginners"],
+    "supportingKeywords": [
+      "Indian cuisine guide",
+      "Indian food for beginners"
+    ],
     "intent": "informational",
     "priority": 1,
-    "status": "planned",
+    "status": "published",
     "plannedPublishDate": "2026-06-10",
     "draftPath": "content/articles/what-is-indian-food.json",
     "internalLinks": [
@@ -32,10 +35,13 @@
     "title": "Indian Food in London: A Beginner's Guide",
     "slug": "indian-food-in-london-guide",
     "primaryKeyword": "Indian food in London",
-    "supportingKeywords": ["London Indian food guide", "Indian restaurants London guide"],
+    "supportingKeywords": [
+      "London Indian food guide",
+      "Indian restaurants London guide"
+    ],
     "intent": "informational-local",
     "priority": 2,
-    "status": "idea",
+    "status": "drafted",
     "plannedPublishDate": "2026-06-11",
     "draftPath": "content/articles/indian-food-in-london-guide.json",
     "internalLinks": [
@@ -54,10 +60,14 @@
     "title": "North Indian vs South Indian Food",
     "slug": "north-indian-vs-south-indian-food",
     "primaryKeyword": "North Indian vs South Indian food",
-    "supportingKeywords": ["North Indian food", "South Indian food", "Indian regional food"],
+    "supportingKeywords": [
+      "North Indian food",
+      "South Indian food",
+      "Indian regional food"
+    ],
     "intent": "informational-comparison",
     "priority": 3,
-    "status": "idea",
+    "status": "drafted",
     "plannedPublishDate": "2026-06-12",
     "draftPath": "content/articles/north-indian-vs-south-indian-food.json",
     "internalLinks": [
@@ -76,10 +86,13 @@
     "title": "How to Choose an Indian Restaurant in London",
     "slug": "how-to-choose-indian-restaurant-london",
     "primaryKeyword": "how to choose an Indian restaurant in London",
-    "supportingKeywords": ["best Indian restaurant London tips", "Indian restaurant guide London"],
+    "supportingKeywords": [
+      "best Indian restaurant London tips",
+      "Indian restaurant guide London"
+    ],
     "intent": "decision-support",
     "priority": 4,
-    "status": "idea",
+    "status": "drafted",
     "plannedPublishDate": "2026-06-13",
     "draftPath": "content/articles/how-to-choose-indian-restaurant-london.json",
     "internalLinks": [
@@ -91,5 +104,97 @@
     ],
     "researchNotesPath": "content/research/how-to-choose-indian-restaurant-london.md",
     "similarTopicIds": []
+  },
+  {
+    "id": "template-takeaway-intent",
+    "cluster": "restaurant-choice-intent",
+    "title": "Indian Takeaway in London: How to Choose Delivery-Friendly Restaurants",
+    "slug": "indian-takeaway-london",
+    "primaryKeyword": "Indian takeaway in London",
+    "supportingKeywords": [
+      "Indian delivery London",
+      "takeaway Indian restaurants London",
+      "Indian food delivery London"
+    ],
+    "intent": "takeaway-and-delivery",
+    "priority": 5,
+    "status": "drafted",
+    "plannedPublishDate": "2026-06-18",
+    "draftPath": "content/articles/indian-takeaway-london.json",
+    "internalLinks": [
+      {
+        "label": "Delivery restaurants",
+        "href": "/services/delivery",
+        "reason": "Move readers straight into the highest-intent delivery filter."
+      },
+      {
+        "label": "Takeaway restaurants",
+        "href": "/services/takeaway",
+        "reason": "Support readers who want collection or collection-ready shortlist pages."
+      },
+      {
+        "label": "Indian restaurants in London",
+        "href": "/",
+        "reason": "Keep a broad comparison route when service pages feel too narrow."
+      },
+      {
+        "label": "Areas",
+        "href": "/areas",
+        "reason": "Help readers narrow the shortlist by borough or local area after choosing service fit."
+      }
+    ],
+    "researchNotesPath": "content/research/indian-takeaway-london.md",
+    "similarTopicIds": [
+      "template-visitor-intent"
+    ]
+  },
+  {
+    "id": "template-halal-intent",
+    "cluster": "dietary-intent",
+    "title": "Halal Indian Restaurants in London: How to Compare Your Best Options",
+    "slug": "halal-indian-restaurants-london",
+    "primaryKeyword": "halal Indian restaurants in London",
+    "supportingKeywords": [
+      "halal Indian food London",
+      "Indian halal restaurant London",
+      "halal curry London"
+    ],
+    "intent": "dietary-and-local",
+    "priority": 6,
+    "status": "drafted",
+    "plannedPublishDate": "2026-06-19",
+    "draftPath": "content/articles/halal-indian-restaurants-london.json",
+    "internalLinks": [
+      {
+        "label": "Halal restaurants",
+        "href": "/dietary/halal",
+        "reason": "Move readers directly into the halal facet page once they know the comparison framework."
+      },
+      {
+        "label": "Delivery restaurants",
+        "href": "/services/delivery",
+        "reason": "Support readers who want halal options they can order at home, not only dine in."
+      },
+      {
+        "label": "Indian restaurants in London",
+        "href": "/",
+        "reason": "Keep a broad route for readers who want to widen the shortlist beyond one dietary page."
+      },
+      {
+        "label": "Areas",
+        "href": "/areas",
+        "reason": "Help readers narrow the halal shortlist by borough once the dietary fit is clear."
+      },
+      {
+        "label": "Restaurant categories",
+        "href": "/categories",
+        "reason": "Let readers compare South Indian, North Indian, Punjabi, and other style signals after confirming halal fit."
+      }
+    ],
+    "researchNotesPath": "content/research/halal-indian-restaurants-london.md",
+    "similarTopicIds": [
+      "template-visitor-intent",
+      "template-takeaway-intent"
+    ]
   }
 ]

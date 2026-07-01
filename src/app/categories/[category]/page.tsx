@@ -2,23 +2,25 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
-import { getCategorySeoPage, toSeoMetadata, type SeoPageSearchParams } from "@/lib/seo-pages";
+import { getCategorySeoPage, toSeoMetadata } from "@/lib/seo-pages";
+import { getStaticCategoryParams } from "@/lib/static-route-params";
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
-  searchParams: Promise<SeoPageSearchParams>;
 };
 
-export const dynamic = "force-dynamic";
-
-export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
-  const { category } = await params;
-  return toSeoMetadata(getCategorySeoPage(category, await searchParams));
+export function generateStaticParams() {
+  return getStaticCategoryParams();
 }
 
-export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { category } = await params;
-  const page = getCategorySeoPage(category, await searchParams);
+  return toSeoMetadata(getCategorySeoPage(category, {}));
+}
+
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { category } = await params;
+  const page = getCategorySeoPage(category, {});
   if (!page) notFound();
 
   return (

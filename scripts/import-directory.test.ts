@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   analyzeDirectoryRows,
   analyzeDirectoryBuffer,
+  renderMissingCategoryReview,
   renderReportForListings,
   selectCuratedRestaurantSample,
   type Row
@@ -198,10 +199,12 @@ function listingDescriptionsUseDataRichCopy() {
   assert.match(listing.description, /Ilford|Redbridge/);
   assert.match(listing.description, /vegan|vegetarian/i);
   assert.match(listing.description, /takeaway|delivery|dine-in/i);
-  assert.match(listing.description, /5,374 Google reviews|5374 Google reviews/);
   assert.match(listing.description, /Barkingside Underground Station|Cranbrook Baptist Church/);
+  assert.match(listing.description, /Saravanaa Bhavan is a South Indian restaurant in Ilford, Redbridge serving South Indian food\./);
+  assert.doesNotMatch(listing.description, /The listing includes|Google reviews|compare/i);
   assert.doesNotMatch(listing.description, /A great spot for authentic flavors|welcoming dining experience for all|is a highly-rated/i);
   assert.doesNotMatch(listing.metaDescription, /A great spot for authentic flavors|welcoming dining experience for all|is a highly-rated/i);
+  assert.doesNotMatch(listing.metaDescription, /The listing includes|Google reviews|compare/i);
   assert.doesNotMatch(listing.metaDescription, /\b(and|near|with|dine-|di|n)\.$/i);
 }
 
@@ -264,6 +267,253 @@ function listingMetaDescriptionsAvoidBrokenTruncation() {
   assert.doesNotMatch(listing.metaDescription, /-\.$/);
 }
 
+function listingDescriptionsAvoidAwkwardSeoCopy() {
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Royal Nawaab",
+      "Cuisine Type": "Indian",
+      "Service options": "Delivery, Takeaway, Dine-in",
+      "Google Rating": "5",
+      "Review Count": "18625",
+      Neighborhood: "Ilford",
+      Borough: "Redbridge",
+      "Tube Station": "Barkingside Underground Station",
+      place_id: "indian-article-description"
+    },
+    {
+      "Restaurant Name": "Kera Restaurant",
+      "Service options": "Takeaway, Dine-in",
+      "Review Count": "27",
+      Neighborhood: "Finsbury Park",
+      Borough: "Islington",
+      "Nearby Cinema": "Finsbury Park Picturehouse",
+      "Cinema Distance (m)": "200",
+      place_id: "missing-category-description"
+    },
+    {
+      "Restaurant Name": "Kabul Kitchen",
+      "Cuisine Type": "Afghan",
+      "Service options": "Takeaway, Delivery",
+      "Review Count": "120",
+      Neighborhood: "Harrow",
+      Borough: "Harrow",
+      place_id: "afghan-article-description"
+    }
+  ];
+
+  const listings = analyzeDirectoryRows(rows, "test.csv", "normal import").listings;
+  const [indian, uncategorized, afghan] = listings;
+
+  assert.match(indian.description ?? "", /Royal Nawaab is an Indian restaurant in Ilford, Redbridge serving Indian food\./i);
+  assert.doesNotMatch(indian.description ?? "", /\ba Indian\b|Indian option|appears as|is listed for|is listed in|restaurant covering|The listing includes|Google reviews|compare/i);
+  assert.doesNotMatch(indian.metaDescription ?? "", /\ba Indian\b|Restaurant food|Indian option|The listing includes|Google reviews|compare/i);
+
+  assert.match(uncategorized.description ?? "", /Kera Restaurant is a restaurant in Finsbury Park, Islington/i);
+  assert.doesNotMatch(uncategorized.description ?? "", /Restaurant food|Restaurant restaurant|The listing includes|Google reviews|compare/i);
+  assert.doesNotMatch(uncategorized.metaDescription ?? "", /Restaurant food|Restaurant restaurant|The listing includes|Google reviews|compare/i);
+
+  assert.match(afghan.description ?? "", /\b(an Afghan restaurant|serves Afghan food|offers Afghan food)\b/i);
+  assert.doesNotMatch(afghan.description ?? "", /\ba Afghan\b|Afghan option/i);
+}
+
+function duplicateListingSlugsPreferLocalAreaBeforeNumbers() {
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Curry House",
+      "Cuisine Type": "Indian",
+      Borough: "Redbridge",
+      Neighborhood: "Ilford",
+      place_id: "curry-redbridge"
+    },
+    {
+      "Restaurant Name": "Curry House",
+      "Cuisine Type": "Indian",
+      Borough: "Camden",
+      Neighborhood: "Camden Town",
+      place_id: "curry-camden"
+    },
+    {
+      "Restaurant Name": "Curry House",
+      "Cuisine Type": "Indian",
+      Borough: "Camden",
+      Neighborhood: "Kentish Town",
+      place_id: "curry-kentish"
+    }
+  ];
+
+  const listings = analyzeDirectoryRows(rows, "test.csv", "normal import").listings;
+
+  assert.deepEqual(
+    listings.map((listing) => listing.slug),
+    ["curry-house", "curry-house-camden", "curry-house-kentish-town"]
+  );
+}
+
+function missingCategoriesUseConservativeInferenceAndReview() {
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Moj Spice Indian Takeaway",
+      "Cuisine Type": "",
+      "Restaurant Type": "",
+      "Service options": "Delivery, Takeaway",
+      Offerings: "Quick bite",
+      Borough: "Redbridge",
+      Neighborhood: "South Woodford",
+      "Google Reviews": "89",
+      place_id: "moj-spice"
+    },
+    {
+      "Restaurant Name": "Chennai Dosa Surbiton",
+      "Cuisine Type": "",
+      "Restaurant Type": "Casual Dining",
+      "Service options": "Delivery, Takeaway, Dine-in",
+      Offerings: "Halal food, Vegetarian options",
+      Borough: "Kingston upon Thames",
+      Neighborhood: "Tolworth",
+      "Google Reviews": "340",
+      place_id: "chennai-dosa"
+    },
+    {
+      "Restaurant Name": "Bang Bang Oriental Foodhall",
+      "Cuisine Type": "",
+      "Restaurant Type": "Casual Dining",
+      "Service options": "Dine-in",
+      Borough: "Brent",
+      Neighborhood: "Colindale",
+      "Google Reviews": "10267",
+      place_id: "foodhall"
+    }
+  ];
+
+  const result = analyzeDirectoryRows(rows, "test.csv", "normal import");
+  const bySlug = new Map(result.listings.map((listing) => [listing.slug, listing]));
+
+  assert.deepEqual(bySlug.get("moj-spice-indian-takeaway")?.categories, ["Indian"]);
+  assert.deepEqual(bySlug.get("chennai-dosa-surbiton")?.categories, ["South Indian", "Indian"]);
+  assert.deepEqual(bySlug.get("bang-bang-oriental-foodhall")?.categories, []);
+
+  const review = renderMissingCategoryReview(result.categoryReview);
+  assert.match(review, /Missing Category Review/);
+  assert.match(review, /inferred[\s\S]+Moj Spice Indian Takeaway[\s\S]+Indian/);
+  assert.match(review, /inferred[\s\S]+Chennai Dosa Surbiton[\s\S]+South Indian, Indian/);
+  assert.match(review, /manual_review[\s\S]+Bang Bang Oriental Foodhall/);
+}
+
+function sourceDataOverridesCorrectKnownLocalBusinessErrors() {
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Yummy Dosa Catering",
+      "Cuisine Type": "South Indian",
+      Website: "https://yummydosarestaurant.co.uk/",
+      Phone: "+44 7776 675146",
+      Phone_2: "447776675146",
+      Email: "yummydosailford@gmail.com",
+      City: "London",
+      Borough: "Barking & Dagenham",
+      Neighborhood: "Barking",
+      Area: "Farr Avenue Area",
+      Postcode: "IG11 0NY",
+      "Street Address": "5 Farr Ave",
+      latitude: "47.73855",
+      longitude: "12.5088275",
+      place_id: "ChIJocOA2Stm2qoRoXP2Vrhu6T4"
+    },
+    {
+      "Restaurant Name": "The Indian Dinner Box",
+      "Cuisine Type": "Indian",
+      Phone: "+44 20 7387 9292",
+      City: "London",
+      latitude: "51.4893323",
+      longitude: "-0.0881552",
+      place_id: "ChIJDQ9xSacEdkgRIXfW2iPUYkQ"
+    }
+  ];
+
+  const [yummyDosa, dinnerBox] = analyzeDirectoryRows(rows, "test.csv", "normal import").listings;
+
+  assert.equal(yummyDosa.name, "Yummy Dosa");
+  assert.equal(yummyDosa.address, "68 Cranbrook Rd");
+  assert.equal(yummyDosa.postcode, "IG1 4NH");
+  assert.equal(yummyDosa.area, "Redbridge");
+  assert.equal(yummyDosa.neighborhood, "Ilford");
+  assert.equal(yummyDosa.borough, "Redbridge");
+  assert.equal(yummyDosa.fullAddress, "68 Cranbrook Rd, Ilford, IG1 4NH, London");
+  assert.equal(yummyDosa.location?.latitude, 51.5606646);
+  assert.equal(yummyDosa.location?.longitude, 0.0697829);
+  assert.equal(yummyDosa.contact?.phone, "+44 20 8637 3026");
+  assert.equal(yummyDosa.contact?.phoneAlt, "+44 7776 675146");
+
+  assert.equal(dinnerBox.address, "6 Trinity Street");
+  assert.equal(dinnerBox.postcode, "SE1 1DB");
+  assert.equal(dinnerBox.area, "Southwark");
+  assert.equal(dinnerBox.neighborhood, "The Borough");
+  assert.equal(dinnerBox.borough, "Southwark");
+  assert.equal(dinnerBox.fullAddress, "6 Trinity Street, The Borough, SE1 1DB, London");
+  assert.equal(dinnerBox.location?.latitude, 51.4996898);
+  assert.equal(dinnerBox.location?.longitude, -0.0951699);
+  assert.equal(dinnerBox.contact?.phone, "+44 20 7387 9292");
+}
+
+function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Monty's Nepalese Cuisine",
+      "Cuisine Type": "Indian, Nepalese",
+      "Restaurant Type": "",
+      Website: "http://www.kathmandunepalesecuisine.co.uk/",
+      Phone: "+44 20 8840 1634",
+      City: "London",
+      Borough: "Ealing",
+      Neighborhood: "West Ealing",
+      Area: "Northfield Avenue",
+      Postcode: "W13 9RR",
+      "Street Address": "86 Northfield Ave",
+      latitude: "51.5034531",
+      longitude: "-0.3176297",
+      "Google Rating": "5",
+      "Google Reviews": "255",
+      "Reserve a Table": "",
+      "Book Appointment": "",
+      place_id: "old-place-id"
+    },
+    {
+      "Restaurant Name": "MONTYS NEPALESE CUISINE",
+      "Restaurant Type": "Casual Dining",
+      Website: "https://montysnepalesecuisine.com/",
+      Phone: "+44 20 8840 1634",
+      City: "London",
+      Borough: "Ealing",
+      Neighborhood: "Northfields",
+      Area: "Northfield Avenue",
+      Postcode: "W13 9RR",
+      "Street Address": "86 Northfield Ave",
+      latitude: "51.5034162",
+      longitude: "-0.3177137",
+      "Reserve a Table": "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g",
+      "Book Appointment": "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g",
+      place_id: "new-place-id"
+    }
+  ];
+
+  const result = analyzeDirectoryRows(rows, "test.csv", "normal import");
+  const listing = result.listings[0];
+
+  assert.equal(result.listings.length, 1);
+  assert.equal(result.reportData.summary.skippedRows, 0);
+  assert.equal(result.reportData.duplicateCount, 1);
+  assert.match(result.report, /Duplicate rows merged: 1/);
+  assert.doesNotMatch(result.report, /Duplicate rows skipped/);
+  assert.equal(listing.name, "Monty's Nepalese Cuisine");
+  assert.equal(listing.contact?.website, "https://montysnepalesecuisine.com/");
+  assert.equal(listing.contact?.reserveUrl, "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g");
+  assert.equal(listing.contact?.appointmentUrl, "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g");
+  assert.deepEqual(listing.categories, ["Indian", "Nepalese"]);
+  assert.deepEqual(listing.listingTypes, ["Casual Dining"]);
+  assert.equal(listing.neighborhood, "Northfield Avenue");
+  assert.equal(listing.rating, 5);
+  assert.equal(listing.reviewCount, 255);
+}
+
 repeatedHeaderRowsAreSkipped();
 restaurantFeatureColumnsMapToDetails();
 actionLinksAreCleanedForSafeDisplay();
@@ -275,5 +525,10 @@ serviceFilterExcludesAdvancedOnlyValues();
 listingDescriptionsUseDataRichCopy();
 listingDescriptionVariantsAreStableAndVaried();
 listingMetaDescriptionsAvoidBrokenTruncation();
+listingDescriptionsAvoidAwkwardSeoCopy();
+duplicateListingSlugsPreferLocalAreaBeforeNumbers();
+missingCategoriesUseConservativeInferenceAndReview();
+sourceDataOverridesCorrectKnownLocalBusinessErrors();
+duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping();
 
 console.log("import-directory behavior tests passed");

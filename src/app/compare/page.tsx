@@ -5,10 +5,22 @@ import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracke
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
+import { pageShareMetadata } from "@/lib/share-metadata";
+
+const metadataTitle = `Compare saved ${directoryConfig.listingPluralLabel.toLowerCase()}`;
+const metadataDescription = `Compare saved ${directoryConfig.listingPluralLabel.toLowerCase()} from ${siteConfig.siteName}.`;
 
 export const metadata: Metadata = {
-  title: `Compare saved ${directoryConfig.listingPluralLabel.toLowerCase()}`,
-  description: `Compare saved ${directoryConfig.listingPluralLabel.toLowerCase()} from ${siteConfig.siteName}.`
+  title: metadataTitle,
+  description: metadataDescription,
+  alternates: {
+    canonical: "/compare"
+  },
+  robots: {
+    index: false,
+    follow: true
+  },
+  ...pageShareMetadata({ title: metadataTitle, description: metadataDescription, path: "/compare" })
 };
 
 export default function ComparePage() {

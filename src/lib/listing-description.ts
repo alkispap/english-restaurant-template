@@ -51,19 +51,21 @@ export function buildListingDescriptions(listing: ListingDescriptionInput): List
 }
 
 function listingFacts(listing: ListingDescriptionInput) {
-  const categories = cleanList(listing.categories).slice(0, 3);
+  const categories = simplifyCategories(cleanList(listing.categories)).slice(0, 3);
   const dietary = cleanList(listing.dietaryOptions).slice(0, 2);
   const services = prioritizedServices(cleanList(listing.details?.serviceOptions)).slice(0, 3);
   const highlights = cleanList(listing.details?.highlights).slice(0, 2);
   const offerings = cleanList(listing.details?.offerings).slice(0, 2);
   const dining = cleanList(listing.details?.diningOptions).slice(0, 2);
   const locationLabel = listing.neighborhood || listing.area || listing.borough || listing.city || "London";
-  const areaLabel = listing.area && listing.area !== locationLabel ? listing.area : listing.borough;
+  const areaLabel = [listing.area, listing.borough, listing.city || "London"].find(
+    (value) => value && !sameText(value, locationLabel)
+  );
   const tube = cleanStation(listing.location?.tubeStation);
   const nearbyPlace = cleanList(listing.location?.nearbyPlaces?.map((place) => place.name)).at(0);
 
   return {
-    name: listing.name,
+    name: cleanBusinessName(listing.name),
     primaryCategory: categories[0] || "Restaurant",
     categories,
     dietary,
@@ -83,22 +85,15 @@ function listingFacts(listing: ListingDescriptionInput) {
 }
 
 function variantFirstSentence(variant: number, facts: ReturnType<typeof listingFacts>) {
-  const cuisine = cuisinePhrase(facts);
+  const cuisine = cuisineFoodPhrase(facts);
   const location = locationPhrase(facts);
-  const dietary = facts.dietary.length ? ` with ${lowerList(facts.dietary)} options` : "";
-  const rating = ratingPhrase(facts);
-  const transport = transportPhrase(facts);
+  const restaurant = restaurantPhrase(facts);
 
-  const variants = [
-    `${facts.name} serves ${cuisine} in ${location}${dietary}`,
-    `${facts.name} is listed in ${location} for ${cuisine}${dietary}`,
-    `${facts.name} brings ${cuisine} to ${location}${dietary}`,
-    `${facts.name} appears as a ${facts.primaryCategory} restaurant in ${location}${rating ? `, ${rating}` : ""}`,
-    `${facts.name} is a ${facts.primaryCategory} option in ${location}${transport ? ` near ${transport}` : ""}`,
-    `${facts.name} has ${cuisine} in ${location}${dietary}`,
-    `${facts.name} is a ${location} restaurant covering ${cuisine}${dietary}`,
-    `${facts.name} is listed for ${cuisine} in ${location}${rating ? `, ${rating}` : ""}`
-  ];
+  if (!cuisine) {
+    return `${facts.name} is a restaurant in ${location}`;
+  }
+
+  const variants = Array.from({ length: 8 }, () => `${facts.name} is ${restaurant} in ${location} serving ${cuisine}`);
 
   return variants[variant];
 }
@@ -107,16 +102,16 @@ function variantSecondSentence(variant: number, facts: ReturnType<typeof listing
   const details = compactFactParts(facts);
   const nearby = nearbyPhrase(facts);
   const highlights = facts.highlights.length ? `highlights such as ${lowerList(facts.highlights)}` : undefined;
-  const serviceText = facts.services.length ? lowerList(facts.services) : undefined;
+  const serviceText = servicePhrase(facts);
 
   const variants = [
-    sentenceFromParts([reviewPhrase(facts), serviceText, nearby]),
-    sentenceFromParts([serviceText, reviewPhrase(facts), highlights || nearby]),
-    sentenceFromParts([nearby, serviceText, reviewPhrase(facts)]),
-    sentenceFromParts([reviewPhrase(facts), pricePhrase(facts), nearby]),
+    sentenceFromParts([serviceText, nearby]),
+    sentenceFromParts([serviceText, highlights || nearby]),
+    sentenceFromParts([nearby, serviceText]),
+    sentenceFromParts([pricePhrase(facts), nearby]),
     sentenceFromParts([highlights, serviceText, nearby]),
-    sentenceFromParts([pricePhrase(facts), reviewPhrase(facts), serviceText]),
-    sentenceFromParts([serviceText, nearby, reviewPhrase(facts)]),
+    sentenceFromParts([pricePhrase(facts), serviceText]),
+    sentenceFromParts([serviceText, nearby]),
     sentenceFromParts(details)
   ];
 
@@ -124,7 +119,11 @@ function variantSecondSentence(variant: number, facts: ReturnType<typeof listing
 }
 
 function metaSentence(facts: ReturnType<typeof listingFacts>) {
-  return `${facts.name} serves ${cuisinePhrase(facts)} in ${locationPhrase(facts)}`;
+  const cuisine = cuisineFoodPhrase(facts);
+  const location = locationPhrase(facts);
+  return cuisine
+    ? `${facts.name} is ${restaurantPhrase(facts)} in ${location} serving ${cuisine}`
+    : `${facts.name} is a restaurant in ${location}`;
 }
 
 function buildMetaDescription(facts: ReturnType<typeof listingFacts>) {
@@ -142,8 +141,7 @@ function buildMetaDescription(facts: ReturnType<typeof listingFacts>) {
 function compactFactParts(facts: ReturnType<typeof listingFacts>) {
   return [
     facts.dietary.length ? `${lowerList(facts.dietary)} options` : undefined,
-    facts.services.length ? lowerList(facts.services) : undefined,
-    reviewPhrase(facts),
+    servicePhrase(facts),
     pricePhrase(facts),
     nearbyPhrase(facts)
   ];
@@ -152,45 +150,39 @@ function compactFactParts(facts: ReturnType<typeof listingFacts>) {
 function sentenceFromParts(parts: Array<string | undefined>) {
   const cleanParts = parts.filter((part): part is string => Boolean(part));
   if (!cleanParts.length) return "";
-  return `The listing includes ${formatList(cleanParts)}`;
+  return `Details include ${formatList(cleanParts)}`;
 }
 
-function cuisinePhrase(facts: ReturnType<typeof listingFacts>) {
-  return facts.categories.length ? `${formatList(facts.categories)} food` : `${facts.primaryCategory} food`;
+function cuisineFoodPhrase(facts: ReturnType<typeof listingFacts>) {
+  return facts.categories.length ? `${formatList(facts.categories)} food` : undefined;
+}
+
+function restaurantPhrase(facts: ReturnType<typeof listingFacts>) {
+  if (!facts.categories.length) return "a restaurant";
+  return `${articleFor(facts.primaryCategory)} ${facts.primaryCategory} restaurant`;
+}
+
+function articleFor(value: string) {
+  return /^[aeiou]/i.test(value.trim()) ? "an" : "a";
 }
 
 function locationPhrase(facts: ReturnType<typeof listingFacts>) {
   return facts.areaLabel ? `${facts.locationLabel}, ${facts.areaLabel}` : facts.locationLabel;
 }
 
-function ratingPhrase(facts: ReturnType<typeof listingFacts>) {
-  if (facts.rating && facts.reviewCount) {
-    return `with a ${formatRating(facts.rating)} Google rating from ${facts.reviewCount.toLocaleString()} reviews`;
-  }
-  if (facts.reviewCount) return `with ${facts.reviewCount.toLocaleString()} Google reviews`;
-  if (facts.rating) return `with a ${formatRating(facts.rating)} Google rating`;
-  return undefined;
-}
-
-function reviewPhrase(facts: ReturnType<typeof listingFacts>) {
-  if (facts.reviewCount) return `${facts.reviewCount.toLocaleString()} Google reviews`;
-  if (facts.rating) return `${formatRating(facts.rating)} Google rating`;
-  return undefined;
-}
-
 function pricePhrase(facts: ReturnType<typeof listingFacts>) {
   return facts.priceLevel ? `${facts.priceLevel} price level` : undefined;
 }
 
-function nearbyPhrase(facts: ReturnType<typeof listingFacts>) {
-  if (facts.nearbyPlace) return `nearby ${facts.nearbyPlace}`;
-  if (facts.tube) return `access near ${facts.tube}`;
-  if (facts.busStop) return `access near ${facts.busStop}`;
-  return undefined;
+function servicePhrase(facts: ReturnType<typeof listingFacts>) {
+  return facts.services.length ? `${lowerList(facts.services)} service` : undefined;
 }
 
-function transportPhrase(facts: ReturnType<typeof listingFacts>) {
-  return facts.tube || facts.busStop || facts.nearbyPlace;
+function nearbyPhrase(facts: ReturnType<typeof listingFacts>) {
+  if (facts.nearbyPlace) return `nearby landmarks such as ${facts.nearbyPlace}`;
+  if (facts.tube) return `transport access near ${facts.tube}`;
+  if (facts.busStop) return `transport access near ${facts.busStop}`;
+  return undefined;
 }
 
 function prioritizedServices(values: string[]) {
@@ -219,12 +211,31 @@ function sentencePair(sentences: string[]) {
 function formatList(values: string[]) {
   const items = values.filter(Boolean);
   if (items.length <= 1) return items[0] ?? "";
-  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  if (items.length === 2) return `${items[0]}${/[,;]|\sand\s/i.test(items[0]) ? "," : ""} and ${items[1]}`;
   return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
 }
 
 function cleanList(values?: Array<string | undefined>) {
   return Array.from(new Set((values ?? []).map(cleanValue).filter((value): value is string => Boolean(value))));
+}
+
+function simplifyCategories(values: string[]) {
+  const hasSpecificIndian = values.some((value) => /\bIndian\b/i.test(value) && !/^Indian$/i.test(value));
+  const withoutBroadIndian = hasSpecificIndian ? values.filter((value) => !/^Indian$/i.test(value)) : values;
+  const hasMiddleEastern = withoutBroadIndian.some((value) => /^Middle Eastern$/i.test(value));
+
+  return withoutBroadIndian.filter((value) => !(hasMiddleEastern && /^Asian\s*\/\s*Middle Eastern$/i.test(value)));
+}
+
+function cleanBusinessName(value: string) {
+  return String(value ?? "")
+    .replace(/\s+\.\s+/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function sameText(left?: string, right?: string) {
+  return Boolean(left && right && left.toLocaleLowerCase() === right.toLocaleLowerCase());
 }
 
 function cleanValue(value?: string) {
@@ -237,10 +248,6 @@ function cleanStation(value?: string) {
   const station = cleanValue(value);
   if (!station) return undefined;
   return /station$/i.test(station) ? station : `${station} Station`;
-}
-
-function formatRating(value: number) {
-  return Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1);
 }
 
 function truncateAtWord(value: string, limit: number) {

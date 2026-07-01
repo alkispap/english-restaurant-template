@@ -2,23 +2,25 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
-import { getFacetSeoPage, toSeoMetadata, type SeoPageSearchParams } from "@/lib/seo-pages";
+import { getFacetSeoPage, toSeoMetadata } from "@/lib/seo-pages";
+import { getStaticFacetParams } from "@/lib/static-route-params";
 
 type ServicePageProps = {
   params: Promise<{ service: string }>;
-  searchParams: Promise<SeoPageSearchParams>;
 };
 
-export const dynamic = "force-dynamic";
-
-export async function generateMetadata({ params, searchParams }: ServicePageProps): Promise<Metadata> {
-  const { service } = await params;
-  return toSeoMetadata(getFacetSeoPage("service", service, await searchParams));
+export function generateStaticParams() {
+  return getStaticFacetParams("service", "service");
 }
 
-export default async function ServicePage({ params, searchParams }: ServicePageProps) {
+export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { service } = await params;
-  const page = getFacetSeoPage("service", service, await searchParams);
+  return toSeoMetadata(getFacetSeoPage("service", service, {}));
+}
+
+export default async function ServicePage({ params }: ServicePageProps) {
+  const { service } = await params;
+  const page = getFacetSeoPage("service", service, {});
   if (!page) notFound();
 
   return (

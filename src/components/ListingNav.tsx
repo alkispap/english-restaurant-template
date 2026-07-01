@@ -37,7 +37,7 @@ export function ListingNav({ name, tabs }: { name: string; tabs: ListingNavTab[]
   }, [tabs]);
 
   return (
-    <div className="sticky top-0 z-50 border-b border-line bg-white/90 shadow-sm backdrop-blur-md dark:bg-slate-950/90">
+    <div className="sticky top-0 z-40 border-b border-line bg-white/90 shadow-sm backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-8">
           <div className="hidden truncate text-lg font-bold text-ink sm:block">{name}</div>
@@ -48,8 +48,8 @@ export function ListingNav({ name, tabs }: { name: string; tabs: ListingNavTab[]
                 href={tab.href}
                 className={`inline-flex items-center border-b-2 px-1 text-sm font-bold transition-all ${
                   activeTab === tab.href
-                    ? "border-emerald-600 text-ink dark:text-white"
-                    : "border-transparent text-muted hover:border-emerald-200 hover:text-ink dark:hover:text-white"
+                    ? "border-emerald-600 text-ink"
+                    : "border-transparent text-muted hover:border-emerald-200 hover:text-ink"
                 }`}
               >
                 {tab.label}

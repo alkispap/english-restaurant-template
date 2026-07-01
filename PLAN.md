@@ -63,7 +63,7 @@ Create one production-readiness report with:
   - `/services/takeaway`
   - `/dietary/vegan`
   - `/types/casual-dining`
-  - `/listings/the-curry-club-london`
+  - `/restaurants/the-curry-club-london`
   - `/compare`
   - `/sitemap.xml`
   - `/robots.txt`

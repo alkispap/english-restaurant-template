@@ -23,7 +23,7 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
 
   if (!user) {
     return (
-      <section className="mt-6 rounded-lg border border-line bg-orange-50 p-5 dark:bg-orange-950/20">
+      <section className="mt-6 rounded-lg border border-line bg-orange-50 p-5">
         <div className="flex items-start gap-3">
           <Lock className="mt-1 h-5 w-5 text-accent" aria-hidden />
           <div>
@@ -43,7 +43,7 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
   }
 
   return (
-    <section className="mt-6 rounded-lg border border-line bg-white p-5 dark:bg-slate-900">
+    <section className="mt-6 rounded-lg border border-line bg-white p-5">
       <h2 className="font-bold text-ink">Private notes</h2>
       <form className="mt-3 grid gap-3" onSubmit={submitNote}>
         <textarea

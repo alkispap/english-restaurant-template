@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { X } from "lucide-react";
 import { FilterCheckboxGroup } from "./FilterCheckboxGroup";
@@ -5,11 +7,7 @@ import { directoryConfig } from "@/config/directory";
 import { buildListingsPageHref, type ListingsPageLinkValues } from "@/lib/listings-page";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { directoryIndexPath } from "@/lib/routes";
-import {
-  getFilterPanelOptionGroups,
-  type FilterOption,
-  type FilterPanelOptionGroup
-} from "@/lib/filter-panel-options";
+import type { FilterOption, FilterPanelOptionGroup } from "@/lib/filter-panel-options";
 
 type FilterPanelProps = {
   values: ListingsPageLinkValues & {
@@ -41,10 +39,10 @@ type FilterPanelProps = {
     sort?: string;
   };
   action?: string;
+  optionGroups: FilterPanelOptionGroup[];
 };
 
-export function FilterPanel({ values, action }: FilterPanelProps) {
-  const optionGroups = getFilterPanelOptionGroups(values);
+export function FilterPanel({ values, action, optionGroups }: FilterPanelProps) {
   const optionGroupsByName = new Map(optionGroups.map((group) => [group.name, group]));
   const labels = directoryConfig.filterLabels;
   const selectedFilters = buildSelectedFilters(
@@ -103,9 +101,6 @@ export function FilterPanel({ values, action }: FilterPanelProps) {
         options={group("rating")?.options ?? []}
         placeholder="Any rating"
       />
-      <button className="focus-ring w-full rounded-md bg-ink px-4 py-3 text-sm font-bold text-white hover:bg-slate-800">
-        Apply filters
-      </button>
     </form>
   );
 }
@@ -285,12 +280,34 @@ function Select({
 }) {
   if (!options.length) return null;
 
+  function applySelectFilter(event: React.ChangeEvent<HTMLSelectElement>) {
+    const scrollY = window.scrollY;
+    const nextValue = event.target.value;
+    const params = new URLSearchParams(window.location.search);
+
+    params.delete(name);
+    params.delete("page");
+    if (nextValue) params.set(name, nextValue);
+
+    const query = params.toString();
+    const nextUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+    window.history.pushState({}, "", nextUrl);
+    window.dispatchEvent(new Event("directory-url-change"));
+    window.requestAnimationFrame(() => window.scrollTo({ top: scrollY }));
+  }
+
   return (
     <div>
       <label className="mb-2 block text-sm font-bold text-ink" htmlFor={name}>
         {label}
       </label>
-      <select id={name} name={name} defaultValue={value ?? ""} className="focus-ring w-full rounded-md border border-line px-3 py-2 text-sm">
+      <select
+        id={name}
+        name={name}
+        defaultValue={value ?? ""}
+        onChange={(event) => applySelectFilter(event)}
+        className="focus-ring w-full rounded-md border border-line px-3 py-2 text-sm"
+      >
         <option value="">{placeholder}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>

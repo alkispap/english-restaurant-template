@@ -11,7 +11,7 @@ The main reusable settings live in:
 - `src/config/site.ts` for branding, city/region, niche, hero text, and SEO description.
 - `src/config/directory.ts` for listing and category labels.
 
-The main directory index is `/`. Individual listing detail pages stay under `/listings/[slug]`.
+The main directory index is `/`. Individual listing detail pages stay under `/restaurants/[slug]`.
 
 ## Production URL
 
@@ -160,4 +160,4 @@ npm run audit:freshness
 npm run build
 ```
 
-Then open the site locally and spot-check `/`, `/listings` redirect behavior, `/areas`, `/categories`, `/compare`, a listing detail page, and a few natural searches such as `halal delivery ilford`. Confirm the visible copy, page titles, sitemap, link audit, and robots output match the new niche and configured public URL.
+Then open the site locally and spot-check `/`, `/listings` redirect behavior, `/listings/[slug]` legacy redirects, `/restaurants/[slug]` detail pages, `/areas`, `/categories`, `/compare`, and a few natural searches such as `halal delivery ilford`. Confirm the visible copy, page titles, sitemap, link audit, and robots output match the new niche and configured public URL.

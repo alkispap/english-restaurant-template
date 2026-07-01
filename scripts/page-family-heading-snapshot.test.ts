@@ -36,7 +36,7 @@ function getPage(id: string): TemplatePageInventoryItem {
   },
   {
     id: "listing-detail",
-    headingSource: "src/app/listings/[slug]/page.tsx inline detail sections",
+    headingSource: "src/app/restaurants/[slug]/page.tsx inline detail sections",
     metadataSource: "generateMetadata from listingShareMetadata"
   },
   {

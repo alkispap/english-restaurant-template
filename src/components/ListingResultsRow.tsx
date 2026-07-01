@@ -17,15 +17,15 @@ import { OpenStatusBadge } from "@/components/OpenStatusBadge";
 import { RatingPill } from "@/components/RatingPill";
 import { SaveListingButton } from "@/components/SaveListingButton";
 import { directoryConfig } from "@/config/directory";
-import type { Listing } from "@/data/listings";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { openStatus } from "@/lib/opening-hours";
 import { categoryPath, listingDetailPath } from "@/lib/routes";
 import { slugify } from "@/lib/slug";
 import { buildListingImageAlt } from "@/lib/listing-image-alt";
+import type { ListingResultSummary } from "@/lib/listings-page";
 
 type ListingResultsRowProps = {
-  listing: Listing;
+  listing: ListingResultSummary;
   rank: number;
 };
 
@@ -171,7 +171,7 @@ export function ListingResultsRow({ listing, rank }: ListingResultsRowProps) {
           {featureChips.length ? (
             <div className="mt-4 flex flex-wrap gap-2">
               {featureChips.map((chip) => (
-                <span key={chip} className="rounded-full border border-line bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-100">
+                <span key={chip} className="rounded-full border border-line bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
                   {chip}
                 </span>
               ))}
@@ -244,7 +244,7 @@ function RowActions({
   );
 }
 
-function getFeatureChips(listing: Listing) {
+function getFeatureChips(listing: ListingResultSummary) {
   const candidates = [
     ...(listing.details?.highlights ?? []),
     ...(listing.details?.diningOptions ?? []),
@@ -255,7 +255,7 @@ function getFeatureChips(listing: Listing) {
   return Array.from(new Set(candidates.filter(Boolean))).slice(0, 5);
 }
 
-function getDirectionsHref(listing: Listing) {
+function getDirectionsHref(listing: ListingResultSummary) {
   if (listing.location?.googleMapsUrl) return listing.location.googleMapsUrl;
 
   const latitude = listing.location?.latitude;

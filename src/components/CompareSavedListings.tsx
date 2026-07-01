@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ExternalLink, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAccount } from "@/components/AccountProvider";
+import { getClientShortlistListingSummaries } from "@/data/shortlist-summaries";
 import { OpenStatusBadge } from "@/components/OpenStatusBadge";
 import {
   getCompareFields,
@@ -16,7 +17,6 @@ import { directoryConfig } from "@/config/directory";
 export function CompareSavedListings() {
   const { authEnabled, user, savedSlugs, noteBySlug, removeSavedSlug, refreshSavedSlugs, loadNotesForSlugs } = useAccount();
   const [isReady, setIsReady] = useState(false);
-  const [isLoadingSummaries, setIsLoadingSummaries] = useState(false);
   const [savedListings, setSavedListings] = useState<ShortlistListingSummary[]>([]);
   const missingCount = savedSlugs.length - savedListings.length;
 
@@ -45,37 +45,10 @@ export function CompareSavedListings() {
     if (!isReady) return;
     if (!savedSlugs.length) {
       setSavedListings([]);
-      setIsLoadingSummaries(false);
       return;
     }
 
-    const controller = new AbortController();
-    setIsLoadingSummaries(true);
-
-    fetch("/api/shortlist", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ slugs: savedSlugs }),
-      signal: controller.signal
-    })
-      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("Unable to load saved listings"))))
-      .then((payload: { listings?: ShortlistListingSummary[] }) => {
-        setSavedListings(Array.isArray(payload.listings) ? payload.listings : []);
-      })
-      .catch((error) => {
-        if ((error as Error).name !== "AbortError") {
-          setSavedListings([]);
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) {
-          setIsLoadingSummaries(false);
-        }
-      });
-
-    return () => controller.abort();
+    setSavedListings(getClientShortlistListingSummaries(savedSlugs));
   }, [isReady, savedSlugs]);
 
   async function removeListing(slug: string) {
@@ -88,7 +61,7 @@ export function CompareSavedListings() {
     });
   }
 
-  if (!isReady || isLoadingSummaries) {
+  if (!isReady) {
     return (
       <section className="rounded-lg border border-line bg-white p-8 text-center shadow-soft">
         <h2 className="text-2xl font-bold text-ink">Loading saved listings</h2>

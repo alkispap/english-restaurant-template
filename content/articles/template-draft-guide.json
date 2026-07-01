@@ -4,10 +4,18 @@
   "title": "Template Draft Guide",
   "metaTitle": "Template Draft Guide",
   "metaDescription": "A non-public sample draft showing the article content structure.",
+  "answer": "This sample shows the article content structure while staying excluded from public guide output.",
   "publishedAt": "",
   "updatedAt": "2026-06-02",
   "cluster": "template-sample",
   "primaryKeyword": "template draft guide",
+  "keyFacts": [
+    {
+      "label": "Status",
+      "value": "Draft",
+      "detail": "Draft articles do not appear publicly."
+    }
+  ],
   "sections": [
     {
       "heading": "Sample Section",

@@ -1,8 +1,8 @@
 import { ListingRowSection } from "@/components/ListingRowSection";
-import type { DirectoryListingRow } from "@/lib/directory-ux";
+import type { DirectoryListingRowSummary } from "@/lib/listings-page";
 
 type DirectoryListingRowsProps = {
-  rows: DirectoryListingRow[];
+  rows: DirectoryListingRowSummary[];
   className?: string;
 };
 

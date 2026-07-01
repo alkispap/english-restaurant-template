@@ -8,6 +8,11 @@ export function directoryIndexPath(path = "") {
   return `/${path.replace(/^\//, "")}`;
 }
 
+export function directorySearchPath(path = "") {
+  const suffix = path ? path.replace(/^\//, "") : "";
+  return `/${siteConfig.listingBasePath}${suffix}`;
+}
+
 export function listingDetailPath(slug: string) {
   return listingsPath(`/${slug}`);
 }

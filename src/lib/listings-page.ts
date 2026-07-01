@@ -1,4 +1,4 @@
-import type { Listing } from "@/data/listings";
+import type { Listing, OpeningHours } from "@/data/listings";
 import { directoryIndexPath } from "@/lib/routes";
 
 export type ListingsViewMode = "grid" | "map";
@@ -47,6 +47,61 @@ export type MapPoint = {
   longitude: number;
 };
 
+type MapPointSource = {
+  [key: string]: unknown;
+  slug: string;
+  name: string;
+  area?: string;
+  categories: string[];
+  rating?: number;
+  reviewCount?: number;
+  location?: {
+    latitude?: number;
+    longitude?: number;
+  };
+};
+
+export type ListingResultSummary = {
+  slug: string;
+  name: string;
+  description?: string;
+  images: string[];
+  imageFallbackLabel?: string;
+  area?: string;
+  neighborhood?: string;
+  categories: string[];
+  dietaryOptions: string[];
+  priceLevel?: Listing["priceLevel"];
+  rating?: number;
+  reviewCount?: number;
+  fullAddress?: string;
+  address?: string;
+  contact?: {
+    website?: string;
+    googleReviewsUrl?: string;
+  };
+  location?: {
+    googleMapsUrl?: string;
+    latitude?: number;
+    longitude?: number;
+  };
+  details?: {
+    workingHours?: OpeningHours[];
+    serviceOptions?: string[];
+    highlights?: string[];
+    diningOptions?: string[];
+    googleVerified?: boolean;
+  };
+};
+
+export type DirectoryListingRowSummary = {
+  id: string;
+  title: string;
+  copy?: string;
+  listings: ListingResultSummary[];
+  seeAllHref: string;
+};
+
 export const LISTINGS_PAGE_SIZE = 12;
 
 export function paginateListings<T>(items: T[], requestedPage = 1, pageSize = LISTINGS_PAGE_SIZE) {
@@ -86,7 +141,7 @@ export function buildListingsPageHref(values: ListingsPageLinkValues, overrides:
   return query ? `${basePath}?${query}` : basePath;
 }
 
-export function mapPointFromListing(listing: Listing): MapPoint | undefined {
+export function mapPointFromListing(listing: MapPointSource): MapPoint | undefined {
   const latitude = listing.location?.latitude;
   const longitude = listing.location?.longitude;
   if (!latitude || !longitude) return undefined;
@@ -103,7 +158,42 @@ export function mapPointFromListing(listing: Listing): MapPoint | undefined {
   };
 }
 
-export function mapPointsFromListings(listings: Listing[]) {
+export function listingResultSummaryFromListing(listing: Listing): ListingResultSummary {
+  return {
+    slug: listing.slug,
+    name: listing.name,
+    description: listing.description,
+    images: listing.images.slice(0, 3),
+    imageFallbackLabel: listing.imageFallbackLabel,
+    area: listing.area,
+    neighborhood: listing.neighborhood,
+    categories: listing.categories.slice(0, 3),
+    dietaryOptions: listing.dietaryOptions.slice(0, 3),
+    priceLevel: listing.priceLevel,
+    rating: listing.rating,
+    reviewCount: listing.reviewCount,
+    fullAddress: listing.fullAddress,
+    address: listing.address,
+    contact: {
+      website: listing.contact?.website,
+      googleReviewsUrl: listing.contact?.googleReviewsUrl
+    },
+    location: {
+      googleMapsUrl: listing.location?.googleMapsUrl,
+      latitude: listing.location?.latitude,
+      longitude: listing.location?.longitude
+    },
+    details: {
+      workingHours: listing.details?.workingHours,
+      serviceOptions: listing.details?.serviceOptions?.slice(0, 4),
+      highlights: listing.details?.highlights?.slice(0, 3),
+      diningOptions: listing.details?.diningOptions?.slice(0, 3),
+      googleVerified: listing.details?.googleVerified
+    }
+  };
+}
+
+export function mapPointsFromListings(listings: MapPointSource[]) {
   const points = listings.flatMap((listing) => {
     const point = mapPointFromListing(listing);
     return point ? [point] : [];

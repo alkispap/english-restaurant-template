@@ -22,9 +22,13 @@ import {
   typePath
 } from "@/lib/routes";
 import { SEO_POLICY, isApprovedHighIntentFacet } from "@/lib/seo-policy";
+import { getIndexedListingFilterCount } from "@/lib/listing-filter-counts";
 
 const filterCountCache = new Map<string, number>();
 function getFilterCount(filters: ListingFilters): number {
+  const indexedCount = getIndexedListingFilterCount(filters);
+  if (indexedCount !== undefined) return indexedCount;
+
   const key = JSON.stringify(filters);
   if (!filterCountCache.has(key)) {
     filterCountCache.set(key, filterListings(filters).length);
@@ -241,6 +245,9 @@ export function getRatingFilterOptions() {
 
 export function getListingExploreLinks(listing: Listing): ContextualBridgeGroup[] {
   const listingPlural = directoryConfig.listingPluralLabel.toLowerCase();
+  const localNiche = localNicheLabel();
+  const localNicheTitle = titleCase(localNiche);
+  const localSingularNicheTitle = singularRestaurantPhrase(localNicheTitle);
   const area = listing.area;
   const areaSlug = area ? slugify(area) : "";
 
@@ -251,7 +258,7 @@ export function getListingExploreLinks(listing: Listing): ContextualBridgeGroup[
   if (area && areaSlug) {
     if (getFilterCount({ area: areaSlug }) >= SEO_POLICY.routeThresholds.area) {
       localAreaLinks.push({
-        label: `More ${listingPlural} in ${area}`,
+        label: `More ${localNiche} in ${area}`,
         href: areaPath(areaSlug)
       });
     }
@@ -261,7 +268,7 @@ export function getListingExploreLinks(listing: Listing): ContextualBridgeGroup[
     const nSlug = slugify(listing.neighborhood);
     if (getFilterCount({ neighborhood: nSlug }) >= SEO_POLICY.routeThresholds.neighborhood) {
       localAreaLinks.push({
-        label: `More ${listingPlural} in ${listing.neighborhood}`,
+        label: `More ${localNiche} in ${listing.neighborhood}`,
         href: neighborhoodPath(nSlug)
       });
     }
@@ -271,7 +278,7 @@ export function getListingExploreLinks(listing: Listing): ContextualBridgeGroup[
     const categorySlug = slugify(category);
     if (getFilterCount({ category: categorySlug }) >= SEO_POLICY.routeThresholds.category) {
       cuisineLinks.push({
-        label: `${category} ${listingPlural}`,
+        label: `${category} ${listingPlural} in ${siteConfig.cityOrRegion}`,
         href: categoryPath(categorySlug)
       });
     }
@@ -336,27 +343,53 @@ export function getListingExploreLinks(listing: Listing): ContextualBridgeGroup[
 
   if (localAreaLinks.length > 0) {
     groups.push({
-      title: "Local area",
-      description: "These local hubs keep the search focused on the same area or neighborhood.",
+      title: area ? `${localNicheTitle} Near ${area}` : `${localNicheTitle} by Area`,
+      description: area
+        ? `Explore more ${localNiche} in ${area} and nearby ${siteConfig.cityOrRegion} areas.`
+        : `Explore more ${siteConfig.niche} by area and neighborhood.`,
       links: dedupeLinks(localAreaLinks).slice(0, 8)
     });
   }
   if (cuisineLinks.length > 0) {
     groups.push({
-      title: "Similar cuisine",
-      description: "These category hubs help compare restaurants with similar cuisine signals.",
+      title: `Similar ${localSingularNicheTitle.replace(/\s+Restaurant$/i, "")} Cuisine in ${siteConfig.cityOrRegion}`,
+      description: `Browse ${siteConfig.niche} by related cuisine styles and dining options.`,
       links: dedupeLinks(cuisineLinks).slice(0, 8)
     });
   }
   if (featuresLinks.length > 0) {
     groups.push({
-      title: "Features & dietary",
-      description: "These feature-led searches match the services, dining options, or dietary signals in this listing.",
+      title: `${localNicheTitle} by Features and Dietary Needs`,
+      description: `Find ${siteConfig.niche} with matching services, dietary options, and dining features.`,
       links: dedupeLinks(featuresLinks).slice(0, 8)
     });
   }
 
   return groups;
+}
+
+function localNicheLabel() {
+  return siteConfig.niche
+    .replace(new RegExp(`\\s+in\\s+${escapeRegExp(siteConfig.cityOrRegion)}$`, "i"), "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function singularRestaurantPhrase(value: string) {
+  return value.replace(/\bRestaurants\b/i, "Restaurant");
+}
+
+function titleCase(value: string) {
+  const smallWords = new Set(["a", "an", "and", "as", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to"]);
+  return value
+    .trim()
+    .split(/\s+/)
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      if (index > 0 && smallWords.has(lower)) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(" ");
 }
 
 function sourceLinks(source: FooterSource, limit = 6): DirectoryLink[] {
@@ -393,6 +426,10 @@ function dedupeLinks(links: DirectoryLink[]) {
   });
 
   return result;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function asSortKey(value?: string): SortKey | undefined {

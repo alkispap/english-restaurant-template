@@ -35,7 +35,7 @@ export function OpenStatusBadge({ workingHours, compact = false }: OpenStatusBad
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${
         status.isOpen
           ? "bg-emerald-50 text-emerald-700"
-          : "bg-red-50 text-red-600"
+          : "bg-red-50 text-red-700"
       }`}
     >
       <Clock className={compact ? "h-3.5 w-3.5 shrink-0" : "h-4 w-4 shrink-0"} aria-hidden />

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Indian food visual summary</title>
+  <desc id="desc">A diagram showing that Indian food connects regions, ingredients, cooking methods, dishes, and local restaurant choices.</desc>
+  <rect width="1200" height="675" fill="#fff7ed"/>
+  <circle cx="600" cy="338" r="128" fill="#f97316"/>
+  <circle cx="600" cy="338" r="92" fill="#fffaf3"/>
+  <text x="600" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="31" font-weight="700" fill="#1f2933">Indian food</text>
+  <text x="600" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#64748b">many regional cuisines</text>
+  <g font-family="Arial, sans-serif">
+    <g transform="translate(90 88)">
+      <rect width="260" height="122" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <text x="24" y="43" font-size="24" font-weight="700" fill="#9f1239">Regions</text>
+      <text x="24" y="80" font-size="18" fill="#64748b">North, South, Bengali,</text>
+      <text x="24" y="104" font-size="18" fill="#64748b">Gujarati, Goan and more</text>
+    </g>
+    <g transform="translate(850 88)">
+      <rect width="260" height="122" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <text x="24" y="43" font-size="24" font-weight="700" fill="#9f1239">Ingredients</text>
+      <text x="24" y="80" font-size="18" fill="#64748b">Spices, lentils, rice,</text>
+      <text x="24" y="104" font-size="18" fill="#64748b">bread, yoghurt, herbs</text>
+    </g>
+    <g transform="translate(90 456)">
+      <rect width="260" height="122" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <text x="24" y="43" font-size="24" font-weight="700" fill="#9f1239">Methods</text>
+      <text x="24" y="80" font-size="18" fill="#64748b">Tandoor, simmering,</text>
+      <text x="24" y="104" font-size="18" fill="#64748b">tempering, fermentation</text>
+    </g>
+    <g transform="translate(850 456)">
+      <rect width="260" height="122" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="3"/>
+      <text x="24" y="43" font-size="24" font-weight="700" fill="#9f1239">Restaurant choice</text>
+      <text x="24" y="80" font-size="18" fill="#64748b">Compare area, menu,</text>
+      <text x="24" y="104" font-size="18" fill="#64748b">reviews and services</text>
+    </g>
+  </g>
+  <g stroke="#f97316" stroke-width="5" stroke-linecap="round">
+    <path d="M350 149 C430 160 484 217 535 271" fill="none"/>
+    <path d="M850 149 C770 160 716 217 665 271" fill="none"/>
+    <path d="M350 517 C430 506 484 459 535 405" fill="none"/>
+    <path d="M850 517 C770 506 716 459 665 405" fill="none"/>
+  </g>
+</svg>

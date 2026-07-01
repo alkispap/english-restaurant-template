@@ -11,6 +11,7 @@ import {
 
 const expectedPageTypes = [
   "homepage",
+  "directory_search",
   "listing_detail",
   "area_hub",
   "category_hub",
@@ -54,7 +55,7 @@ assert.doesNotThrow(() => {
 const normalized = normalizeDirectoryAnalyticsEvent({
   pageType: "listing_detail",
   action: "website_click",
-  route: "/listings/example",
+  route: "/restaurants/example",
   listingSlug: "example",
   label: "",
   targetUrl: undefined
@@ -62,7 +63,7 @@ const normalized = normalizeDirectoryAnalyticsEvent({
 assert.deepEqual(normalized, {
   pageType: "listing_detail",
   action: "website_click",
-  route: "/listings/example",
+  route: "/restaurants/example",
   listingSlug: "example"
 });
 
@@ -94,7 +95,7 @@ const trackedEvents: DirectoryAnalyticsEvent[] = [];
 trackDirectoryEvent({
   pageType: "listing_detail",
   action: "maps_click",
-  route: "/listings/example",
+  route: "/restaurants/example",
   listingSlug: "example",
   label: "Open Google Maps",
   targetUrl: "https://maps.example.com"
@@ -110,14 +111,15 @@ assert.equal(trackedEvents[0].pageType, "listing_detail");
 
 const root = process.cwd();
 const source = (file: string) => fs.readFileSync(path.join(root, file), "utf8");
-const listingPage = source("src/app/listings/[slug]/page.tsx");
+const listingPage = source("src/app/restaurants/[slug]/page.tsx");
 const shareButton = source("src/components/ShareButton.tsx");
 const saveButton = source("src/components/SaveListingButton.tsx");
 const comparePage = source("src/components/CompareSavedListings.tsx");
 const savedLink = source("src/components/SavedListingsLink.tsx");
 const pageTrackingSources = [
   source("src/app/page.tsx"),
-  source("src/app/listings/[slug]/page.tsx"),
+  source("src/app/restaurants/page.tsx"),
+  source("src/app/restaurants/[slug]/page.tsx"),
   source("src/app/areas/[area]/page.tsx"),
   source("src/app/categories/[category]/page.tsx"),
   source("src/app/areas/[area]/categories/[category]/page.tsx"),
@@ -157,6 +159,7 @@ assert.ok(saveButton.includes("remove_saved_listing"), "save button should track
 
 [
   "pageType=\"homepage\"",
+  "pageType=\"directory_search\"",
   "pageType=\"listing_detail\"",
   "pageType=\"area_hub\"",
   "pageType=\"category_hub\"",

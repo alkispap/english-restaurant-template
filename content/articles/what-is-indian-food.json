@@ -1,0 +1,226 @@
+{
+  "slug": "what-is-indian-food",
+  "status": "published",
+  "title": "What Is Indian Food?",
+  "metaTitle": "What Is Indian Food? A Beginner's Guide",
+  "metaDescription": "A beginner's guide to Indian food, common dishes, regional styles, menu terms, and how to choose Indian restaurants in London.",
+  "answer": "Indian food is a wide collection of regional cuisines shaped by local ingredients, religion, trade, climate, migration, and family traditions across India and the Indian diaspora.",
+  "publishedAt": "2026-06-13",
+  "updatedAt": "2026-06-13",
+  "cluster": "core-topic-authority",
+  "primaryKeyword": "what is Indian food",
+  "heroImage": {
+    "src": "/images/articles/what-is-indian-food/hero.webp",
+    "alt": "A varied Indian meal with rice, bread, dal, curry, chutneys, and grilled food",
+    "caption": "A complete Indian meal works better than a decorative food photo because it shows variety: rice, breads, sauces, lentils, chutneys, grilled dishes, and vegetarian options."
+  },
+  "keyFacts": [
+    {
+      "label": "Direct answer",
+      "value": "Regional cuisines",
+      "detail": "Indian food is not one single menu style; it is a broad family of regional food traditions."
+    },
+    {
+      "label": "London listings",
+      "value": "3,187",
+      "detail": "Current restaurant records in this London directory."
+    },
+    {
+      "label": "Delivery signal",
+      "value": "85%",
+      "detail": "2,721 listings currently mention delivery in the directory data."
+    }
+  ],
+  "visualBlocks": [
+    {
+      "title": "Indian food is a system, not one dish",
+      "image": {
+        "src": "/images/articles/what-is-indian-food/visual-summary.svg",
+        "alt": "Diagram showing Indian food connected to regions, ingredients, methods, and restaurant choice",
+        "caption": "Visual summary of the main entities a beginner should connect: region, ingredient, cooking method, dish type, and local restaurant choice."
+      },
+      "body": "This diagram supports the first answer by showing why Indian food should be understood through connected signals, not just a list of popular dishes."
+    }
+  ],
+  "dataBlocks": [
+    {
+      "title": "How this topic connects to London restaurant choices",
+      "description": "These signals come from the current Indian Restaurants London dataset and help turn the guide into a practical directory page.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Directory listings",
+          "value": "3,187",
+          "detail": "Current London restaurant records in this project."
+        },
+        {
+          "label": "Listings with ratings",
+          "value": "98%",
+          "detail": "3,119 listings include a rating value."
+        },
+        {
+          "label": "Delivery signal",
+          "value": "85%",
+          "detail": "2,721 listings mention delivery."
+        },
+        {
+          "label": "Listings with photos",
+          "value": "2%",
+          "detail": "50 listings include at least one image, so generated guide visuals fill an important page gap."
+        },
+        {
+          "label": "Common related category",
+          "value": "Middle Eastern",
+          "detail": "481 listings include this related category alongside the main Indian restaurant dataset."
+        }
+      ]
+    }
+  ],
+  "comparisonTables": [
+    {
+      "title": "Common Indian restaurant styles beginners compare",
+      "columns": ["Style", "What it usually signals", "How to use it when choosing"],
+      "rows": [
+        {
+          "label": "North Indian",
+          "values": ["Breads, tandoori dishes, paneer, kebabs, richer sauces, Punjabi or Mughlai influence.", "Good when you want grills, naan, sauced curries, paneer dishes, or a familiar curry-house meal."]
+        },
+        {
+          "label": "South Indian",
+          "values": ["Dosa, idli, vada, sambar, rice dishes, coconut, tamarind, curry leaves, and fermented batters.", "Good when you want a lighter meal, vegetarian range, crisp dosa, or a restaurant with a clear regional focus."]
+        },
+        {
+          "label": "Modern Indian",
+          "values": ["Familiar Indian flavours presented with tasting menus, cocktails, design-led interiors, or special-occasion service.", "Good for dates, business meals, celebrations, and readers comparing restaurant atmosphere as well as food."]
+        }
+      ]
+    }
+  ],
+  "ctaBlocks": [
+    {
+      "title": "Ready to compare restaurants?",
+      "copy": "Move from the definition into local options by browsing Indian restaurants across London.",
+      "href": "/restaurants",
+      "label": "Search Indian restaurants in London"
+    },
+    {
+      "title": "Compare by food style",
+      "copy": "Use categories when you want to move from learning about Indian food into a specific dining style or regional cuisine.",
+      "href": "/categories",
+      "label": "Browse Indian restaurant cuisines in London"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "The Short Answer",
+      "body": [
+        "That means a London Indian restaurant can be a curry house, a dosa cafe, a Punjabi grill, a Gujarati vegetarian restaurant, a biryani specialist, or a modern Indian dining room. They can all be Indian, but they may answer very different dining needs.",
+        "The practical way to understand Indian food is to connect five things: region, ingredients, cooking method, dish type, and the occasion you are choosing for."
+      ]
+    },
+    {
+      "heading": "What Makes Indian Food Distinctive?",
+      "body": [
+        "Indian cooking often builds flavour in layers. Spices may be toasted, ground, bloomed in hot oil, simmered into sauces, or added near the end for aroma. This does not always mean the food is hot. Spice can mean warmth, sweetness, fragrance, bitterness, earthiness, or freshness.",
+        "Common flavour builders include cumin, coriander, turmeric, mustard seed, cardamom, cloves, cinnamon, chilli, ginger, garlic, curry leaves, tamarind, yoghurt, coconut, onions, tomatoes, lentils, and fresh herbs. The balance changes by region and dish.",
+        "Texture also matters. A good Indian meal might combine soft rice, crisp dosa, creamy dal, charred tandoori food, cooling raita, pickles, chutneys, and breads such as naan, roti, paratha, or chapati."
+      ]
+    },
+    {
+      "heading": "Common Dishes Beginners Should Recognise",
+      "body": [
+        "Biryani is a layered rice dish usually cooked with spices, herbs, and meat, seafood, paneer, vegetables, or egg. It is often a full meal rather than a side dish.",
+        "Dal means lentils or pulses. It can be simple and comforting or rich and slow-cooked, depending on the style. Dal is useful when you want something warm, filling, and not too heavy.",
+        "Tandoori dishes are cooked in or inspired by a tandoor oven. They are often marinated, smoky, and drier than sauced curries, so they work well with bread, chutney, or rice.",
+        "Dosa is a thin South Indian crepe, often made from fermented rice and lentil batter. It is commonly served with sambar and chutneys, and it is a good sign that the restaurant may specialise beyond standard curry-house dishes.",
+        "Paneer is a firm Indian cheese used in dishes such as saag paneer, matar paneer, and paneer tikka. It is popular for vegetarian diners because it holds its shape and absorbs flavour."
+      ]
+    },
+    {
+      "heading": "North Indian, South Indian, and Regional Food",
+      "body": [
+        "North Indian restaurant menus often feature breads, tandoori cooking, paneer dishes, creamy sauces, kebabs, chole, and rich meat or vegetable curries. Punjabi, Delhi, Kashmiri, and Mughlai influences are common in many London menus.",
+        "South Indian food often includes dosa, idli, vada, sambar, coconut chutney, rice dishes, tamarind, curry leaves, mustard seeds, and lighter fermented batters. Restaurants that focus on South Indian food can feel very different from a typical curry house.",
+        "Other regional traditions are just as important. Gujarati food is often vegetarian and can balance sweet, sour, and spicy flavours. Bengali food is known for fish, mustard, rice, and sweets. Goan food may use coconut, vinegar, seafood, and Portuguese-influenced flavours."
+      ]
+    },
+    {
+      "heading": "How To Read An Indian Restaurant Menu",
+      "body": [
+        "Start with the restaurant's strongest signal. If the menu highlights dosa, idli, and sambar, think South Indian. If it highlights grills, naan, butter chicken, and paneer tikka, think North Indian or curry-house style. If it focuses on thalis, snacks, sweets, or vegetarian dishes, the restaurant may be more specialised.",
+        "Do not judge a restaurant only by whether it serves familiar dishes. Chicken tikka masala and korma can be useful comfort choices, but the most interesting meal may be in the house specials, regional dishes, breads, street-food snacks, or vegetarian section.",
+        "For a balanced first order, choose one main protein or vegetable dish, one dal or vegetable side, one bread or rice, and one cooling element such as raita or chutney. If you are unsure about heat, ask the restaurant before ordering rather than guessing from the dish name."
+      ]
+    },
+    {
+      "heading": "How This Helps You Choose In London",
+      "body": [
+        "London has many types of Indian restaurants, from late-night takeaway counters to polished dining rooms, family-run neighbourhood restaurants, vegetarian cafes, halal-friendly options, and restaurants built around specific regional traditions.",
+        "When comparing places, look beyond the star rating. Check the area, transport convenience, review count, menu focus, dietary options, delivery or dine-in availability, opening hours, and whether the restaurant sounds right for the occasion.",
+        "If you are ready to compare options, start with Indian restaurants in London, then use categories, areas, dietary filters, and service options to narrow the choice."
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Is Indian food always spicy?",
+      "answer": "No. Indian food uses many spices, but spice does not always mean chilli heat. Some dishes are mild, creamy, tangy, smoky, sweet, or aromatic. If heat level matters, ask the restaurant before ordering."
+    },
+    {
+      "question": "What is a good Indian dish for beginners?",
+      "answer": "Good beginner choices include dal, biryani, tandoori chicken, paneer tikka, saag paneer, dosa, butter chicken, chana masala, and naan or roti. The best choice depends on whether you want something mild, vegetarian, grilled, sauced, or filling."
+    },
+    {
+      "question": "What is the difference between curry and Indian food?",
+      "answer": "Curry is only one broad category. Indian food also includes breads, rice dishes, lentils, grills, snacks, sweets, fermented dishes, street food, seafood, vegetarian thalis, and many regional styles."
+    },
+    {
+      "question": "How should I choose an Indian restaurant in London?",
+      "answer": "Check the menu focus, area, opening hours, review count, dietary options, and whether you want dine-in, takeaway, delivery, or a special occasion meal. A directory can help you compare those details faster than browsing restaurants one by one."
+    }
+  ],
+  "internalLinks": [
+    {
+      "label": "Search Indian restaurants in London",
+      "href": "/restaurants",
+      "reason": "Connect the broad food topic to the main directory."
+    },
+    {
+      "label": "Indian restaurant cuisines in London",
+      "href": "/categories",
+      "reason": "Help readers move from cuisine research to category browsing."
+    },
+    {
+      "label": "Takeaway Indian restaurants in London",
+      "href": "/services/takeaway",
+      "reason": "Connect beginner food research to a high-intent takeaway restaurant search."
+    }
+  ],
+  "researchSources": [
+    {
+      "title": "Indian cuisine | History, Regions, Dishes, & Facts | Britannica",
+      "url": "https://www.britannica.com/topic/Indian-cuisine",
+      "note": "Used for broad cuisine and regional context."
+    },
+    {
+      "title": "Indian cuisine - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Indian_cuisine",
+      "note": "Used as a broad reference for cuisine diversity and common ingredients."
+    },
+    {
+      "title": "Indian Food 101: Your Guide to an Indian Restaurant Menu",
+      "url": "https://sukhis.com/indian-food-101-guide/",
+      "note": "Used for beginner menu framing."
+    },
+    {
+      "title": "The 23 Most Popular Indian Dishes You Should Try",
+      "url": "https://sandinmysuitcase.com/popular-indian-dishes/",
+      "note": "Used to cross-check common dish examples."
+    },
+    {
+      "title": "34 Traditional Indian Foods to Try - DelishGlobe",
+      "url": "https://delishglobe.com/traditional-indian-foods/",
+      "note": "Used to cross-check common dish examples."
+    }
+  ]
+}

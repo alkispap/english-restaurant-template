@@ -24,7 +24,7 @@ export function AccountMenu() {
     <div className="relative">
       <button
         type="button"
-        className="focus-ring inline-flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:border-primary dark:bg-slate-800 dark:text-slate-100"
+        className="focus-ring inline-flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:border-primary"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
       >
@@ -33,14 +33,14 @@ export function AccountMenu() {
       </button>
 
       {isOpen ? (
-        <div className="absolute right-0 top-12 z-50 w-80 rounded-lg border border-line bg-white p-4 text-sm shadow-soft dark:bg-slate-900">
+        <div className="absolute right-0 top-12 z-50 w-80 rounded-lg border border-line bg-white p-4 text-sm shadow-soft">
           {user ? (
             <div>
               <p className="font-bold text-ink">Signed in</p>
               <p className="mt-1 break-words text-muted">{user.email}</p>
               <button
                 type="button"
-                  className="focus-ring mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary dark:text-slate-100"
+                  className="focus-ring mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary"
                 onClick={() => void signOut()}
               >
                 <LogOut className="h-4 w-4" aria-hidden />
@@ -54,7 +54,7 @@ export function AccountMenu() {
               <div className="mt-4 grid gap-2">
                 <button
                   type="button"
-                  className="focus-ring rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary dark:text-slate-100"
+                  className="focus-ring rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary"
                   disabled={loading}
                   onClick={() => void signInWithProvider("google")}
                 >
@@ -62,7 +62,7 @@ export function AccountMenu() {
                 </button>
                 <button
                   type="button"
-                  className="focus-ring rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary dark:text-slate-100"
+                  className="focus-ring rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary"
                   disabled={loading}
                   onClick={() => void signInWithProvider("azure")}
                 >

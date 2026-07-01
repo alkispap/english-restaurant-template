@@ -37,6 +37,23 @@ export type CompareField = {
   label: string;
 };
 
+export type ShortlistListingSource = Pick<
+  Listing,
+  "slug" | "name" | "rating" | "reviewCount" | "priceLevel" | "neighborhood" | "area" | "categories" | "dietaryOptions"
+> & {
+  contact?: {
+    website?: string;
+    menuUrl?: string;
+    reserveUrl?: string;
+    appointmentUrl?: string;
+  };
+  details?: {
+    serviceOptions?: string[];
+    parking?: string[];
+    workingHours?: OpeningHours[];
+  };
+};
+
 const shortlistConfig = directoryConfig.shortlist;
 
 export const SHORTLIST_STORAGE_KEY: string = shortlistConfig.storageKey;
@@ -77,7 +94,7 @@ export function getShortlistListingSummaries(slugs: string[], sourceListings: Li
     .map(toShortlistListingSummary);
 }
 
-export function getAllShortlistListingSummaries(sourceListings: Listing[]) {
+export function getAllShortlistListingSummaries(sourceListings: ShortlistListingSource[]) {
   return sourceListings.map(toShortlistListingSummary);
 }
 
@@ -97,7 +114,7 @@ export function getCompareFields(): CompareField[] {
   ];
 }
 
-function toShortlistListingSummary(listing: Listing): ShortlistListingSummary {
+function toShortlistListingSummary(listing: ShortlistListingSource): ShortlistListingSummary {
   return {
     slug: listing.slug,
     name: listing.name,

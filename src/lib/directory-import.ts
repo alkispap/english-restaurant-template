@@ -26,11 +26,13 @@ type ImportAnalysis = {
   mapped: Record<string, string>;
   roleByHeader: Record<string, ImportFieldRole>;
   isOutscraper: boolean;
+  skippedCount: number;
   duplicateCount: number;
   nonOperationalCount: number;
   inferredFilters: InferredFilter[];
   ignoredHeaders: string[];
   warnings: string[];
+  categoryReview: MissingCategoryReviewItem[];
 };
 
 export type MappingReviewColumn = {
@@ -105,11 +107,40 @@ export type ImportReportData = {
   previewListings: ImportedListing[];
 };
 
+export type MissingCategoryReviewItem = {
+  rowNumber: number;
+  name: string;
+  slug?: string;
+  area?: string;
+  neighborhood?: string;
+  reviewCount?: number;
+  status: "source" | "inferred" | "manual_review";
+  suggestedCategories: string[];
+  evidence: string[];
+};
+
+type ListingSourceOverride = {
+  name?: string;
+  address?: string;
+  postcode?: string;
+  area?: string;
+  neighborhood?: string;
+  borough?: string;
+  fullAddress?: string;
+  latitude?: number;
+  longitude?: number;
+  phone?: string;
+  phoneAlt?: string;
+};
+
 export type ImportResult = {
   listings: ImportedListing[];
   report: string;
   reportData: ImportReportData;
+  categoryReview: MissingCategoryReviewItem[];
   listingsFile: string;
+  listingsJsonFile: string;
+  listingSearchRecordsJsonFile: string;
   sourceFile: string;
   rows: Row[];
 };
@@ -196,22 +227,16 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
   const analysis = analyzeColumns(headers, rows, roleOverrides);
   const listings: ImportedListing[] = [];
   const usedSlugs = new Map<string, number>();
-  const seenSourceIds = new Set<string>();
+  const listingBySourceId = new Map<string, ImportedListing>();
 
   rows.forEach((row, index) => {
     if (isRepeatedHeaderRow(row, headers)) {
+      analysis.skippedCount += 1;
       analysis.warnings.push(`Row ${index + 2}: skipped repeated header row.`);
       return;
     }
 
     const sourceId = dedupeKey(row, analysis);
-    if (sourceId && seenSourceIds.has(sourceId)) {
-      analysis.duplicateCount += 1;
-      analysis.warnings.push(`Row ${index + 2}: duplicate source ID "${sourceId}" was skipped.`);
-      return;
-    }
-    if (sourceId) seenSourceIds.add(sourceId);
-
     if (isNonOperational(row, analysis)) {
       analysis.nonOperationalCount += 1;
       analysis.warnings.push(`Row ${index + 2}: "${firstByRole(row, analysis, "name") || "Listing"}" is not marked operational.`);
@@ -219,19 +244,21 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
 
     const listing = toListing(row, index, analysis);
     if (!listing.name) {
+      analysis.skippedCount += 1;
       analysis.warnings.push(`Row ${index + 2}: skipped because no listing name was found.`);
       return;
     }
 
-    const baseSlug = listing.slug || stableSlug(listing.name, row, index, analysis);
-    const slugCount = usedSlugs.get(baseSlug) ?? 0;
-    usedSlugs.set(baseSlug, slugCount + 1);
-    if (slugCount > 0) {
-      listing.slug = `${baseSlug}-${slugCount + 1}`;
-      analysis.warnings.push(`Row ${index + 2}: duplicate slug "${baseSlug}" changed to "${listing.slug}".`);
-    } else {
-      listing.slug = baseSlug;
+    if (sourceId && listingBySourceId.has(sourceId)) {
+      analysis.duplicateCount += 1;
+      mergeDuplicateListing(listingBySourceId.get(sourceId)!, listing);
+      analysis.warnings.push(`Row ${index + 2}: duplicate source ID "${sourceId}" was merged into the existing listing.`);
+      return;
     }
+
+    const baseSlug = listing.slug || stableSlug(listing.name, row, index, analysis);
+    listing.slug = uniqueListingSlug(baseSlug, listing, usedSlugs, index, analysis);
+    if (sourceId) listingBySourceId.set(sourceId, listing);
 
     addRowWarnings(row, index, listing, analysis);
     listings.push(listing);
@@ -244,7 +271,10 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     listings,
     report,
     reportData,
-    listingsFile: renderListingsFile(listings),
+    categoryReview: analysis.categoryReview,
+    listingsFile: renderListingsFile(),
+    listingsJsonFile: renderListingsJsonFile(listings),
+    listingSearchRecordsJsonFile: renderListingSearchRecordsJsonFile(listings),
     sourceFile,
     rows
   };
@@ -286,11 +316,13 @@ function analyzeColumns(headers: string[], rows: Row[], roleOverrides?: Record<s
     mapped,
     roleByHeader,
     isOutscraper,
+    skippedCount: 0,
     duplicateCount: 0,
     nonOperationalCount: 0,
     inferredFilters,
     ignoredHeaders: headers.filter((header) => !usedHeaders.has(header)),
-    warnings
+    warnings,
+    categoryReview: []
   };
 }
 
@@ -482,13 +514,22 @@ function inferFilterColumns(headers: string[], rows: Row[], usedHeaders: Set<str
 
 function toListing(row: Row, index: number, analysis: ImportAnalysis): ImportedListing {
   const get = (field: string) => valueAt(row, analysis.mapped[field]);
-  const categoryValues = unique([...valuesByRole(row, analysis, "category"), ...list(get("category"))]);
-  const typeValues = unique([...valuesByRole(row, analysis, "typeFilter"), ...list(get("type"))]).filter((value) => !categoryValues.includes(value));
+  const sourceCategoryValues = unique([...valuesByRole(row, analysis, "category"), ...list(get("category"))]);
+  const typeValues = unique([...valuesByRole(row, analysis, "typeFilter"), ...list(get("type"))]).filter((value) => !sourceCategoryValues.includes(value));
   const dietaryValues = list(get("dietary"));
   const inferredValues = analysis.inferredFilters.flatMap((filter) => list(valueAt(row, filter.header)));
   const aboutFeatures = featuresFromAbout(firstByRole(row, analysis, "rawFeatureJson"));
   const serviceValues = unique([...list(get("services")), ...aboutFeatures.serviceOptions, ...serviceLikeValues(row, analysis)]);
   const offeringValues = unique([...list(get("offerings")), ...aboutFeatures.offerings]);
+  const categoryInference = inferMissingCategories(row, analysis, {
+    sourceCategoryValues,
+    typeValues,
+    dietaryValues,
+    serviceValues,
+    offeringValues,
+    rowNumber: index + 2
+  });
+  const categoryValues = categoryInference.categories;
   const tagValues = unique([
     ...categoryValues,
     ...typeValues,
@@ -587,11 +628,240 @@ function toListing(row: Row, index: number, analysis: ImportAnalysis): ImportedL
       placeId: firstByRole(row, analysis, "dedupeId") || valueAt(row, "place_id")
     })
   };
+  applyListingSourceOverride(listing);
 
   const generatedDescriptions = buildListingDescriptions(listing);
   listing.description = generatedDescriptions.description;
   listing.metaDescription = generatedDescriptions.metaDescription;
+  if (categoryInference.review) {
+    categoryInference.review.slug = listing.slug;
+    categoryInference.review.area = listing.area;
+    categoryInference.review.neighborhood = listing.neighborhood;
+    categoryInference.review.reviewCount = listing.reviewCount;
+    analysis.categoryReview.push(categoryInference.review);
+  }
   return listing;
+}
+
+const LISTING_SOURCE_OVERRIDES: Record<string, ListingSourceOverride> = {
+  ChIJocOA2Stm2qoRoXP2Vrhu6T4: {
+    name: "Yummy Dosa",
+    address: "68 Cranbrook Rd",
+    postcode: "IG1 4NH",
+    area: "Redbridge",
+    neighborhood: "Ilford",
+    borough: "Redbridge",
+    fullAddress: "68 Cranbrook Rd, Ilford, IG1 4NH, London",
+    latitude: 51.5606646,
+    longitude: 0.0697829,
+    phone: "+44 20 8637 3026",
+    phoneAlt: "+44 7776 675146"
+  },
+  ChIJDQ9xSacEdkgRIXfW2iPUYkQ: {
+    address: "6 Trinity Street",
+    postcode: "SE1 1DB",
+    area: "Southwark",
+    neighborhood: "The Borough",
+    borough: "Southwark",
+    fullAddress: "6 Trinity Street, The Borough, SE1 1DB, London",
+    latitude: 51.4996898,
+    longitude: -0.0951699
+  }
+};
+
+function applyListingSourceOverride(listing: ImportedListing) {
+  const placeId = typeof listing.details?.placeId === "string" ? listing.details.placeId : "";
+  const override = LISTING_SOURCE_OVERRIDES[placeId];
+  if (!override) return;
+
+  if (override.name) listing.name = override.name;
+  if (override.address) listing.address = override.address;
+  if (override.postcode) listing.postcode = override.postcode;
+  if (override.area) listing.area = override.area;
+  if (override.neighborhood) listing.neighborhood = override.neighborhood;
+  if (override.borough) listing.borough = override.borough;
+  if (override.fullAddress) listing.fullAddress = override.fullAddress;
+
+  listing.location = {
+    ...(listing.location ?? {}),
+    ...(override.latitude !== undefined ? { latitude: override.latitude } : {}),
+    ...(override.longitude !== undefined ? { longitude: override.longitude } : {})
+  };
+
+  listing.contact = {
+    ...(listing.contact ?? {}),
+    ...(override.phone ? { phone: override.phone } : {}),
+    ...(override.phoneAlt ? { phoneAlt: override.phoneAlt } : {})
+  };
+}
+
+function mergeDuplicateListing(target: ImportedListing, duplicate: ImportedListing) {
+  target.categories = unique([...target.categories, ...duplicate.categories]);
+  target.listingTypes = unique([...target.listingTypes, ...duplicate.listingTypes]);
+  target.dietaryOptions = unique([...target.dietaryOptions, ...duplicate.dietaryOptions]);
+  target.tags = unique([...target.tags, ...duplicate.tags]);
+
+  if (duplicate.neighborhood) target.neighborhood = duplicate.neighborhood;
+  target.area ||= duplicate.area;
+  target.borough ||= duplicate.borough;
+  target.postcode ||= duplicate.postcode;
+  target.address ||= duplicate.address;
+  target.fullAddress ||= duplicate.fullAddress;
+  target.city ||= duplicate.city;
+  target.priceLevel ||= duplicate.priceLevel;
+  target.rating ||= duplicate.rating;
+  target.reviewCount ||= duplicate.reviewCount;
+  target.logo ||= duplicate.logo;
+  target.images = unique([...target.images, ...duplicate.images]);
+
+  target.contact = compact({
+    ...(target.contact ?? {}),
+    ...(duplicate.contact?.website ? { website: duplicate.contact.website } : {}),
+    phone: target.contact?.phone ?? duplicate.contact?.phone,
+    phoneAlt: target.contact?.phoneAlt ?? duplicate.contact?.phoneAlt,
+    email: target.contact?.email ?? duplicate.contact?.email,
+    contactUrl: target.contact?.contactUrl ?? duplicate.contact?.contactUrl,
+    googleReviewsUrl: target.contact?.googleReviewsUrl ?? duplicate.contact?.googleReviewsUrl,
+    orderOnlineUrl: duplicate.contact?.orderOnlineUrl ?? target.contact?.orderOnlineUrl,
+    reserveUrl: duplicate.contact?.reserveUrl ?? target.contact?.reserveUrl,
+    appointmentUrl: duplicate.contact?.appointmentUrl ?? target.contact?.appointmentUrl,
+    menuUrl: duplicate.contact?.menuUrl ?? target.contact?.menuUrl,
+    socials: compact({
+      ...((target.contact?.socials as Record<string, unknown> | undefined) ?? {}),
+      ...((duplicate.contact?.socials as Record<string, unknown> | undefined) ?? {})
+    })
+  });
+
+  target.location = compact({
+    ...(target.location ?? {}),
+    latitude: target.location?.latitude ?? duplicate.location?.latitude,
+    longitude: target.location?.longitude ?? duplicate.location?.longitude,
+    googleMapsUrl: target.location?.googleMapsUrl ?? duplicate.location?.googleMapsUrl,
+    tubeStation: target.location?.tubeStation ?? duplicate.location?.tubeStation,
+    tubeLines: unique([
+      ...asStringArray(target.location?.tubeLines),
+      ...asStringArray(duplicate.location?.tubeLines)
+    ]),
+    tubeDistanceMeters: target.location?.tubeDistanceMeters ?? duplicate.location?.tubeDistanceMeters,
+    tubeWalkMinutes: target.location?.tubeWalkMinutes ?? duplicate.location?.tubeWalkMinutes,
+    nightTubeAvailable: target.location?.nightTubeAvailable ?? duplicate.location?.nightTubeAvailable,
+    busStop: target.location?.busStop ?? duplicate.location?.busStop,
+    busRoutes: unique([
+      ...asStringArray(target.location?.busRoutes),
+      ...asStringArray(duplicate.location?.busRoutes)
+    ]),
+    busDistanceMeters: target.location?.busDistanceMeters ?? duplicate.location?.busDistanceMeters,
+    busWalkMinutes: target.location?.busWalkMinutes ?? duplicate.location?.busWalkMinutes,
+    nightBusAvailable: target.location?.nightBusAvailable ?? duplicate.location?.nightBusAvailable,
+    nearbyPlaces: target.location?.nearbyPlaces ?? duplicate.location?.nearbyPlaces
+  });
+
+  target.details = compact({
+    ...(target.details ?? {}),
+    workingHours: target.details?.workingHours ?? duplicate.details?.workingHours,
+    workingHoursText: target.details?.workingHoursText ?? duplicate.details?.workingHoursText,
+    serviceOptions: unique([
+      ...asStringArray(target.details?.serviceOptions),
+      ...asStringArray(duplicate.details?.serviceOptions)
+    ]),
+    highlights: unique([...asStringArray(target.details?.highlights), ...asStringArray(duplicate.details?.highlights)]),
+    offerings: unique([...asStringArray(target.details?.offerings), ...asStringArray(duplicate.details?.offerings)]),
+    amenities: unique([...asStringArray(target.details?.amenities), ...asStringArray(duplicate.details?.amenities)]),
+    atmosphere: unique([...asStringArray(target.details?.atmosphere), ...asStringArray(duplicate.details?.atmosphere)]),
+    popularFor: unique([...asStringArray(target.details?.popularFor), ...asStringArray(duplicate.details?.popularFor)]),
+    accessibility: unique([...asStringArray(target.details?.accessibility), ...asStringArray(duplicate.details?.accessibility)]),
+    diningOptions: unique([...asStringArray(target.details?.diningOptions), ...asStringArray(duplicate.details?.diningOptions)]),
+    crowd: unique([...asStringArray(target.details?.crowd), ...asStringArray(duplicate.details?.crowd)]),
+    planning: unique([...asStringArray(target.details?.planning), ...asStringArray(duplicate.details?.planning)]),
+    payments: unique([...asStringArray(target.details?.payments), ...asStringArray(duplicate.details?.payments)]),
+    children: unique([...asStringArray(target.details?.children), ...asStringArray(duplicate.details?.children)]),
+    parking: unique([...asStringArray(target.details?.parking), ...asStringArray(duplicate.details?.parking)]),
+    pets: unique([...asStringArray(target.details?.pets), ...asStringArray(duplicate.details?.pets)]),
+    googleVerified: target.details?.googleVerified ?? duplicate.details?.googleVerified,
+    placeId: target.details?.placeId ?? duplicate.details?.placeId
+  });
+
+  const generatedDescriptions = buildListingDescriptions(target);
+  target.description = generatedDescriptions.description;
+  target.metaDescription = generatedDescriptions.metaDescription;
+}
+
+type CategoryInferenceInput = {
+  sourceCategoryValues: string[];
+  typeValues: string[];
+  dietaryValues: string[];
+  serviceValues: string[];
+  offeringValues: string[];
+  rowNumber: number;
+};
+
+function inferMissingCategories(row: Row, analysis: ImportAnalysis, input: CategoryInferenceInput) {
+  if (input.sourceCategoryValues.length) {
+    return {
+      categories: input.sourceCategoryValues,
+      review: undefined as MissingCategoryReviewItem | undefined
+    };
+  }
+
+  const name = firstByRole(row, analysis, "name") || valueAt(row, analysis.mapped.name) || "Listing";
+  const text = categoryEvidenceText(row, analysis, input);
+  const evidence: string[] = [];
+  const suggestedCategories: string[] = [];
+
+  function add(category: string, reason: string) {
+    if (!suggestedCategories.includes(category)) suggestedCategories.push(category);
+    if (!evidence.includes(reason)) evidence.push(reason);
+  }
+
+  if (/\b(dosa|chennai|tamil|malabar|kerala|sri\s*lalitha|srilalitha|idli|uttapam|uttapam|uttappam)\b/i.test(text)) {
+    add("South Indian", "South Indian wording in name or listing text");
+    add("Indian", "South Indian is part of Indian cuisine");
+  } else if (/\b(indian|indiya|tandoori|curry|masala|biryani|balti|naan|dhaba|chaat|samosa|saffron|spice|spices|coriander|papadom|papadoms|tiffin|madras|bombay|delhi|bhavan|nawaab|nawab|namaste|maharaja|mahal|khushboo|kushboo|voujon|mirch|mirchi|roti|thali|vada pav|chapati)\b/i.test(text)) {
+    add("Indian", "Indian cuisine wording in name or listing text");
+  }
+
+  if (/\b(punjab|punjabi|bhangra)\b/i.test(text)) {
+    add("Indian", "Punjabi cuisine wording in name or listing text");
+    add("Punjabi", "Punjabi cuisine wording in name or listing text");
+  }
+  if (/\b(bangla|bangladeshi|bengal|sylhet|surma|purbani)\b/i.test(text)) {
+    add("Bangladeshi", "Bangladeshi cuisine wording in name or listing text");
+  }
+  if (/\b(nepal|nepalese|momo|momos|gurkha)\b/i.test(text)) {
+    add("Nepalese", "Nepalese cuisine wording in name or listing text");
+  }
+  if (/\b(sri lanka|sri-lankan|srilankan|kothu)\b/i.test(text)) {
+    add("Sri Lankan", "Sri Lankan cuisine wording in name or listing text");
+  }
+  if (/\b(qasr|kebab|shawarma|lebanese|persian|turkish|arabic|arab|middle eastern)\b/i.test(text)) {
+    add("Middle Eastern", "Middle Eastern cuisine wording in name or listing text");
+  }
+  if (/\b(caribbean|jamaican|jerk)\b/i.test(text)) {
+    add("Caribbean", "Caribbean cuisine wording in name or listing text");
+  }
+
+  const review: MissingCategoryReviewItem = {
+    rowNumber: input.rowNumber,
+    name,
+    status: suggestedCategories.length ? "inferred" : "manual_review",
+    suggestedCategories,
+    evidence: suggestedCategories.length ? evidence : ["Source Cuisine Type is blank and no conservative cuisine rule matched"]
+  };
+
+  return {
+    categories: suggestedCategories,
+    review
+  };
+}
+
+function categoryEvidenceText(row: Row, analysis: ImportAnalysis, input: CategoryInferenceInput) {
+  void input;
+  return [
+    firstByRole(row, analysis, "name"),
+    valueAt(row, analysis.mapped.name)
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 export function selectCuratedRestaurantSample(items: ImportedListing[], options: SampleOptions = {}) {
@@ -817,6 +1087,41 @@ function stableSlug(value: string, row: Row, index: number, analysis: ImportAnal
   return sourceSlug ? `listing-${sourceSlug}` : `listing-${index + 1}`;
 }
 
+function uniqueListingSlug(
+  baseSlug: string,
+  listing: ImportedListing,
+  usedSlugs: Map<string, number>,
+  index: number,
+  analysis: ImportAnalysis
+) {
+  const candidates = unique([
+    baseSlug,
+    listing.area ? `${baseSlug}-${slugify(listing.area)}` : "",
+    listing.neighborhood ? `${baseSlug}-${slugify(listing.neighborhood)}` : "",
+    listing.area && listing.neighborhood ? `${baseSlug}-${slugify(listing.area)}-${slugify(listing.neighborhood)}` : ""
+  ]).filter(Boolean);
+
+  const available = candidates.find((candidate) => !usedSlugs.has(candidate));
+  if (available) {
+    usedSlugs.set(available, 1);
+    if (available !== baseSlug) {
+      analysis.warnings.push(`Row ${index + 2}: duplicate slug "${baseSlug}" changed to "${available}".`);
+    }
+    return available;
+  }
+
+  const duplicateCount = usedSlugs.get(baseSlug) ?? 1;
+  let fallback = `${baseSlug}-${duplicateCount + 1}`;
+  while (usedSlugs.has(fallback)) {
+    fallback = `${baseSlug}-${(usedSlugs.get(baseSlug) ?? duplicateCount) + 1}`;
+    usedSlugs.set(baseSlug, (usedSlugs.get(baseSlug) ?? duplicateCount) + 1);
+  }
+  usedSlugs.set(baseSlug, (usedSlugs.get(baseSlug) ?? duplicateCount) + 1);
+  usedSlugs.set(fallback, 1);
+  analysis.warnings.push(`Row ${index + 2}: duplicate slug "${baseSlug}" changed to "${fallback}".`);
+  return fallback;
+}
+
 function serviceLikeValues(row: Row, analysis: ImportAnalysis) {
   return analysis.inferredFilters
     .filter((filter) => /service|feature|amenit|seating|parking|delivery|opening/i.test(filter.header))
@@ -855,7 +1160,7 @@ function buildReportData(
       sourceFile,
       sourceRows: sourceCount,
       importedListings: items.length,
-      skippedRows: sourceCount - items.length,
+      skippedRows: analysis.skippedCount,
       mode
     },
     columnMapping: analysis.mapped,
@@ -890,7 +1195,7 @@ export function renderReport(data: ImportReportData) {
 - Skipped rows: ${data.summary.skippedRows}
 - Mode: ${data.summary.mode}
 - Source type: ${data.sourceKind === "outscraper" ? "Outscraper export" : "Generic CSV"}
-- Duplicate rows skipped: ${data.duplicateCount}
+- Duplicate rows merged: ${data.duplicateCount}
 - Non-operational rows flagged: ${data.nonOperationalCount}
 
 ## Column Mapping
@@ -930,6 +1235,64 @@ Generated by \`npm run import:directory\`.
 `;
 }
 
+export function renderMissingCategoryReview(items: MissingCategoryReviewItem[]) {
+  const inferred = items.filter((item) => item.status === "inferred");
+  const manualReview = items.filter((item) => item.status === "manual_review");
+  const sorted = [...items].sort(
+    (a, b) =>
+      statusWeight(a.status) - statusWeight(b.status) ||
+      Number(b.reviewCount ?? 0) - Number(a.reviewCount ?? 0) ||
+      a.rowNumber - b.rowNumber
+  );
+
+  return `# Missing Category Review
+
+This file is generated by \`npm run import:directory\`.
+
+It only covers rows where the source category column was blank. High-confidence
+matches are inferred from stable cuisine wording in the restaurant name or
+listing text. Unclear rows stay uncategorized and require manual review.
+
+## Summary
+
+- Rows with blank source category: ${items.length.toLocaleString()}
+- Categories inferred: ${inferred.length.toLocaleString()}
+- Manual review required: ${manualReview.length.toLocaleString()}
+
+## Review Rows
+
+| Row | Status | Listing | Area | Reviews | Suggested categories | Evidence |
+| --- | --- | --- | --- | ---: | --- | --- |
+${sorted.length ? sorted.map(renderMissingCategoryReviewRow).join("\n") : "| - | - | - | - | - | - | - |"}
+`;
+}
+
+function renderMissingCategoryReviewRow(item: MissingCategoryReviewItem) {
+  return [
+    item.rowNumber.toString(),
+    item.status,
+    escapeMarkdownTable(item.name),
+    escapeMarkdownTable([item.neighborhood, item.area].filter(Boolean).join(", ") || "-"),
+    item.reviewCount?.toLocaleString() ?? "-",
+    escapeMarkdownTable(item.suggestedCategories.join(", ") || "-"),
+    escapeMarkdownTable(item.evidence.join("; "))
+  ]
+    .map((value) => ` ${value} `)
+    .join("|")
+    .replace(/^/, "|")
+    .replace(/$/, "|");
+}
+
+function statusWeight(status: MissingCategoryReviewItem["status"]) {
+  if (status === "manual_review") return 0;
+  if (status === "inferred") return 1;
+  return 2;
+}
+
+function escapeMarkdownTable(value: string) {
+  return value.replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
+}
+
 export function renderReportForListings(data: ImportReportData, items: ImportedListing[], _modeLabel?: string): ImportReportData {
   void _modeLabel;
   return {
@@ -955,10 +1318,10 @@ export function renderReportForListings(data: ImportReportData, items: ImportedL
   };
 }
 
-export function renderListingsFile(items: ImportedListing[]) {
-  const json = JSON.stringify(items, null, 2).replaceAll("\u00a3", "\\u00a3");
-  const jsonLiteral = JSON.stringify(json);
-  return `export type NearbyPlace = {
+export function renderListingsFile() {
+  return `import listingsData from "../../data/listings.json";
+
+export type NearbyPlace = {
   label: string;
   name: string;
   distanceMeters?: number;
@@ -1054,10 +1417,113 @@ export type Listing = {
   };
 };
 
-const listingsJson = ${jsonLiteral};
-
-export const listings: Listing[] = JSON.parse(listingsJson) as Listing[];
+export const listings = listingsData as Listing[];
 `;
+}
+
+export function renderListingsJsonFile(items: ImportedListing[]) {
+  return `${JSON.stringify(items, null, 2)}\n`;
+}
+
+export function renderListingSearchRecordsJsonFile(items: ImportedListing[]) {
+  return `${JSON.stringify(items.map(toListingSearchRecord))}\n`;
+}
+
+function toListingSearchRecord(listing: ImportedListing) {
+  const contact = listing.contact as
+    | {
+        website?: string;
+        googleReviewsUrl?: string;
+        menuUrl?: string;
+        reserveUrl?: string;
+        appointmentUrl?: string;
+      }
+    | undefined;
+  const location = listing.location as
+    | {
+        googleMapsUrl?: string;
+        latitude?: number;
+        longitude?: number;
+        tubeStation?: string;
+        busStop?: string;
+        nearbyPlaces?: { name?: string }[];
+      }
+    | undefined;
+  const details = listing.details as
+    | {
+        workingHours?: unknown[];
+        serviceOptions?: string[];
+        offerings?: string[];
+        highlights?: string[];
+        popularFor?: string[];
+        diningOptions?: string[];
+        amenities?: string[];
+        accessibility?: string[];
+        atmosphere?: string[];
+        crowd?: string[];
+        planning?: string[];
+        payments?: string[];
+        children?: string[];
+        parking?: string[];
+        pets?: string[];
+        googleVerified?: boolean;
+      }
+    | undefined;
+
+  return {
+    slug: listing.slug,
+    name: listing.name,
+    description: listing.description,
+    images: asStringArray(listing.images).slice(0, 2),
+    imageFallbackLabel: listing.imageFallbackLabel,
+    area: listing.area,
+    neighborhood: listing.neighborhood,
+    borough: listing.borough,
+    address: listing.address,
+    fullAddress: listing.fullAddress,
+    postcode: listing.postcode,
+    categories: asStringArray(listing.categories),
+    listingTypes: asStringArray(listing.listingTypes),
+    dietaryOptions: asStringArray(listing.dietaryOptions),
+    priceLevel: listing.priceLevel,
+    rating: listing.rating,
+    reviewCount: listing.reviewCount,
+    featured: Boolean(listing.featured),
+    contact: {
+      website: contact?.website,
+      googleReviewsUrl: contact?.googleReviewsUrl,
+      menuUrl: contact?.menuUrl,
+      reserveUrl: contact?.reserveUrl,
+      appointmentUrl: contact?.appointmentUrl
+    },
+    location: {
+      googleMapsUrl: location?.googleMapsUrl,
+      latitude: location?.latitude,
+      longitude: location?.longitude,
+      tubeStation: location?.tubeStation,
+      busStop: location?.busStop,
+      nearbyPlaces: asStringArray(location?.nearbyPlaces?.map((place) => place.name))
+    },
+    details: {
+      workingHours: details?.workingHours ?? [],
+      serviceOptions: asStringArray(details?.serviceOptions),
+      offerings: asStringArray(details?.offerings),
+      highlights: asStringArray(details?.highlights),
+      popularFor: asStringArray(details?.popularFor),
+      diningOptions: asStringArray(details?.diningOptions),
+      amenities: asStringArray(details?.amenities),
+      accessibility: asStringArray(details?.accessibility),
+      atmosphere: asStringArray(details?.atmosphere),
+      crowd: asStringArray(details?.crowd),
+      planning: asStringArray(details?.planning),
+      payments: asStringArray(details?.payments),
+      children: asStringArray(details?.children),
+      parking: asStringArray(details?.parking),
+      pets: asStringArray(details?.pets),
+      googleVerified: Boolean(details?.googleVerified)
+    },
+    tags: asStringArray(listing.tags)
+  };
 }
 
 function findColumn(headers: string[], aliases: string[]) {

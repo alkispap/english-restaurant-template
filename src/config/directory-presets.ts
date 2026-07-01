@@ -177,7 +177,7 @@ const sharedHomeSections = [
     display: "listingRow",
     enabled: true,
     limit: 6,
-    seeAllHref: "/?sort=price"
+    seeAllHref: "/restaurants?sort=price"
   },
   {
     id: "highly-rated",
@@ -187,7 +187,7 @@ const sharedHomeSections = [
     display: "listingRow",
     enabled: true,
     limit: 6,
-    seeAllHref: "/?sort=rating"
+    seeAllHref: "/restaurants?sort=rating"
   },
   {
     id: "recently-added",
@@ -322,9 +322,9 @@ const sharedFooterGroups = [
   {
     title: "Browse",
     links: [
-      { label: "All {listingPluralLabelLower}", href: "/" },
-      { label: "Areas", href: "/areas" },
-      { label: "{categoryPluralLabel}", href: "/categories" }
+      { label: "All {listingPluralLabelLower}", href: "/restaurants" },
+      { label: "{listingLabel} areas", href: "/areas" },
+      { label: "{listingLabel} cuisines", href: "/categories" }
     ]
   },
   {
@@ -349,12 +349,12 @@ const sharedFooterGroups = [
     ]
   },
   {
-    title: "Useful filters",
+    title: "Useful searches",
     links: [
-      { label: "Open now", href: "/?open=1" },
-      { label: "Best rated", href: "/?sort=rating" },
-      { label: "Most reviewed", href: "/?sort=reviews" },
-      { label: "Lowest price", href: "/?sort=price" }
+      { label: "Best rated {listingPluralLabelLower}", href: "/best/best-rated" },
+      { label: "Most reviewed {listingPluralLabelLower}", href: "/best/most-reviewed" },
+      { label: "Budget friendly {listingPluralLabelLower}", href: "/best/budget-friendly" },
+      { label: "Takeaway {listingPluralLabelLower}", href: "/best/takeaway" }
     ]
   },
   {

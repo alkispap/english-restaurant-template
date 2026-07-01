@@ -101,6 +101,14 @@ function thinCombinationsAreNoindexedAndExcludedFromSitemap() {
 
   const urls = sitemap().map((entry) => entry.url);
   assert.ok(!urls.includes(`${siteConfig.url}${thin.href}`), "thin area/category pages should stay out of sitemap");
+  assert.ok(
+    !page.structuredData.some((item) => item["@type"] === "ItemList"),
+    "thin noindex SEO pages should not emit ItemList structured data"
+  );
+  assert.ok(
+    page.structuredData.some((item) => item["@type"] === "BreadcrumbList"),
+    "thin noindex SEO pages may still emit breadcrumb structured data"
+  );
 }
 
 function highValuePagesStayIndexable() {
@@ -127,6 +135,36 @@ function seoPagesExposeReusableContentBlocks() {
   assert.ok(page.relatedLinkGroups.length >= 2, "SEO pages should expose internal link groups");
   assert.ok(page.faqs.length >= 3, "SEO pages should expose visible FAQs");
   assert.ok(page.structuredData.length >= 2, "SEO pages should expose breadcrumb and ItemList structured data");
+}
+
+function relatedLinksUseDescriptiveAnchorText() {
+  const areaPage = getAreaSeoPage("barnet", {});
+  const categoryPage = getCategorySeoPage("indian", {});
+  const bestPage = getPopularSearchSeoPage("best-rated", {});
+  const facetPage = getFacetSeoPage("service", "takeaway", {});
+  const pages = [areaPage, categoryPage, bestPage, facetPage].filter((page): page is NonNullable<typeof page> =>
+    Boolean(page)
+  );
+  const links = pages.flatMap((page) => page.relatedLinkGroups.flatMap((group) => group.links));
+  const areaLinks = links.filter((link) => /^\/areas\/[^/]+$/.test(link.href));
+  const categoryLinks = links.filter((link) => /^\/categories\/[^/]+$/.test(link.href));
+  const areaCategoryLinks = links.filter((link) => /^\/areas\/[^/]+\/categories\/[^/]+$/.test(link.href));
+
+  assert.ok(areaLinks.length > 0, "expected sampled SEO pages to expose area links");
+  assert.ok(categoryLinks.length > 0, "expected sampled SEO pages to expose category links");
+  assert.ok(areaCategoryLinks.length > 0, "expected sampled SEO pages to expose area/category links");
+  assert.ok(
+    areaLinks.every((link) => /Indian restaurants in /i.test(link.label)),
+    "area links should use descriptive Indian restaurant anchor text"
+  );
+  assert.ok(
+    categoryLinks.every((link) => /restaurants in London/i.test(link.label)),
+    "category links should use descriptive London restaurant anchor text"
+  );
+  assert.ok(
+    areaCategoryLinks.every((link) => /restaurants in /i.test(link.label)),
+    "area/category links should mention restaurants and area"
+  );
 }
 
 function seoPagesUseReusableLandingHeadings() {
@@ -171,7 +209,7 @@ function seoPagesUseReusableLandingHeadings() {
   assert.equal(bestPage?.guide.title, bestHeadings.guideTitle);
   assert.ok(bestPage?.relatedLinkGroups.some((group) => group.title === bestHeadings.related.areaLinksTitle));
 
-  const facetHeadings = seoLandingHeadings.facet(service);
+  const facetHeadings = seoLandingHeadings.facet("service", service);
   const facetPage = getFacetSeoPage("service", slugify(service), {});
   assert.equal(facetPage?.hero.eyebrow, facetHeadings.eyebrow);
   assert.equal(facetPage?.hero.title, facetHeadings.heroTitle);
@@ -200,6 +238,7 @@ popularSearchCopyUsesCorrectAgreement();
 thinCombinationsAreNoindexedAndExcludedFromSitemap();
 highValuePagesStayIndexable();
 seoPagesExposeReusableContentBlocks();
+relatedLinksUseDescriptiveAnchorText();
 seoPagesUseReusableLandingHeadings();
 
 console.log("SEO page behavior tests passed");

@@ -8,7 +8,7 @@ This is the living reminder for reusable SEO upgrades across the directory templ
 | --- | --- | --- | --- | --- |
 | Homepage search | `/` | `DirectoryListingsPage`, `HomepageSeoLinks`, `homepageHeadings` | **Upgraded** with reusable homepage SEO heading helper | Done |
 | Dynamic SEO landing pages | `/areas/[area]`, `/neighborhoods/[neighborhood]`, `/categories/[category]`, `/areas/[area]/categories/[category]`, `/best/[slug]`, `/services/[service]`, `/dietary/[dietary]`, `/offerings/[offering]`, `/types/[type]` | `SeoLandingPage`, `seo-pages`, `seoLandingHeadings` | **Upgraded** with reusable dynamic SEO landing page heading/copy helper | Done |
-| Listing detail pages | `/listings/[slug]` | Listing detail route with inline sections | **Not upgraded yet**; needs reusable detail-page headings around overview, reviews, location, services, contact, freshness, and related links | 1 - High |
+| Listing detail pages | `/restaurants/[slug]` | Listing detail route with inline sections | **Not upgraded yet**; needs reusable detail-page headings around overview, reviews, location, services, contact, freshness, and related links | 1 - High |
 | Directory index pages | `/areas`, `/categories` | Inline index page headings and metadata | **Not upgraded yet**; useful structure exists, but generic wording should become config-driven | 2 - Medium |
 | Trust/support pages | `/about`, `/contact`, `/privacy-policy`, `/terms`, `/methodology`, `/suggest-update` | `TrustPage` content helper | **Partly reusable** through trust content helper; keep simple and trust-focused | 3 - Low |
 | Compare utility page | `/compare` | `CompareSavedListings` | **Not upgraded yet**; useful UX page, not a main organic landing target | 4 - Low |

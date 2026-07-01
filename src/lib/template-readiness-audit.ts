@@ -4,6 +4,8 @@ import { getAreas, getCategories, getFacetLabels, filterListings, slugify, type 
 import { getAreaCategoryCombinations, getPopularSearches } from "@/lib/directory-growth";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { buildFreshnessAuditReport } from "@/lib/freshness-audit";
+import { getIndexedListingFilterCount, getListingFilterCount } from "@/lib/listing-filter-counts";
+import { auditLocalBusinessDataQuality } from "@/lib/local-business-data-quality";
 import { SEO_POLICY, isApprovedHighIntentFacet, isListingIndexable } from "@/lib/seo-policy";
 
 export type TemplateReadinessSeverity = "pass" | "info" | "warning" | "blocker";
@@ -72,6 +74,7 @@ export function buildTemplateReadinessReport(options: TemplateReadinessOptions):
   issues.push(...productionUrlIssues(options.env ?? process.env));
   issues.push(...importReportIssues(options.importReportText));
   issues.push(...listingQualityIssues(options.listings, now));
+  issues.push(...localBusinessDataQualityIssues(options.listings));
   issues.push(...hubStrengthIssues(options.listings));
   issues.push(...seoPolicyIssues(options.directory));
   issues.push(...supabaseIssues(options.env ?? process.env));
@@ -323,6 +326,17 @@ function listingQualityIssues(listings: Listing[], now: Date) {
   return issues;
 }
 
+function localBusinessDataQualityIssues(listings: Listing[]) {
+  const report = auditLocalBusinessDataQuality(listings);
+
+  return report.issues.map((issue) => ({
+    code: `data_quality_${issue.code}`,
+    severity: issue.severity,
+    message: `${issue.message}${issue.listings.length ? ` Examples: ${issue.listings.slice(0, 3).join("; ")}.` : ""}`,
+    recommendation: issue.recommendation
+  }) satisfies TemplateReadinessIssue);
+}
+
 function hubStrengthIssues(listings: Listing[]) {
   if (!listings.length) {
     return [
@@ -335,10 +349,10 @@ function hubStrengthIssues(listings: Listing[]) {
     ];
   }
 
-  const areaCount = getAreas().filter((area) => filterListings({ area: slugify(area) }).length >= SEO_POLICY.routeThresholds.area).length;
-  const categoryCount = getCategories().filter((category) => filterListings({ category: slugify(category) }).length >= SEO_POLICY.routeThresholds.category).length;
+  const areaCount = getAreas().filter((area) => getListingFilterCount("area", slugify(area)) >= SEO_POLICY.routeThresholds.area).length;
+  const categoryCount = getCategories().filter((category) => getListingFilterCount("category", slugify(category)) >= SEO_POLICY.routeThresholds.category).length;
   const areaCategoryCount = getAreaCategoryCombinations().filter((item) => item.count >= SEO_POLICY.routeThresholds.areaCategory).length;
-  const popularCount = getPopularSearches().filter((search) => filterListings(search.filters).length >= SEO_POLICY.routeThresholds.best).length;
+  const popularCount = getPopularSearches().filter((search) => routeFilterCount(search.filters) >= SEO_POLICY.routeThresholds.best).length;
   const facetCount = countIndexableFacetHubs();
 
   if (areaCount === 0 || categoryCount === 0 || areaCategoryCount === 0 || popularCount === 0 || facetCount === 0) {
@@ -440,8 +454,14 @@ function countIndexableFacetHubs() {
     .filter(
       (value) =>
         isApprovedHighIntentFacet(value.facet, value.slug) &&
-        filterListings({ [value.facet]: value.slug }).length >= SEO_POLICY.routeThresholds.facet
+        getListingFilterCount(value.facet, value.slug) >= SEO_POLICY.routeThresholds.facet
     ).length;
+}
+
+function routeFilterCount(filters: Parameters<typeof getIndexedListingFilterCount>[0]) {
+  const indexedCount = getIndexedListingFilterCount(filters);
+  if (indexedCount !== undefined) return indexedCount;
+  return filterListings(filters).length;
 }
 
 function recommendations(issues: TemplateReadinessIssue[]) {

@@ -28,6 +28,7 @@ export function SavedListingsLink() {
   return (
     <Link
       href={shortlist.comparePath}
+      prefetch={false}
       onClick={() =>
         trackDirectoryEvent({
           pageType: "compare",
@@ -35,7 +36,7 @@ export function SavedListingsLink() {
           route: shortlist.comparePath
         })
       }
-      className="focus-ring inline-flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:border-primary dark:bg-slate-800 dark:text-slate-100"
+      className="focus-ring inline-flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:border-primary"
     >
       <Heart className="h-4 w-4 text-primary" aria-hidden />
       <span className="hidden sm:inline">{shortlist.label}</span>

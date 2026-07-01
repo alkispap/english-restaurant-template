@@ -15,10 +15,12 @@ import { slugify } from "@/lib/slug";
 
 export type SeoSearchParams = Record<string, string | string[] | undefined>;
 
+const directoryLastModified = new Date("2026-05-18T00:00:00.000Z");
+
 export const SEO_POLICY = {
   listingQualityThreshold: 70,
-  directoryLastModified: new Date("2026-05-18T00:00:00.000Z"),
-  lastCheckedLabel: "Updated restaurant details",
+  directoryLastModified,
+  lastCheckedLabel: `Directory data last updated: ${formatSeoPolicyDate(directoryLastModified)}`,
   routeThresholds: {
     area: 5,
     neighborhood: 5,
@@ -34,6 +36,15 @@ export const SEO_POLICY = {
     offering: ["halal-food", "vegan-options", "vegetarian-options", "organic-dishes", "small-plates"]
   } satisfies Record<FacetKey, readonly string[]>
 } as const;
+
+export function formatSeoPolicyDate(date: Date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(date);
+}
 
 const noindexFollowRobots: Metadata["robots"] = { index: false, follow: true };
 

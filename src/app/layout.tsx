@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { AccountProvider } from "@/components/AccountProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { siteConfig } from "@/config/site";
@@ -16,20 +15,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark')}catch(e){}})()`
-          }}
-        />
-      </head>
-      <body suppressHydrationWarning>
-        <AccountProvider>
-          <Header />
-          {children}
-          <Footer />
-        </AccountProvider>
+    <html lang="en">
+      <body>
+        <Header />
+        {children}
+        <Footer />
       </body>
     </html>
   );

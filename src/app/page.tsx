@@ -3,41 +3,35 @@ import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracke
 import { DirectoryListingsPage } from "@/components/DirectoryListingsPage";
 import { siteConfig } from "@/config/site";
 import { homepageHeadings } from "@/lib/homepage-headings";
-import {
-  getNoindexFollowRobots,
-  resolveCanonicalForSearchParams,
-  shouldNoindexSearchParams,
-  type SeoSearchParams
-} from "@/lib/seo-policy";
+import { pageShareMetadata } from "@/lib/share-metadata";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
 
-type HomePageMetadataProps = {
-  searchParams: Promise<SeoSearchParams>;
-};
-
-type HomePageProps = {
-  searchParams: Promise<SeoSearchParams>;
-};
-
-export async function generateMetadata({ searchParams }: HomePageMetadataProps): Promise<Metadata> {
-  const params = await searchParams;
-  const hasQueryState = shouldNoindexSearchParams(params);
+export function generateMetadata(): Metadata {
+  const title = "Indian Restaurants in London Directory";
 
   return {
-    title: siteConfig.niche,
+    title,
     description: siteConfig.description,
     alternates: {
-      canonical: hasQueryState ? resolveCanonicalForSearchParams(params) : "/"
+      canonical: "/"
     },
-    robots: hasQueryState ? getNoindexFollowRobots() : undefined
+    ...pageShareMetadata({ title, description: siteConfig.description, path: "/" })
   };
 }
 
-export default async function HomePage({ searchParams }: HomePageProps) {
+export default function HomePage() {
   return (
     <>
       <DirectoryAnalyticsTracker pageType="homepage" route="/" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
+      />
       <DirectoryListingsPage
-        searchParams={await searchParams}
         basePath="/"
         title={homepageHeadings.heroTitle}
         description={homepageHeadings.heroDescription}

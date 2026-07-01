@@ -1,8 +1,8 @@
-import type { Listing } from "@/data/listings";
 import { ListingResultsRow } from "@/components/ListingResultsRow";
+import type { ListingResultSummary } from "@/lib/listings-page";
 
 type ListingResultsListProps = {
-  listings: Listing[];
+  listings: ListingResultSummary[];
   currentPage: number;
   pageSize: number;
 };

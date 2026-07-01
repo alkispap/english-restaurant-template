@@ -14,3 +14,7 @@ codex-review-*.log
 scratch/
 homepage.html
 /*.png
+.diagnostics/
+namecheap-static-upload.zip
+.codex-remote-attachments/
+.superpowers/

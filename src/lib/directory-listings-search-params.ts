@@ -1,0 +1,69 @@
+export type DirectoryListingsSearchParams = Record<string, string | string[] | undefined>;
+
+const directorySearchParamKeys = new Set([
+  "q",
+  "area",
+  "neighborhood",
+  "category",
+  "cuisine",
+  "type",
+  "dietary",
+  "service",
+  "offering",
+  "highlight",
+  "popularFor",
+  "dining",
+  "amenity",
+  "accessibility",
+  "atmosphere",
+  "crowd",
+  "planning",
+  "payment",
+  "children",
+  "parking",
+  "pets",
+  "tube",
+  "bus",
+  "nearby",
+  "price",
+  "rating",
+  "sort",
+  "open",
+  "view",
+  "page"
+]);
+
+export function searchParamsRecordFromUrlSearchParams(searchParams: URLSearchParams): DirectoryListingsSearchParams {
+  const record: DirectoryListingsSearchParams = {};
+
+  searchParams.forEach((value, key) => {
+    if (!directorySearchParamKeys.has(key)) return;
+
+    const current = record[key];
+    if (Array.isArray(current)) {
+      record[key] = [...current, value];
+    } else if (current) {
+      record[key] = [current, value];
+    } else {
+      record[key] = value;
+    }
+  });
+
+  return record;
+}
+
+export function normalizeSearchParams(searchParams: DirectoryListingsSearchParams = {}) {
+  const params = new URLSearchParams();
+  Object.keys(searchParams)
+    .sort()
+    .forEach((key) => {
+      const value = searchParams[key];
+      if (Array.isArray(value)) {
+        value.filter(Boolean).forEach((item) => params.append(key, item));
+      } else if (value) {
+        params.set(key, value);
+      }
+    });
+
+  return params.toString();
+}

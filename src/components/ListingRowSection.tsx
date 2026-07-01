@@ -4,10 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ListingCard } from "@/components/ListingCard";
-import type { DirectoryListingRow } from "@/lib/directory-ux";
+import type { DirectoryListingRowSummary } from "@/lib/listings-page";
 
 type ListingRowSectionProps = {
-  row: DirectoryListingRow;
+  row: DirectoryListingRowSummary;
 };
 
 export function ListingRowSection({ row }: ListingRowSectionProps) {

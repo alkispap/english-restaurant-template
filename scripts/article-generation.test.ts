@@ -52,6 +52,14 @@ const draft = buildDraftArticleFromPlanAndResearch(plan, research, "2026-06-02")
 assert.equal(draft.status, "drafted");
 assert.equal(draft.slug, "what-is-indian-food");
 assert.equal(draft.primaryKeyword, "what is Indian food");
+assert.ok(draft.answer, "generated drafts should include a direct answer");
+assert.notEqual(draft.answer, draft.metaDescription, "visible answer should not reuse the SEO meta description");
+assert.ok(draft.heroImage?.src.includes("/images/articles/what-is-indian-food/"), "generated drafts should include an article hero image path");
+assert.ok((draft.keyFacts ?? []).length >= 2, "generated drafts should include key fact cards");
+assert.ok((draft.visualBlocks ?? []).length >= 1, "generated drafts should include visual blocks");
+assert.ok((draft.dataBlocks ?? []).length >= 1, "generated drafts should include data blocks");
+assert.ok((draft.comparisonTables ?? []).length >= 1, "generated drafts should include comparison tables");
+assert.ok((draft.ctaBlocks ?? []).length >= 1, "generated drafts should include CTA blocks");
 assert.ok(draft.metaTitle.includes("What Is Indian Food?"));
 assert.ok(draft.sections.length >= 4, "drafts should contain enough sections for a useful review draft");
 assert.ok(draft.faqs.length >= 2, "drafts should include FAQs");

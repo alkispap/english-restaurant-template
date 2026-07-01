@@ -3,10 +3,10 @@
 - Source file: Indian Restaurants - Outscraper - Test.csv
 - Source rows: 3188
 - Imported listings: 3187
-- Skipped rows: 1
+- Skipped rows: 0
 - Mode: normal import
 - Source type: Generic CSV
-- Duplicate rows skipped: 1
+- Duplicate rows merged: 1
 - Non-operational rows flagged: 0
 
 ## Column Mapping
@@ -150,23 +150,23 @@
 
 ### Categories
 
-- Indian: 1876
-- Middle Eastern: 481
+- Indian: 2134
+- Middle Eastern: 483
 - South Asian: 212
 - Pakistani: 203
-- South Indian: 154
-- Bangladeshi: 133
+- South Indian: 166
+- Bangladeshi: 137
 - Asian / Middle Eastern: 97
 - Sri Lankan: 85
-- Nepalese: 83
-- Punjabi: 77
+- Nepalese: 84
+- Punjabi: 84
 - North Indian: 68
 - Indian / Asian: 63
 - 47 more values not shown.
 
 ### Types
 
-- Casual Dining: 1319
+- Casual Dining: 1320
 - Bar: 324
 - Café: 195
 - Fine Dining: 97
@@ -178,7 +178,7 @@
 - Harrow: 181
 - Hounslow: 171
 - Westminster: 169
-- Redbridge: 165
+- Redbridge: 166
 - Hillingdon: 158
 - Newham: 152
 - Brent: 149
@@ -191,7 +191,7 @@
 
 ### Neighborhoods
 
-- Ilford: 93
+- Ilford: 94
 - Hounslow: 86
 - Southall: 83
 - Wembley: 61
@@ -203,7 +203,7 @@
 - Manor Park: 30
 - Whitechapel: 29
 - Dagenham: 28
-- 357 more values not shown.
+- 358 more values not shown.
 
 ### Dietary Options
 
@@ -232,7 +232,7 @@
 
 ### Offerings
 
-- Small plates: 2054
+- Small plates: 2055
 - Coffee: 1836
 - Quick bite: 1813
 - Late-night food: 1803
@@ -271,16 +271,10 @@
 
 ## Warnings
 
-- Row 16: "Spice Restaurant" has no category values.
-- Row 19: duplicate slug "hyderabad-darbar" changed to "hyderabad-darbar-2".
+- Row 19: duplicate slug "hyderabad-darbar" changed to "hyderabad-darbar-redbridge".
 - Row 20: "Vijay's Virasat" has no category values.
-- Row 25: "Spice Hut" has no category values.
 - Row 37: "Panjab Street Food" has no images.
-- Row 42: "Naan Staap" has no category values.
-- Row 46: "Al Qasr" has no category values.
-- Row 49: "Adchaya Bhavan" has no category values.
 - Row 51: "Clove Woodford" has no images.
-- Row 52: "Village Indiya" has no category values.
 - Row 52: "Village Indiya" has no images.
 - Row 53: "Temple" has no images.
 - Row 54: "Namak Restaurant" has no images.
@@ -288,9 +282,7 @@
 - Row 56: "Reesa London" has no category values.
 - Row 56: "Reesa London" has no images.
 - Row 57: "Gandhi Tandoori" has no images.
-- Row 58: "Heritage Indian Kitchen" has no category values.
 - Row 58: "Heritage Indian Kitchen" has no images.
-- Row 59: "Moj Spice Indian Takeaway" has no category values.
 - Row 59: "Moj Spice Indian Takeaway" has no images.
 - Row 60: "Bombay Spice" has no images.
 - Row 61: "The Coriander" has no images.
@@ -300,7 +292,6 @@
 - Row 64: "Purbani Tandoori" has no images.
 - Row 65: "Masala Zone Earls Court" has no images.
 - Row 66: "Village Masaleh" has no images.
-- Row 67: "Papadoms Indian Takeaway" has no category values.
 - Row 67: "Papadoms Indian Takeaway" has no images.
 - Row 68: "Purbani" has no images.
 - Row 69: "Spice Village Tooting" has no images.
@@ -309,21 +300,18 @@
 - Row 72: "Saffron Kitchen" has no images.
 - Row 73: "Khushboo" has no images.
 - Row 74: "Masala India" has no images.
-- Row 75: "Bhangra Beat Online" has no category values.
 - Row 75: "Bhangra Beat Online" has no images.
 - Row 76: "Salaam Namaste" has no images.
 - Row 77: "Rasa N16" has no images.
 - Row 78: "Shish Mahal" has no images.
 - Row 80: "Leytonstone Spice" has no images.
 - Row 81: "Forest Tandoori Walthamstow" has no images.
-- Row 82: "The Tiffin Guru - Highgate" has no category values.
 - Row 82: "The Tiffin Guru - Highgate" has no images.
 - Row 83: "Monsoon Tandoori" has no images.
 - Row 84: "Dine More" has no images.
 - Row 85: "Star of India" has no images.
 - Row 86: "Hichki Indian Restaurant" has no images.
 - Row 87: "Bengal Curry House" has no images.
-- Row 88: "Hyderabadi Biryani's (chocolate Villa)" has no category values.
 - Row 88: "Hyderabadi Biryani's (chocolate Villa)" has no images.
 - Row 89: "Vijay India Restaurant" has no images.
 - Row 90: "Lahore Xpress" has no images.
@@ -332,14 +320,12 @@
 - Row 93: "Karak Chaii Leyton" has no images.
 - Row 94: "Shri Lakshmi Foods" has no images.
 - Row 95: "Miran Masala" has no images.
-- Row 96: duplicate slug "banana-leaf" changed to "banana-leaf-2".
+- Row 96: duplicate slug "banana-leaf" changed to "banana-leaf-redbridge".
 - Row 96: "Banana Leaf" has no images.
 - Row 97: "Bindaas - The Indian Kitchen" has no images.
-- Row 98: "Namaste Kingston" has no category values.
 - Row 98: "Namaste Kingston" has no images.
 - Row 100: "Spice Lodge Indian Takeaway" has no images.
 - Row 101: "Roz Ana" has no images.
-- Row 102: "Tamil Cafe Restaurant" has no category values.
 - Row 102: "Tamil Cafe Restaurant" has no images.
 - Row 103: "Moidul's Hampton Wick Tandoori" has no images.
 - Row 104: "Deea Bangladeshi Cuisine" has no images.
@@ -351,7 +337,21 @@
 - Row 110: "Ranya Restaurant" has no images.
 - Row 111: "DELHI BY NATURE" has no images.
 - Row 112: "Red Koyla - Indian Restaurant Teddington" has no images.
+- Row 113: "Koyal Indian Restaurant & Bar" has no images.
+- Row 114: "Al-Amin" has no images.
+- Row 115: "Riverside Walk Kingston" has no images.
+- Row 116: "Roti run" has no images.
+- Row 117: "MOJEN" has no images.
+- Row 118: "The DOSA Company" has no images.
+- Row 119: "Agra Tandoori Surbiton" has no images.
+- Row 120: "Vasantha Vilas - Surbiton" has no images.
+- Row 121: "East India Restaurant, Surbiton" has no images.
+- Row 122: "Saqui Tandoori" has no images.
+- Row 123: "Prithi Cuisine" has no images.
+- Row 124: "Chilli Cha Cha" has no images.
+- Row 125: "Joy Indian Cuisine" has no images.
+- Row 126: "Saffron Summer" has no images.
 
-- 3963 more warnings not shown.
+- 3698 more warnings not shown.
 
 Generated by `npm run import:directory`.

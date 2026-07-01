@@ -7,8 +7,7 @@ export type TemplatePageCategory =
   | "article-guide"
   | "utility"
   | "trust-support"
-  | "system-seo"
-  | "api";
+  | "system-seo";
 
 export type TemplateReusableStatus =
   | "helper-backed"
@@ -41,34 +40,60 @@ const pageInventory = [
     category: "homepage-search",
     urlPattern: "/",
     routeFile: "src/app/page.tsx",
-    componentOrModel: "DirectoryListingsPage + HomepageSeoLinks",
+    componentOrModel: "DirectoryListingsPage conversion-first homepage",
     headingSource: "homepageHeadings helper + DirectoryListingsPage",
     metadataSource: "src/app/page.tsx generateMetadata + siteConfig",
     reusableStatus: "helper-backed",
     staleWordingRisk: "low",
     upgradePriority: "none",
-    notes: "Already upgraded with reusable homepage SEO headings."
+    notes: "Search-first homepage with image-led discovery cards; deeper SEO links live in hubs, footer, and sitemap."
   },
   {
     id: "listings-redirect",
     category: "redirect",
     urlPattern: "/listings",
     routeFile: "src/app/listings/page.tsx",
-    componentOrModel: "Next redirect to homepage",
+    componentOrModel: "Next redirect to restaurant search route",
     headingSource: "No rendered headings",
     metadataSource: "No standalone metadata",
     reusableStatus: "not-seo-content",
     staleWordingRisk: "none",
     upgradePriority: "none",
-    notes: "Keeps old listing index route compatible by redirecting query state to /."
+    notes: "Keeps old listing index route compatible with a static redirect to /restaurants."
+  },
+  {
+    id: "restaurants-index",
+    category: "directory-index",
+    urlPattern: "/restaurants",
+    routeFile: "src/app/restaurants/page.tsx",
+    componentOrModel: "DirectoryListingsPage search and filter workspace",
+    headingSource: "DirectoryListingsPage default directory heading",
+    metadataSource: "src/app/restaurants/page.tsx generateMetadata + siteConfig",
+    reusableStatus: "helper-backed",
+    staleWordingRisk: "low",
+    upgradePriority: "none",
+    notes: "Canonical searchable restaurant index; query filtering is handled after static render by the directory query enhancer."
+  },
+  {
+    id: "legacy-listing-detail-redirect",
+    category: "redirect",
+    urlPattern: "/listings/[slug]",
+    routeFile: "src/app/listings/[slug]/page.tsx",
+    componentOrModel: "Next redirect to restaurant detail route",
+    headingSource: "No rendered headings",
+    metadataSource: "No standalone metadata",
+    reusableStatus: "not-seo-content",
+    staleWordingRisk: "none",
+    upgradePriority: "none",
+    notes: "Keeps old listing detail URLs compatible by redirecting to /restaurants/[slug]."
   },
   {
     id: "listing-detail",
     category: "listing-detail",
-    urlPattern: "/listings/[slug]",
-    routeFile: "src/app/listings/[slug]/page.tsx",
+    urlPattern: "/restaurants/[slug]",
+    routeFile: "src/app/restaurants/[slug]/page.tsx",
     componentOrModel: "Listing detail route",
-    headingSource: "src/app/listings/[slug]/page.tsx inline detail sections",
+    headingSource: "src/app/restaurants/[slug]/page.tsx inline detail sections",
     metadataSource: "generateMetadata from listingShareMetadata",
     reusableStatus: "partially-config-driven",
     staleWordingRisk: "medium",
@@ -245,6 +270,19 @@ const pageInventory = [
     notes: "Article detail page only renders published guide content and emits Article/FAQ schema."
   },
   {
+    id: "guide-preview",
+    category: "article-guide",
+    urlPattern: "/guides/preview/[slug]",
+    routeFile: "src/app/guides/preview/[slug]/page.tsx",
+    componentOrModel: "getPreviewArticleBySlug + article content files",
+    headingSource: "GuideArticleContent from draft article content",
+    metadataSource: "getDraftPreviewRouteMetadata(article)",
+    reusableStatus: "helper-backed",
+    staleWordingRisk: "low",
+    upgradePriority: "none",
+    notes: "Draft guide preview route; blocked from indexing and excluded from public sitemap."
+  },
+  {
     id: "compare",
     category: "utility",
     urlPattern: "/compare",
@@ -360,19 +398,6 @@ const pageInventory = [
     staleWordingRisk: "none",
     upgradePriority: "none",
     notes: "System SEO route, not a public content page."
-  },
-  {
-    id: "shortlist-api",
-    category: "api",
-    urlPattern: "/api/shortlist",
-    routeFile: "src/app/api/shortlist/route.ts",
-    componentOrModel: "Shortlist API route",
-    headingSource: "No rendered headings",
-    metadataSource: "No page metadata",
-    reusableStatus: "not-seo-content",
-    staleWordingRisk: "none",
-    upgradePriority: "none",
-    notes: "API route, excluded from public SEO heading work."
   }
 ] as const satisfies readonly TemplatePageInventoryItem[];
 
@@ -406,13 +431,12 @@ export function getPublicSeoUpgradeTargets(): TemplatePageInventoryItem[] {
     utility: 5,
     "homepage-search": 6,
     redirect: 7,
-    "system-seo": 8,
-    api: 9
+    "system-seo": 8
   };
 
   return getTemplatePageInventory()
     .filter((page) => page.upgradePriority !== "none")
-    .filter((page) => page.category !== "api" && page.category !== "system-seo" && page.category !== "redirect")
+    .filter((page) => page.category !== "system-seo" && page.category !== "redirect")
     .sort(
       (a, b) =>
         priorityRank[a.upgradePriority] - priorityRank[b.upgradePriority] ||

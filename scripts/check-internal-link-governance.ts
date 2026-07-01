@@ -1,15 +1,77 @@
 import { listings } from "../src/data/listings";
-import { getListingExploreLinks } from "../src/lib/directory-growth";
+import { getFooterGroups, getListingExploreLinks } from "../src/lib/directory-growth";
+import { getHomepageSeoFeatureGroups } from "../src/lib/directory-ux";
+import {
+  getIndexableAreaSeoPages,
+  getIndexableCategorySeoPages,
+  getIndexableFacetSeoPages,
+  getIndexablePopularSearchSeoPages
+} from "../src/lib/seo-pages";
+import { getPublicGuideArticles } from "../src/lib/articles";
 import { buildInternalLinkAuditReport, renderInternalLinkAuditReport } from "../src/lib/internal-link-audit";
 
 async function runAudit() {
-  const sources = listings.map((listing) => ({
+  const listingSources = listings.map((listing) => ({
     sourcePageType: "listing_detail" as const,
     sourceLabel: listing.slug,
     groups: getListingExploreLinks(listing)
   }));
 
-  const report = buildInternalLinkAuditReport(sources);
+  const homepageSources = [
+    {
+      sourcePageType: "homepage" as const,
+      sourceLabel: "homepage SEO links",
+      groups: getHomepageSeoFeatureGroups().map((group) => ({
+        title: group.title,
+        description: group.copy,
+        links: group.links
+      }))
+    },
+    {
+      sourcePageType: "homepage" as const,
+      sourceLabel: "footer links",
+      groups: getFooterGroups().map((group) => ({
+        title: group.title,
+        description: `${group.title} footer navigation links.`,
+        links: group.links
+      }))
+    }
+  ];
+
+  const seoSources = [
+    ...getIndexableAreaSeoPages().slice(0, 25),
+    ...getIndexableCategorySeoPages().slice(0, 25),
+    ...getIndexablePopularSearchSeoPages().slice(0, 25),
+    ...getIndexableFacetSeoPages().slice(0, 25)
+  ].map((page) => ({
+    sourcePageType: page.kind === "area"
+      ? "area_hub" as const
+      : page.kind === "category"
+        ? "category_hub" as const
+        : page.kind === "best"
+          ? "best_hub" as const
+          : "facet_hub" as const,
+    sourceLabel: page.metadata.canonical,
+    groups: page.relatedLinkGroups.map((group) => ({
+      title: group.title,
+      description: `${group.title} related internal links.`,
+      links: group.links
+    }))
+  }));
+
+  const guideSources = getPublicGuideArticles().map((article) => ({
+    sourcePageType: "guide_article" as const,
+    sourceLabel: `/guides/${article.slug}`,
+    groups: [
+      {
+        title: "Related directory pages",
+        description: "Guide links that move readers into useful directory pages.",
+        links: article.internalLinks
+      }
+    ]
+  }));
+
+  const report = buildInternalLinkAuditReport([...listingSources, ...homepageSources, ...seoSources, ...guideSources]);
   console.log(renderInternalLinkAuditReport(report));
 
   if (report.totals.blockers > 0) {
