@@ -8,10 +8,22 @@ import {
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 
 type DirectoryListingsInteractiveShellComponent = typeof import("@/components/DirectoryListingsInteractiveShell").DirectoryListingsInteractiveShell;
+type DirectoryListingsBrowserModule = typeof import("@/lib/directory-listings-browser");
+type DirectoryListingsShellModule = typeof import("@/components/DirectoryListingsInteractiveShell");
 
 type DirectoryListingsQueryEnhancerProps = {
   initialModel: DirectoryListingsModel;
 };
+
+let directoryListingsClientModulesPromise: Promise<[DirectoryListingsBrowserModule, DirectoryListingsShellModule]> | null = null;
+
+function loadDirectoryListingsClientModules() {
+  directoryListingsClientModulesPromise ??= Promise.all([
+    import("@/lib/directory-listings-browser"),
+    import("@/components/DirectoryListingsInteractiveShell")
+  ]);
+  return directoryListingsClientModulesPromise;
+}
 
 export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListingsQueryEnhancerProps) {
   const [activeModel, setActiveModel] = useState<DirectoryListingsModel | null>(null);
@@ -28,8 +40,16 @@ export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListin
 
   useEffect(() => {
     let cancelled = false;
+    let pendingUpdateTimer: number | null = null;
+    let lastHandledUrl: string | null = null;
+    let requestVersion = 0;
 
     async function updateFromCurrentUrl() {
+      const currentUrl = window.location.href;
+      if (currentUrl === lastHandledUrl) return;
+
+      lastHandledUrl = currentUrl;
+      const version = ++requestVersion;
       const currentParams = new URLSearchParams(window.location.search);
       const nextQuery = normalizeSearchParams(searchParamsRecordFromUrlSearchParams(currentParams));
       if (!nextQuery) {
@@ -37,11 +57,8 @@ export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListin
         return;
       }
 
-      const [{ buildBrowserDirectoryListingsModel }, shellModule] = await Promise.all([
-        import("@/lib/directory-listings-browser"),
-        import("@/components/DirectoryListingsInteractiveShell")
-      ]);
-      if (cancelled) return;
+      const [{ buildBrowserDirectoryListingsModel }, shellModule] = await loadDirectoryListingsClientModules();
+      if (cancelled || version !== requestVersion) return;
 
       setInteractiveShell(() => shellModule.DirectoryListingsInteractiveShell);
       setActiveModel(
@@ -52,6 +69,17 @@ export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListin
           description: initialModel.description
         })
       );
+    }
+
+    function scheduleUpdateFromCurrentUrl() {
+      if (pendingUpdateTimer !== null) {
+        window.clearTimeout(pendingUpdateTimer);
+      }
+
+      pendingUpdateTimer = window.setTimeout(() => {
+        pendingUpdateTimer = null;
+        void updateFromCurrentUrl();
+      }, 0);
     }
 
     const originalPushState = window.history.pushState;
@@ -67,16 +95,19 @@ export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListin
       return result;
     };
 
-    updateFromCurrentUrl();
-    window.addEventListener("popstate", updateFromCurrentUrl);
-    window.addEventListener("directory-url-change", updateFromCurrentUrl);
+    void updateFromCurrentUrl();
+    window.addEventListener("popstate", scheduleUpdateFromCurrentUrl);
+    window.addEventListener("directory-url-change", scheduleUpdateFromCurrentUrl);
 
     return () => {
       cancelled = true;
+      if (pendingUpdateTimer !== null) {
+        window.clearTimeout(pendingUpdateTimer);
+      }
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
-      window.removeEventListener("popstate", updateFromCurrentUrl);
-      window.removeEventListener("directory-url-change", updateFromCurrentUrl);
+      window.removeEventListener("popstate", scheduleUpdateFromCurrentUrl);
+      window.removeEventListener("directory-url-change", scheduleUpdateFromCurrentUrl);
     };
   }, [initialModel.basePath, initialModel.description, initialModel.title]);
 

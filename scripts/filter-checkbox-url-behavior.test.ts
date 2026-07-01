@@ -15,10 +15,10 @@ assert.match(
   /window\.history\.pushState/,
   "filter checkbox changes should update the URL through history state"
 );
-assert.match(
+assert.doesNotMatch(
   source,
   /directory-url-change/,
-  "filter checkbox changes should notify the client listings query enhancer"
+  "filter checkbox changes should not manually dispatch directory-url-change after pushState"
 );
 assert.match(
   source,

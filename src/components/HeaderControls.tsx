@@ -18,7 +18,7 @@ export function HeaderControls({ navigation, shortlistEnabled }: HeaderControlsP
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <>
+    <div className="relative shrink-0">
       <div className="flex items-center gap-2">
         {shortlistEnabled ? <SavedListingsLink /> : null}
         <AccountMenu />
@@ -34,21 +34,22 @@ export function HeaderControls({ navigation, shortlistEnabled }: HeaderControlsP
         </button>
       </div>
       {isMenuOpen ? (
-        <nav id="mobile-navigation" className="relative z-[90] border-t border-line bg-white px-4 py-3 shadow-soft md:hidden">
-          <div className="mx-auto grid max-w-7xl gap-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-md px-3 py-2 text-sm font-semibold text-muted hover:bg-orange-50 hover:text-ink"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+        <nav
+          id="mobile-navigation"
+          className="absolute right-0 top-[calc(100%+0.75rem)] z-[90] w-[min(calc(100vw-2rem),14rem)] rounded-b-md border border-line bg-white px-4 py-3 shadow-soft md:hidden"
+        >
+          {navigation.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block rounded-md px-3 py-2 text-sm font-semibold text-muted hover:bg-orange-50 hover:text-ink"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
       ) : null}
-    </>
+    </div>
   );
 }

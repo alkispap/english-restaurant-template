@@ -138,7 +138,6 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
     const query = params.toString();
     const nextUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
     window.history.pushState({}, "", nextUrl);
-    window.dispatchEvent(new Event("directory-url-change"));
     window.requestAnimationFrame(() => window.scrollTo({ top: scrollY }));
   }
 

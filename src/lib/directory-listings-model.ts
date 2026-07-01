@@ -22,7 +22,13 @@ import {
   type ListingsPageLinkValues,
   type ListingsViewMode
 } from "@/lib/listings-page";
-import type { DirectoryListingsFilters, DirectoryListingsModel } from "@/lib/directory-listings-types";
+import type {
+  DirectoryListingsFilters,
+  DirectoryListingsLinkGroup,
+  DirectoryListingsModel,
+  SearchAreaOption
+} from "@/lib/directory-listings-types";
+import type { MapPoint } from "@/lib/listings-page";
 
 type SortKey = "featured" | "rating" | "reviews" | "price";
 
@@ -33,6 +39,10 @@ type BuildDirectoryListingsModelInput = {
   description?: string;
   headingContext?: string;
 };
+
+let cachedSearchAreaOptions: SearchAreaOption[] | null = null;
+let cachedSearchMapPoints: MapPoint[] | null = null;
+const cachedSidebarBlocksByContext = new Map<"default" | "homepage" | "seoLanding", DirectoryListingsLinkGroup[]>();
 
 export function buildDirectoryListingsModel({
   searchParams = {},
@@ -96,12 +106,31 @@ export function buildDirectoryListingsChrome(
   sidebarContext: "default" | "homepage" | "seoLanding"
 ) {
   return {
-    searchAreas: getSearchAreas().map((area) => ({ label: area, value: slugify(area) })),
-    searchMapPoints: getSearchAreaMapPoints(),
+    searchAreas: getCachedSearchAreaOptions(),
+    searchMapPoints: getCachedSearchMapPoints(),
     filterOptionGroups: getFilterPanelOptionGroups(values),
     sidebarContext,
-    sidebarBlocks: getClientSidebarBlocks(sidebarContext)
+    sidebarBlocks: getCachedSidebarBlocks(sidebarContext)
   };
+}
+
+function getCachedSearchAreaOptions() {
+  cachedSearchAreaOptions ??= getSearchAreas().map((area) => ({ label: area, value: slugify(area) }));
+  return cachedSearchAreaOptions;
+}
+
+function getCachedSearchMapPoints() {
+  cachedSearchMapPoints ??= getSearchAreaMapPoints();
+  return cachedSearchMapPoints;
+}
+
+function getCachedSidebarBlocks(context: "default" | "homepage" | "seoLanding") {
+  const cachedBlocks = cachedSidebarBlocksByContext.get(context);
+  if (cachedBlocks) return cachedBlocks;
+
+  const blocks = getClientSidebarBlocks(context);
+  cachedSidebarBlocksByContext.set(context, blocks);
+  return blocks;
 }
 
 function filtersFromSearchParams(params: DirectoryListingsSearchParams): DirectoryListingsFilters {

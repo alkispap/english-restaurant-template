@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { DirectoryListingRows } from "@/components/DirectoryListingRows";
-import { DirectorySidebar } from "@/components/DirectorySidebar";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
 import { DirectoryImage } from "@/components/DirectoryImage";
-import { FilterPanel } from "@/components/FilterPanel";
 import { ListingsResults } from "@/components/ListingsResults";
+import { ResponsiveDirectoryFilters } from "@/components/ResponsiveDirectoryFilters";
 import { SearchBar } from "@/components/SearchBar";
 import { siteConfig } from "@/config/site";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
@@ -92,18 +91,7 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
         </>
       ) : (
       <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:pr-2">
-          <details className="rounded-lg border border-line bg-white p-4 shadow-soft lg:hidden">
-            <summary className="cursor-pointer text-sm font-bold text-ink">Filters</summary>
-            <div className="mt-5">
-              <FilterPanel values={model.filterPanelValues} optionGroups={model.filterOptionGroups} />
-            </div>
-          </details>
-          <div className="hidden lg:block">
-            <FilterPanel values={model.filterPanelValues} optionGroups={model.filterOptionGroups} />
-            <DirectorySidebar context={model.sidebarContext} blocks={model.sidebarBlocks} />
-          </div>
-        </aside>
+        <ResponsiveDirectoryFilters model={model} />
         <div className="min-w-0">
           <ListingsResults
             listings={model.listings}

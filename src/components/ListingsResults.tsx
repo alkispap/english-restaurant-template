@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Clock, List, Map as MapIcon } from "lucide-react";
+import { List, Map as MapIcon } from "lucide-react";
 import { ListingMap } from "@/components/ListingMap";
 import { ListingResultsList } from "@/components/ListingResultsList";
+import { OpenNowResultsLink } from "@/components/OpenNowResultsLink";
 import { SortSelect } from "@/components/SortSelect";
 import { directoryConfig } from "@/config/directory";
 import {
@@ -77,19 +78,7 @@ export function ListingsResults({
 }
 
 function OpenNowLink({ values, openOnly }: { values: ListingsPageLinkValues; openOnly: boolean }) {
-  return (
-    <Link
-      href={buildListingsPageHref(values, { open: !openOnly, page: 1 })}
-      className={`flex items-center gap-3 rounded-lg border px-4 py-3 shadow-soft transition ${
-        openOnly
-          ? "border-primary bg-orange-50 text-ink"
-          : "border-line bg-white text-ink hover:border-primary"
-      }`}
-    >
-      <Clock className="h-4 w-4 text-primary" aria-hidden />
-      <span className="text-sm font-bold">Open now</span>
-    </Link>
-  );
+  return <OpenNowResultsLink href={buildListingsPageHref(values, { open: !openOnly, page: 1 })} active={openOnly} />;
 }
 
 function ViewToggle({ values, mode }: { values: ListingsPageLinkValues; mode: ListingsViewMode }) {

@@ -124,7 +124,7 @@ async function restaurantsPageRendersFullSearchAndFilterWorkspace() {
 
   assert.deepEqual(h1s, ["Find restaurants in London"], "restaurants page should have one clear H1");
   assert.ok(html.includes('action="/restaurants"'), "restaurants page search form should submit to /restaurants");
-  assert.ok(html.includes("Minimum rating"), "restaurants page should render the full filter panel");
+  assert.ok(html.includes('aria-label="Directory filters"'), "restaurants page should render the responsive filter workspace");
   assert.ok(!html.includes("Apply filters"), "restaurants page filters should auto-apply without a manual Apply button");
   assert.ok(h2s.includes("3,187 restaurants found"), "restaurants page should render the full results heading");
   assert.ok(html.includes("Open now"), "restaurants page should render the open-now control");

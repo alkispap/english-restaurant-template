@@ -47,10 +47,33 @@ type OptionGroupConfig = Omit<FilterPanelOptionGroup, "options" | "totalOptions"
 };
 
 const DEFAULT_MAX_INITIAL_OPTIONS = 16;
+let cachedOptionGroupConfigs: OptionGroupConfig[] | null = null;
 
 export function getFilterPanelOptionGroups(values: ListingsPageLinkValues = {}) {
+  const groups = getOptionGroupConfigs();
+
+  return groups.map((group) => {
+    const options = limitOptions(
+      group.options,
+      valueForName(values, group.name),
+      group.maxInitialOptions ?? DEFAULT_MAX_INITIAL_OPTIONS
+    );
+
+    return {
+      label: group.label,
+      modalLabel: group.modalLabel,
+      name: group.name,
+      options,
+      totalOptions: group.options.length
+    };
+  });
+}
+
+function getOptionGroupConfigs() {
+  if (cachedOptionGroupConfigs) return cachedOptionGroupConfigs;
+
   const labels = directoryConfig.filterLabels;
-  const groups: OptionGroupConfig[] = [
+  cachedOptionGroupConfigs = [
     { label: "Area", name: "area", options: getSearchAreas().map(toOption), maxInitialOptions: 40 },
     { label: "Neighborhood", name: "neighborhood", options: getSearchNeighborhoods().map(toOption) },
     { label: directoryConfig.categoryPluralLabel, name: "category", options: getSearchCategories().map(toOption), maxInitialOptions: 24 },
@@ -89,21 +112,7 @@ export function getFilterPanelOptionGroups(values: ListingsPageLinkValues = {}) 
     { label: "Minimum rating", name: "rating", options: getSearchRatingFilterOptions() }
   ];
 
-  return groups.map((group) => {
-    const options = limitOptions(
-      group.options,
-      valueForName(values, group.name),
-      group.maxInitialOptions ?? DEFAULT_MAX_INITIAL_OPTIONS
-    );
-
-    return {
-      label: group.label,
-      modalLabel: group.modalLabel,
-      name: group.name,
-      options,
-      totalOptions: group.options.length
-    };
-  });
+  return cachedOptionGroupConfigs;
 }
 
 function limitOptions(options: FilterOption[], selected: string | string[] | undefined, limit: number) {
