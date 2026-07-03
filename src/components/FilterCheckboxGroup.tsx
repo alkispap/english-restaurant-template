@@ -80,7 +80,7 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto border-b border-line px-6 pb-6 sm:px-10">
-          <div className="grid gap-x-12 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-wrap gap-2">
             {filteredOptions.map((option) => (
               <CheckboxOption
                 key={option.value}
@@ -165,7 +165,7 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
       ))}
 
       {expanded ? (
-        <div id={`${id}-options`} className="space-y-3">
+        <div id={`${id}-options`} className="flex flex-wrap gap-2">
           {visibleOptions.map((option) => (
             <CheckboxOption
               key={option.value}
@@ -202,13 +202,21 @@ function CheckboxOption({
   checked: boolean;
   onChange: () => void;
 }) {
+  const basePillClass =
+    "inline-flex min-h-9 cursor-pointer items-center rounded-full border px-3 py-1.5 text-sm font-semibold transition focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2";
+  const selectedPillClass = "border-emerald-900 bg-emerald-900 text-white shadow-sm";
+  const unselectedPillClass = "border-line bg-white text-ink hover:border-emerald-800 hover:bg-emerald-50";
+
   return (
-    <label className="flex items-center gap-3 text-sm text-ink">
+    <label
+      data-filter-option-pill="true"
+      className={`${basePillClass} ${checked ? selectedPillClass : unselectedPillClass}`}
+    >
       <input
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="focus-ring h-4 w-4 rounded-sm border-line accent-emerald-900"
+        className="sr-only peer"
       />
       <span>{option.label}</span>
     </label>

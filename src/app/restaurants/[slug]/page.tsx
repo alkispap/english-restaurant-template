@@ -38,6 +38,7 @@ import { OpeningHoursList } from "@/components/OpeningHoursList";
 import { RatingPill } from "@/components/RatingPill";
 import { ReviewSummary } from "@/components/ReviewSummary";
 import { ListingNav } from "@/components/ListingNav";
+import { ListingDetailMobileChrome } from "@/components/ListingDetailMobileChrome";
 import { ListingEngagementStats } from "@/components/ListingEngagementStats";
 import { ListingGrid } from "@/components/ListingGrid";
 import { ShareButton } from "@/components/ShareButton";
@@ -160,6 +161,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   return (
     <main>
       <ListingNav name={listing.name} tabs={tabs} />
+      <ListingDetailMobileChrome listing={listing} tabs={tabs} shareUrl={share.url} route={route} />
       <DirectoryAnalyticsTracker pageType="listing_detail" route={route} listingSlug={listing.slug} />
       <script
         type="application/ld+json"
@@ -170,8 +172,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(breadcrumbs)) }}
       />
       <section id="photos" className="scroll-mt-20 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted">
+        <div className="mx-auto max-w-7xl px-0 py-0 sm:px-6 sm:py-8 lg:px-8">
+          <div className="mb-6 hidden flex-wrap items-center gap-2 text-sm text-muted md:flex">
             <Link href={directoryIndexPath()} className="hover:text-primary">
               {directoryConfig.listingPluralLabel}
             </Link>
@@ -184,7 +186,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
           {gallery.length ? (
             <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-              <div className="relative h-[420px] overflow-hidden rounded-lg bg-orange-50">
+              <div className="relative h-[320px] overflow-hidden bg-orange-50 sm:h-[420px] sm:rounded-lg">
                 <DirectoryImage
                   src={gallery[0]}
                   alt={buildListingImageAlt(listing, { variant: "featured", index: 0 })}
@@ -225,7 +227,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
       <section className="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_340px] lg:px-8">
         <article id="overview" className="scroll-mt-20">
-          <div className="mb-5 flex flex-wrap items-center gap-3">
+          <div className="mb-5 hidden flex-wrap items-center gap-3 md:flex">
             {listing.rating ? <RatingPill rating={listing.rating} reviewCount={listing.reviewCount} href="#reviews" /> : null}
             {listing.priceLevel ? (
               <span className="rounded-full bg-orange-50 px-3 py-1 text-sm font-bold text-accent">{listing.priceLevel}</span>
@@ -242,7 +244,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
           {isClosed ? <StatusBanner status={status} /> : null}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <h1 className="text-4xl font-bold text-ink">{headings.h1}</h1>
+            <h1 className="hidden text-4xl font-bold text-ink md:block">{headings.h1}</h1>
             <div className="flex flex-wrap gap-2 sm:mt-1">
               {isDirectoryFeatureEnabled("shortlist") ? <SaveListingButton slug={listing.slug} /> : null}
               <ShareButton 
@@ -267,7 +269,43 @@ export default async function ListingPage({ params }: ListingPageProps) {
           {listing.description ? <p className="mt-4 max-w-3xl text-lg leading-8 text-muted">{listing.description}</p> : null}
           <ListingPrivateNote slug={listing.slug} />
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <section id="mobile-at-a-glance" className="mt-8 scroll-mt-20 border-y border-line bg-white py-7 md:hidden">
+            <h2 className="text-3xl font-extrabold text-ink">At a glance</h2>
+            <div className="mt-5 space-y-4">
+              <OpenStatusBadge workingHours={listing.details?.workingHours} />
+              {listing.fullAddress ? (
+                <p className="flex items-start gap-2 text-lg leading-7 text-muted">
+                  <MapPin className="mt-1 h-5 w-5 shrink-0 text-ink" aria-hidden />
+                  <span>{listing.fullAddress}</span>
+                </p>
+              ) : null}
+              <div className="grid grid-cols-2 gap-3">
+                <TrackedActionLink href={listing.contact?.website} label={actionLabels.website} icon={<ExternalLink className="h-4 w-4" />} pageType="listing_detail" action="website_click" route={route} listingSlug={listing.slug} />
+                {listing.contact?.phone ? (
+                  <TrackedActionLink href={`tel:${listing.contact.phone.replace(/\s+/g, "")}`} label="Call" icon={<Phone className="h-4 w-4" />} pageType="listing_detail" action="phone_click" route={route} listingSlug={listing.slug} />
+                ) : null}
+                <TrackedActionLink href={getListingMapsUrl(listing)} label="Map" icon={<MapPin className="h-4 w-4" />} pageType="listing_detail" action="maps_click" route={route} listingSlug={listing.slug} />
+                <TrackedActionLink href={listing.contact?.googleReviewsUrl ?? "#reviews"} label="Review" icon={<Star className="h-4 w-4" />} pageType="listing_detail" action="reviews_click" route={route} listingSlug={listing.slug} />
+              </div>
+            </div>
+          </section>
+
+          <section id="mobile-location" className="mt-8 scroll-mt-20 md:hidden">
+            <h2 className="text-3xl font-extrabold text-ink">Location</h2>
+            <a
+              href={getListingMapsUrl(listing)}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 block overflow-hidden rounded-lg border border-line bg-slate-100"
+            >
+              <div className="grid min-h-[170px] place-items-center bg-[linear-gradient(135deg,#eef2f7,#dbeafe_48%,#d1fae5)] p-6 text-center">
+                <MapPin className="mx-auto h-10 w-10 text-secondary" aria-hidden />
+                <p className="mt-3 font-bold text-ink">{listing.fullAddress ?? listing.area ?? listing.name}</p>
+              </div>
+            </a>
+          </section>
+
+          <div className="mt-10 hidden gap-4 md:grid sm:grid-cols-3">
             {listing.area ? (
               <InfoCard
                 icon={<MapPin className="h-5 w-5" />}
@@ -337,7 +375,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
         </article>
 
         {hasContactSection ? (
-          <aside id="contact" className="h-max scroll-mt-20 rounded-lg border border-line bg-white p-6 shadow-soft">
+          <aside id="contact" className="hidden h-max scroll-mt-20 rounded-lg border border-line bg-white p-6 shadow-soft md:block">
             <h2 className="text-lg font-bold text-ink">{headings.contact}</h2>
             {listing.fullAddress ? <p className="mt-3 text-sm leading-6 text-muted">{listing.fullAddress}</p> : null}
 

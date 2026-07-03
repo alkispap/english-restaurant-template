@@ -28,9 +28,24 @@ type RunResult = {
   resultHeading: string;
 };
 
+type CdpResponseResult = Record<string, unknown>;
+
+type CdpEvent = {
+  method: string;
+  params?: CdpResponseResult;
+};
+
+type CdpMessage = {
+  id?: number;
+  method?: string;
+  result?: CdpResponseResult;
+  error?: unknown;
+  params?: CdpResponseResult;
+};
+
 type CdpClient = {
-  send: (method: string, params?: Record<string, unknown>) => Promise<any>;
-  waitFor: (method: string, timeout?: number) => Promise<any>;
+  send: (method: string, params?: Record<string, unknown>) => Promise<CdpResponseResult>;
+  waitFor: (method: string, timeout?: number) => Promise<CdpEvent>;
   close: () => void;
 };
 
@@ -153,7 +168,7 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
     awaitPromise: true,
     returnByValue: true
   });
-  const target = targetResult.result.value as null | { x: number; y: number };
+  const target = cdpReturnValue(targetResult) as null | { x: number; y: number };
   if (!target) throw new Error(`${scenario.id}: benchmark target not found`);
 
   await client.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: target.x, y: target.y, button: "none" });
@@ -166,12 +181,16 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
     returnByValue: true
   });
 
-  const measurement = measurementResult.result.value as RunResult;
+  const measurement = cdpReturnValue(measurementResult) as RunResult;
   return {
     ...measurement,
     scenario: scenario.id,
     run
   };
+}
+
+function cdpReturnValue(result: CdpResponseResult) {
+  return (result.result as { value?: unknown } | undefined)?.value;
 }
 
 function setupBenchmarkExpression(targetScript: string) {
@@ -390,19 +409,19 @@ async function waitForJson(url: string, init?: RequestInit) {
 function connectCdp(wsUrl: string): Promise<CdpClient> {
   const ws = new WebSocket(wsUrl);
   let id = 0;
-  const pending = new Map<number, { resolve: (value: unknown) => void; reject: (error: Error) => void }>();
-  const events: any[] = [];
+  const pending = new Map<number, { resolve: (value: CdpResponseResult) => void; reject: (error: Error) => void }>();
+  const events: CdpEvent[] = [];
 
   ws.addEventListener("message", (event) => {
-    const message = JSON.parse(String(event.data));
+    const message = JSON.parse(String(event.data)) as CdpMessage;
     if (message.id && pending.has(message.id)) {
       const callbacks = pending.get(message.id);
       pending.delete(message.id);
       if (!callbacks) return;
       if (message.error) callbacks.reject(new Error(JSON.stringify(message.error)));
-      else callbacks.resolve(message.result);
+      else callbacks.resolve(message.result ?? {});
     } else if (message.method) {
-      events.push(message);
+      events.push({ method: message.method, params: message.params });
     }
   });
 

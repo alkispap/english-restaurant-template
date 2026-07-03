@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { DirectorySidebar } from "@/components/DirectorySidebar";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
-import { FilterPanel } from "@/components/FilterPanel";
 import { ListingsResults } from "@/components/ListingsResults";
+import { ResponsiveDirectoryFilters } from "@/components/ResponsiveDirectoryFilters";
 import { SearchBar } from "@/components/SearchBar";
 import { SearchableCardGrid } from "@/components/SearchableCardGrid";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -17,6 +16,12 @@ type SeoLandingPageProps = {
 
 export function SeoLandingPage({ page }: SeoLandingPageProps) {
   const chrome = buildDirectoryListingsChrome(page.filterPanelValues, "seoLanding");
+  const filterModel = {
+    filterPanelValues: page.filterPanelValues,
+    filterOptionGroups: chrome.filterOptionGroups,
+    sidebarContext: chrome.sidebarContext,
+    sidebarBlocks: areaScopedSidebarBlocks(page, chrome.sidebarBlocks)
+  };
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -42,32 +47,17 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
             basePath={page.metadata.canonical}
             areas={chrome.searchAreas}
             mapPoints={chrome.searchMapPoints}
+            hideAreaChoice={page.kind === "area"}
           />
         </div>
       </section>
 
       <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <details className="rounded-lg border border-line bg-white p-4 shadow-soft lg:hidden">
-            <summary className="cursor-pointer text-sm font-bold text-ink">Filters and guides</summary>
-            <div className="mt-5">
-              <FilterPanel
-                action={page.metadata.canonical}
-                values={page.filterPanelValues}
-                optionGroups={chrome.filterOptionGroups}
-              />
-              <DirectorySidebar context="seoLanding" blocks={chrome.sidebarBlocks} />
-            </div>
-          </details>
-          <div className="hidden lg:block">
-            <FilterPanel
-              action={page.metadata.canonical}
-              values={page.filterPanelValues}
-              optionGroups={chrome.filterOptionGroups}
-            />
-            <DirectorySidebar context="seoLanding" blocks={chrome.sidebarBlocks} />
-          </div>
-        </aside>
+        <ResponsiveDirectoryFilters
+          model={filterModel}
+          action={page.metadata.canonical}
+          hiddenGroups={areaScopedHiddenFilterGroups(page)}
+        />
 
         <div className="min-w-0">
           <AreaGuideSection page={page} />
@@ -178,6 +168,8 @@ function areaGuideHeading(page: SeoPageModel, areaLabel: string) {
 }
 
 function GuideSection({ page }: { page: SeoPageModel }) {
+  if (page.kind === "area") return null;
+
   return (
     <section className="mt-12 rounded-lg border border-line bg-white p-6">
       <SectionHeading title={page.guide.title} copy={page.guide.body} />
@@ -259,4 +251,12 @@ function Faqs({ faqs }: { faqs: SeoPageModel["faqs"] }) {
 
 function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
+}
+
+function areaScopedHiddenFilterGroups(page: SeoPageModel) {
+  return page.kind === "area" ? ["area"] : [];
+}
+
+function areaScopedSidebarBlocks(page: SeoPageModel, blocks: ReturnType<typeof buildDirectoryListingsChrome>["sidebarBlocks"]) {
+  return page.kind === "area" ? [] : blocks;
 }

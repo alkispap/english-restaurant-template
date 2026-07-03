@@ -37,7 +37,7 @@ export function ListingNav({ name, tabs }: { name: string; tabs: ListingNavTab[]
   }, [tabs]);
 
   return (
-    <div className="sticky top-0 z-40 border-b border-line bg-white/90 shadow-sm backdrop-blur-md">
+    <div className="sticky top-0 z-40 hidden border-b border-line bg-white/90 shadow-sm backdrop-blur-md md:block">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-8">
           <div className="hidden truncate text-lg font-bold text-ink sm:block">{name}</div>

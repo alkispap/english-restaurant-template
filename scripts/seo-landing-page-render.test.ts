@@ -76,7 +76,6 @@ async function seoLandingPageRendersEntitySpecificHeadingOutline() {
   [
     `Explore Indian Restaurants in ${area} by Neighborhood and Cuisine`,
     `${page.totalCount.toLocaleString()} Indian Restaurants in ${area} Found`,
-    headings.guideTitle,
     headings.related.areaCategoryLinksTitle,
     headings.related.areaLinksTitle,
     headings.related.usefulSearchesTitle,
@@ -117,6 +116,39 @@ async function seoLandingPageRendersEntitySpecificHeadingOutline() {
   });
 }
 
+function areaLandingPageKeepsFiltersFocusedOnCurrentArea() {
+  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPage.tsx");
+  const source = fs.readFileSync(componentPath, "utf8");
+  const componentBody = source.split("function Breadcrumbs")[0];
+
+  assert.match(
+    componentBody,
+    /ResponsiveDirectoryFilters/,
+    "SEO landing pages should use the same responsive filter wrapper as directory listings"
+  );
+  assert.match(
+    componentBody,
+    /hiddenGroups=\{areaScopedHiddenFilterGroups\(page\)\}/,
+    "area-scoped SEO landing pages should hide the already-selected area filter group"
+  );
+  assert.doesNotMatch(
+    componentBody,
+    /summary[^>]*>\s*Filters and guides\s*</,
+    "mobile area filters should not combine filters with guide/sidebar blocks"
+  );
+}
+
+function areaLandingPageDoesNotRenderLowerGuideBlock() {
+  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPage.tsx");
+  const source = fs.readFileSync(componentPath, "utf8");
+
+  assert.match(
+    source,
+    /function GuideSection\(\{ page \}: \{ page: SeoPageModel \}\) \{[\s\S]*?page\.kind === "area"/,
+    "area SEO pages should skip the lower guide section to reduce page clutter"
+  );
+}
+
 function textFromTags(html: string, tag: "h1" | "h2" | "h3") {
   return Array.from(html.matchAll(new RegExp(`<${tag}[^>]*>(.*?)</${tag}>`, "gis"))).map((match) =>
     match[1].replace(/<[^>]+>/g, "").replaceAll("&amp;", "&").replace(/\s+/g, " ").trim()
@@ -124,6 +156,8 @@ function textFromTags(html: string, tag: "h1" | "h2" | "h3") {
 }
 
 seoLandingPageDoesNotRenderSummaryCards();
+areaLandingPageKeepsFiltersFocusedOnCurrentArea();
+areaLandingPageDoesNotRenderLowerGuideBlock();
 seoLandingPageRendersEntitySpecificHeadingOutline()
   .then(() => neighborhoodLandingPageRendersLocalSeoHeadingOutline())
   .then(() => categoryLandingPageRendersCuisineSeoHeadingOutline())

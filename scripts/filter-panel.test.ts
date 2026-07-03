@@ -27,6 +27,54 @@ const filterPanelSource = fs.readFileSync(path.join(process.cwd(), "src", "compo
 const listingsViewSource = fs.readFileSync(path.join(process.cwd(), "src", "components", "DirectoryListingsView.tsx"), "utf8");
 const responsiveFiltersSource = fs.readFileSync(path.join(process.cwd(), "src", "components", "ResponsiveDirectoryFilters.tsx"), "utf8");
 
+const topLevelPanelOrder = [
+  'group("area")',
+  'group("neighborhood")',
+  'group("category")',
+  'group("price")',
+  'name="rating"',
+  'group("dining")',
+  'group("dietary")',
+  'group("service")',
+  "labels.advanced",
+  "labels.transport"
+];
+
+topLevelPanelOrder.reduce((previousIndex, token) => {
+  const nextIndex = filterPanelSource.indexOf(token);
+  assert.notEqual(nextIndex, -1, `filter panel should include ${token}`);
+  assert.ok(nextIndex > previousIndex, `${token} should appear after the previous Tripadvisor-style filter group`);
+  return nextIndex;
+}, -1);
+
+const advancedSection = filterPanelSource.slice(
+  filterPanelSource.indexOf("labels.advanced"),
+  filterPanelSource.indexOf("labels.transport")
+);
+
+[
+  'group("type")',
+  'group("offering")',
+  'group("highlight")',
+  'group("popularFor")',
+  'group("amenity")',
+  'group("accessibility")',
+  'group("atmosphere")',
+  'group("crowd")',
+  'group("planning")',
+  'group("payment")',
+  'group("children")',
+  'group("parking")',
+  'group("pets")'
+].forEach((token) => {
+  assert.match(advancedSection, new RegExp(token.replace(/[()"]/g, "\\$&")), `${token} should live inside More filters`);
+});
+
+assert.doesNotMatch(
+  filterPanelSource.slice(0, filterPanelSource.indexOf("labels.advanced")),
+  /group\("type"\)|group\("offering"\)|group\("highlight"\)|group\("popularFor"\)/,
+  "secondary restaurant filters should not render before More filters"
+);
 assert.doesNotMatch(filterPanelSource, /Apply filters/, "filter panel should not render a manual Apply filters button");
 assert.match(filterPanelSource, /onChange=\{\([^)]*\)\s*=>\s*applySelectFilter/, "rating select should auto-apply on change");
 assert.match(filterPanelSource, /window\.history\.pushState/, "rating select should update the URL without a full navigation");

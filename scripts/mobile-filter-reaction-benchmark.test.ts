@@ -19,5 +19,6 @@ assert.match(source, /median/, "benchmark should summarize median timing");
 assert.match(source, /slowest/, "benchmark should summarize slowest timing");
 assert.match(source, /RUNS/, "benchmark should allow overriding run count");
 assert.match(source, /CPU_THROTTLE/, "benchmark should allow optional CPU throttling");
+assert.doesNotMatch(source, /\bany\b/, "benchmark should use bounded unknown-based CDP types instead of explicit any");
 
 console.log("mobile filter reaction benchmark tests passed");

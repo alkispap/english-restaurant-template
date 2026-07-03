@@ -9,9 +9,18 @@ type SearchBarProps = {
   basePath?: string;
   areas: SearchAreaOption[];
   mapPoints: MapPoint[];
+  hideAreaChoice?: boolean;
 };
 
-export function SearchBar({ compact = false, defaultQuery = "", defaultArea = "", basePath, areas, mapPoints }: SearchBarProps) {
+export function SearchBar({
+  compact = false,
+  defaultQuery = "",
+  defaultArea = "",
+  basePath,
+  areas,
+  mapPoints,
+  hideAreaChoice = false
+}: SearchBarProps) {
   return (
     <SearchBarClient
       compact={compact}
@@ -20,6 +29,7 @@ export function SearchBar({ compact = false, defaultQuery = "", defaultArea = ""
       basePath={basePath}
       areas={areas}
       mapPoints={mapPoints}
+      hideAreaChoice={hideAreaChoice}
     />
   );
 }

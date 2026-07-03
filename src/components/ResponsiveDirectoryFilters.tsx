@@ -3,13 +3,16 @@
 import { useEffect, useState } from "react";
 import { DirectorySidebar } from "@/components/DirectorySidebar";
 import { FilterPanel } from "@/components/FilterPanel";
+import type { FilterPanelOptionGroup } from "@/lib/filter-panel-options";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 
 type ResponsiveDirectoryFiltersProps = {
-  model: DirectoryListingsModel;
+  model: Pick<DirectoryListingsModel, "filterPanelValues" | "filterOptionGroups" | "sidebarContext" | "sidebarBlocks">;
+  action?: string;
+  hiddenGroups?: FilterPanelOptionGroup["name"][];
 };
 
-export function ResponsiveDirectoryFilters({ model }: ResponsiveDirectoryFiltersProps) {
+export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }: ResponsiveDirectoryFiltersProps) {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -36,7 +39,12 @@ export function ResponsiveDirectoryFilters({ model }: ResponsiveDirectoryFilters
         aria-label="Directory filters"
         className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:pr-2"
       >
-        <FilterPanel values={model.filterPanelValues} optionGroups={model.filterOptionGroups} />
+        <FilterPanel
+          action={action}
+          values={model.filterPanelValues}
+          optionGroups={model.filterOptionGroups}
+          hiddenGroups={hiddenGroups}
+        />
         <DirectorySidebar context={model.sidebarContext} blocks={model.sidebarBlocks} />
       </aside>
     );
@@ -47,7 +55,12 @@ export function ResponsiveDirectoryFilters({ model }: ResponsiveDirectoryFilters
       <details className="rounded-lg border border-line bg-white p-4 shadow-soft">
         <summary className="cursor-pointer text-sm font-bold text-ink">Filters</summary>
         <div className="mt-5">
-          <FilterPanel values={model.filterPanelValues} optionGroups={model.filterOptionGroups} />
+          <FilterPanel
+            action={action}
+            values={model.filterPanelValues}
+            optionGroups={model.filterOptionGroups}
+            hiddenGroups={hiddenGroups}
+          />
         </div>
       </details>
     </aside>

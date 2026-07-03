@@ -27,5 +27,9 @@ assert.match(
 );
 assert.doesNotMatch(source, />\s*Apply\s*</, "filter pop-up choices should auto-apply without a modal Apply button");
 assert.doesNotMatch(source, /draftValues|setDraftValues|toggleDraftValue/, "filter pop-up choices should not use draft-only selection state");
+assert.match(source, /data-filter-option-pill/, "filter choices should render as pill-style selectable controls");
+assert.match(source, /rounded-full/, "filter choice controls should use rounded pill styling");
+assert.match(source, /type="checkbox"[\s\S]*className="sr-only peer"/, "pill filters should keep checkbox semantics for multi-select behavior");
+assert.match(source, /selectedPillClass/, "selected pill styling should be explicit and separate from unselected styling");
 
 console.log("filter checkbox URL behavior tests passed");

@@ -22,12 +22,26 @@ type SearchBarClientProps = {
   basePath?: string;
   areas: AreaOption[];
   mapPoints: MapPoint[];
+  hideAreaChoice?: boolean;
 };
 
 type LocateStatus = "idle" | "locating" | "denied" | "unavailable" | "not-found";
 
-export function SearchBarClient({ compact = false, defaultQuery = "", defaultArea = "", basePath = directorySearchPath(), areas, mapPoints }: SearchBarClientProps) {
+export function SearchBarClient({
+  compact = false,
+  defaultQuery = "",
+  defaultArea = "",
+  basePath = directorySearchPath(),
+  areas,
+  mapPoints,
+  hideAreaChoice = false
+}: SearchBarClientProps) {
   const [locateStatus, setLocateStatus] = useState<LocateStatus>("idle");
+  const gridClass = hideAreaChoice
+    ? "md:grid-cols-[1fr_auto]"
+    : compact
+      ? "md:grid-cols-[1fr_180px_auto]"
+      : "md:grid-cols-[1fr_220px_auto]";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -86,7 +100,7 @@ export function SearchBarClient({ compact = false, defaultQuery = "", defaultAre
       <form
         action={basePath}
         onSubmit={handleSubmit}
-        className={`grid gap-3 ${compact ? "md:grid-cols-[1fr_180px_auto]" : "md:grid-cols-[1fr_220px_auto]"}`}
+        className={`grid gap-3 ${gridClass}`}
       >
         <label className="flex items-center gap-3 rounded-md border border-line px-4 py-3">
           <Search className="h-5 w-5 text-primary" aria-hidden />
@@ -98,22 +112,25 @@ export function SearchBarClient({ compact = false, defaultQuery = "", defaultAre
             className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-muted"
           />
         </label>
-        <label className="flex items-center gap-3 rounded-md border border-line px-4 py-3">
-          <MapPin className="h-5 w-5 text-primary" aria-hidden />
-          <span className="sr-only">Choose area</span>
-          <select name="area" defaultValue={defaultArea} className="w-full bg-transparent text-sm text-ink outline-none">
-            <option value="">All {siteConfig.cityOrRegion}</option>
-            {areas.map((area) => (
-              <option key={area.value} value={area.value}>
-                {area.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        {hideAreaChoice ? null : (
+          <label className="flex items-center gap-3 rounded-md border border-line px-4 py-3">
+            <MapPin className="h-5 w-5 text-primary" aria-hidden />
+            <span className="sr-only">Choose area</span>
+            <select name="area" defaultValue={defaultArea} className="w-full bg-transparent text-sm text-ink outline-none">
+              <option value="">All {siteConfig.cityOrRegion}</option>
+              {areas.map((area) => (
+                <option key={area.value} value={area.value}>
+                  {area.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <button type="submit" className="focus-ring rounded-md bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-orange-600">
           Search
         </button>
       </form>
+      {hideAreaChoice ? null : (
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
@@ -130,6 +147,7 @@ export function SearchBarClient({ compact = false, defaultQuery = "", defaultAre
           <p className="text-sm font-semibold text-muted">{locateStatusMessage[locateStatus]}</p>
         ) : null}
       </div>
+      )}
     </div>
   );
 }

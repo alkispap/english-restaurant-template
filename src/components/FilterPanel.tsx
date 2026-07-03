@@ -40,20 +40,24 @@ type FilterPanelProps = {
   };
   action?: string;
   optionGroups: FilterPanelOptionGroup[];
+  hiddenGroups?: string[];
 };
 
-export function FilterPanel({ values, action, optionGroups }: FilterPanelProps) {
+export function FilterPanel({ values, action, optionGroups, hiddenGroups = [] }: FilterPanelProps) {
   const optionGroupsByName = new Map(optionGroups.map((group) => [group.name, group]));
   const labels = directoryConfig.filterLabels;
+  const hiddenGroupSet = new Set(hiddenGroups);
   const selectedFilters = buildSelectedFilters(
     values,
-    optionGroups.map((group) => ({
-      name: group.name as SidebarFilterName,
-      value: filterValue(values, group.name),
-      options: group.options
-    }))
+    optionGroups
+      .filter((group) => !hiddenGroupSet.has(group.name as SidebarFilterName))
+      .map((group) => ({
+        name: group.name as SidebarFilterName,
+        value: filterValue(values, group.name),
+        options: group.options
+      }))
   );
-  const group = (name: SidebarFilterName) => optionGroupsByName.get(name);
+  const group = (name: SidebarFilterName) => (hiddenGroupSet.has(name) ? undefined : optionGroupsByName.get(name));
 
   return (
     <form action={action ?? values.basePath ?? directoryIndexPath()} className="space-y-5 rounded-lg border border-line bg-white p-5 shadow-soft">
@@ -62,16 +66,24 @@ export function FilterPanel({ values, action, optionGroups }: FilterPanelProps) 
       <FilterGroup group={group("area")} value={values.area} />
       <FilterGroup group={group("neighborhood")} value={values.neighborhood} />
       <FilterGroup group={group("category")} value={values.category} />
-      {isDirectoryFeatureEnabled("listingTypePages") ? <FilterGroup group={group("type")} value={values.type} /> : null}
+      <FilterGroup group={group("price")} value={values.price} />
+      <Select
+        label="Minimum rating"
+        name="rating"
+        value={values.rating}
+        options={group("rating")?.options ?? []}
+        placeholder="Any rating"
+      />
+      <FilterGroup group={group("dining")} value={values.dining} />
       {isDirectoryFeatureEnabled("dietaryPages") ? <FilterGroup group={group("dietary")} value={values.dietary} /> : null}
       {isDirectoryFeatureEnabled("servicePages") ? <FilterGroup group={group("service")} value={values.service} /> : null}
-      {isDirectoryFeatureEnabled("offeringPages") ? <FilterGroup group={group("offering")} value={values.offering} /> : null}
-      <FilterGroup group={group("highlight")} value={values.highlight} />
-      <FilterGroup group={group("popularFor")} value={values.popularFor} />
-      <FilterGroup group={group("dining")} value={values.dining} />
       <details className="rounded-md border border-line bg-slate-50 p-4" open={hasAdvancedValues(values)}>
         <summary className="cursor-pointer text-sm font-bold text-ink">{labels.advanced}</summary>
         <div className="mt-4 space-y-5">
+          {isDirectoryFeatureEnabled("listingTypePages") ? <FilterGroup group={group("type")} value={values.type} /> : null}
+          {isDirectoryFeatureEnabled("offeringPages") ? <FilterGroup group={group("offering")} value={values.offering} /> : null}
+          <FilterGroup group={group("highlight")} value={values.highlight} />
+          <FilterGroup group={group("popularFor")} value={values.popularFor} />
           <FilterGroup group={group("amenity")} value={values.amenity} />
           <FilterGroup group={group("accessibility")} value={values.accessibility} />
           <FilterGroup group={group("atmosphere")} value={values.atmosphere} />
@@ -93,14 +105,6 @@ export function FilterPanel({ values, action, optionGroups }: FilterPanelProps) 
         </div>
       </details>
       ) : null}
-      <FilterGroup group={group("price")} value={values.price} />
-      <Select
-        label="Minimum rating"
-        name="rating"
-        value={values.rating}
-        options={group("rating")?.options ?? []}
-        placeholder="Any rating"
-      />
     </form>
   );
 }
@@ -328,7 +332,10 @@ function filterValue(values: ListingsPageLinkValues, name: string) {
 
 function hasAdvancedValues(values: FilterPanelProps["values"]) {
   return Boolean(
-    values.dining ||
+    values.type ||
+      values.offering ||
+      values.highlight ||
+      values.popularFor ||
       values.amenity ||
       values.accessibility ||
       values.atmosphere ||
