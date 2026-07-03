@@ -43,4 +43,20 @@ assert.ok(
   "publish script should run the full Cloudflare preparation workflow before deployment"
 );
 
+const headersPath = path.join(process.cwd(), "public", "_headers");
+const headers = fs.readFileSync(headersPath, "utf8");
+assert.ok(headers.includes("/robots.txt"), "public/_headers should set robots cache policy by path");
+assert.ok(headers.includes("/sitemap.xml"), "public/_headers should set sitemap cache policy by path");
+assert.ok(
+  !headers.includes("https://indianrestaurantlondon.co.uk/robots.txt") &&
+    !headers.includes("https://www.indianrestaurantlondon.co.uk/robots.txt") &&
+    !headers.includes("https://indianrestaurantlondon.co.uk/sitemap.xml") &&
+    !headers.includes("https://www.indianrestaurantlondon.co.uk/sitemap.xml"),
+  "public/_headers should not duplicate robots or sitemap rules with hostname-specific entries"
+);
+assert.ok(
+  !fs.existsSync(path.join(process.cwd(), "public", "_worker.js")),
+  "robots cache policy should not require a Pages advanced-mode worker"
+);
+
 console.log("Cloudflare publish tests passed");

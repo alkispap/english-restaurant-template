@@ -27,16 +27,13 @@ assert.equal(
 const sitemapPath = path.join(outDir, "sitemap.xml");
 const robotsPath = path.join(outDir, "robots.txt");
 const headersPath = path.join(outDir, "_headers");
-const workerPath = path.join(outDir, "_worker.js");
 assert.ok(fs.existsSync(sitemapPath), "out/sitemap.xml is missing.");
 assert.ok(fs.existsSync(robotsPath), "out/robots.txt is missing.");
 assert.ok(fs.existsSync(headersPath), "out/_headers is missing. Cloudflare cache header rules will not be uploaded.");
-assert.ok(fs.existsSync(workerPath), "out/_worker.js is missing. Cloudflare robots cache override will not be uploaded.");
 
 const sitemap = fs.readFileSync(sitemapPath, "utf8");
 const robots = fs.readFileSync(robotsPath, "utf8");
 const headers = fs.readFileSync(headersPath, "utf8");
-const worker = fs.readFileSync(workerPath, "utf8");
 const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
 assert.ok(publicSiteUrl, "NEXT_PUBLIC_SITE_URL must be set to the final https production domain before publishing.");
@@ -47,9 +44,9 @@ assert.ok(robots.includes(`${publicSiteUrl.replace(/\/$/, "")}/sitemap.xml`), "r
 assert.ok(headers.includes("/_next/static/*"), "out/_headers must include long-cache rules for hashed Next assets.");
 assert.ok(headers.includes("/vendor/leaflet/*"), "out/_headers must include long-cache rules for map vendor assets.");
 assert.ok(
-  headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/robots.txt`) &&
-    headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/sitemap.xml`),
-  "out/_headers must include production-domain rules for robots and sitemap."
+  !headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/robots.txt`) &&
+    !headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/sitemap.xml`),
+  "out/_headers must not duplicate robots or sitemap rules with production-domain entries."
 );
 assert.ok(
   headers.includes("Cache-Control: public, max-age=31536000, immutable"),
@@ -58,12 +55,6 @@ assert.ok(
 assert.ok(
   headers.includes("/sitemap.xml") && headers.includes("/robots.txt") && headers.includes("max-age=0, must-revalidate"),
   "out/_headers must keep sitemap and robots revalidated."
-);
-assert.ok(
-  worker.includes('url.pathname === "/robots.txt"') &&
-    worker.includes('headers.set("Cache-Control", "public, max-age=0, must-revalidate")') &&
-    worker.includes("env.ASSETS.fetch(request)"),
-  "out/_worker.js must preserve static assets and override robots cache headers."
 );
 
 console.log(`Cloudflare export checks passed: ${files.length.toLocaleString()} files, no asset over 25 MiB.`);

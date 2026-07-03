@@ -4,18 +4,6 @@
 /vendor/leaflet/*
   Cache-Control: public, max-age=31536000, immutable
 
-https://indianrestaurantlondon.co.uk/robots.txt
-  Cache-Control: public, max-age=0, must-revalidate
-
-https://www.indianrestaurantlondon.co.uk/robots.txt
-  Cache-Control: public, max-age=0, must-revalidate
-
-https://indianrestaurantlondon.co.uk/sitemap.xml
-  Cache-Control: public, max-age=0, must-revalidate
-
-https://www.indianrestaurantlondon.co.uk/sitemap.xml
-  Cache-Control: public, max-age=0, must-revalidate
-
 /robots.txt
   Cache-Control: public, max-age=0, must-revalidate
 
