@@ -20,7 +20,7 @@ assert.ok(
   "information-gain copy should not expose implementation wording"
 );
 
-const componentSource = fs.readFileSync(path.join(process.cwd(), "src", "components", "SeoLandingPage.tsx"), "utf8");
+const componentSource = fs.readFileSync(path.join(process.cwd(), "src", "components", "SeoLandingPageContent.tsx"), "utf8");
 assert.ok(componentSource.includes("InformationGain"), "SEO landing page should render information-gain blocks");
 
 console.log("information gain tests passed");

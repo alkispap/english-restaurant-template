@@ -35,7 +35,7 @@ moduleWithLoad._load = function patchedLoad(request: string, parent: unknown, is
 };
 
 function seoLandingPageDoesNotRenderSummaryCards() {
-  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPage.tsx");
+  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPageContent.tsx");
   const source = fs.readFileSync(componentPath, "utf8");
   const componentBody = source.split("function Breadcrumbs")[0];
 
@@ -125,7 +125,7 @@ async function seoLandingPageRendersEntitySpecificHeadingOutline() {
 }
 
 function areaLandingPageKeepsFiltersFocusedOnCurrentArea() {
-  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPage.tsx");
+  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPageContent.tsx");
   const source = fs.readFileSync(componentPath, "utf8");
   const componentBody = source.split("function Breadcrumbs")[0];
 
@@ -147,7 +147,7 @@ function areaLandingPageKeepsFiltersFocusedOnCurrentArea() {
 }
 
 function areaLandingPageDoesNotRenderLowerGuideBlock() {
-  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPage.tsx");
+  const componentPath = path.join(process.cwd(), "src", "components", "SeoLandingPageContent.tsx");
   const source = fs.readFileSync(componentPath, "utf8");
 
   assert.match(

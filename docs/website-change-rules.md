@@ -94,6 +94,7 @@ Do:
 
 - Keep homepage and SEO landing page hub links clean and crawlable.
 - Keep area/category/best/facet pages statically generated when they have enough results.
+- Keep SEO landing route files static; query/filter UX belongs in the SEO landing client enhancer, not server `searchParams`.
 - Keep sitemap and robots using `https://indianrestaurantlondon.co.uk`.
 - Keep one clear homepage H1.
 - Keep internal links useful, count-backed, and relevant to the directory.
@@ -111,6 +112,7 @@ Check:
 - Sitemap includes the live production domain.
 - Robots points to the production sitemap.
 - SEO landing pages keep clean canonicals and noindex weak/query states where intended.
+- Filter, sort, Open now, pagination, and map/list changes work on `/restaurants` and at least one SEO landing page.
 
 ## Accessibility Rules
 
