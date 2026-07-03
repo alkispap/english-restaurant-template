@@ -16,6 +16,16 @@ export type HomepageHeadingDirectoryConfig = {
 export type HomepageHeadings = {
   heroTitle: string;
   heroDescription: string;
+  discoveryTitle: string;
+  discoveryCardTitles: {
+    area: string;
+    category: string;
+    takeaway: string;
+    halal: string;
+    vegetarian: string;
+    bestRated: string;
+  };
+  startRowTitle: string;
   seoLinksTitle: string;
   seoLinksDescription: string;
   resultsHeadingContext: string;
@@ -62,6 +72,9 @@ export function buildHomepageHeadings(
 ): HomepageHeadings {
   const niche = titleCase(site.niche);
   const city = site.cityOrRegion;
+  const localNiche = titleCase(stripCityQualifier(site.niche, city));
+  const localNicheModifier = stripRestaurantPlural(localNiche);
+  const localSingularNiche = singularizeRestaurantPhrase(localNiche);
   const listingLabel = titleCase(directory.listingLabel);
   const listingLabelLower = directory.listingLabel.toLowerCase();
   const listingPluralLabel = titleCase(directory.listingPluralLabel);
@@ -72,6 +85,16 @@ export function buildHomepageHeadings(
   return {
     heroTitle: niche,
     heroDescription: `Compare ${site.niche} with ratings, review counts, areas, ${directory.categoryLabel.toLowerCase()} tags, service options, transport links, and dining details from the current directory.`,
+    discoveryTitle: `Explore ${niche} by Area, ${categoryLabel}, and Need`,
+    discoveryCardTitles: {
+      area: `${localNiche} by ${city} Area`,
+      category: `${localSingularNiche} ${categoryPluralLabel} in ${city}`,
+      takeaway: `${localNicheModifier} Takeaway ${listingPluralLabel} in ${city}`,
+      halal: `Halal ${niche}`,
+      vegetarian: `Vegetarian ${niche}`,
+      bestRated: `Best Rated ${niche}`
+    },
+    startRowTitle: `Popular ${niche} to Start With`,
     seoLinksTitle: `Find ${niche} by Area, ${categoryPluralLabel}, and Need`,
     seoLinksDescription: `Use these shortcuts for common ${city} ${listingLabelLower} searches with dedicated pages, filters, summaries, and related listings.`,
     resultsHeadingContext: niche,
@@ -115,6 +138,18 @@ export function buildHomepageHeadings(
 
 export const homepageHeadings = buildHomepageHeadings(siteConfig, directoryConfig);
 
+function stripCityQualifier(niche: string, cityOrRegion: string) {
+  return niche.replace(new RegExp(`\\s+in\\s+${escapeRegExp(cityOrRegion)}$`, "i"), "");
+}
+
+function singularizeRestaurantPhrase(value: string) {
+  return value.replace(/\bRestaurants\b/i, "Restaurant");
+}
+
+function stripRestaurantPlural(value: string) {
+  return value.replace(/\s+Restaurants\b/i, "");
+}
+
 function titleCase(value: string) {
   const smallWords = new Set(["a", "an", "and", "as", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to"]);
   return value
@@ -126,4 +161,8 @@ function titleCase(value: string) {
       return lower.charAt(0).toUpperCase() + lower.slice(1);
     })
     .join(" ");
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

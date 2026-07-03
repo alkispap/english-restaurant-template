@@ -320,7 +320,7 @@ const sharedPopularSearches = [
 
 const sharedFooterGroups = [
   {
-    title: "Browse",
+    title: "Browse {nicheTitle}",
     links: [
       { label: "All {listingPluralLabelLower}", href: "/restaurants" },
       { label: "{listingLabel} areas", href: "/areas" },
@@ -328,17 +328,17 @@ const sharedFooterGroups = [
     ]
   },
   {
-    title: "Popular searches",
+    title: "Popular {localNicheSingularTitle} Searches",
     source: "popularSearches",
     limit: 6
   },
   {
-    title: "Top areas",
+    title: "Top {cityOrRegion} Areas for {localNicheTitle}",
     source: "topAreas",
     limit: 6
   },
   {
-    title: "{listingLabel} needs",
+    title: "{localNicheSingularTitle} Needs",
     links: [
       { label: "Takeaway {listingPluralLabelLower}", href: "/services/takeaway" },
       { label: "Delivery {listingPluralLabelLower}", href: "/services/delivery" },
@@ -349,7 +349,7 @@ const sharedFooterGroups = [
     ]
   },
   {
-    title: "Useful searches",
+    title: "Useful {localNicheSingularTitle} Searches",
     links: [
       { label: "Best rated {listingPluralLabelLower}", href: "/best/best-rated" },
       { label: "Most reviewed {listingPluralLabelLower}", href: "/best/most-reviewed" },
@@ -358,7 +358,7 @@ const sharedFooterGroups = [
     ]
   },
   {
-    title: "Trust",
+    title: "About This {localNicheSingularTitle} Directory",
     links: [
       { label: "About", href: "/about" },
       { label: "Contact", href: "/contact" },

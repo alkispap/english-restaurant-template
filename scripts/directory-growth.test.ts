@@ -64,6 +64,18 @@ function footerGroupsGenerateMixedLinks() {
   const links = groups.flatMap((group) => group.links);
 
   assert.ok(groups.length >= 3, "expected grouped footer sections");
+  assert.deepEqual(
+    groups.map((group) => group.title),
+    [
+      "Browse Indian Restaurants in London",
+      "Popular Indian Restaurant Searches",
+      "Top London Areas for Indian Restaurants",
+      "Indian Restaurant Needs",
+      "Useful Indian Restaurant Searches",
+      "About This Indian Restaurant Directory"
+    ],
+    "footer group headings should support the local restaurant directory topic"
+  );
   assert.ok(links.some((link) => link.href === "/restaurants"));
   assert.ok(links.some((link) => link.href.startsWith("/best/")));
   assert.ok(links.some((link) => link.href.startsWith("/areas/")));
@@ -126,6 +138,9 @@ function templateResolverUsesDirectoryLabels() {
     resolveDirectoryTemplate("{listingPluralLabel} in {cityOrRegion}"),
     `${directoryConfig.listingPluralLabel} in London`
   );
+  assert.equal(resolveDirectoryTemplate("{nicheTitle}"), "Indian Restaurants in London");
+  assert.equal(resolveDirectoryTemplate("{localNicheTitle}"), "Indian Restaurants");
+  assert.equal(resolveDirectoryTemplate("{localNicheSingularTitle}"), "Indian Restaurant");
 }
 
 popularSearchesResolveLabelsAndFilters();

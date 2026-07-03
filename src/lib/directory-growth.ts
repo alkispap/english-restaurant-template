@@ -91,8 +91,12 @@ const configPopularSearches = directoryConfig.popularSearches satisfies readonly
 }[];
 
 export function resolveDirectoryTemplate(value: string) {
+  const localNicheTitle = titleCase(localNicheLabel());
   const tokens: Record<string, string> = {
     siteName: siteConfig.siteName,
+    nicheTitle: titleCase(siteConfig.niche),
+    localNicheTitle,
+    localNicheSingularTitle: singularRestaurantPhrase(localNicheTitle),
     cityOrRegion: siteConfig.cityOrRegion,
     listingLabel: directoryConfig.listingLabel,
     listingPluralLabel: directoryConfig.listingPluralLabel,

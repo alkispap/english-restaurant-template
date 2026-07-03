@@ -63,9 +63,9 @@ function trustPagesExposeExpectedRoutes() {
 }
 
 function footerLinksToTrustPages() {
-  const trustGroup = getFooterGroups().find((group) => group.title === "Trust");
+  const trustGroup = getFooterGroups().find((group) => group.title === "About This Indian Restaurant Directory");
 
-  assert.ok(trustGroup, "footer should include a Trust group");
+  assert.ok(trustGroup, "footer should include an SEO-focused trust group");
   assert.deepEqual(
     trustGroup.links.map((link) => link.href),
     expectedPages.map((page) => page.href)

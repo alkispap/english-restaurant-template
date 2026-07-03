@@ -6,6 +6,7 @@ import { ListingsResults } from "@/components/ListingsResults";
 import { ResponsiveDirectoryFilters } from "@/components/ResponsiveDirectoryFilters";
 import { SearchBar } from "@/components/SearchBar";
 import { siteConfig } from "@/config/site";
+import { homepageHeadings } from "@/lib/homepage-headings";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 import type { DirectoryListingRowSummary } from "@/lib/listings-page";
 import { directorySearchPath } from "@/lib/routes";
@@ -144,42 +145,42 @@ function HomepageQuickLinks({ tone = "dark" }: { tone?: "dark" | "light" }) {
 function HomepageDiscoveryCards() {
   const cards = [
     {
-      title: "Browse by area",
+      title: homepageHeadings.discoveryCardTitles.area,
       copy: "Start with London neighbourhoods and local hubs.",
       href: "/areas",
       image: "/images/homepage/discovery-area.webp",
       imageAlt: "London street with Indian restaurants for browsing by area"
     },
     {
-      title: "Browse cuisines",
+      title: homepageHeadings.discoveryCardTitles.category,
       copy: "Narrow the directory by cuisine and restaurant style.",
       href: "/categories",
       image: "/images/homepage/discovery-cuisines.webp",
       imageAlt: "Indian dishes showing different cuisines and restaurant styles"
     },
     {
-      title: "Takeaway",
+      title: homepageHeadings.discoveryCardTitles.takeaway,
       copy: "Find Indian restaurants set up for takeaway orders.",
       href: "/services/takeaway",
       image: "/images/homepage/discovery-takeaway.webp",
       imageAlt: "Indian takeaway containers ready for collection"
     },
     {
-      title: "Halal",
+      title: homepageHeadings.discoveryCardTitles.halal,
       copy: "Explore restaurants with halal-friendly details.",
       href: "/dietary/halal",
       image: "/images/homepage/discovery-halal.webp",
       imageAlt: "Halal-friendly Indian restaurant table with shared dishes"
     },
     {
-      title: "Vegetarian",
+      title: homepageHeadings.discoveryCardTitles.vegetarian,
       copy: "Compare places with vegetarian options.",
       href: "/dietary/vegetarian",
       image: "/images/homepage/discovery-vegetarian.webp",
       imageAlt: "Vegetarian Indian thali with colourful vegetable dishes"
     },
     {
-      title: "Best rated",
+      title: homepageHeadings.discoveryCardTitles.bestRated,
       copy: "Jump to restaurants sorted by strong review signals.",
       href: directorySearchPath("?sort=rating"),
       image: "/images/homepage/discovery-best-rated.webp",
@@ -190,7 +191,7 @@ function HomepageDiscoveryCards() {
   return (
     <section className="mt-10">
       <div className="mb-5 max-w-2xl">
-        <h2 className="text-2xl font-bold text-ink">Popular ways to explore</h2>
+        <h2 className="text-2xl font-bold text-ink">{homepageHeadings.discoveryTitle}</h2>
         <p className="mt-2 text-sm leading-6 text-muted">
           Use these visual shortcuts to start with the most common restaurant decisions.
         </p>
@@ -232,7 +233,7 @@ function homepageStartRows(rows: DirectoryListingRowSummary[]) {
   return [
     {
       ...startRow,
-      title: "Popular restaurants to start with",
+      title: homepageHeadings.startRowTitle,
       copy: "A small set of high-signal listings before visitors continue into the full directory."
     }
   ];

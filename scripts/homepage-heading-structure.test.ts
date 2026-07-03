@@ -71,8 +71,14 @@ async function homepageUsesConversionFirstHeadingOutline() {
     "clean homepage should not render the full results heading"
   );
 
-  assert.ok(h2s.includes("Popular ways to explore"), "homepage should include an image-led discovery section");
-  assert.ok(h2s.includes("Popular restaurants to start with"), "homepage should include one compact listing row");
+  assert.ok(
+    h2s.includes("Explore Indian Restaurants in London by Area, Cuisine, and Need"),
+    "homepage should include a keyword-focused image-led discovery section"
+  );
+  assert.ok(
+    h2s.includes("Popular Indian Restaurants in London to Start With"),
+    "homepage should include one keyword-focused compact listing row"
+  );
   assert.equal(
     countOccurrences(html, 'data-homepage-discovery-card="true"'),
     6,
@@ -95,12 +101,12 @@ async function homepageUsesConversionFirstHeadingOutline() {
   });
 
   [
-    "Browse by area",
-    "Browse cuisines",
-    "Takeaway",
-    "Halal",
-    "Vegetarian",
-    "Best rated"
+    "Indian Restaurants by London Area",
+    "Indian Restaurant Cuisines in London",
+    "Indian Takeaway Restaurants in London",
+    "Halal Indian Restaurants in London",
+    "Vegetarian Indian Restaurants in London",
+    "Best Rated Indian Restaurants in London"
   ].forEach((heading) => {
     assert.ok(h3s.includes(heading), `homepage discovery cards should include "${heading}"`);
   });

@@ -19,6 +19,19 @@ const mexicanText = JSON.stringify(mexicanHeadings);
 assert.equal(mexicanHeadings.heroTitle, "Mexican Restaurants in London");
 assert.equal(mexicanHeadings.seoLinksTitle, "Find Mexican Restaurants in London by Area, Cuisines, and Need");
 assert.equal(mexicanHeadings.resultsHeadingContext, "Mexican Restaurants in London");
+assert.equal(
+  mexicanHeadings.discoveryTitle,
+  "Explore Mexican Restaurants in London by Area, Cuisine, and Need"
+);
+assert.equal(mexicanHeadings.startRowTitle, "Popular Mexican Restaurants in London to Start With");
+assert.deepEqual(mexicanHeadings.discoveryCardTitles, {
+  area: "Mexican Restaurants by London Area",
+  category: "Mexican Restaurant Cuisines in London",
+  takeaway: "Mexican Takeaway Restaurants in London",
+  halal: "Halal Mexican Restaurants in London",
+  vegetarian: "Vegetarian Mexican Restaurants in London",
+  bestRated: "Best Rated Mexican Restaurants in London"
+});
 assert.equal(mexicanHeadings.sourceContextTitle, "How Our Mexican Restaurants in London Directory Works");
 assert.equal(mexicanHeadings.sourceContextQuestionTitles.choose, "How should visitors choose a restaurant?");
 assert.equal(mexicanHeadings.sidebarTitles.popularSearches, "Best Restaurant Searches");
