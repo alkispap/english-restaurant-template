@@ -4,7 +4,6 @@ import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
 import { ListingsResults } from "@/components/ListingsResults";
 import { ResponsiveDirectoryFilters } from "@/components/ResponsiveDirectoryFilters";
 import { SearchBar } from "@/components/SearchBar";
-import { SearchableCardGrid } from "@/components/SearchableCardGrid";
 import { SectionHeading } from "@/components/SectionHeading";
 import { buildDirectoryListingsChrome } from "@/lib/directory-listings-model";
 import { seoLandingHeadings } from "@/lib/seo-landing-headings";
@@ -60,8 +59,6 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
         />
 
         <div className="min-w-0">
-          <AreaGuideSection page={page} />
-
           <ListingsResults
             listings={page.listings}
             mapPoints={page.mapPoints}
@@ -85,59 +82,6 @@ export function SeoLandingPage({ page }: SeoLandingPageProps) {
   );
 }
 
-function AreaGuideSection({ page }: { page: SeoPageModel }) {
-  if (!page.areaGuide) return null;
-
-  const { areaLabel, neighborhoods, categories } = page.areaGuide;
-  if (!neighborhoods.length && !categories.length) return null;
-
-  return (
-    <section className="mb-10" aria-label={`Explore ${areaLabel}`}>
-      <div>
-        <p className="text-sm font-bold uppercase tracking-wide text-primary">Area guide</p>
-        <h2 className="mt-2 text-2xl font-bold text-ink">{areaGuideHeading(page, areaLabel)}</h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
-          Use these shortcuts to narrow the area before comparing the restaurant results below.
-        </p>
-      </div>
-
-      <div className="mt-6 grid gap-10">
-        {neighborhoods.length ? (
-          <section>
-            <h3 className="text-xl font-bold text-ink">Neighborhoods in {areaLabel}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
-              Pick a smaller local area when location is the first decision.
-            </p>
-            <SearchableCardGrid
-              items={neighborhoods}
-              searchPlaceholder={`Search neighborhoods in ${areaLabel}`}
-              emptyMessage="No neighborhoods match this search."
-              alphabetLabel={`Filter ${areaLabel} neighborhoods by first letter`}
-              className="mt-4"
-            />
-          </section>
-        ) : null}
-
-        {categories.length ? (
-          <section>
-            <h3 className="text-xl font-bold text-ink">Cuisine types in {areaLabel}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
-              Choose a cuisine or category when you know what you want to eat.
-            </p>
-            <SearchableCardGrid
-              items={categories}
-              searchPlaceholder={`Search cuisine types in ${areaLabel}`}
-              emptyMessage="No cuisine types match this search."
-              alphabetLabel={`Filter ${areaLabel} cuisine types by first letter`}
-              className="mt-4"
-            />
-          </section>
-        ) : null}
-      </div>
-    </section>
-  );
-}
-
 function Breadcrumbs({ items }: { items: SeoPageModel["breadcrumbItems"] }) {
   if (items.length <= 1) return null;
 
@@ -157,14 +101,6 @@ function Breadcrumbs({ items }: { items: SeoPageModel["breadcrumbItems"] }) {
       ))}
     </nav>
   );
-}
-
-function areaGuideHeading(page: SeoPageModel, areaLabel: string) {
-  if (page.resultsHeadingContext) {
-    return `Explore ${page.resultsHeadingContext} by Neighborhood and Cuisine`;
-  }
-
-  return `Choose a neighborhood or cuisine in ${areaLabel}`;
 }
 
 function GuideSection({ page }: { page: SeoPageModel }) {

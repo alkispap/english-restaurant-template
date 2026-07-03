@@ -74,7 +74,6 @@ async function seoLandingPageRendersEntitySpecificHeadingOutline() {
 
   assert.deepEqual(h1s, [headings.heroTitle], "SEO landing page should render one helper-generated H1");
   [
-    `Explore Indian Restaurants in ${area} by Neighborhood and Cuisine`,
     `${page.totalCount.toLocaleString()} Indian Restaurants in ${area} Found`,
     headings.related.areaCategoryLinksTitle,
     headings.related.areaLinksTitle,
@@ -83,6 +82,15 @@ async function seoLandingPageRendersEntitySpecificHeadingOutline() {
     seoLandingHeadings.sectionTitles.faqs
   ].forEach((heading) => {
     assert.ok(h2s.includes(heading), `SEO landing H2s should include "${heading}"`);
+  });
+  [
+    "Area guide",
+    `Neighborhoods in ${area}`,
+    `Cuisine types in ${area}`,
+    `Search neighborhoods in ${area}`,
+    `Search cuisine types in ${area}`
+  ].forEach((copy) => {
+    assert.ok(!html.includes(copy), `area SEO landing page should not render "${copy}"`);
   });
   assert.ok(
     !h2s.some((heading) =>
