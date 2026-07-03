@@ -41,9 +41,16 @@ type FilterPanelProps = {
   action?: string;
   optionGroups: FilterPanelOptionGroup[];
   hiddenGroups?: string[];
+  className?: string;
 };
 
-export function FilterPanel({ values, action, optionGroups, hiddenGroups = [] }: FilterPanelProps) {
+export function FilterPanel({
+  values,
+  action,
+  optionGroups,
+  hiddenGroups = [],
+  className = "space-y-5 rounded-lg border border-line bg-white p-5 shadow-soft"
+}: FilterPanelProps) {
   const optionGroupsByName = new Map(optionGroups.map((group) => [group.name, group]));
   const labels = directoryConfig.filterLabels;
   const hiddenGroupSet = new Set(hiddenGroups);
@@ -51,7 +58,7 @@ export function FilterPanel({ values, action, optionGroups, hiddenGroups = [] }:
   const group = (name: SidebarFilterName) => (hiddenGroupSet.has(name) ? undefined : optionGroupsByName.get(name));
 
   return (
-    <form action={action ?? values.basePath ?? directoryIndexPath()} className="space-y-5 rounded-lg border border-line bg-white p-5 shadow-soft">
+    <form action={action ?? values.basePath ?? directoryIndexPath()} className={className}>
       <SelectedFilterChips values={values} filters={selectedFilters} />
       <PersistentFilterFields values={values} />
       <FilterGroup group={group("area")} value={values.area} />
