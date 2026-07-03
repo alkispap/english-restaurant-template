@@ -44,6 +44,11 @@ assert.ok(robots.includes(`${publicSiteUrl.replace(/\/$/, "")}/sitemap.xml`), "r
 assert.ok(headers.includes("/_next/static/*"), "out/_headers must include long-cache rules for hashed Next assets.");
 assert.ok(headers.includes("/vendor/leaflet/*"), "out/_headers must include long-cache rules for map vendor assets.");
 assert.ok(
+  headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/robots.txt`) &&
+    headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/sitemap.xml`),
+  "out/_headers must include production-domain rules for robots and sitemap."
+);
+assert.ok(
   headers.includes("Cache-Control: public, max-age=31536000, immutable"),
   "out/_headers must set immutable one-year caching for safe static assets."
 );
