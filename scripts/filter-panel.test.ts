@@ -27,6 +27,11 @@ function selectedFilterChipsUseLabelsAndHiddenGroups() {
   const filters = getSelectedFilters(
     {
       basePath: "/areas/ealing",
+      q: "dosa",
+      open: true,
+      sort: "reviews",
+      view: "map",
+      page: 3,
       area: "ealing",
       category: ["south-indian", "biryani"],
       rating: "4"
@@ -62,8 +67,8 @@ function selectedFilterChipsUseLabelsAndHiddenGroups() {
 
   assert.deepEqual(
     filters.map((filter) => filter.label),
-    ["South Indian", "Biryani", "4.0+"],
-    "selected filters should use option labels and exclude hidden groups"
+    ["Search: dosa", "Open now", "South Indian", "Biryani", "4.0+"],
+    "selected filters should include search and open state, use option labels, and exclude hidden groups"
   );
   assert.ok(
     filters.every((filter) => filter.href.startsWith("/areas/ealing")),
@@ -72,6 +77,18 @@ function selectedFilterChipsUseLabelsAndHiddenGroups() {
   assert.ok(
     filters.some((filter) => filter.key === "category-south-indian"),
     "selected filter keys should include the filter group and selected value"
+  );
+  assert.ok(
+    filters.find((filter) => filter.key === "search-query")?.href.includes("sort=reviews"),
+    "removing the search chip should preserve sort state"
+  );
+  assert.ok(
+    !filters.find((filter) => filter.key === "search-query")?.href.includes("q=dosa"),
+    "removing the search chip should remove q"
+  );
+  assert.ok(
+    !filters.find((filter) => filter.key === "open-now")?.href.includes("open=1"),
+    "removing Open now should remove open state"
   );
 }
 
@@ -133,6 +150,10 @@ assert.doesNotMatch(filterPanelSource, /Apply filters/, "filter panel should not
 assert.match(filterPanelSource, /onChange=\{\([^)]*\)\s*=>\s*applySelectFilter/, "rating select should auto-apply on change");
 assert.match(filterPanelSource, /window\.history\.pushState/, "rating select should update the URL without a full navigation");
 assert.doesNotMatch(filterPanelSource, /directory-url-change/, "rating select should not manually dispatch duplicate directory-url-change events");
+assert.match(filterPanelSource, /Selected filters/, "selected summary should have a clear heading");
+assert.match(filterPanelSource, /active/, "selected summary should show an active filter count");
+assert.match(filterPanelSource, /q: undefined/, "clear all should remove search text");
+assert.match(filterPanelSource, /open: undefined/, "clear all should remove Open now");
 assert.match(listingsViewSource, /ResponsiveDirectoryFilters/, "listings view should render filters through the responsive filter wrapper");
 assert.match(responsiveFiltersSource, /max-h-\[calc\(100vh-6rem\)\]/, "desktop filters should have a viewport-bounded scroll area");
 assert.match(responsiveFiltersSource, /overflow-y-auto/, "desktop filters should scroll internally under the mouse");

@@ -194,9 +194,16 @@ export function SelectedFilterChips({
   className?: string;
 }) {
   if (!filters.length) return null;
+  const activeCountLabel = `${filters.length.toLocaleString()} active`;
 
   return (
     <section className={className} aria-label="Selected filters">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="text-sm font-bold text-ink">Selected filters</h2>
+        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-muted">
+          {activeCountLabel}
+        </span>
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         {filters.map((filter) => (
           <Link
@@ -221,7 +228,24 @@ export function SelectedFilterChips({
 }
 
 function buildSelectedFilters(values: ListingsPageLinkValues, sources: FilterChipSource[]): SelectedFilter[] {
-  return sources.flatMap((source) => {
+  const stateFilters: SelectedFilter[] = [
+    values.q
+      ? {
+          key: "search-query",
+          label: `Search: ${values.q}`,
+          href: buildListingsPageHref(values, { q: undefined, page: undefined })
+        }
+      : undefined,
+    values.open
+      ? {
+          key: "open-now",
+          label: "Open now",
+          href: buildListingsPageHref(values, { open: undefined, page: undefined })
+        }
+      : undefined
+  ].filter((filter): filter is SelectedFilter => Boolean(filter));
+
+  const sidebarFilters = sources.flatMap((source) => {
     const optionLabels = new Map(source.options.map((option) => [option.value, option.label]));
 
     return normalizeValues(source.value).map((selectedValue) => ({
@@ -233,6 +257,8 @@ function buildSelectedFilters(values: ListingsPageLinkValues, sources: FilterChi
       })
     }));
   });
+
+  return [...stateFilters, ...sidebarFilters];
 }
 
 export function getSelectedFilters(
@@ -263,6 +289,8 @@ function removeFilterValue(value: string | string[] | undefined, selectedValue: 
 function clearSidebarFilterOverrides() {
   return {
     ...Object.fromEntries(sidebarFilterNames.map((name) => [name, undefined])),
+    q: undefined,
+    open: undefined,
     page: undefined
   };
 }
