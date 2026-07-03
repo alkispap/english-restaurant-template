@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { getPersistentFilterFields } from "../src/components/FilterPanel";
+import { getPersistentFilterFields, getSelectedFilters } from "../src/components/FilterPanel";
 
 function filterPanelPreservesNonCheckboxState() {
   const fields = getPersistentFilterFields({
@@ -22,6 +22,60 @@ function filterPanelPreservesNonCheckboxState() {
 }
 
 filterPanelPreservesNonCheckboxState();
+
+function selectedFilterChipsUseLabelsAndHiddenGroups() {
+  const filters = getSelectedFilters(
+    {
+      basePath: "/areas/ealing",
+      area: "ealing",
+      category: ["south-indian", "biryani"],
+      rating: "4"
+    },
+    [
+      {
+        name: "area",
+        label: "Area",
+        modalLabel: "Area",
+        options: [{ label: "Ealing", value: "ealing" }],
+        totalOptions: 1
+      },
+      {
+        name: "category",
+        label: "Cuisine",
+        modalLabel: "Cuisine",
+        options: [
+          { label: "South Indian", value: "south-indian" },
+          { label: "Biryani", value: "biryani" }
+        ],
+        totalOptions: 2
+      },
+      {
+        name: "rating",
+        label: "Minimum rating",
+        modalLabel: "Minimum rating",
+        options: [{ label: "4.0+", value: "4" }],
+        totalOptions: 1
+      }
+    ],
+    ["area"]
+  );
+
+  assert.deepEqual(
+    filters.map((filter) => filter.label),
+    ["South Indian", "Biryani", "4.0+"],
+    "selected filters should use option labels and exclude hidden groups"
+  );
+  assert.ok(
+    filters.every((filter) => filter.href.startsWith("/areas/ealing")),
+    "selected filter links should preserve the current base path"
+  );
+  assert.ok(
+    filters.some((filter) => filter.key === "category-south-indian"),
+    "selected filter keys should include the filter group and selected value"
+  );
+}
+
+selectedFilterChipsUseLabelsAndHiddenGroups();
 
 const filterPanelSource = fs.readFileSync(path.join(process.cwd(), "src", "components", "FilterPanel.tsx"), "utf8");
 const listingsViewSource = fs.readFileSync(path.join(process.cwd(), "src", "components", "DirectoryListingsView.tsx"), "utf8");

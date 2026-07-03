@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DirectorySidebar } from "@/components/DirectorySidebar";
-import { FilterPanel } from "@/components/FilterPanel";
+import { FilterPanel, SelectedFilterChips, getSelectedFilters } from "@/components/FilterPanel";
 import type { FilterPanelOptionGroup } from "@/lib/filter-panel-options";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 
@@ -14,6 +14,8 @@ type ResponsiveDirectoryFiltersProps = {
 
 export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }: ResponsiveDirectoryFiltersProps) {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const selectedFilters = getSelectedFilters(model.filterPanelValues, model.filterOptionGroups, hiddenGroups);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1024px)");
@@ -50,9 +52,13 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
     );
   }
 
+  function handleMobileFiltersToggle(event: React.ToggleEvent<HTMLDetailsElement>) {
+    setMobileFiltersOpen(event.currentTarget.open);
+  }
+
   return (
     <aside aria-label="Directory filters" className="lg:hidden">
-      <details className="rounded-lg border border-line bg-white p-4 shadow-soft">
+      <details className="rounded-lg border border-line bg-white p-4 shadow-soft" onToggle={handleMobileFiltersToggle}>
         <summary className="cursor-pointer text-sm font-bold text-ink">Filters</summary>
         <div className="mt-5">
           <FilterPanel
@@ -63,6 +69,13 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
           />
         </div>
       </details>
+      {!mobileFiltersOpen ? (
+        <SelectedFilterChips
+          values={model.filterPanelValues}
+          filters={selectedFilters}
+          className="mt-3 rounded-lg border border-line bg-white p-4 shadow-soft"
+        />
+      ) : null}
     </aside>
   );
 }

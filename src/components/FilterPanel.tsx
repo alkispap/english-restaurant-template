@@ -47,16 +47,7 @@ export function FilterPanel({ values, action, optionGroups, hiddenGroups = [] }:
   const optionGroupsByName = new Map(optionGroups.map((group) => [group.name, group]));
   const labels = directoryConfig.filterLabels;
   const hiddenGroupSet = new Set(hiddenGroups);
-  const selectedFilters = buildSelectedFilters(
-    values,
-    optionGroups
-      .filter((group) => !hiddenGroupSet.has(group.name as SidebarFilterName))
-      .map((group) => ({
-        name: group.name as SidebarFilterName,
-        value: filterValue(values, group.name),
-        options: group.options
-      }))
-  );
+  const selectedFilters = getSelectedFilters(values, optionGroups, hiddenGroups);
   const group = (name: SidebarFilterName) => (hiddenGroupSet.has(name) ? undefined : optionGroupsByName.get(name));
 
   return (
@@ -154,7 +145,7 @@ type SidebarFilterName =
   | "price"
   | "rating";
 
-type SelectedFilter = {
+export type SelectedFilter = {
   key: string;
   label: string;
   href: string;
@@ -193,17 +184,19 @@ const sidebarFilterNames: SidebarFilterName[] = [
   "rating"
 ];
 
-function SelectedFilterChips({
+export function SelectedFilterChips({
   values,
-  filters
+  filters,
+  className = "border-b border-line pb-5"
 }: {
   values: ListingsPageLinkValues;
   filters: SelectedFilter[];
+  className?: string;
 }) {
   if (!filters.length) return null;
 
   return (
-    <section className="border-b border-line pb-5" aria-label="Selected filters">
+    <section className={className} aria-label="Selected filters">
       <div className="flex flex-wrap items-center gap-2">
         {filters.map((filter) => (
           <Link
@@ -240,6 +233,25 @@ function buildSelectedFilters(values: ListingsPageLinkValues, sources: FilterChi
       })
     }));
   });
+}
+
+export function getSelectedFilters(
+  values: ListingsPageLinkValues,
+  optionGroups: FilterPanelOptionGroup[],
+  hiddenGroups: string[] = []
+) {
+  const hiddenGroupSet = new Set(hiddenGroups);
+
+  return buildSelectedFilters(
+    values,
+    optionGroups
+      .filter((group) => !hiddenGroupSet.has(group.name))
+      .map((group) => ({
+        name: group.name as SidebarFilterName,
+        value: filterValue(values, group.name),
+        options: group.options
+      }))
+  );
 }
 
 function removeFilterValue(value: string | string[] | undefined, selectedValue: string) {
