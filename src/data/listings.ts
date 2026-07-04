@@ -27,6 +27,7 @@ export type Listing = {
   description?: string;
   logo?: string;
   images: string[];
+  menuImages?: string[];
   imageFallbackLabel?: string;
   area?: string;
   neighborhood?: string;

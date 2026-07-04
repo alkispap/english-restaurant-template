@@ -133,6 +133,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const related = getRelatedListings(listing, 8).map(listingResultSummaryFromListing);
   const gallery = listing.images.slice(0, 3);
+  const menuImages = listing.menuImages?.slice(0, 6) ?? [];
   const eavSummary = buildListingEavSummary(listing);
   const visibleFactBlocks = eavSummary.blocks.filter((block) => block.available);
   const tags = [...listing.categories, ...listing.listingTypes, ...listing.dietaryOptions];
@@ -340,6 +341,29 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ))}
             </div>
           </section>
+
+          {menuImages.length ? (
+            <section id="menu-photos" className="mt-10 scroll-mt-20 rounded-lg border border-line bg-white p-6">
+              <div className="flex items-center gap-2">
+                <MenuIcon className="h-5 w-5 text-primary" aria-hidden />
+                <h2 className="text-2xl font-bold text-ink">Menu photos</h2>
+              </div>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                {menuImages.map((image, index) => (
+                  <div key={image} className="relative aspect-[4/3] overflow-hidden rounded-lg bg-orange-50">
+                    <DirectoryImage
+                      src={image}
+                      alt={buildListingImageAlt(listing, { variant: "menu", index })}
+                      fill
+                      sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                      fallbackLabel="Menu"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           {hasServiceFeaturesSection ? (
             <div id="services" className="scroll-mt-20">
