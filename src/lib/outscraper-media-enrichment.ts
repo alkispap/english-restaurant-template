@@ -42,6 +42,7 @@ type MediaForPlace = {
 };
 
 const MAX_LISTING_IMAGES = 5;
+const IMAGE_VALIDATION_TIMEOUT_MS = 8000;
 
 export function enrichListingsWithOutscraperMedia(
   listings: Listing[],
@@ -78,10 +79,13 @@ export function enrichListingsWithOutscraperMedia(
     const media = placeId ? mediaByPlaceId.get(placeId) : undefined;
     if (!media) return listing;
 
+    const images = uniqueValues([...media.images, ...(listing.images ?? [])]);
+    const menuImages = uniqueValues([...media.menuImages, ...(listing.menuImages ?? [])]);
+
     return {
       ...listing,
-      images: media.images,
-      ...(media.menuImages.length ? { menuImages: media.menuImages } : { menuImages: undefined })
+      images,
+      ...(menuImages.length ? { menuImages } : { menuImages: undefined })
     };
   });
 
@@ -115,8 +119,8 @@ export function cleanUnusableListingMedia(listings: Listing[]): ListingMediaClea
   let listingsWithRemovedMedia = 0;
 
   const cleanedListings = listings.map((listing) => {
-    const images = (listing.images ?? []).filter((url) => !isKnownBlockedGooglePhotoUrl(url));
-    const menuImages = (listing.menuImages ?? []).filter((url) => !isKnownBlockedGooglePhotoUrl(url));
+    const images = (listing.images ?? []).filter((url) => !isKnownUnusableMediaUrl(url)).slice(0, MAX_LISTING_IMAGES);
+    const menuImages = (listing.menuImages ?? []).filter((url) => !isKnownUnusableMediaUrl(url));
     const removedImagesForListing = (listing.images ?? []).length - images.length;
     const removedMenuImagesForListing = (listing.menuImages ?? []).length - menuImages.length;
 
@@ -143,8 +147,58 @@ export function cleanUnusableListingMedia(listings: Listing[]): ListingMediaClea
   };
 }
 
+export async function cleanUnusableListingMediaWithValidation(
+  listings: Listing[],
+  validateImageUrl: (url: string) => Promise<boolean> = isRemoteImageUrlLoadable
+): Promise<ListingMediaCleanupResult> {
+  let removedImageUrls = 0;
+  let removedMenuImageUrls = 0;
+  let listingsWithRemovedMedia = 0;
+
+  const cleanedListings: Listing[] = [];
+
+  for (const listing of listings) {
+    const images = await validatedMediaUrls(listing.images ?? [], validateImageUrl, MAX_LISTING_IMAGES);
+    const menuImages = await validatedMediaUrls(listing.menuImages ?? [], validateImageUrl);
+    const removedImagesForListing = (listing.images ?? []).length - images.length;
+    const removedMenuImagesForListing = (listing.menuImages ?? []).length - menuImages.length;
+
+    if (removedImagesForListing || removedMenuImagesForListing) {
+      listingsWithRemovedMedia += 1;
+      removedImageUrls += removedImagesForListing;
+      removedMenuImageUrls += removedMenuImagesForListing;
+    }
+
+    cleanedListings.push({
+      ...listing,
+      images,
+      ...(menuImages.length ? { menuImages } : { menuImages: undefined })
+    });
+  }
+
+  return {
+    listings: cleanedListings,
+    report: {
+      removedImageUrls,
+      removedMenuImageUrls,
+      listingsWithRemovedMedia
+    }
+  };
+}
+
 export function isKnownBlockedGooglePhotoUrl(url: string) {
   return /https:\/\/lh\d\.googleusercontent\.com\/gps-cs-s\/APNQ/i.test(url);
+}
+
+export function isKnownUnusableMediaUrl(url: string) {
+  return isKnownBlockedGooglePhotoUrl(url) || /^https:\/\/streetviewpixels-pa\.googleapis\.com\//i.test(url);
+}
+
+export async function isRemoteImageUrlLoadable(url: string): Promise<boolean> {
+  if (isKnownUnusableMediaUrl(url)) return false;
+
+  if (await requestImageUrl(url, "HEAD")) return true;
+  return requestImageUrl(url, "GET");
 }
 
 export function parseOutscraperPhotoCsv(csv: string): OutscraperPhotoRow[] {
@@ -173,6 +227,44 @@ export function parseOutscraperPhotoCsv(csv: string): OutscraperPhotoRow[] {
 
 function addUnique(values: string[], value: string) {
   if (!values.includes(value)) values.push(value);
+}
+
+function uniqueValues(values: string[]) {
+  return values.filter((value, index) => values.indexOf(value) === index);
+}
+
+async function validatedMediaUrls(urls: string[], validateImageUrl: (url: string) => Promise<boolean>, limit?: number) {
+  const cleaned: string[] = [];
+
+  for (const url of uniqueValues(urls)) {
+    if (isKnownUnusableMediaUrl(url)) continue;
+    if (!(await validateImageUrl(url))) continue;
+
+    cleaned.push(url);
+    if (limit && cleaned.length >= limit) break;
+  }
+
+  return cleaned;
+}
+
+async function requestImageUrl(url: string, method: "HEAD" | "GET") {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), IMAGE_VALIDATION_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: method === "GET" ? { accept: "image/*", range: "bytes=0-0" } : { accept: "image/*" },
+      signal: controller.signal
+    });
+    const contentType = response.headers.get("content-type") ?? "";
+
+    return response.ok && contentType.toLocaleLowerCase().startsWith("image/");
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function cleanUrl(value?: string) {

@@ -3,9 +3,11 @@ import path from "node:path";
 import process from "node:process";
 import type { Listing } from "../src/data/listings";
 import {
-  cleanUnusableListingMedia,
+  cleanUnusableListingMediaWithValidation,
   enrichListingsWithOutscraperMedia,
   parseOutscraperPhotoCsv,
+  type ListingMediaCleanupReport,
+  type OutscraperMediaEnrichmentReport,
   type OutscraperPhotoRow
 } from "../src/lib/outscraper-media-enrichment";
 
@@ -22,38 +24,45 @@ const defaultCsvPaths = [
 const csvPaths = args.filter((arg) => !arg.startsWith("--"));
 const inputPaths = csvPaths.length ? csvPaths.map((csvPath) => path.resolve(root, csvPath)) : defaultCsvPaths;
 
-for (const inputPath of inputPaths) {
-  if (!fs.existsSync(inputPath)) {
-    console.error(`CSV file not found: ${inputPath}`);
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
+
+async function main() {
+  for (const inputPath of inputPaths) {
+    if (!fs.existsSync(inputPath)) {
+      console.error(`CSV file not found: ${inputPath}`);
+      process.exit(1);
+    }
+  }
+
+  if (!fs.existsSync(sourceListingsPath)) {
+    console.error(`Listings file not found: ${sourceListingsPath}`);
     process.exit(1);
   }
-}
 
-if (!fs.existsSync(sourceListingsPath)) {
-  console.error(`Listings file not found: ${sourceListingsPath}`);
-  process.exit(1);
-}
+  const listings = JSON.parse(fs.readFileSync(sourceListingsPath, "utf8").replace(/^\uFEFF/, "")) as Listing[];
+  const photoRows = inputPaths.flatMap(readOutscraperRows);
+  const result = enrichListingsWithOutscraperMedia(listings, photoRows);
+  const cleaned = await cleanUnusableListingMediaWithValidation(result.listings);
 
-const listings = JSON.parse(fs.readFileSync(sourceListingsPath, "utf8").replace(/^\uFEFF/, "")) as Listing[];
-const photoRows = inputPaths.flatMap(readOutscraperRows);
-const result = enrichListingsWithOutscraperMedia(listings, photoRows);
-const cleaned = cleanUnusableListingMedia(result.listings);
+  printReport(result.report, inputPaths);
+  printCleanupReport(cleaned.report);
 
-printReport(result.report, inputPaths);
-printCleanupReport(cleaned.report);
-
-if (dryRun) {
-  console.log("Dry run complete. No files were changed.");
-} else {
-  fs.writeFileSync(listingsPath, `${JSON.stringify(cleaned.listings, null, 2)}\n`, "utf8");
-  console.log(`Updated ${path.relative(root, listingsPath)}`);
+  if (dryRun) {
+    console.log("Dry run complete. No files were changed.");
+  } else {
+    fs.writeFileSync(listingsPath, `${JSON.stringify(cleaned.listings, null, 2)}\n`, "utf8");
+    console.log(`Updated ${path.relative(root, listingsPath)}`);
+  }
 }
 
 function readOutscraperRows(inputPath: string): OutscraperPhotoRow[] {
   return parseOutscraperPhotoCsv(fs.readFileSync(inputPath, "utf8"));
 }
 
-function printReport(report: typeof result.report, inputPaths: string[]) {
+function printReport(report: OutscraperMediaEnrichmentReport, inputPaths: string[]) {
   console.log("Outscraper media enrichment report");
   console.log(`CSV files: ${inputPaths.length}`);
   inputPaths.forEach((inputPath) => console.log(`- ${inputPath}`));
@@ -66,8 +75,9 @@ function printReport(report: typeof result.report, inputPaths: string[]) {
   console.log(`Restaurants with menu photos: ${report.restaurantsWithMenuImages}`);
 }
 
-function printCleanupReport(report: typeof cleaned.report) {
-  console.log(`Removed blocked normal image URLs: ${report.removedImageUrls}`);
-  console.log(`Removed blocked menu image URLs: ${report.removedMenuImageUrls}`);
+function printCleanupReport(report: ListingMediaCleanupReport) {
+  console.log("Remote image URL validation complete.");
+  console.log(`Removed unusable normal image URLs: ${report.removedImageUrls}`);
+  console.log(`Removed unusable menu image URLs: ${report.removedMenuImageUrls}`);
   console.log(`Listings with removed media: ${report.listingsWithRemovedMedia}`);
 }

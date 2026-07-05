@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import type { Listing } from "../src/data/listings";
 import {
+  cleanUnusableListingMediaWithValidation,
   cleanUnusableListingMedia,
   enrichListingsWithOutscraperMedia,
   parseOutscraperPhotoCsv,
@@ -59,7 +60,8 @@ function matchedListingsReplaceExistingImagesAndSeparateMenus() {
     "https://lh3.googleusercontent.com/photo-2-original",
     "https://lh3.googleusercontent.com/photo-3",
     "https://lh3.googleusercontent.com/photo-4",
-    "https://lh3.googleusercontent.com/photo-5"
+    "https://lh3.googleusercontent.com/photo-5",
+    "https://old.example.com/photo.jpg"
   ]);
   assert.deepEqual(result.listings[0].menuImages, ["https://lh3.googleusercontent.com/menu-1"]);
   assert.equal(result.report.matchedRestaurants, 1);
@@ -86,7 +88,7 @@ function unmatchedListingsAreLeftUnchanged() {
   assert.equal(result.report.matchedRestaurants, 0);
 }
 
-function menuImagesCanReplaceStaleMenuImagesWhenMatched() {
+function existingImagesAreKeptAsFallbacksForMatchedRestaurants() {
   const sourceListings = [
     listing({
       name: "Menu Restaurant",
@@ -101,8 +103,8 @@ function menuImagesCanReplaceStaleMenuImagesWhenMatched() {
     row({ photo_url_big: "https://lh3.googleusercontent.com/menu-new", photo_tags: "MENU" })
   ]);
 
-  assert.deepEqual(result.listings[0].images, []);
-  assert.deepEqual(result.listings[0].menuImages, ["https://lh3.googleusercontent.com/menu-new"]);
+  assert.deepEqual(result.listings[0].images, ["https://old.example.com/photo.jpg"]);
+  assert.deepEqual(result.listings[0].menuImages, ["https://lh3.googleusercontent.com/menu-new", "https://old.example.com/menu.jpg"]);
 }
 
 function csvParserReadsOutscraperPhotoRows() {
@@ -126,6 +128,7 @@ function knownBlockedGooglePhotoUrlsAreRemovedFromDisplayMedia() {
       slug: "royal-nawaab-perivale",
       images: [
         "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFNmoh5R30htfvPVQ1SHH6dhqFTcf5GX9TDcD_naKLO1X8Pw-t555RCUpoj5GsYOFL_KwEAP7S6sY5JExfL06dV6XaqcFJe9XiJ9hRUOfJ0mz_zHQleS1nzpnZ6VQUCRFB2R0R4=w2048-h2048-k-no",
+        "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=abc&cb_client=maps_sv.tactile.gps&w=203&h=100",
         "https://lh3.googleusercontent.com/p/AF1QipNZ7MrA9n82benYHHWF9GZ2RCh5KZZZvBqwy581"
       ],
       menuImages: [
@@ -136,15 +139,54 @@ function knownBlockedGooglePhotoUrlsAreRemovedFromDisplayMedia() {
 
   assert.deepEqual(result.listings[0].images, ["https://lh3.googleusercontent.com/p/AF1QipNZ7MrA9n82benYHHWF9GZ2RCh5KZZZvBqwy581"]);
   assert.equal(result.listings[0].menuImages, undefined);
-  assert.equal(result.report.removedImageUrls, 1);
+  assert.equal(result.report.removedImageUrls, 2);
   assert.equal(result.report.removedMenuImageUrls, 1);
   assert.equal(result.report.listingsWithRemovedMedia, 1);
 }
 
-matchedListingsReplaceExistingImagesAndSeparateMenus();
-unmatchedListingsAreLeftUnchanged();
-menuImagesCanReplaceStaleMenuImagesWhenMatched();
-csvParserReadsOutscraperPhotoRows();
-knownBlockedGooglePhotoUrlsAreRemovedFromDisplayMedia();
+async function remainingMediaUrlsAreValidatedBeforeDisplay() {
+  const checkedUrls: string[] = [];
+  const result = await cleanUnusableListingMediaWithValidation(
+    [
+      listing({
+        name: "Validated Restaurant",
+        slug: "validated-restaurant",
+        images: [
+          "https://lh3.googleusercontent.com/gps-cs-s/APNQblocked",
+          "https://lh3.googleusercontent.com/gps-cs-s/AHVAblocked",
+          "https://lh3.googleusercontent.com/p/AF1Qworking"
+        ],
+        menuImages: ["https://lh3.googleusercontent.com/gps-cs-s/AHVAblocked-menu", "https://lh3.googleusercontent.com/p/AF1Qworking-menu"]
+      })
+    ],
+    async (url) => {
+      checkedUrls.push(url);
+      return url.includes("working");
+    }
+  );
 
-console.log("outscraper media enrichment tests passed");
+  assert.deepEqual(result.listings[0].images, ["https://lh3.googleusercontent.com/p/AF1Qworking"]);
+  assert.deepEqual(result.listings[0].menuImages, ["https://lh3.googleusercontent.com/p/AF1Qworking-menu"]);
+  assert.deepEqual(checkedUrls, [
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAblocked",
+    "https://lh3.googleusercontent.com/p/AF1Qworking",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAblocked-menu",
+    "https://lh3.googleusercontent.com/p/AF1Qworking-menu"
+  ]);
+  assert.equal(result.report.removedImageUrls, 2);
+  assert.equal(result.report.removedMenuImageUrls, 1);
+  assert.equal(result.report.listingsWithRemovedMedia, 1);
+}
+
+async function run() {
+  matchedListingsReplaceExistingImagesAndSeparateMenus();
+  unmatchedListingsAreLeftUnchanged();
+  existingImagesAreKeptAsFallbacksForMatchedRestaurants();
+  csvParserReadsOutscraperPhotoRows();
+  knownBlockedGooglePhotoUrlsAreRemovedFromDisplayMedia();
+  await remainingMediaUrlsAreValidatedBeforeDisplay();
+
+  console.log("outscraper media enrichment tests passed");
+}
+
+void run();
