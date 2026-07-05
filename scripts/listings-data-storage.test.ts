@@ -39,4 +39,11 @@ assert.ok(
   "compact client search records should be smaller than full listing records"
 );
 
+const listingImagesBySlug = new Map(listings.map((listing) => [listing.slug, listing.images.slice(0, 3)]));
+const recordsWithImageDrift = searchRecords
+  .filter((record) => JSON.stringify(record.images) !== JSON.stringify(listingImagesBySlug.get(record.slug) ?? []))
+  .map((record) => record.slug);
+
+assert.deepEqual(recordsWithImageDrift, [], "compact client search records should use the same cleaned listing-card images");
+
 console.log("listings data storage tests passed");
