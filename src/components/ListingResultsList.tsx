@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+import { AdsterraAd } from "@/components/AdsterraAd";
 import { ListingResultsRow } from "@/components/ListingResultsRow";
 import type { ListingResultSummary } from "@/lib/listings-page";
 
@@ -21,7 +23,14 @@ export function ListingResultsList({ listings, currentPage, pageSize }: ListingR
   return (
     <div className="grid gap-4">
       {listings.map((listing, index) => (
-        <ListingResultsRow key={listing.slug} listing={listing} rank={firstRank + index} />
+        <Fragment key={listing.slug}>
+          <ListingResultsRow listing={listing} rank={firstRank + index} />
+          {index === 2 ? (
+            <div className="py-2">
+              <AdsterraAd placement="300x250" />
+            </div>
+          ) : null}
+        </Fragment>
       ))}
     </div>
   );

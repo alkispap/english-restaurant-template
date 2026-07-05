@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdsterraAd } from "@/components/AdsterraAd";
 import { DirectoryListingRows } from "@/components/DirectoryListingRows";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
 import { DirectoryImage } from "@/components/DirectoryImage";
@@ -85,6 +86,12 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
           </div>
         </div>
       )}
+      <div className="mb-8 hidden justify-center lg:flex">
+        <AdsterraAd placement="728x90" />
+      </div>
+      <div className="mb-6 flex justify-center lg:hidden">
+        <AdsterraAd placement="320x50" />
+      </div>
       {isCleanHomepage ? (
         <>
           <HomepageDiscoveryCards />

@@ -32,6 +32,7 @@ import {
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { GoogleIcon } from "@/components/GoogleIcon";
+import { AdsterraAd } from "@/components/AdsterraAd";
 import { DirectoryImage } from "@/components/DirectoryImage";
 import { OpenStatusBadge } from "@/components/OpenStatusBadge";
 import { OpeningHoursList } from "@/components/OpeningHoursList";
@@ -453,6 +454,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <OpeningHoursList workingHours={listing.details?.workingHours} />
               </div>
             ) : null}
+            <div className="-mx-2 mt-8 border-t border-line pt-8">
+              <AdsterraAd placement="300x250" />
+            </div>
           </aside>
         ) : null}
       </section>
