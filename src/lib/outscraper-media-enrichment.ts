@@ -24,6 +24,17 @@ export type OutscraperMediaEnrichmentResult = {
   report: OutscraperMediaEnrichmentReport;
 };
 
+export type ListingMediaCleanupReport = {
+  removedImageUrls: number;
+  removedMenuImageUrls: number;
+  listingsWithRemovedMedia: number;
+};
+
+export type ListingMediaCleanupResult = {
+  listings: Listing[];
+  report: ListingMediaCleanupReport;
+};
+
 type MediaForPlace = {
   images: string[];
   menuImages: string[];
@@ -96,6 +107,44 @@ export function preferredPhotoUrl(row: OutscraperPhotoRow) {
 
 export function isMenuPhoto(row: OutscraperPhotoRow) {
   return splitTags(row.photo_tags).some((tag) => tag.toLocaleLowerCase() === "menu");
+}
+
+export function cleanUnusableListingMedia(listings: Listing[]): ListingMediaCleanupResult {
+  let removedImageUrls = 0;
+  let removedMenuImageUrls = 0;
+  let listingsWithRemovedMedia = 0;
+
+  const cleanedListings = listings.map((listing) => {
+    const images = (listing.images ?? []).filter((url) => !isKnownBlockedGooglePhotoUrl(url));
+    const menuImages = (listing.menuImages ?? []).filter((url) => !isKnownBlockedGooglePhotoUrl(url));
+    const removedImagesForListing = (listing.images ?? []).length - images.length;
+    const removedMenuImagesForListing = (listing.menuImages ?? []).length - menuImages.length;
+
+    if (removedImagesForListing || removedMenuImagesForListing) {
+      listingsWithRemovedMedia += 1;
+      removedImageUrls += removedImagesForListing;
+      removedMenuImageUrls += removedMenuImagesForListing;
+    }
+
+    return {
+      ...listing,
+      images,
+      ...(menuImages.length ? { menuImages } : { menuImages: undefined })
+    };
+  });
+
+  return {
+    listings: cleanedListings,
+    report: {
+      removedImageUrls,
+      removedMenuImageUrls,
+      listingsWithRemovedMedia
+    }
+  };
+}
+
+export function isKnownBlockedGooglePhotoUrl(url: string) {
+  return /https:\/\/lh\d\.googleusercontent\.com\/gps-cs-s\/APNQ/i.test(url);
 }
 
 export function parseOutscraperPhotoCsv(csv: string): OutscraperPhotoRow[] {

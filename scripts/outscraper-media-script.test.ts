@@ -14,5 +14,9 @@ const scriptSource = fs.readFileSync(expectedScriptPath, "utf8");
 assert.match(scriptSource, /Outscraper-20260604054319m10\.csv/);
 assert.match(scriptSource, /Outscraper-20260604054426m03\.csv/);
 assert.match(scriptSource, /--dry-run/);
+assert.match(scriptSource, /--source-listings=/, "script should support regenerating from a clean source listings file");
+assert.match(scriptSource, /cleanUnusableListingMedia/, "script should remove known blocked media URLs before writing listings");
+assert.match(scriptSource, /Removed blocked normal image URLs/, "script should report removed normal image URLs");
+assert.match(scriptSource, /Removed blocked menu image URLs/, "script should report removed menu image URLs");
 
 console.log("outscraper media script tests passed");

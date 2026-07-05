@@ -133,6 +133,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const related = getRelatedListings(listing, 8).map(listingResultSummaryFromListing);
   const gallery = listing.images.slice(0, 3);
+  const hasGallery = gallery.length > 0;
+  const hasSecondaryGalleryImages = gallery.length > 1;
   const menuImages = listing.menuImages?.slice(0, 6) ?? [];
   const eavSummary = buildListingEavSummary(listing);
   const visibleFactBlocks = eavSummary.blocks.filter((block) => block.available);
@@ -185,7 +187,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </>
             ) : null}
           </div>
-          {gallery.length ? (
+          {hasGallery ? (
             <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
               <div className="relative h-[320px] overflow-hidden bg-orange-50 sm:h-[420px] sm:rounded-lg">
                 <DirectoryImage
@@ -198,7 +200,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   fallbackLabel={listing.imageFallbackLabel}
                 />
               </div>
-              {gallery.length > 1 ? (
+              {hasSecondaryGalleryImages ? (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   {gallery.slice(1, 3).map((image, index) => (
                     <div key={image} className="relative h-[202px] overflow-hidden rounded-lg bg-orange-50">

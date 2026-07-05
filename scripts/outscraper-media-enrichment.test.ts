@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import type { Listing } from "../src/data/listings";
-import { enrichListingsWithOutscraperMedia, parseOutscraperPhotoCsv, type OutscraperPhotoRow } from "../src/lib/outscraper-media-enrichment";
+import {
+  cleanUnusableListingMedia,
+  enrichListingsWithOutscraperMedia,
+  parseOutscraperPhotoCsv,
+  type OutscraperPhotoRow
+} from "../src/lib/outscraper-media-enrichment";
 
 function listing(overrides: Partial<Listing>): Listing {
   return {
@@ -114,9 +119,32 @@ function csvParserReadsOutscraperPhotoRows() {
   assert.equal(rows[0].photo_tags, "menu, other");
 }
 
+function knownBlockedGooglePhotoUrlsAreRemovedFromDisplayMedia() {
+  const result = cleanUnusableListingMedia([
+    listing({
+      name: "Royal Nawaab Perivale",
+      slug: "royal-nawaab-perivale",
+      images: [
+        "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFNmoh5R30htfvPVQ1SHH6dhqFTcf5GX9TDcD_naKLO1X8Pw-t555RCUpoj5GsYOFL_KwEAP7S6sY5JExfL06dV6XaqcFJe9XiJ9hRUOfJ0mz_zHQleS1nzpnZ6VQUCRFB2R0R4=w2048-h2048-k-no",
+        "https://lh3.googleusercontent.com/p/AF1QipNZ7MrA9n82benYHHWF9GZ2RCh5KZZZvBqwy581"
+      ],
+      menuImages: [
+        "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF9R3SZs5ApmCIM74ecuvFQPLfDFpZx3KtFZ69QBZVn2ND-bGqgMBDn8rA4vwXTWw6tiZ7XFiBcw7WrgG5k52JKfRX6fOHOUMkisb44jOv7noO8dvgwUlrIax8F6iAD5alYaB50Y3rQWuU=w2048-h2048-k-no"
+      ]
+    })
+  ]);
+
+  assert.deepEqual(result.listings[0].images, ["https://lh3.googleusercontent.com/p/AF1QipNZ7MrA9n82benYHHWF9GZ2RCh5KZZZvBqwy581"]);
+  assert.equal(result.listings[0].menuImages, undefined);
+  assert.equal(result.report.removedImageUrls, 1);
+  assert.equal(result.report.removedMenuImageUrls, 1);
+  assert.equal(result.report.listingsWithRemovedMedia, 1);
+}
+
 matchedListingsReplaceExistingImagesAndSeparateMenus();
 unmatchedListingsAreLeftUnchanged();
 menuImagesCanReplaceStaleMenuImagesWhenMatched();
 csvParserReadsOutscraperPhotoRows();
+knownBlockedGooglePhotoUrlsAreRemovedFromDisplayMedia();
 
 console.log("outscraper media enrichment tests passed");

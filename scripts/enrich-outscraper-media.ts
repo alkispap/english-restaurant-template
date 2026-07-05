@@ -2,12 +2,19 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import type { Listing } from "../src/data/listings";
-import { enrichListingsWithOutscraperMedia, parseOutscraperPhotoCsv, type OutscraperPhotoRow } from "../src/lib/outscraper-media-enrichment";
+import {
+  cleanUnusableListingMedia,
+  enrichListingsWithOutscraperMedia,
+  parseOutscraperPhotoCsv,
+  type OutscraperPhotoRow
+} from "../src/lib/outscraper-media-enrichment";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
+const sourceListingsArg = args.find((arg) => arg.startsWith("--source-listings="));
 const listingsPath = path.join(root, "data/listings.json");
+const sourceListingsPath = sourceListingsArg ? path.resolve(root, sourceListingsArg.split("=").slice(1).join("=")) : listingsPath;
 const defaultCsvPaths = [
   "C:\\Users\\user\\Desktop\\Outscraper-20260604054319m10.csv",
   "C:\\Users\\user\\Desktop\\Outscraper-20260604054426m03.csv"
@@ -22,21 +29,23 @@ for (const inputPath of inputPaths) {
   }
 }
 
-if (!fs.existsSync(listingsPath)) {
-  console.error(`Listings file not found: ${listingsPath}`);
+if (!fs.existsSync(sourceListingsPath)) {
+  console.error(`Listings file not found: ${sourceListingsPath}`);
   process.exit(1);
 }
 
-const listings = JSON.parse(fs.readFileSync(listingsPath, "utf8")) as Listing[];
+const listings = JSON.parse(fs.readFileSync(sourceListingsPath, "utf8").replace(/^\uFEFF/, "")) as Listing[];
 const photoRows = inputPaths.flatMap(readOutscraperRows);
 const result = enrichListingsWithOutscraperMedia(listings, photoRows);
+const cleaned = cleanUnusableListingMedia(result.listings);
 
 printReport(result.report, inputPaths);
+printCleanupReport(cleaned.report);
 
 if (dryRun) {
   console.log("Dry run complete. No files were changed.");
 } else {
-  fs.writeFileSync(listingsPath, `${JSON.stringify(result.listings, null, 2)}\n`, "utf8");
+  fs.writeFileSync(listingsPath, `${JSON.stringify(cleaned.listings, null, 2)}\n`, "utf8");
   console.log(`Updated ${path.relative(root, listingsPath)}`);
 }
 
@@ -55,4 +64,10 @@ function printReport(report: typeof result.report, inputPaths: string[]) {
   console.log(`Restaurants with images: ${report.restaurantsWithImages}`);
   console.log(`Restaurants with five photos: ${report.restaurantsWithFivePhotos}`);
   console.log(`Restaurants with menu photos: ${report.restaurantsWithMenuImages}`);
+}
+
+function printCleanupReport(report: typeof cleaned.report) {
+  console.log(`Removed blocked normal image URLs: ${report.removedImageUrls}`);
+  console.log(`Removed blocked menu image URLs: ${report.removedMenuImageUrls}`);
+  console.log(`Listings with removed media: ${report.listingsWithRemovedMedia}`);
 }
