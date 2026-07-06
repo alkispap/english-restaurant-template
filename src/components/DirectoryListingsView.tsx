@@ -71,20 +71,10 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
           </div>
         </>
       ) : (
-        <div className="mb-6 rounded-lg border border-line bg-white p-5 shadow-soft">
-          <h1 className="text-3xl font-bold text-ink">{model.title}</h1>
+        <section className="mb-6 max-w-3xl">
+          <h1 className="text-3xl font-bold leading-tight text-ink sm:text-4xl">{model.title}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">{model.description}</p>
-          <div className="mt-6">
-            <SearchBar
-              compact
-              defaultQuery={model.filters.q}
-              defaultArea={first(model.filters.area)}
-              basePath={model.basePath}
-              areas={model.searchAreas}
-              mapPoints={model.searchMapPoints}
-            />
-          </div>
-        </div>
+        </section>
       )}
       <div className="mb-8 hidden justify-center lg:flex">
         <AdsterraAd placement="728x90" />

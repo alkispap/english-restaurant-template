@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { AccountMenu } from "@/components/AccountMenu";
+import { HeaderSearch } from "@/components/HeaderSearch";
 import { SavedListingsLink } from "@/components/SavedListingsLink";
 
 type HeaderControlsProps = {
@@ -23,7 +24,7 @@ export function HeaderControls({ navigation, shortlistEnabled }: HeaderControlsP
         {shortlistEnabled ? <SavedListingsLink /> : null}
         <AccountMenu />
         <button
-          className="focus-ring rounded-md bg-ink p-2 text-white md:hidden"
+          className="focus-ring rounded-md bg-ink p-2 text-white lg:hidden"
           type="button"
           aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
           aria-expanded={isMenuOpen}
@@ -36,8 +37,9 @@ export function HeaderControls({ navigation, shortlistEnabled }: HeaderControlsP
       {isMenuOpen ? (
         <nav
           id="mobile-navigation"
-          className="absolute right-0 top-[calc(100%+0.75rem)] z-[90] w-[min(calc(100vw-2rem),14rem)] rounded-b-md border border-line bg-white px-4 py-3 shadow-soft md:hidden"
+          className="absolute right-0 top-[calc(100%+0.75rem)] z-[90] w-[min(calc(100vw-2rem),20rem)] rounded-b-md border border-line bg-white px-4 py-3 shadow-soft lg:hidden"
         >
+          <HeaderSearch className="mb-3" onSearch={() => setIsMenuOpen(false)} />
           {navigation.map((item) => (
             <Link
               key={item.href}

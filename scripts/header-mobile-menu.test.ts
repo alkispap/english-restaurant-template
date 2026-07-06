@@ -12,7 +12,7 @@ assert.match(headerSource, /setIsMenuOpen\(false\)/, "navigation links should cl
 assert.match(headerSource, /z-\[\d+\]/, "mobile menu should define an explicit layer above sticky detail nav");
 assert.match(headerSource, /relative\s+shrink-0/, "mobile header controls should reserve only their own width");
 assert.match(headerSource, /absolute\s+right-0\s+top-\[calc\(100%\+0\.75rem\)\]/, "mobile menu should be positioned out of the header flex layout");
-assert.match(headerSource, /w-\[min\(calc\(100vw-2rem\),14rem\)\]/, "mobile menu should fit inside narrow phone viewports");
+assert.match(headerSource, /w-\[min\(calc\(100vw-2rem\),20rem\)\]/, "mobile menu should fit inside narrow phone viewports with header search");
 assert.deepEqual(
   siteConfig.navigation.map((item) => item.label),
   ["Restaurants", "Areas", "Categories"],
