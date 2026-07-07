@@ -77,7 +77,12 @@ import { listingShareMetadata } from "@/lib/share-metadata";
 import { getListingRobots } from "@/lib/seo-policy";
 import { shouldGenerateFullStaticParams } from "@/lib/static-build";
 import { listingResultSummaryFromListing } from "@/lib/listings-page";
-import { buildListingDetailHeadings, buildListingDetailPageTitle } from "@/lib/listing-detail-headings";
+import { buildListingDetailHeadings } from "@/lib/listing-detail-headings";
+import {
+  buildListingDetailMetaDescription,
+  buildListingDetailPageSummary,
+  buildListingDetailSeoTitle
+} from "@/lib/listing-detail-seo";
 
 type ListingPageProps = {
   params: Promise<{ slug: string }>;
@@ -98,15 +103,16 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
   const listing = getListingBySlug(redirectTarget ?? slug);
   if (!listing) return {};
 
-  const title = buildListingDetailPageTitle(listing);
+  const title = buildListingDetailSeoTitle(listing);
+  const description = buildListingDetailMetaDescription(listing);
   const share = listingShareMetadata(listing);
 
   return {
     title,
-    description: share.description,
+    description,
     openGraph: {
       title,
-      description: share.description,
+      description,
       type: "website",
       url: share.url,
       images: share.images.map((image) => ({ url: image })),
@@ -118,7 +124,7 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
     twitter: {
       card: "summary_large_image",
       title,
-      description: share.description,
+      description,
       images: share.images,
     },
   };
@@ -155,6 +161,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const share = listingShareMetadata(listing);
   const route = `/${siteConfig.listingBasePath}/${listing.slug}`;
   const headings = buildListingDetailHeadings(listing);
+  const pageSummary = buildListingDetailPageSummary(listing);
 
   const breadcrumbs = [
     { name: directoryConfig.listingPluralLabel, href: directoryIndexPath() },
@@ -271,6 +278,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
           <DirectoryFreshnessLabel className="mt-3" />
           {listing.description ? <p className="mt-4 max-w-3xl text-lg leading-8 text-muted">{listing.description}</p> : null}
+          <p className="mt-4 max-w-3xl rounded-lg border border-line bg-slate-50 p-4 text-base leading-7 text-ink">
+            {pageSummary}
+          </p>
           <ListingPrivateNote slug={listing.slug} />
 
           <section id="mobile-at-a-glance" className="mt-8 scroll-mt-20 border-y border-line bg-white py-7 md:hidden">
@@ -495,6 +505,10 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
         </section>
       ) : null}
+
+      <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+        <AdsterraAd placement="300x250" />
+      </section>
 
       {related.length ? (
         <section className="mx-auto max-w-7xl px-4 pb-14 pt-10 sm:px-6 lg:px-8">

@@ -103,11 +103,16 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
       </button>
 
       {!mobileFiltersOpen ? (
-        <SelectedFilterChips
-          values={model.filterPanelValues}
-          filters={selectedFilters}
-          className="mt-3 rounded-lg border border-line bg-white p-4 shadow-soft"
-        />
+        <>
+          <SelectedFilterChips
+            values={model.filterPanelValues}
+            filters={selectedFilters}
+            className="mt-3 rounded-lg border border-line bg-white p-4 shadow-soft"
+          />
+          <div className="mt-4 flex justify-center">
+            <AdsterraAd placement="320x50" />
+          </div>
+        </>
       ) : null}
 
       {mobileFiltersOpen ? (

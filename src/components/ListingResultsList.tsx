@@ -25,7 +25,7 @@ export function ListingResultsList({ listings, currentPage, pageSize }: ListingR
       {listings.map((listing, index) => (
         <Fragment key={listing.slug}>
           <ListingResultsRow listing={listing} rank={firstRank + index} />
-          {index === 2 ? (
+          {index === 2 || index === 7 ? (
             <div className="py-2">
               <AdsterraAd placement="300x250" />
             </div>

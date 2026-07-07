@@ -49,12 +49,19 @@ assert.match(adComponentSource, /localhost|127\.0\.0\.1/, "ad component should s
 
 assert.match(directoryViewSource, /AdsterraAd/, "directory view should render top display ads");
 assert.match(directoryViewSource, /placement="728x90"/, "directory view should include desktop leaderboard ad");
+assert.match(directoryViewSource, /placement="468x60"/, "homepage should include a mid-page desktop banner ad");
 assert.match(directoryViewSource, /placement="320x50"/, "directory view should include mobile banner ad");
 assert.match(listingResultsListSource, /placement="300x250"/, "listing results should include one in-content ad");
+assert.match(listingResultsListSource, /index === 2 \|\| index === 7/, "listing results should include two spaced in-content ads on longer pages");
 assert.match(responsiveFiltersSource, /placement="160x600"/, "desktop filters/sidebar should include a skyscraper ad");
+assert.match(responsiveFiltersSource, /placement="320x50"/, "mobile filters should include a small lower mobile ad");
 assert.match(guideArticleSource, /placement="300x250"/, "guide articles should include in-article ad");
 assert.match(guideArticleSource, /placement="NativeBanner"/, "guide articles should include native banner ad");
 assert.match(listingDetailSource, /placement="300x250"/, "listing detail sidebar should include a display ad");
+assert.ok(
+  countOccurrences(listingDetailSource, 'placement="300x250"') >= 2,
+  "listing detail pages should include a lower display ad before similar restaurants"
+);
 
 assert.match(trustPagesSource, /Advertising and Cookies/, "privacy policy should disclose advertising and cookies");
 assert.match(trustPagesSource, /third-party ad partners/i, "privacy policy should mention third-party ad partners");
@@ -62,4 +69,8 @@ assert.match(trustPagesSource, /cookies or similar technologies/i, "privacy poli
 
 function read(relativePath: string) {
   return fs.readFileSync(path.join(root, ...relativePath.split("/")), "utf8");
+}
+
+function countOccurrences(value: string, pattern: string) {
+  return value.split(pattern).length - 1;
 }
