@@ -83,8 +83,9 @@ async function restaurantDetailDescriptionStaysSpecific() {
 
   assert.equal(
     metadata.description,
-    "The Curry Club London is an Indian restaurant in Ilford, Redbridge serving Indian and Punjabi food. Details include vegan options."
+    "The Curry Club London in Ilford, Redbridge is an Indian restaurant rated 5.0 from 254 reviews. Check menu, address, hours, delivery, takeaway, and nearby restaurants."
   );
+  assert.ok((metadata.description as string).length <= 170, "restaurant detail description should stay snippet sized");
 }
 
 Promise.all([
