@@ -107,6 +107,7 @@ const specs: FilterSpec[] = [
 ];
 
 const panelGroups = new Map(getFilterPanelOptionGroups().map((group) => [group.name, group]));
+const invalidOptionValues = new Set(["#error!", "#value!", "#n/a", "nan", "null", "undefined"]);
 
 specs.forEach((spec) => {
   assert.ok(spec.options.length > 0, `${spec.name} should expose source options`);
@@ -117,6 +118,11 @@ specs.forEach((spec) => {
     panelGroup.totalOptions,
     spec.options.length,
     `${spec.name} panel total should match its source option count`
+  );
+  assert.deepEqual(
+    panelGroup.options.filter((item) => invalidOptionValues.has(item.label.trim().toLowerCase())),
+    [],
+    `${spec.name} panel options should not expose invalid imported values`
   );
 
   const indexedValues = spec.indexedValues ?? buildIndex(spec.listingValues ?? (() => []));
@@ -135,6 +141,36 @@ specs.forEach((spec) => {
     );
   });
 });
+
+const westminsterGroups = new Map(getFilterPanelOptionGroups({ area: "westminster" }).map((group) => [group.name, group]));
+const areaScopedSpecs = specs.filter((spec) => spec.name !== "area" && spec.name !== "rating");
+
+areaScopedSpecs.forEach((spec) => {
+  const panelGroup = westminsterGroups.get(spec.name);
+  assert.ok(panelGroup, `${spec.name} should be present in area-scoped filter panel`);
+
+  panelGroup.options.forEach((item) => {
+    const results = filterListingSearchRecords({ area: "westminster", [spec.name]: item.value });
+    assert.ok(results.length > 0, `area=westminster and ${spec.name}=${item.value} should return results`);
+  });
+});
+
+const westminsterNeighborhoods = westminsterGroups.get("neighborhood")?.options ?? [];
+const globallyAvailableNeighborhood = specs
+  .find((spec) => spec.name === "neighborhood")
+  ?.options.find((item) => !westminsterNeighborhoods.some((option) => option.value === item.value));
+
+assert.ok(globallyAvailableNeighborhood, "test fixture should include a non-Westminster neighborhood");
+
+const selectedNeighborhoods = getFilterPanelOptionGroups({
+  area: "westminster",
+  neighborhood: globallyAvailableNeighborhood.value
+}).find((group) => group.name === "neighborhood")?.options;
+
+assert.ok(
+  selectedNeighborhoods?.some((option) => option.value === globallyAvailableNeighborhood.value),
+  "selected neighborhood should remain visible even when it is outside the current area result set"
+);
 
 function buildIndex(readValues: (listing: ListingSearchRecord) => string[]) {
   const index = new Set<string>();

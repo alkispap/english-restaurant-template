@@ -587,15 +587,18 @@ function unique(items: string[]) {
   const seen = new Set<string>();
   const result: string[] = [];
   for (const item of items) {
-    if (!item) continue;
-    const slug = slugify(item);
+    if (!isValidFacetValue(item)) continue;
+    const trimmed = item.trim();
+    const slug = slugify(trimmed);
     if (!seen.has(slug)) {
       seen.add(slug);
-      result.push(item.trim());
+      result.push(trimmed);
     }
   }
   return result;
 }
+
+const invalidFacetValues = new Set(["#error!", "#value!", "#n/a", "nan", "null", "undefined"]);
 
 function countLabels(labels: string[]) {
   const counts = new Map<string, { label: string; slug: string; count: number }>();
@@ -614,4 +617,12 @@ function countLabels(labels: string[]) {
 
 function isString(value: string | undefined): value is string {
   return Boolean(value);
+}
+
+function isValidFacetValue(value: string | undefined) {
+  if (!value) return false;
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return false;
+
+  return !invalidFacetValues.has(normalized);
 }
