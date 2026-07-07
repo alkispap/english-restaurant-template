@@ -58,9 +58,9 @@ async function directoryIndexMetadataUsesApprovedTitles() {
 
 async function restaurantDetailMetadataUsesGeneratedLocalTitles() {
   const samples = [
-    { slug: "the-curry-club-london", expected: "The Curry Club London in Redbridge, London - Reviews & Details" },
-    { slug: "hyderabad-darbar", expected: "HYDERABAD DARBAR in Redbridge, London - Reviews & Details" },
-    { slug: "saravanaa-bhavan", expected: "Saravanaa Bhavan in Redbridge, London - Reviews & Details" }
+    { slug: "the-curry-club-london", expected: "The Curry Club London in Redbridge, London" },
+    { slug: "hyderabad-darbar", expected: "HYDERABAD DARBAR in Redbridge, London" },
+    { slug: "saravanaa-bhavan", expected: "Saravanaa Bhavan in Redbridge, London" }
   ];
 
   for (const sample of samples) {
