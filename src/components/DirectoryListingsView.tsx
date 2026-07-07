@@ -74,6 +74,9 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
         <section className="mb-6 max-w-3xl">
           <h1 className="text-3xl font-bold leading-tight text-ink sm:text-4xl">{model.title}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">{model.description}</p>
+          <div className="mt-5">
+            {homepageSearch}
+          </div>
         </section>
       )}
       <div className="mb-8 hidden justify-center lg:flex">
