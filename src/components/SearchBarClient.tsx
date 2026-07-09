@@ -6,8 +6,7 @@ import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
 import { directorySearchPath } from "@/lib/routes";
 import { buildSearchHref } from "@/lib/search-url";
-import { nearestAreaFromCoordinates } from "@/lib/geo-area";
-import type { MapPoint } from "@/lib/listings-page";
+import { nearestAreaFromCoordinates, type AreaCentroid } from "@/lib/geo-area";
 import { useState } from "react";
 
 type AreaOption = {
@@ -21,7 +20,7 @@ type SearchBarClientProps = {
   defaultArea?: string;
   basePath?: string;
   areas: AreaOption[];
-  mapPoints: MapPoint[];
+  areaCentroids: AreaCentroid[];
   hideAreaChoice?: boolean;
 };
 
@@ -33,7 +32,7 @@ export function SearchBarClient({
   defaultArea = "",
   basePath = directorySearchPath(),
   areas,
-  mapPoints,
+  areaCentroids,
   hideAreaChoice = false
 }: SearchBarClientProps) {
   const [locateStatus, setLocateStatus] = useState<LocateStatus>("idle");
@@ -69,7 +68,7 @@ export function SearchBarClient({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           },
-          mapPoints
+          areaCentroids
         );
 
         if (!nearest) {

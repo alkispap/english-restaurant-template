@@ -1,42 +1,60 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   normalizeSearchParams,
   searchParamsRecordFromUrlSearchParams
 } from "@/lib/directory-listings-search-params";
-import type { SeoPageModel } from "@/lib/seo-pages";
+import type { SeoLandingResultsShell } from "@/components/SeoLandingResultsShell";
+import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 
-type SeoLandingContentComponent = typeof import("@/components/SeoLandingPageContent").SeoLandingPageContent;
-type SeoLandingBrowserModule = typeof import("@/lib/seo-landing-browser");
-type SeoLandingContentModule = typeof import("@/components/SeoLandingPageContent");
+type SeoLandingResultsShellComponent = typeof SeoLandingResultsShell;
+type SeoLandingBrowserModule = typeof import("@/lib/seo-landing-listings-browser");
+type SeoLandingResultsShellModule = typeof import("@/components/SeoLandingResultsShell");
 
 type SeoLandingQueryEnhancerProps = {
-  initialPage: SeoPageModel;
+  initialPage: {
+    kind: string;
+    metadata: {
+      canonical: string;
+    };
+    hero: {
+      title: string;
+      description: string;
+    };
+    resultsHeadingContext?: string;
+  };
 };
 
-let seoLandingClientModulesPromise: Promise<[SeoLandingBrowserModule, SeoLandingContentModule]> | null = null;
+let seoLandingClientModulesPromise: Promise<[SeoLandingBrowserModule, SeoLandingResultsShellModule]> | null = null;
 
 function loadSeoLandingClientModules() {
   seoLandingClientModulesPromise ??= Promise.all([
-    import("@/lib/seo-landing-browser"),
-    import("@/components/SeoLandingPageContent")
+    import("@/lib/seo-landing-listings-browser"),
+    import("@/components/SeoLandingResultsShell")
   ]);
   return seoLandingClientModulesPromise;
 }
 
 export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancerProps) {
-  const [activePage, setActivePage] = useState<SeoPageModel | null>(null);
-  const [ActiveContent, setActiveContent] = useState<SeoLandingContentComponent | null>(null);
+  const [activeModel, setActiveModel] = useState<DirectoryListingsModel | null>(null);
+  const [ActiveResultsShell, setActiveResultsShell] = useState<SeoLandingResultsShellComponent | null>(null);
+  const [clientResultsRoot, setClientResultsRoot] = useState<HTMLElement | null>(null);
+  const hiddenGroups = initialPage.kind === "area" ? (["area"] as const) : [];
 
   useEffect(() => {
-    const serverMain = document.getElementById("seo-landing-server-main");
-    if (serverMain) serverMain.hidden = activePage !== null;
+    const serverResults = document.getElementById("seo-landing-server-results");
+    if (serverResults) serverResults.hidden = activeModel !== null;
 
     return () => {
-      if (serverMain) serverMain.hidden = false;
+      if (serverResults) serverResults.hidden = false;
     };
-  }, [activePage]);
+  }, [activeModel]);
+
+  useEffect(() => {
+    setClientResultsRoot(document.getElementById("seo-landing-client-results-root"));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -53,18 +71,22 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
       const currentParams = new URLSearchParams(window.location.search);
       const nextQuery = normalizeSearchParams(searchParamsRecordFromUrlSearchParams(currentParams));
       if (!nextQuery) {
-        setActivePage(null);
+        setActiveModel(null);
         return;
       }
 
-      const [{ buildBrowserSeoLandingPage }, contentModule] = await loadSeoLandingClientModules();
+      const [{ buildBrowserSeoLandingListingsModel }, shellModule] = await loadSeoLandingClientModules();
       if (cancelled || version !== requestVersion) return;
 
-      setActiveContent(() => contentModule.SeoLandingPageContent);
-      setActivePage(
-        buildBrowserSeoLandingPage({
+      setActiveResultsShell(() => shellModule.SeoLandingResultsShell);
+      setActiveModel(
+        buildBrowserSeoLandingListingsModel({
           pathname: window.location.pathname,
-          searchParams: currentParams
+          searchParams: currentParams,
+          basePath: initialPage.metadata.canonical,
+          title: initialPage.hero.title,
+          description: initialPage.hero.description,
+          headingContext: initialPage.resultsHeadingContext
         }) ?? null
       );
     }
@@ -107,9 +129,9 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
       window.removeEventListener("popstate", scheduleUpdateFromCurrentUrl);
       window.removeEventListener("seo-landing-url-change", scheduleUpdateFromCurrentUrl);
     };
-  }, [initialPage.metadata.canonical]);
+  }, [initialPage.hero.description, initialPage.hero.title, initialPage.metadata.canonical, initialPage.resultsHeadingContext]);
 
-  if (!activePage || !ActiveContent) return null;
+  if (!activeModel || !ActiveResultsShell || !clientResultsRoot) return null;
 
-  return <ActiveContent page={activePage} viewId="seo-landing-client-main" />;
+  return createPortal(<ActiveResultsShell model={activeModel} hiddenGroups={[...hiddenGroups]} />, clientResultsRoot);
 }

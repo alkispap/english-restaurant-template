@@ -14,8 +14,22 @@ const mobileChromeSource = fs.existsSync(mobileChromePath) ? fs.readFileSync(mob
 
 assert.match(
   pageSource,
-  /<ListingDetailMobileChrome[\s\S]*listing=\{listing\}[\s\S]*tabs=\{tabs\}/,
-  "restaurant detail page should render the mobile detail chrome with listing and tabs"
+  /<ListingDetailMobileChrome[\s\S]*listing=\{mobileChromeListing\}[\s\S]*tabs=\{tabs\}/,
+  "restaurant detail page should render the mobile detail chrome with compact listing props and tabs"
+);
+assert.match(
+  pageSource,
+  /mobileChromeListingFromListing\(listing\)/,
+  "restaurant detail page should map the full listing to compact mobile chrome props"
+);
+assert.ok(
+  !pageSource.includes("<ListingDetailMobileChrome listing={listing}"),
+  "restaurant detail page should not pass the full listing object into mobile chrome"
+);
+assert.doesNotMatch(
+  mobileChromeSource,
+  /listing: Listing/,
+  "mobile chrome props should not accept the full Listing type"
 );
 assert.match(
   mobileChromeSource,

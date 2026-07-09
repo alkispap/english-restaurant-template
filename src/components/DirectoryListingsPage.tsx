@@ -25,7 +25,7 @@ export function DirectoryListingsPage({
   return (
     <>
       <DirectoryListingsView model={model} viewId="directory-listings-server-main" />
-      <DirectoryListingsQueryEnhancer initialModel={model} />
+      {model.searchQuery ? <DirectoryListingsQueryEnhancer initialModel={model} /> : null}
     </>
   );
 }

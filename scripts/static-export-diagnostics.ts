@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
-import { listings } from "../src/data/listings";
 import {
   getStaticAreaCategoryParams,
   getStaticAreaParams,
@@ -11,6 +10,8 @@ import {
   getStaticPopularSearchParams
 } from "../src/lib/static-route-params";
 import { getPublicGuideArticles } from "../src/lib/articles";
+import { generateStaticParams as legacyListingStaticParams } from "../src/app/listings/[slug]/page";
+import { generateStaticParams as restaurantDetailStaticParams } from "../src/app/restaurants/[slug]/page";
 
 process.env.NEXT_STATIC_EXPORT = "1";
 
@@ -35,7 +36,8 @@ function reportRouteFamilies() {
     "popular searches": getStaticPopularSearchParams,
     categories: getStaticCategoryParams,
     dietary: () => getStaticFacetParams("dietary", "dietary"),
-    listings: () => listings.map((listing) => ({ slug: listing.slug })),
+    "restaurant details": restaurantDetailStaticParams,
+    "legacy listing redirects": legacyListingStaticParams,
     neighborhoods: getStaticNeighborhoodParams,
     offerings: () => getStaticFacetParams("offering", "offering"),
     services: () => getStaticFacetParams("service", "service"),

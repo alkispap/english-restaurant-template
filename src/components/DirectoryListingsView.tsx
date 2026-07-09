@@ -28,7 +28,13 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
       defaultArea={first(model.filters.area)}
       basePath={searchBasePath}
       areas={model.searchAreas}
-      mapPoints={model.searchMapPoints}
+      areaCentroids={model.searchMapPoints.map((point) => ({
+        slug: point.slug,
+        name: point.name,
+        area: point.area,
+        latitude: point.latitude,
+        longitude: point.longitude
+      }))}
     />
   );
 
@@ -44,7 +50,10 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
               <img
                 src={siteConfig.heroImage}
                 alt={siteConfig.heroImageAlt}
+                width={1280}
+                height={720}
                 className="h-full w-full object-cover object-center"
+                loading="eager"
                 fetchPriority="high"
                 decoding="async"
               />

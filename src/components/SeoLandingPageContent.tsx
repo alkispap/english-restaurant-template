@@ -46,13 +46,19 @@ export function SeoLandingPageContent({ page, viewId }: SeoLandingPageContentPro
             defaultArea={first(page.linkValues.area)}
             basePath={page.metadata.canonical}
             areas={chrome.searchAreas}
-            mapPoints={chrome.searchMapPoints}
+            areaCentroids={chrome.searchMapPoints.map((point) => ({
+              slug: point.slug,
+              name: point.name,
+              area: point.area,
+              latitude: point.latitude,
+              longitude: point.longitude
+            }))}
             hideAreaChoice={page.kind === "area"}
           />
         </div>
       </section>
 
-      <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div id="seo-landing-server-results" className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
         <ResponsiveDirectoryFilters
           model={filterModel}
           action={page.metadata.canonical}
@@ -72,7 +78,12 @@ export function SeoLandingPageContent({ page, viewId }: SeoLandingPageContentPro
             linkValues={page.linkValues}
             headingContext={page.resultsHeadingContext}
           />
-
+        </div>
+      </div>
+      <div id="seo-landing-client-results-root" />
+      <div id="seo-landing-stable-content" className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="hidden lg:block" aria-hidden />
+        <div className="min-w-0">
           <GuideSection page={page} />
           <InformationGain page={page} />
           <RelatedLinks groups={page.relatedLinkGroups} />

@@ -4,9 +4,11 @@ import {
   addShortlistSlug,
   getCompareFields,
   getShortlistListingSummaries,
+  normalizeShortlistSlugs,
   removeShortlistSlug,
   toggleShortlistSlug
 } from "../src/lib/shortlist";
+import { getClientShortlistListingSummaries, shortlistListingSummaries } from "../src/data/shortlist-summaries";
 
 const sampleListings = [
   {
@@ -81,8 +83,24 @@ function compareFieldsExposeExpectedColumns() {
   ]);
 }
 
+function clientShortlistSummariesPreserveSavedOrderAndMissingItems() {
+  const first = shortlistListingSummaries[0];
+  const second = shortlistListingSummaries[1];
+  assert.ok(first, "expected generated shortlist summaries");
+  assert.ok(second, "expected at least two generated shortlist summaries");
+
+  const summaries = getClientShortlistListingSummaries([second.slug, "missing-slug", first.slug, second.slug]);
+
+  assert.deepEqual(
+    summaries.map((summary) => summary.slug),
+    normalizeShortlistSlugs([second.slug, first.slug])
+  );
+  assert.ok(summaries.every((summary) => summary.href === `/restaurants/${summary.slug}`));
+}
+
 shortlistHelpersAddRemoveToggleDedupeAndEnforceLimit();
 compareSummariesHandleMissingOptionalFields();
 compareFieldsExposeExpectedColumns();
+clientShortlistSummariesPreserveSavedOrderAndMissingItems();
 
 console.log("shortlist behavior tests passed");

@@ -6,11 +6,16 @@ const root = process.cwd();
 const listingsSourcePath = path.join(root, "src", "data", "listings.ts");
 const listingsJsonPath = path.join(root, "data", "listings.json");
 const listingSearchRecordsJsonPath = path.join(root, "data", "listing-search-records.json");
+const shortlistSummariesJsonPath = path.join(root, "data", "shortlist-summaries.json");
 
 assert.ok(fs.existsSync(listingsJsonPath), "listing records should be stored in data/listings.json");
 assert.ok(
   fs.existsSync(listingSearchRecordsJsonPath),
   "compact client search records should be stored in data/listing-search-records.json"
+);
+assert.ok(
+  fs.existsSync(shortlistSummariesJsonPath),
+  "compact compare shortlist summaries should be stored in data/shortlist-summaries.json"
 );
 
 const listingsSource = fs.readFileSync(listingsSourcePath, "utf8");
@@ -37,6 +42,22 @@ assert.equal(
 assert.ok(
   fs.statSync(listingSearchRecordsJsonPath).size < fs.statSync(listingsJsonPath).size,
   "compact client search records should be smaller than full listing records"
+);
+
+const shortlistSummaries = JSON.parse(fs.readFileSync(shortlistSummariesJsonPath, "utf8"));
+assert.ok(Array.isArray(shortlistSummaries), "data/shortlist-summaries.json should contain a listing array");
+assert.equal(
+  shortlistSummaries.length,
+  listings.length,
+  "compact compare shortlist summaries should stay in sync with full listing records"
+);
+assert.ok(
+  fs.statSync(shortlistSummariesJsonPath).size < fs.statSync(listingSearchRecordsJsonPath).size,
+  "compare shortlist summaries should be smaller than browser search records"
+);
+assert.ok(
+  shortlistSummaries.every((summary) => !("description" in summary) && !("images" in summary) && !("details" in summary)),
+  "compare shortlist summaries should not carry full search-card fields"
 );
 
 const listingImagesBySlug = new Map(listings.map((listing) => [listing.slug, listing.images.slice(0, 3)]));

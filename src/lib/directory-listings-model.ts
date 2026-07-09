@@ -38,6 +38,8 @@ type BuildDirectoryListingsModelInput = {
   title?: string;
   description?: string;
   headingContext?: string;
+  baseFilters?: Partial<DirectoryListingsFilters>;
+  defaultSort?: SortKey;
 };
 
 let cachedSearchAreaOptions: SearchAreaOption[] | null = null;
@@ -49,9 +51,17 @@ export function buildDirectoryListingsModel({
   basePath,
   title = `Find ${directoryConfig.listingPluralLabel.toLowerCase()} in ${siteConfig.cityOrRegion}`,
   description = `Search the imported directory dataset and refine by area, ${directoryConfig.categoryLabel.toLowerCase()}, ${directoryConfig.filterLabels.type.toLowerCase()}, features, price, and rating.`,
-  headingContext
+  headingContext,
+  baseFilters = {},
+  defaultSort
 }: BuildDirectoryListingsModelInput = {}): DirectoryListingsModel {
-  const filters = filtersFromSearchParams(searchParams);
+  const queryFilters = filtersFromSearchParams(searchParams);
+  const filters = {
+    ...queryFilters,
+    ...baseFilters,
+    q: queryFilters.q,
+    sort: queryFilters.sort ?? baseFilters.sort ?? defaultSort
+  };
   const openOnly = single(searchParams.open) === "1";
   const viewMode = asViewMode(single(searchParams.view));
   const requestedPage = numeric(single(searchParams.page)) ?? 1;

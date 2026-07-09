@@ -3,10 +3,20 @@ import { DirectoryImage } from "@/components/DirectoryImage";
 import { RatingPill } from "@/components/RatingPill";
 import { listingDetailPath } from "@/lib/routes";
 import { buildListingImageAlt } from "@/lib/listing-image-alt";
-import type { ListingResultSummary } from "@/lib/listings-page";
+
+export type RelatedListingCard = {
+  slug: string;
+  name: string;
+  image?: string;
+  imageFallbackLabel?: string;
+  category?: string;
+  priceLevel?: string;
+  rating?: number;
+  reviewCount?: number;
+};
 
 type ListingGridProps = {
-  listings: ListingResultSummary[];
+  listings: RelatedListingCard[];
 };
 
 export function ListingGrid({ listings }: ListingGridProps) {
@@ -21,15 +31,15 @@ export function ListingGrid({ listings }: ListingGridProps) {
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,260px))] justify-center gap-4">
       {listings.map((listing) => {
-        const image = listing.images[0];
+        const categoryLine = [listing.category, listing.priceLevel].filter(Boolean).join(" - ");
 
         return (
           <article key={listing.slug} className="overflow-hidden rounded-lg border border-line bg-white shadow-soft transition hover:shadow-xl">
             <Link href={listingDetailPath(listing.slug)} className="block">
               <div className="relative aspect-[16/11] overflow-hidden bg-orange-50">
                 <DirectoryImage
-                  src={image}
-                  alt={buildListingImageAlt(listing, { variant: "card", index: 0 })}
+                  src={listing.image}
+                  alt={buildListingImageAlt({ name: listing.name, categories: listing.category ? [listing.category] : undefined }, { variant: "card", index: 0 })}
                   fill
                   sizes="260px"
                   className="h-full w-full object-cover transition duration-500 hover:scale-105"
@@ -41,9 +51,9 @@ export function ListingGrid({ listings }: ListingGridProps) {
                   <h3 className="line-clamp-2 text-base font-bold text-ink">{listing.name}</h3>
                   {listing.rating ? <RatingPill rating={listing.rating} /> : null}
                 </div>
-                {listing.categories.length ? (
+                {categoryLine ? (
                   <p className="line-clamp-1 text-sm text-muted">
-                    {[listing.categories[0], listing.priceLevel].filter(Boolean).join(" - ")}
+                    {categoryLine}
                   </p>
                 ) : null}
                 {listing.reviewCount ? (

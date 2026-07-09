@@ -1,0 +1,2 @@
+/listings/:slug /restaurants/:slug 301
+/listings /restaurants 301

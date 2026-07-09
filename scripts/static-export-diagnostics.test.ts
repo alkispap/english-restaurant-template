@@ -14,9 +14,16 @@ for (const expected of [
   "largest files",
   "sitemap.xml",
   "robots.txt",
-  "NEXT_PUBLIC_SITE_URL"
+  "NEXT_PUBLIC_SITE_URL",
+  "restaurant details",
+  "legacy listing redirects"
 ]) {
   assert.ok(source.includes(expected), `diagnostics script should report ${expected}`);
 }
+
+assert.ok(
+  !source.includes('listings: () => listings.map((listing) => ({ slug: listing.slug }))'),
+  "diagnostics should not report legacy listing route params from raw listing data"
+);
 
 console.log("static export diagnostics tests passed");

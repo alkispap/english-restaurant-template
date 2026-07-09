@@ -22,6 +22,20 @@ export function generateMetadata(): Metadata {
 export default function HomePage() {
   return (
     <>
+      <link
+        rel="preload"
+        as="image"
+        href={siteConfig.heroImageMobile}
+        media="(max-width: 639px)"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href={siteConfig.heroImage}
+        media="(min-width: 640px)"
+        fetchPriority="high"
+      />
       <DirectoryAnalyticsTracker pageType="homepage" route="/" />
       <script
         type="application/ld+json"

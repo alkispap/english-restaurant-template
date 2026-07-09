@@ -32,6 +32,7 @@ assert.ok(prepareScript.includes("check:cloudflare"), "prepare script should run
 assert.ok(prepareScript.includes("Upload-ready folder:"), "prepare script should report the upload-ready out folder");
 
 const publishScript = fs.readFileSync(path.join(process.cwd(), "scripts", "publish-cloudflare.ts"), "utf8");
+const exportCheckScript = fs.readFileSync(path.join(process.cwd(), "scripts", "check-cloudflare-export.ts"), "utf8");
 
 assert.ok(publishScript.includes("CLOUDFLARE_PROJECT_NAME"), "publish script should require a Cloudflare project name");
 assert.ok(
@@ -41,6 +42,10 @@ assert.ok(
 assert.ok(
   publishScript.includes('"npm", ["run", "prepare:cloudflare"]'),
   "publish script should run the full Cloudflare preparation workflow before deployment"
+);
+assert.ok(
+  exportCheckScript.includes("_redirects"),
+  "Cloudflare export checks should verify redirect rules are present in out/_redirects"
 );
 
 const headersPath = path.join(process.cwd(), "public", "_headers");
@@ -57,6 +62,18 @@ assert.ok(
 assert.ok(
   !fs.existsSync(path.join(process.cwd(), "public", "_worker.js")),
   "robots cache policy should not require a Pages advanced-mode worker"
+);
+
+const redirectsPath = path.join(process.cwd(), "public", "_redirects");
+assert.ok(fs.existsSync(redirectsPath), "public/_redirects should define static-hosting redirects");
+const redirects = fs.readFileSync(redirectsPath, "utf8");
+assert.ok(
+  redirects.includes("/listings/:slug /restaurants/:slug 301"),
+  "legacy listing detail URLs should permanently redirect to canonical restaurant URLs"
+);
+assert.ok(
+  redirects.includes("/listings /restaurants 301"),
+  "legacy listing index URL should permanently redirect to canonical restaurant index"
 );
 
 console.log("Cloudflare publish tests passed");

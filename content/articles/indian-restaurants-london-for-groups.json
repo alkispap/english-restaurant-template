@@ -1,0 +1,351 @@
+{
+  "slug": "indian-restaurants-london-for-groups",
+  "status": "drafted",
+  "title": "Indian Restaurants in London for Groups: How to Choose the Right Place",
+  "metaTitle": "Indian Restaurants in London for Groups: How to Choose the Right Place | Guide",
+  "metaDescription": "Compare Indian restaurants in London for groups using current directory data on reservations, family signals, review depth, borough coverage, and cuisine-style fit.",
+  "answer": "Indian restaurants in London for groups are easiest to choose by checking booking and table-fit signals first, then narrowing by cuisine style, borough depth, review proof, and mixed-group needs such as family or accessibility fit.",
+  "publishedAt": "",
+  "updatedAt": "2026-07-06",
+  "cluster": "group-and-occasion-intent",
+  "primaryKeyword": "Indian restaurants in London for groups",
+  "heroImage": {
+    "src": "/images/articles/indian-restaurants-london-for-groups/hero.png",
+    "alt": "London group dining scene at an Indian restaurant with shared dishes, mixed-age guests, and booking cues",
+    "caption": "Generated hero image brief: show a realistic London Indian restaurant table for a mixed group with shared dishes, plates in the center, subtle booking cues, and a warm but practical dining atmosphere; no text, no logos."
+  },
+  "keyFacts": [
+    {
+      "label": "Current group-ready pool",
+      "value": "1,898 listings",
+      "detail": "About 85% of the current Indian-labelled directory shows at least one group-ready signal through crowd, children, or reservation fields."
+    },
+    {
+      "label": "Best first move",
+      "value": "Check booking fit before ratings",
+      "detail": "Large-party planning breaks down faster when the venue cannot handle the table shape, timing, or service style you need."
+    },
+    {
+      "label": "Proof depth",
+      "value": "1,503 listings with 100+ reviews",
+      "detail": "Readers can still compare group-friendly options with meaningful public proof instead of relying on a thin set of vague recommendations."
+    }
+  ],
+  "visualBlocks": [
+    {
+      "title": "Use a simple group-dining decision order",
+      "image": {
+        "src": "/images/articles/indian-restaurants-london-for-groups/group-dining-decision-flow.svg",
+        "alt": "Decision flow for choosing Indian restaurants in London for groups",
+        "caption": "Generated visual brief: create a clean decision-flow diagram for Indian restaurants in London for groups with four steps labeled table and booking fit, menu style, group needs, and proof plus area; use simple icons for reservations, shared plates, accessibility or family needs, star reviews, and map location."
+      },
+      "body": "This visual should reinforce that group dining gets easier when the shortlist starts with table logistics and menu fit rather than a generic ranking of famous restaurants."
+    },
+    {
+      "title": "Where the strongest group-ready borough pools appear",
+      "image": {
+        "src": "/images/articles/indian-restaurants-london-for-groups/group-borough-hotspots.svg",
+        "alt": "Borough hotspot summary for group-friendly Indian restaurants in London",
+        "caption": "Generated visual brief: create a simple London borough hotspot graphic showing the deepest group-ready Indian restaurant pools in Harrow, Westminster, Brent, Newham, Hounslow, Tower Hamlets, Ealing, and Hillingdon; keep it educational, clean, and label-led."
+      },
+      "body": "This visual should connect the article to real local browsing behaviour by showing that group-friendly depth is strong in both central and outer-London boroughs."
+    }
+  ],
+  "dataBlocks": [
+    {
+      "title": "What the current group-ready Indian subset looks like",
+      "description": "These counts are based on the current Indian-labelled restaurant dataset in this project, using group-ready signals from crowd, children, and reservation fields.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Indian-labelled listings",
+          "value": "2,241",
+          "detail": "This is the current local pool used for the article and group-intent comparisons."
+        },
+        {
+          "label": "Group-ready listings",
+          "value": "1,898",
+          "detail": "The subset is broad enough to support real comparison rather than a thin special-occasion page."
+        },
+        {
+          "label": "Explicit groups signal",
+          "value": "1,476",
+          "detail": "Most of the subset directly references groups, so the query maps well to existing directory fields."
+        },
+        {
+          "label": "Reservation signals",
+          "value": "1,527",
+          "detail": "Booking evidence is strong enough that readers can start with planning fit instead of prestige alone."
+        },
+        {
+          "label": "Visible review footprint",
+          "value": "1,491,937 reviews",
+          "detail": "The subset still has enough public review volume to support trust-based shortlist decisions."
+        }
+      ]
+    },
+    {
+      "title": "Why the group shortlist still stays flexible",
+      "description": "These practical signals explain why readers can keep filtering by occasion, age mix, and logistics after confirming the venue is group-ready.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Family-friendly signals",
+          "value": "1,652",
+          "detail": "Mixed-age parties are common enough that children and family markers deserve attention early in the search."
+        },
+        {
+          "label": "Accessibility signals",
+          "value": "1,201",
+          "detail": "Access needs show up often enough to be part of the first-pass comparison for larger parties."
+        },
+        {
+          "label": "With dine-in",
+          "value": "1,739",
+          "detail": "Dine-in remains the main use case, so room fit and service flow still matter more than celebrity status."
+        },
+        {
+          "label": "With takeaway",
+          "value": "1,841",
+          "detail": "Takeaway remains common, which helps when the group plan shifts from table booking to shared ordering at home or work."
+        },
+        {
+          "label": "With late-night food",
+          "value": "1,242",
+          "detail": "Evening and post-event dining is strong enough that timing can be part of the comparison, not an afterthought."
+        }
+      ]
+    },
+    {
+      "title": "Where the group-ready depth is strongest",
+      "description": "These borough counts show where readers can stay hyper-local and where they may need to widen the search radius for a larger table.",
+      "sourceLabel": "Based on current directory listings",
+      "items": [
+        {
+          "label": "Strongest borough",
+          "value": "Harrow",
+          "detail": "Harrow currently leads the group-ready Indian subset with 111 listings."
+        },
+        {
+          "label": "Central-London leader",
+          "value": "Westminster",
+          "detail": "Westminster follows with 105 listings, giving groups a strong central option for destination dining."
+        },
+        {
+          "label": "Next-deepest pools",
+          "value": "Brent, Newham, Hounslow",
+          "detail": "Brent and Newham each have 103 listings, while Hounslow has 101, showing that group depth is spread across multiple borough patterns."
+        },
+        {
+          "label": "Style overlap leader",
+          "value": "Middle Eastern crossover",
+          "detail": "Middle Eastern crossover leads the subset, ahead of South Asian, South Indian, Pakistani, Bangladeshi, North Indian, and Punjabi signals."
+        },
+        {
+          "label": "Average visible rating",
+          "value": "4.39",
+          "detail": "The reviewed subset stays comfortably above average, so group-ready does not mean low-proof or low-quality."
+        }
+      ]
+    }
+  ],
+  "comparisonTables": [
+    {
+      "title": "How to compare Indian restaurants in London for groups",
+      "columns": [
+        "Signal",
+        "What it tells you",
+        "How to use it"
+      ],
+      "rows": [
+        {
+          "label": "Reservation and table fit",
+          "values": [
+            "Whether the venue is likely to handle a larger party smoothly",
+            "Start here when the meal is planned, because group dining falls apart faster from booking friction than from a slightly lower star rating."
+          ]
+        },
+        {
+          "label": "Cuisine style and menu breadth",
+          "values": [
+            "Whether the food solves the shared-meal problem for the actual group",
+            "Choose style before rating when the group needs dosa, grills, vegetarian range, familiar curry-house dishes, or a broad mixed menu."
+          ]
+        },
+        {
+          "label": "Group needs overlap",
+          "values": [
+            "Whether the listing supports families, accessibility, dietary overlap, or late dining",
+            "Use these signals early for birthdays, family tables, work dinners, and mixed parties so the shortlist stays realistic."
+          ]
+        },
+        {
+          "label": "Rating with review depth",
+          "values": [
+            "Whether the quality signal has enough public proof behind it",
+            "A slightly lower score backed by hundreds of reviews is often safer for a group booking than a near-perfect score with little volume."
+          ]
+        },
+        {
+          "label": "Borough depth",
+          "values": [
+            "How much real local choice exists around the area you want",
+            "Stay narrow in deeper boroughs like Harrow or Westminster, but widen the radius when a local pool feels too thin for a larger group."
+          ]
+        }
+      ]
+    }
+  ],
+  "ctaBlocks": [
+    {
+      "title": "Browse the full shortlist first",
+      "copy": "Move into the main directory when you already know the group size or occasion and want to compare real listing signals in one place.",
+      "href": "/",
+      "label": "Browse Indian restaurants in London"
+    },
+    {
+      "title": "Narrow by borough when the pool is too broad",
+      "copy": "Use the area pages to turn a large group-ready shortlist into a practical local decision.",
+      "href": "/areas",
+      "label": "Browse London areas"
+    },
+    {
+      "title": "Filter by cuisine style for shared meals",
+      "copy": "Use the category pages when the group already knows it wants dosa-led menus, Punjabi grills, or another clear style signal.",
+      "href": "/categories",
+      "label": "Browse restaurant categories"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "The Short Answer",
+      "body": [
+        "The easiest way to choose Indian restaurants in London for groups is to check booking and table-fit signals first, then narrow the shortlist by cuisine style, borough depth, review proof, and mixed-group needs such as family or accessibility fit.",
+        "That works better than starting with a generic best-of list because a large group meal is usually about logistics and menu fit as much as restaurant reputation."
+      ]
+    },
+    {
+      "heading": "Why Group Dining Should Start With Planning Fit",
+      "body": [
+        "Group dining is less forgiving than a solo or couple booking. A restaurant can be excellent and still be the wrong answer if the room, booking flow, or service style does not suit a larger table, a family gathering, or a mixed-age party.",
+        "For this query, the right first filter is whether the listing gives enough evidence that the restaurant is ready for groups. Reservation signals, explicit group markers, family cues, and practical service details matter before prestige does."
+      ]
+    },
+    {
+      "heading": "What The Current Directory Actually Shows",
+      "body": [
+        "The local dataset is deep enough to support a true group-intent article. Out of 2,241 Indian-labelled listings in this project, 1,898 currently show at least one group-ready signal through crowd, children, or reservation fields. That means the group subset covers most of the local Indian pool rather than a tiny special-occasion corner.",
+        "The proof depth is strong as well. The subset includes 1,503 listings with at least 100 reviews, 652 with 500 or more reviews, and a combined review footprint of 1,491,937. Readers can narrow for group intent without giving up the evidence they need to compare confidently."
+      ]
+    },
+    {
+      "heading": "Group-Friendly Does Not Mean One Single Type Of Restaurant",
+      "body": [
+        "The current subset still spans several style directions. Middle Eastern crossover leads the overlap, with strong South Asian, South Indian, Pakistani, Bangladeshi, North Indian, and Punjabi signals as well. In practice, that means a shared-meal shortlist should still respect whether the group wants dosa, grills, broad curry-house menus, or a more specialist regional focus.",
+        "This matters because the best group restaurant for a family birthday, a work dinner, a student gathering, or a late-night shared meal may not come from the same part of the directory. Menu breadth and style fit should come immediately after table planning."
+      ]
+    },
+    {
+      "heading": "Mixed-Group Needs Matter More Than Usual",
+      "body": [
+        "Larger tables often come with more constraints. The current subset includes 1,652 listings with family-friendly signals and 1,201 with accessibility signals, so it is reasonable to compare those needs directly instead of treating them as edge cases. That is especially useful for birthdays, family meals, and multi-household groups.",
+        "The service overlap also stays broad. Group-ready listings still include 1,739 dine-in signals, 1,841 takeaway signals, and 1,740 delivery signals, which means the group plan can shift from a table booking to a shared home order without leaving the same comparison framework."
+      ]
+    },
+    {
+      "heading": "Local Area Depth Changes How Narrow You Can Search",
+      "body": [
+        "Borough depth is uneven enough to change the browsing strategy. Harrow currently leads the group-ready Indian subset with 111 listings, followed by Westminster with 105, then Brent, Newham, Hounslow, Tower Hamlets, Ealing, and Hillingdon. Some boroughs let readers stay very specific, while others may need a wider search radius for a larger group.",
+        "A practical workflow is to confirm that the listing looks group-ready first, then move into area pages only if the shortlist is still too long. This stops location from doing the entire job before planning fit and menu style have been handled."
+      ]
+    },
+    {
+      "heading": "How To Make The Final Group Choice",
+      "body": [
+        "Once the shortlist is manageable, compare rating together with review count, then check the details that matter for the actual table: booking options, family or accessibility fit, menu breadth, and whether the area still works for everyone attending. A restaurant with substantial review proof and clear planning signals is usually safer for a group than a vague listing with a higher score but little context.",
+        "The reusable lesson is simple: choose by planning fit first, then style, then proof, then borough. That logic can be copied into other restaurant directories because it is built around the decision order for shared meals, not around Indian cuisine alone."
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What should I check first when comparing Indian restaurants in London for groups?",
+      "answer": "Check whether the listing shows booking or group-ready signals first, then compare cuisine style, borough depth, review proof, and practical group needs."
+    },
+    {
+      "question": "How large is the group-ready Indian restaurant pool in this directory?",
+      "answer": "The current project data shows 1,898 group-ready listings within 2,241 Indian-labelled listings, so the group subset is broad enough for real local comparison."
+    },
+    {
+      "question": "Are family and accessibility signals common in the group-ready subset?",
+      "answer": "Yes. The current subset includes 1,652 family-friendly signals and 1,201 accessibility signals, so mixed-group needs can be part of the shortlist rather than an afterthought."
+    },
+    {
+      "question": "Which London boroughs currently have the strongest group-ready Indian restaurant depth?",
+      "answer": "Harrow and Westminster currently lead this dataset, with Brent, Newham, Hounslow, Tower Hamlets, Ealing, and Hillingdon also showing strong group-ready depth."
+    },
+    {
+      "question": "Should I choose by rating or by menu style for a larger group?",
+      "answer": "Choose by planning fit and menu style first, then use rating and review volume to make the final decision. A large group usually fails from bad fit faster than from a small difference in rating."
+    }
+  ],
+  "internalLinks": [
+    {
+      "label": "Indian restaurants in London",
+      "href": "/",
+      "reason": "Move readers from group-dining advice into the main comparison directory."
+    },
+    {
+      "label": "Areas",
+      "href": "/areas",
+      "reason": "Help readers narrow group-friendly options by borough once they know the occasion and booking fit."
+    },
+    {
+      "label": "Restaurant categories",
+      "href": "/categories",
+      "reason": "Let readers compare broad curry-house menus, South Indian specialists, Punjabi grills, and other style signals for shared meals."
+    }
+  ],
+  "researchSources": [
+    {
+      "title": "The 10 Best Indian Restaurants for Large Groups in London - Tripadvisor",
+      "url": "https://www.tripadvisor.co.uk/Restaurants-g186338-c24-zfp9-London_England.html",
+      "note": "Used to confirm that group-intent discovery often starts with review proof and large-table browsing patterns."
+    },
+    {
+      "title": "Best Indian Restaurants In London - DesignMyNight",
+      "url": "https://www.designmynight.com/london/best-indian-restaurants-london",
+      "note": "Used to capture occasion-led framing around celebrations, party dining, and practical booking context."
+    },
+    {
+      "title": "THE 10 BEST Indian Restaurants in London (Updated 2026)",
+      "url": "https://www.tripadvisor.co.uk/Restaurants-g186338-c24-London_England.html",
+      "note": "Used to compare broad trust-signal behaviour against the narrower large-group query."
+    },
+    {
+      "title": "The 20 Best Indian Restaurants In London - The Infatuation",
+      "url": "https://www.theinfatuation.com/london/guides/best-indian-restaurants-london",
+      "note": "Used to observe how editorial guides frame room feel, atmosphere, and shared-meal suitability."
+    },
+    {
+      "title": "The 20 Best Indian Restaurants in London - The Desi Directory",
+      "url": "https://thedesidirectory.co.uk/best/indian-restaurants-in-london",
+      "note": "Used to compare community-facing restaurant curation with the broader group-dining query."
+    },
+    {
+      "title": "Best Indian Restaurants London 2026 - Balance Journal",
+      "url": "https://www.balancejournal.co/food-drink/best-indian-restaurants-london",
+      "note": "Used to see how list-driven pages combine social occasion, quality, and restaurant style."
+    },
+    {
+      "title": "The 25 best Indian restaurants in London - CN Traveller",
+      "url": "https://www.cntraveller.com/gallery/best-indian-restaurants-in-london",
+      "note": "Used to confirm the gap between prestige-led restaurant roundups and practical group-choice logic."
+    },
+    {
+      "title": "16 Indian Private & Group Dining Rooms near London - SquareMeal",
+      "url": "https://www.squaremeal.co.uk/private-group-dining/london/indian",
+      "note": "Used to confirm that explicit group-dining intent overlaps with reservations, celebration planning, and room fit."
+    }
+  ]
+}

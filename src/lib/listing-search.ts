@@ -16,7 +16,7 @@ import {
   typePath
 } from "@/lib/routes";
 import { slugify } from "@/lib/slug";
-import type { DirectoryListingRowSummary, ListingsPageLinkValues, MapPoint } from "@/lib/listings-page";
+import type { DirectoryListingRowSummary, ListingResultSummary, ListingsPageLinkValues, MapPoint } from "@/lib/listings-page";
 
 export type ListingSearchFilters = Omit<ListingsPageLinkValues, "basePath" | "open" | "view" | "page" | "rating"> & {
   rating?: number;
@@ -135,10 +135,45 @@ export function getDirectorySearchRows(currentListings: ListingSearchRecord[], l
       const withoutCurrent = row.listings.filter((listing) => !currentSlugs.has(listing.slug));
       return {
         ...row,
-        listings: (withoutCurrent.length ? withoutCurrent : row.listings).slice(0, limit)
+        listings: (withoutCurrent.length ? withoutCurrent : row.listings).slice(0, limit).map(toListingResultSummary)
       };
     })
     .filter((row) => row.listings.length);
+}
+
+function toListingResultSummary(listing: ListingSearchRecord): ListingResultSummary {
+  return {
+    slug: listing.slug,
+    name: listing.name,
+    description: listing.description,
+    images: listing.images.slice(0, 3),
+    imageFallbackLabel: listing.imageFallbackLabel,
+    area: listing.area,
+    neighborhood: listing.neighborhood,
+    categories: listing.categories.slice(0, 3),
+    dietaryOptions: listing.dietaryOptions.slice(0, 3),
+    priceLevel: listing.priceLevel,
+    rating: listing.rating,
+    reviewCount: listing.reviewCount,
+    fullAddress: listing.fullAddress,
+    address: listing.address,
+    contact: {
+      website: listing.contact?.website,
+      googleReviewsUrl: listing.contact?.googleReviewsUrl
+    },
+    location: {
+      googleMapsUrl: listing.location?.googleMapsUrl,
+      latitude: listing.location?.latitude,
+      longitude: listing.location?.longitude
+    },
+    details: {
+      workingHours: listing.details?.workingHours,
+      serviceOptions: listing.details?.serviceOptions?.slice(0, 4),
+      highlights: listing.details?.highlights?.slice(0, 3),
+      diningOptions: listing.details?.diningOptions?.slice(0, 3),
+      googleVerified: listing.details?.googleVerified
+    }
+  };
 }
 
 export function getSearchAreas() {

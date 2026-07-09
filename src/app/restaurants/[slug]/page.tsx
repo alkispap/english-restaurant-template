@@ -39,9 +39,9 @@ import { OpeningHoursList } from "@/components/OpeningHoursList";
 import { RatingPill } from "@/components/RatingPill";
 import { ReviewSummary } from "@/components/ReviewSummary";
 import { ListingNav } from "@/components/ListingNav";
-import { ListingDetailMobileChrome } from "@/components/ListingDetailMobileChrome";
+import { ListingDetailMobileChrome, type MobileChromeListing } from "@/components/ListingDetailMobileChrome";
 import { ListingEngagementStats } from "@/components/ListingEngagementStats";
-import { ListingGrid } from "@/components/ListingGrid";
+import { ListingGrid, type RelatedListingCard } from "@/components/ListingGrid";
 import { ShareButton } from "@/components/ShareButton";
 import { SaveListingButton } from "@/components/SaveListingButton";
 import { ListingPrivateNote } from "@/components/ListingPrivateNote";
@@ -76,8 +76,12 @@ import { getSocialPlatform, type SocialPlatformId } from "@/lib/social-platforms
 import { listingShareMetadata } from "@/lib/share-metadata";
 import { getListingRobots } from "@/lib/seo-policy";
 import { shouldGenerateFullStaticParams } from "@/lib/static-build";
-import { listingResultSummaryFromListing } from "@/lib/listings-page";
-import { buildListingDetailHeadings, buildListingDetailPageTitle } from "@/lib/listing-detail-headings";
+import { buildListingDetailHeadings } from "@/lib/listing-detail-headings";
+import {
+  buildListingDetailMetaDescription,
+  buildListingDetailPageSummary,
+  buildListingDetailSeoTitle
+} from "@/lib/listing-detail-seo";
 
 type ListingPageProps = {
   params: Promise<{ slug: string }>;
@@ -98,15 +102,16 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
   const listing = getListingBySlug(redirectTarget ?? slug);
   if (!listing) return {};
 
-  const title = buildListingDetailPageTitle(listing);
+  const title = buildListingDetailSeoTitle(listing);
+  const description = buildListingDetailMetaDescription(listing);
   const share = listingShareMetadata(listing);
 
   return {
     title,
-    description: share.description,
+    description,
     openGraph: {
       title,
-      description: share.description,
+      description,
       type: "website",
       url: share.url,
       images: share.images.map((image) => ({ url: image })),
@@ -118,7 +123,7 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
     twitter: {
       card: "summary_large_image",
       title,
-      description: share.description,
+      description,
       images: share.images,
     },
   };
@@ -132,7 +137,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const listing = getListingBySlug(slug);
   if (!listing) notFound();
 
-  const related = getRelatedListings(listing, 8).map(listingResultSummaryFromListing);
+  const related = getRelatedListings(listing, 8).map(relatedListingCardFromListing);
   const gallery = listing.images.slice(0, 3);
   const hasGallery = gallery.length > 0;
   const hasSecondaryGalleryImages = gallery.length > 1;
@@ -155,6 +160,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const share = listingShareMetadata(listing);
   const route = `/${siteConfig.listingBasePath}/${listing.slug}`;
   const headings = buildListingDetailHeadings(listing);
+  const pageSummary = buildListingDetailPageSummary(listing);
+  const mobileChromeListing = mobileChromeListingFromListing(listing);
 
   const breadcrumbs = [
     { name: directoryConfig.listingPluralLabel, href: directoryIndexPath() },
@@ -165,7 +172,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   return (
     <main>
       <ListingNav name={listing.name} tabs={tabs} />
-      <ListingDetailMobileChrome listing={listing} tabs={tabs} shareUrl={share.url} route={route} />
+      <ListingDetailMobileChrome listing={mobileChromeListing} tabs={tabs} shareUrl={share.url} route={route} />
       <DirectoryAnalyticsTracker pageType="listing_detail" route={route} listingSlug={listing.slug} />
       <script
         type="application/ld+json"
@@ -271,6 +278,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
           <DirectoryFreshnessLabel className="mt-3" />
           {listing.description ? <p className="mt-4 max-w-3xl text-lg leading-8 text-muted">{listing.description}</p> : null}
+          <p className="mt-4 max-w-3xl rounded-lg border border-line bg-slate-50 p-4 text-base leading-7 text-ink">
+            {pageSummary}
+          </p>
           <ListingPrivateNote slug={listing.slug} />
 
           <section id="mobile-at-a-glance" className="mt-8 scroll-mt-20 border-y border-line bg-white py-7 md:hidden">
@@ -548,6 +558,31 @@ function getListingTagHref(listing: NonNullable<ReturnType<typeof getListingBySl
   if (listing.listingTypes.some((value) => slugify(value) === tagSlug)) return typePath(tagSlug);
 
   return directorySearchPath(`?q=${encodeURIComponent(tag)}`);
+}
+
+function relatedListingCardFromListing(listing: typeof listings[number]): RelatedListingCard {
+  return {
+    slug: listing.slug,
+    name: listing.name,
+    image: listing.images[0],
+    imageFallbackLabel: listing.imageFallbackLabel,
+    category: listing.categories[0],
+    priceLevel: listing.priceLevel,
+    rating: listing.rating,
+    reviewCount: listing.reviewCount
+  };
+}
+
+function mobileChromeListingFromListing(listing: typeof listings[number]): MobileChromeListing {
+  return {
+    slug: listing.slug,
+    name: listing.name,
+    area: listing.area,
+    categories: listing.categories.slice(0, 2),
+    priceLevel: listing.priceLevel,
+    rating: listing.rating,
+    reviewCount: listing.reviewCount
+  };
 }
 
 function StatusBanner({ status }: { status?: string }) {

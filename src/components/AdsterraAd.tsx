@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { adsterraAds, type AdsterraAdConfig, type AdsterraPlacement } from "@/config/adsterra";
+import { adsterraAds, adsterraAdsEnabled, type AdsterraAdConfig, type AdsterraPlacement } from "@/config/adsterra";
 
 declare global {
   interface Window {
@@ -29,11 +29,13 @@ export function AdsterraAd({ placement, className = "" }: AdsterraAdProps) {
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || isLocalPreview()) return;
+    if (!container || isLocalPreview() || !adsterraAdsEnabled) return;
 
     container.replaceChildren();
 
     if (config.kind === "native") {
+      if (!config.scriptSrc) return;
+
       const nativeContainer = document.createElement("div");
       nativeContainer.id = config.containerId;
       container.appendChild(nativeContainer);
@@ -79,6 +81,11 @@ function isLocalPreview() {
 
 function loadIframeAd(container: HTMLDivElement, config: Extract<AdsterraAdConfig, { kind: "iframe" }>) {
   return new Promise<void>((resolve) => {
+    if (!config.scriptSrc) {
+      resolve();
+      return;
+    }
+
     window.atOptions = {
       key: config.key,
       format: "iframe",
@@ -88,7 +95,7 @@ function loadIframeAd(container: HTMLDivElement, config: Extract<AdsterraAdConfi
     };
 
     const script = document.createElement("script");
-    script.src = `https://www.highperformanceformat.com/${config.key}/invoke.js`;
+    script.src = config.scriptSrc;
     script.onload = () => resolve();
     script.onerror = () => resolve();
     container.appendChild(script);
