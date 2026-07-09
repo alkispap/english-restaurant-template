@@ -1,7 +1,8 @@
 const config = {
   plugins: {
     tailwindcss: {},
-    autoprefixer: {}
+    autoprefixer: {},
+    "./scripts/postcss-remove-tailwind-global-scroll-snap-strictness.cjs": {}
   }
 };
 

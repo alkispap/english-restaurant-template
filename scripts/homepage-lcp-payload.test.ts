@@ -63,10 +63,43 @@ function homepageRowsUseListingSummaries() {
   );
 }
 
+function listingRowsAvoidMobileCarouselLcpSuppression() {
+  const rowSectionSource = source("src", "components", "ListingRowSection.tsx");
+
+  assert.doesNotMatch(
+    rowSectionSource,
+    /overflow-x-auto scroll-smooth px-4 pb-3 pt-4/,
+    "mobile listing carousels should avoid the px-4 shorthand that suppresses Lighthouse LCP detection"
+  );
+  assert.match(
+    rowSectionSource,
+    /overflow-x-auto scroll-smooth pl-4 pr-4 pb-3 pt-4/,
+    "mobile listing carousels should keep their spacing with split left/right padding utilities"
+  );
+}
+
+function buildRemovesTailwindGlobalScrollSnapStrictness() {
+  const postcssSource = source("postcss.config.mjs");
+  const postcssPluginSource = source("scripts", "postcss-remove-tailwind-global-scroll-snap-strictness.cjs");
+
+  assert.match(
+    postcssSource,
+    /remove-tailwind-global-scroll-snap-strictness/,
+    "build should remove Tailwind's global scroll-snap strictness variable because it suppresses Chrome LCP detection"
+  );
+  assert.match(
+    postcssPluginSource,
+    /--tw-scroll-snap-strictness/,
+    "the PostCSS patch should target the exact Tailwind scroll-snap custom property"
+  );
+}
+
 homepagePreloadsResponsiveHeroImages();
 homepageHeroImageIsLcpFriendly();
 cleanHomepageDoesNotHydrateDirectoryModel();
 searchBarUsesCompactAreaCentroids();
 homepageRowsUseListingSummaries();
+listingRowsAvoidMobileCarouselLcpSuppression();
+buildRemovesTailwindGlobalScrollSnapStrictness();
 
 console.log("homepage LCP payload tests passed");

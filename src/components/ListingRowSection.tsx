@@ -68,7 +68,7 @@ export function ListingRowSection({ row }: ListingRowSectionProps) {
       <div className="relative">
         <div
           ref={rowRef}
-          className="scrollbar-hide -mx-4 flex snap-x gap-4 overflow-x-auto scroll-smooth px-4 pb-3 pt-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
+          className="scrollbar-hide -mx-4 flex snap-x gap-4 overflow-x-auto scroll-smooth pl-4 pr-4 pb-3 pt-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
         >
           {row.listings.map((listing) => (
             <div key={listing.slug} className="w-[260px] shrink-0 snap-start sm:w-[300px]">
