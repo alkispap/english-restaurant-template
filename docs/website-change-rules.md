@@ -161,6 +161,30 @@ Check:
 - If local images are introduced later, prefer optimized WebP/AVIF at display-appropriate sizes.
 - Make sure images keep stable dimensions and do not create CLS.
 
+## Listing Verification and Correction Rules
+
+Do:
+
+- Keep historical import provenance separate from current verification.
+- Use `npm run verify:listing -- <proposal.json>` as a dry run before every verification or correction write.
+- Retain public evidence, access time, reviewer, fields checked, reason, and prior/new values in the append-only ledger.
+- Use a `needs-review` event when sources conflict; it must not change the canonical listing or claim verification.
+- Recheck name, address, postcode, business status, website, phone, and opening hours before counting a listing as freshly verified.
+
+Do not:
+
+- Manually set `verificationStatus`, `lastVerifiedAt`, or `lastVerificationEventId` in listing JSON.
+- Rewrite or delete a historical ledger event to hide a superseded decision.
+- Treat a visitor correction request as verified evidence or publish it automatically.
+- Configure `CORRECTIONS_EMAIL` until a monitored mailbox, privacy owner, and retention process exist.
+
+Check:
+
+- `npm run audit:verification` has no ledger-integrity or unmatched-state errors.
+- Repeating an accepted proposal returns the existing deterministic event ID and performs no write.
+- Canonical, search, filter, and shortlist outputs are regenerated together.
+- The correction builder transmits nothing from the website and clearly discloses its local-only behavior.
+
 ## Testing Checklist
 
 Before meaningful upload, run:

@@ -876,12 +876,51 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5E policy and enforcement are implemented. Production remains not ready until the top-100 media cohort and Wimbledon identity are resolved.
 
+### 2026-07-16 - Phase 5F: dated verification and correction workflow
+
+**Confirmed findings**
+
+- All 3,186 listings had immutable historical provenance, but all remained `unverified` and none had a dated verification event.
+- `lastVerifiedAt` and verification status existed only as passive optional fields; there was no evidence schema, append-only history, guarded writer, or stale/conflict audit.
+- The suggest-update page provided guidance only and could not generate a structured correction request or prefill the relevant restaurant.
+- Current public evidence distinguishes Wimbledon Tandoori at 26 Ridgway from The Village Tandoori at 28 Ridgway. The second record had the wrong name and a website hostname that no longer resolved.
+
+**Implementation**
+
+- Added an append-only verification ledger covering event identity, restaurant/source identity, check/record times, reviewer, evidence URLs, fields checked, prior/new values, applied status, and notes.
+- Added a dry-run-by-default `npm run verify:listing -- <proposal.json>` command that validates a strict field allowlist, timestamps, URLs, value types, evidence, paired rating/coordinate invariants, and derived-data synchronization.
+- Made identical proposals idempotent with deterministic event IDs; a repeated accepted proposal performs no write.
+- Added `npm run audit:verification` for ledger schema/integrity, duplicate IDs, orphan events, unmatched canonical verification claims, future dates, partial core scope, unverified/stale records, and unresolved conflicts.
+- Added a browser-local correction-request builder requiring public evidence, with optional environment-configured email handoff and explicit no-submit/no-retention disclosure.
+- Linked every restaurant page to a prefilled correction request and updated privacy/trust language.
+- Recorded the first fully scoped editor event for the 28 Ridgway entity, renamed it to The Village Tandoori, marked the checked operational status, and removed its dead website without merging the separate 26 Ridgway record.
+
+**Measured result**
+
+- Ledger events: 0 -> 1; integrity issues: 0.
+- Fresh editor-verified listings: 0 -> 1; explicitly unverified: 3,186 -> 3,185.
+- Operational listing audit: 0 critical, 1 high, 5 medium -> 0 critical, 0 high, 5 medium.
+- Duplicate-name/postcode affected records: 2 -> 0.
+- Canonical listing count remains 3,186.
+- Verification audit remains `not_ready` because 99.97% of records have no current scoped check.
+
+**Verification**
+
+- TypeScript and focused verification, verification-audit, correction-workflow, and privacy tests passed.
+- Guarded Wimbledon proposal dry run passed before the write; repeating it returned the existing event ID and changed no files.
+- Complete regression suite passed against the final code: 149/149 tests.
+- Full ESLint, TypeScript, and `git diff --check` passed.
+- Standard production build generated all 26 route families and passed client-payload budgets.
+- Static Cloudflare export produced 7,411 files, retained `/suggest-update/` as static HTML, passed export checks, and contained no asset over 25 MiB.
+
+**Status:** Phase 5F is locally implemented and verified. The former Wimbledon identity blocker is resolved; the next data gate is systematic priority-cohort verification.
+
 ## Exact next checkpoint
 
-1. Acquire and document rights-cleared media for the top-100 launch cohort, beginning with the first 25 in the media audit.
-2. Confirm the Wimbledon business's current trading name, premises number, domain, and authoritative identifier before merging either record.
-3. Add a dated verification workflow for selected high-value records; historical provenance must not be treated as freshness.
-4. Continue category, hours, rating/review, contact-action, and external-link remediation by measured priority.
+1. Verify the highest-value launch listings using the guarded event workflow, beginning with records that also lack hours, categories, ratings/reviews, or contact actions.
+2. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
+3. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
+4. Continue category, hours, rating/review, contact-action, and external-link remediation through attributable verification events.
 5. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
 
 ## Template for future entries

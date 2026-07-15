@@ -1,0 +1,31 @@
+{
+  "listingSlug": "restaurant-slug",
+  "checkedAt": "2026-07-16T00:00:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Official restaurant contact page",
+      "sourceUrl": "https://restaurant.example/contact",
+      "accessedAt": "2026-07-16T00:00:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "contact.website",
+      "value": "https://restaurant.example/",
+      "reason": "The official contact page identifies this as the canonical website."
+    }
+  ],
+  "notes": "Replace every example value with retained evidence. This template is not a verification event."
+}
