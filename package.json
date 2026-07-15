@@ -17,6 +17,7 @@
     "audit:freshness": "tsx scripts/check-freshness.ts",
     "audit:template": "tsx scripts/check-template-readiness.ts",
     "audit:payload": "tsx scripts/check-client-payload.ts",
+    "audit:dependencies": "tsx scripts/check-dependency-security.ts",
     "check:cloudflare": "tsx scripts/check-cloudflare-export.ts",
     "diagnose:static": "tsx scripts/static-export-diagnostics.ts",
     "generate:redirects": "tsx scripts/generate-cloudflare-redirects.ts",
@@ -52,7 +53,7 @@
     "eslint-config-next": "^15.0.0",
     "postcss": "^8.5.14",
     "tailwindcss": "^3.4.16",
-    "tsx": "^4.21.0",
+    "tsx": "^4.23.1",
     "typescript": "^5.7.2"
   }
 }
