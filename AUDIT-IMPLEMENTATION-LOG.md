@@ -56,6 +56,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `bb245a8` | Phase 4B script-safe JSON-LD serialization |
 | `db75c6e` | Phase 4B verification record |
 | `661c891` | Phase 4C production security headers and CSP |
+| `35f8ed8` | Phase 4C verification record |
+| `8800080` | Phase 4D privacy/data-flow alignment and regression policy |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -66,7 +68,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
-| 4. Security/privacy/deployment | In progress | Dependencies, JSON-LD, and security headers complete; third-party flows and deployment documentation remain |
+| 4. Security/privacy/deployment | In progress | Dependencies, JSON-LD, headers, and privacy alignment complete; deployment documentation remains |
 | 5. Listing quality/operations | Pending | Not started |
 | 6. Reusable directory packs | Pending | Not started |
 
@@ -659,10 +661,29 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 4C complete. Both deployment modes enforce the same tested browser security baseline.
 
+### 2026-07-15 - Phase 4D: align privacy disclosures with active data flows
+
+**Confirmed finding:** The privacy page used conditional “may use” language that did not distinguish active behavior from future integrations. Current analytics events remain inside the page, ads and Supabase are disabled, contact/update pages do not submit data, browser comments are local, and near-you coordinates are processed locally only after permission.
+
+**Implementation**
+
+- Replaced vague disclosure with explicit sections for current analytics, local saved listings/comments, on-demand location, disabled account sync, non-submitting contact/update pages, external links, and disabled advertising.
+- Clarified that browser comments are private/not published, location is not stored or sent to the directory, and ads/account sync require policy/provider/consent review before activation.
+- Added a data-flow regression that rejects cookie-setting APIs and external analytics transmission while no consent mechanism exists, and ties disabled ads/forms to the published disclosure.
+
+**Verification**
+
+- Focused privacy-flow, trust-page, ad, heading, TypeScript, ESLint, and diff checks: passed.
+- First full suite: 140/141; only the intentional privacy-heading snapshot was stale.
+- Updated the exact heading contract; final full suite passed 141/141 in 1m 47.87s.
+- Production build passed in 106.3s; all payload budgets passed.
+
+**Status:** Phase 4D complete. Current visitor data behavior and the published privacy policy now agree, with regressions guarding silent activation.
+
 ## Exact next checkpoint
 
-1. Start Phase 4D by inventorying enabled third-party data flows and aligning privacy/consent controls with actual behavior.
-2. Consolidate Cloudflare deployment documentation and launch verification into one authoritative workflow.
+1. Start Phase 4E by consolidating Cloudflare deployment documentation and launch verification into one authoritative workflow.
+2. Audit the generated output/publish scripts for safe failure behavior and an explicit commit-to-deploy handoff.
 3. On the first deployed preview, run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, and recheck any enabled third-party embeds.
 
 ## Template for future entries
