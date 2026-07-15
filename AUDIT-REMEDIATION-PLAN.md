@@ -95,7 +95,7 @@
 ## Phase 4 — Security, privacy, and deployment hardening
 
 **Priority:** Before launch
-**Status:** Pending
+**Status:** In progress
 
 ### Work packages
 
@@ -166,4 +166,4 @@
 
 ## Current implementation checkpoint
 
-Phase 1 passed its verification gate. Phase 2 local payload remediation passed: clean directory/SEO routes no longer embed full listings, packed query and compare indexes are budgeted, and standard/static builds enforce route and async-chunk ceilings. Phase 2 remains open only for mobile lab measurement on a deployed preview. Phase 3 corrected contrast, modal focus, form names/status messages, async error states, popover keyboard behavior, sticky duplicate controls, carousel announcements, and map/navigation names. True 390 CSS-pixel testing disproved the earlier overflow concern. Phase 3 remains open for a formal automated accessibility scan and assisted screen-reader pass on a deployable preview. The next implementation slice is Phase 4 security, privacy, and deployment hardening.
+Phase 1 passed its verification gate. Phase 2 local payload remediation passed and remains open only for deployed mobile lab measurement. Phase 3 corrected confirmed accessibility defects and remains open for a formal automated scan and assisted screen-reader pass on a deployable preview. Phase 4A reduced the full dependency audit from five findings to two linked reviewed moderates, updated Next to 15.5.20 and esbuild to 0.28.1, and added a policy that rejects any high/critical or new unreviewed advisory. The remaining PostCSS finding is build-time unreachable with the site's trusted authored CSS; Next 16 still pins the affected version, and a forced Next 9 downgrade is explicitly rejected. The next implementation slice is centralized script-safe JSON-LD serialization.

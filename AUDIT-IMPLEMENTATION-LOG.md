@@ -50,6 +50,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `8ab2389` | Phase 3D verification record |
 | `f08a659` | Dead interface-module removal and hygiene regression |
 | `3c5b3b7` | Phase 3E interactive control accessibility |
+| `e04920c` | Phase 3E verification record |
+| `2a1c9d8` | Phase 4A dependency updates and enforced advisory policy |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -60,7 +62,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
-| 4. Security/privacy/deployment | Pending | Not started |
+| 4. Security/privacy/deployment | In progress | Dependency policy complete; JSON-LD, headers, third-party flows, and deployment documentation remain |
 | 5. Listing quality/operations | Pending | Not started |
 | 6. Reusable directory packs | Pending | Not started |
 
@@ -565,10 +567,51 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Dead-code cleanup and Phase 3E are complete. Phase 3 remains open only for a formal automated accessibility scan and assisted screen-reader pass on a deployable preview.
 
+### 2026-07-15 - Phase 4A: triage and enforce dependency security risk
+
+**Finding:** The current lockfile initially reported five advisories: one low and four moderate. There were no high or critical findings. Three findings were development-only dependency paths; the two production entries were the same PostCSS advisory represented once for `postcss` and once for direct parent `next`.
+
+**Reachability and decisions**
+
+- `brace-expansion@5.0.5` was reachable only through the TypeScript ESLint parser and its numeric-range denial-of-service behavior was not part of the production application.
+- `js-yaml@4.1.1` was reachable only through ESLint configuration parsing and was not used for site/user content.
+- `esbuild@0.27.7` was reachable through `tsx`; its arbitrary-file-read advisory applied to a Windows development server and was relevant to this Windows workspace even though it was not deployable production code.
+- Next 15.5.18 pinned `postcss@8.4.31`. Registry inspection confirmed Next 15.5.20 and current Next 16.2.10 still pin the same PostCSS version. `npm audit fix --force` proposed downgrading Next to 9.3.3, which was rejected as unsafe.
+- The remaining PostCSS stringify advisory requires attacker-controlled CSS containing a closing style tag. This application processes only trusted authored CSS during its build and does not accept, parse, or stringify user CSS at runtime. The moderate finding is therefore accepted as build-time unreachable until Next updates its pinned dependency.
+
+**Implementation**
+
+- Updated the lockfile to Next 15.5.20, `brace-expansion@5.0.7`, and `js-yaml@4.3.0` through non-breaking audit remediation.
+- Updated `tsx` from `^4.21.0` to `^4.23.1`, moving esbuild from 0.27.7 to patched 0.28.1.
+- Added `scripts/check-dependency-security.ts` and `npm run audit:dependencies`.
+  - Fails on every high/critical advisory.
+  - Fails on any low/moderate advisory that is not the exact reviewed Next/PostCSS chain.
+  - Allows a future clean audit and explicitly warns against the unsafe force/downgrade path.
+- Added `scripts/dependency-security-policy.test.ts` to protect the severity, advisory-identity, package-chain, and Windows-launch contracts without requiring network access in the full test suite.
+
+**Measured result**
+
+| Scope | Before | After |
+| --- | --- | --- |
+| Production audit | 0 high/critical, 2 moderate | 0 high/critical, 2 linked reviewed moderates |
+| Full dependency audit | 1 low, 4 moderate, 5 total | 0 low, 2 moderate, 2 total |
+| Unreviewed advisories | 3 development findings | 0 |
+
+**Verification**
+
+- `npm run audit:dependencies`: passed with exactly the reviewed Next/PostCSS chain and no high/critical finding.
+- `npm ci`: passed from the new lockfile in 164.4s; 376 packages installed reproducibly.
+- ESLint and TypeScript: passed.
+- Full fresh-tree suite: 138/138 passed in 2m 0.88s.
+- Production build on Next 15.5.20: passed in 111.4s; all route, search-chunk, and compare payload budgets passed.
+- `git diff --check`: passed.
+
+**Status:** Phase 4A complete. The remaining moderate advisory has an explicit, constrained reachability decision and is guarded against accidental expansion.
+
 ## Exact next checkpoint
 
-1. Start Phase 4A by triaging production dependency advisories and documenting reachability/risk decisions before upgrades.
-2. Harden JSON-LD serialization against hostile imported content, then test production security headers and static-export compatibility.
+1. Start Phase 4B by centralizing JSON-LD serialization and proving hostile imported strings cannot terminate script elements.
+2. Test production security headers and CSP/static-export compatibility, then inventory enabled third-party data flows and privacy controls.
 3. On the first deployed preview, run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, and recheck any enabled third-party embeds.
 
 ## Template for future entries
