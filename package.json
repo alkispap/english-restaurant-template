@@ -18,6 +18,7 @@
     "audit:template": "tsx scripts/check-template-readiness.ts",
     "audit:payload": "tsx scripts/check-client-payload.ts",
     "audit:dependencies": "tsx scripts/check-dependency-security.ts",
+    "audit:listings": "tsx scripts/check-listing-operational-quality.ts",
     "check:cloudflare": "tsx scripts/check-cloudflare-export.ts",
     "diagnose:static": "tsx scripts/static-export-diagnostics.ts",
     "generate:redirects": "tsx scripts/generate-cloudflare-redirects.ts",

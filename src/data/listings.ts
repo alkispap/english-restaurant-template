@@ -19,6 +19,15 @@ export type ReviewDistribution = {
   1: number;
 };
 
+export type ListingProvenance = {
+  sourceName: string;
+  sourceId?: string;
+  sourceUrl?: string;
+  importedAt: string;
+  lastVerifiedAt?: string;
+  verificationStatus: "unverified" | "source-verified" | "editor-verified";
+};
+
 export type Listing = {
   name: string;
   slug: string;
@@ -44,6 +53,7 @@ export type Listing = {
   rating?: number;
   reviewCount?: number;
   businessStatus?: string;
+  provenance?: ListingProvenance;
   featured?: boolean;
   reviewDistribution?: ReviewDistribution;
   contact?: {
