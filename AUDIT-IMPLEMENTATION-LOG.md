@@ -58,6 +58,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `661c891` | Phase 4C production security headers and CSP |
 | `35f8ed8` | Phase 4C verification record |
 | `8800080` | Phase 4D privacy/data-flow alignment and regression policy |
+| `28244cd` | Phase 4D verification record |
+| `dbc62ee` | Phase 4E guarded Cloudflare production release workflow |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -68,7 +70,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
-| 4. Security/privacy/deployment | In progress | Dependencies, JSON-LD, headers, and privacy alignment complete; deployment documentation remains |
+| 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
 | 5. Listing quality/operations | Pending | Not started |
 | 6. Reusable directory packs | Pending | Not started |
 
@@ -680,11 +682,44 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 4D complete. Current visitor data behavior and the published privacy policy now agree, with regressions guarding silent activation.
 
+### 2026-07-15 - Phase 4E: guard the commit-to-Cloudflare production handoff
+
+**Confirmed deployment findings**
+
+- `publish:cloudflare` deployed as soon as `CLOUDFLARE_PROJECT_NAME` existed; it did not require an explicit confirmation of the exact production target.
+- The publisher did not reject uncommitted source before or after generation, so it could deploy an unreviewed change or a generator-modified tracked file.
+- Windows command execution used `shell: true` while passing an environment-derived project name.
+- The upload checklist recommended bypassing the publisher with a raw Wrangler command and preserved a stale dated artifact count. Because `out/` is ignored, a clean worktree alone cannot prove that a direct-upload artifact is current.
+- The raw `npx wrangler` path could download tooling during a production operation.
+
+**Implementation**
+
+- The publisher now requires `--confirm-project` to exactly match the validated `CLOUDFLARE_PROJECT_NAME`.
+- It checks the full tracked/untracked Git status before release checks and again after the static export.
+- It reports the source branch/commit, target project, explicit production branch, and existing Wrangler version before work begins.
+- npm, npx, and Wrangler arguments use direct process spawning with `shell: false`; Wrangler is invoked through `npx --no-install`.
+- The deploy step explicitly supplies `--branch`, using `CLOUDFLARE_PRODUCTION_BRANCH` or the documented `main` default.
+- Replaced stale/direct-upload guidance with one authoritative commit, prepare, guarded publish, and live-verification checklist. The change rules now point to that workflow and prohibit raw deployment of ignored output.
+
+**Verification**
+
+- Exact-target mismatch: refused with exit code 1 before build or deployment.
+- Exact confirmation with a dirty worktree: refused with exit code 1 before build or deployment.
+- TypeScript and focused Cloudflare publishing policy test: passed.
+- ESLint: passed.
+- Full suite: 141/141 passed in 2m 2.39s.
+- Fresh `npm run prepare:cloudflare`: all 3,660 routes exported; client payload budgets passed.
+- Cloudflare artifact validation: 7,411 files passed, no file exceeded 25 MiB, and required production URLs, headers, and redirects were present.
+- No Cloudflare publish, push, or live-site mutation was performed.
+- `git diff --check`: passed.
+
+**Status:** Phase 4E local implementation is complete. Phase 4 remains open only for an explicitly authorized production publish and post-release live verification.
+
 ## Exact next checkpoint
 
-1. Start Phase 4E by consolidating Cloudflare deployment documentation and launch verification into one authoritative workflow.
-2. Audit the generated output/publish scripts for safe failure behavior and an explicit commit-to-deploy handoff.
-3. On the first deployed preview, run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, and recheck any enabled third-party embeds.
+1. Start Phase 5A by defining measurable listing-quality, image-provenance, source-traceability, and external-link health gates against the current dataset.
+2. Prioritize confirmed record defects by listing value and automate checks that can run during future imports.
+3. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and then run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, live header/redirect checks, and any enabled third-party embed checks.
 
 ## Template for future entries
 
