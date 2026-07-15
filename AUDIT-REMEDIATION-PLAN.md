@@ -75,7 +75,7 @@
 ## Phase 3 — WCAG 2.2 AA accessibility
 
 **Priority:** Before launch
-**Status:** Pending
+**Status:** In progress
 
 ### Work packages
 
@@ -166,4 +166,4 @@
 
 ## Current implementation checkpoint
 
-Phase 1 passed its verification gate. Phase 2A also passed: the clean directory/SEO route graph no longer embeds full listings, first-load JS is 143–145 KB, and normal/static builds enforce raw asset budgets. Phase 2 continues with the lazy 6.87 MB search chunk, static-output size/time, and the 364 KB compare route. The 390 px horizontal clipping observed during mobile verification remains tracked for responsive/accessibility diagnosis.
+Phase 1 passed its verification gate. Phase 2 local payload remediation passed: clean directory/SEO routes no longer embed full listings, packed query and compare indexes are budgeted, and standard/static builds enforce route and async-chunk ceilings. Phase 2 remains open only for mobile lab measurement on a deployed preview. Phase 3 corrected contrast, modal focus, form names/status messages, async error states, popover keyboard behavior, sticky duplicate controls, carousel announcements, and map/navigation names. True 390 CSS-pixel testing disproved the earlier overflow concern. Phase 3 remains open for a formal automated accessibility scan and assisted screen-reader pass on a deployable preview. The next implementation slice is Phase 4 security, privacy, and deployment hardening.

@@ -41,6 +41,15 @@ These changes existed before remediation began and were reviewed and committed s
 | `67c654f` | Phase 2B packed browser search index and async-chunk budget |
 | `805bcde` | Phase 2C packed compare index and route-specific payload budgets |
 | `d09777e` | Phase 3A accessible primary colour and hover states |
+| `1b47034` | Phase 3A verification record |
+| `646f567` | Phase 3B modal focus management |
+| `561120d` | Phase 3B verification record |
+| `b673ae3` | Phase 3C form labels and live announcements |
+| `10b1842` | Phase 3C verification record |
+| `2f8e0ab` | Phase 3D async failures and shortlist synchronization |
+| `8ab2389` | Phase 3D verification record |
+| `f08a659` | Dead interface-module removal and hygiene regression |
+| `3c5b3b7` | Phase 3E interactive control accessibility |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -50,7 +59,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | --- | --- | --- |
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
-| 3. WCAG 2.2 AA accessibility | In progress | Primary colour contrast fixed; dialogs and persistent form labels remain |
+| 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | Pending | Not started |
 | 5. Listing quality/operations | Pending | Not started |
 | 6. Reusable directory packs | Pending | Not started |
@@ -509,11 +518,58 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 3D complete; Phase 3 remains in progress.
 
+### 2026-07-15 - Phase 3E: remove dead interface code and harden interactive controls
+
+**Maintainability finding:** Six client-interface modules had no importer, dynamic reference, or live route. They included the inaccessible custom `SearchableSelect` pattern and 551 lines of obsolete alternative search/filter UI that could mislead future template work.
+
+**Confirmed accessibility and reliability findings**
+
+- Mobile navigation, account, and share popovers did not share complete initial-focus, Escape, outside-click, and focus-restoration behavior.
+- The mobile detail sticky header was translated off-screen but its Save/Share controls remained exposed to keyboard and assistive technology. After scrolling, its original action set could likewise duplicate the sticky tab stops.
+- Listing image carousels had named previous/next buttons but no carousel semantics or live position announcement.
+- Restaurant-section navigation and the interactive map lacked explicit programmatic names; desktop section links did not expose the current location.
+- Share-copy failure only wrote to the console and gave the user no recovery message.
+
+**Implementation**
+
+- Removed the unused `CategoryPills`, `DirectoryListingsQueryController`, `HomepageSeoLinks`, `OpenNowToggle`, `SearchableSelect`, and `SearchBarClient` modules after repository-wide reference checks.
+- Added `src/lib/use-dismissible-popover.ts` and applied it to mobile navigation, account options, and share options for focus entry, Escape dismissal/restoration, and outside-click dismissal.
+- Made the sticky and original mobile detail action sets mutually `inert`/`aria-hidden` according to scroll state, while preserving the sticky transition.
+- Added carousel group/roledescription semantics and polite atomic position status regions to both card variants.
+- Named mobile/desktop restaurant-section navigation and map regions; desktop navigation now exposes `aria-current="location"`.
+- Added an accessible share-copy error state with address-bar recovery guidance. Recoverable native-share rejection now opens the fallback without generating a console error.
+
+**Regression coverage**
+
+- `scripts/dead-code-hygiene.test.ts` prevents the six deleted modules from returning.
+- `scripts/interactive-controls-accessibility.test.ts` enforces popover, carousel, sticky-action, navigation, map, and share-failure contracts.
+- `scripts/listing-detail-mobile-layout.test.ts` now rejects off-screen or duplicated sticky action tab stops.
+- Existing tests that referenced obsolete modules were retargeted to current live components.
+
+**Verification**
+
+- Repository reference scan: the six removed modules had no live references.
+- Focused dead-code, interactive-control, mobile-detail, and header-menu tests: passed.
+- ESLint and TypeScript: passed.
+- Full suite after final share recovery change: 137/137 passed in 2m 4.71s.
+- Final standard production build: passed in 95.6s; all initial, async-search, and compare payload budgets passed.
+- True 390 x 844 production-browser journeys:
+  - Mobile navigation focused search on open, closed on Escape/outside click, and restored the trigger after Escape.
+  - Share fallback focused its close control, closed on Escape, restored the exact Share trigger, and produced zero console errors in a clean tab.
+  - At scroll position 0 the fixed actions were inert/hidden and original actions active; after scrolling 300 px those states reversed.
+  - `Royal Nawaab images` advanced from `1 / 3` to `2 / 3` in a polite atomic status region.
+  - Map view completed with `aria-busy=false`, label `Map showing 3187 restaurants`, named Zoom in/out controls, no alert, and no mobile overflow.
+- Auth is disabled in the local configuration, so account-popover live interaction remains protected by shared-hook/static regression rather than a signed-in browser journey.
+- Ad network loading is disabled; current placeholders are labeled. Injected iframe titles and network behavior must be rechecked when an ad provider is enabled.
+- `git diff --check`: passed.
+
+**Status:** Dead-code cleanup and Phase 3E are complete. Phase 3 remains open only for a formal automated accessibility scan and assisted screen-reader pass on a deployable preview.
+
 ## Exact next checkpoint
 
-1. Remove the unused inaccessible `SearchableSelect` custom widget and run a dead-code/duplication cleanup without changing live behavior.
-2. Audit keyboard and accessible names for navigation menus, carousels, map controls, and third-party embeds.
-3. Run mobile lab performance on a deployed preview when one is available.
+1. Start Phase 4A by triaging production dependency advisories and documenting reachability/risk decisions before upgrades.
+2. Harden JSON-LD serialization against hostile imported content, then test production security headers and static-export compatibility.
+3. On the first deployed preview, run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, and recheck any enabled third-party embeds.
 
 ## Template for future entries
 
