@@ -15,6 +15,7 @@ scratch/
 homepage.html
 /*.png
 .diagnostics/
+.codex-local/
 namecheap-static-upload.zip
 .codex-remote-attachments/
 .superpowers/
