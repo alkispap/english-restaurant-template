@@ -1,8 +1,9 @@
 "use client";
 
 import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useModalDialog } from "@/lib/use-modal-dialog";
 
 type FilterOption = {
   label: string;
@@ -23,6 +24,19 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
   const [modalOpen, setModalOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedValues, setSelectedValues] = useState(() => normalizeValues(value));
+  const modalTriggerRef = useRef<HTMLButtonElement>(null);
+  const modalOverlayRef = useRef<HTMLDivElement>(null);
+  const modalDialogRef = useRef<HTMLDivElement>(null);
+  const modalSearchRef = useRef<HTMLInputElement>(null);
+
+  useModalDialog({
+    open: modalOpen,
+    onClose: () => setModalOpen(false),
+    dialogRef: modalDialogRef,
+    overlayRef: modalOverlayRef,
+    triggerRef: modalTriggerRef,
+    initialFocusRef: modalSearchRef
+  });
 
   useEffect(() => {
     const nextValues = normalizeValues(value);
@@ -44,11 +58,16 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
     option.label.toLowerCase().includes(query.trim().toLowerCase())
   );
   const modalContent = modalOpen ? (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 px-4 py-5">
+    <div
+      ref={modalOverlayRef}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 px-4 py-5"
+    >
       <div
+        ref={modalDialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${id}-modal-title`}
+        tabIndex={-1}
         className="flex max-h-[88vh] w-full max-w-5xl flex-col rounded-lg bg-white shadow-2xl"
       >
         <div className="flex items-start justify-between gap-4 px-6 pb-4 pt-6 sm:px-10 sm:pt-8">
@@ -69,6 +88,7 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
           <label className="flex items-center gap-3 rounded-sm border border-emerald-900 px-4 py-3 focus-within:ring-2 focus-within:ring-primary">
             <span className="sr-only">Search {title}</span>
             <input
+              ref={modalSearchRef}
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -179,6 +199,7 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
 
       {hasMore ? (
         <button
+          ref={modalTriggerRef}
           type="button"
           className="focus-ring inline-flex items-center gap-1 rounded-sm text-sm font-bold text-emerald-900 underline decoration-emerald-900 underline-offset-4"
           onClick={openModal}

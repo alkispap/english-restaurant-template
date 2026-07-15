@@ -29,8 +29,10 @@ assert.match(responsiveFiltersSource, /aria-modal="true"/, "mobile filter screen
 assert.match(responsiveFiltersSource, /fixed inset-0 z-50/, "mobile filter screen should cover the viewport");
 assert.match(responsiveFiltersSource, /Show results/, "mobile filter screen should include a Show results close button");
 assert.match(responsiveFiltersSource, /sticky bottom-0/, "Show results should stay visible at the bottom of the filter screen");
-assert.match(responsiveFiltersSource, /document\.body\.style\.overflow/, "mobile filter screen should lock page scroll while open");
-assert.match(responsiveFiltersSource, /event\.key === "Escape"/, "mobile filter screen should close on Escape");
+assert.match(responsiveFiltersSource, /useModalDialog/, "mobile filter screen should use shared modal focus management");
+assert.match(responsiveFiltersSource, /createPortal\(/, "mobile filter screen should render at page level for safe background isolation");
+assert.match(responsiveFiltersSource, /ref=\{mobileTriggerRef\}/, "mobile filter trigger should support focus restoration");
+assert.match(responsiveFiltersSource, /ref=\{mobileCloseRef\}/, "mobile filter screen should move focus to its close control");
 assert.match(
   responsiveFiltersSource,
   /!mobileFiltersOpen[\s\S]*SelectedFilterChips/,

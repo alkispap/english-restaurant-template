@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { SlidersHorizontal, X } from "lucide-react";
 import { AdsterraAd } from "@/components/AdsterraAd";
 import { DirectorySidebar } from "@/components/DirectorySidebar";
 import { FilterPanel, SelectedFilterChips, getSelectedFilters } from "@/components/FilterPanel";
 import type { FilterPanelOptionGroup } from "@/lib/filter-panel-options";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
+import { useModalDialog } from "@/lib/use-modal-dialog";
 
 type ResponsiveDirectoryFiltersProps = {
   model: Pick<DirectoryListingsModel, "filterPanelValues" | "filterOptionGroups" | "sidebarContext" | "sidebarBlocks">;
@@ -17,7 +19,19 @@ type ResponsiveDirectoryFiltersProps = {
 export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }: ResponsiveDirectoryFiltersProps) {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobileDialogRef = useRef<HTMLDivElement>(null);
+  const mobileCloseRef = useRef<HTMLButtonElement>(null);
   const selectedFilters = getSelectedFilters(model.filterPanelValues, model.filterOptionGroups, hiddenGroups);
+
+  useModalDialog({
+    open: mobileFiltersOpen,
+    onClose: () => setMobileFiltersOpen(false),
+    dialogRef: mobileDialogRef,
+    overlayRef: mobileDialogRef,
+    triggerRef: mobileTriggerRef,
+    initialFocusRef: mobileCloseRef
+  });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1024px)");
@@ -30,28 +44,6 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
     mediaQuery.addEventListener("change", updateMode);
     return () => mediaQuery.removeEventListener("change", updateMode);
   }, []);
-
-  useEffect(() => {
-    if (!mobileFiltersOpen || isDesktop) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isDesktop, mobileFiltersOpen]);
-
-  useEffect(() => {
-    if (!mobileFiltersOpen) return;
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setMobileFiltersOpen(false);
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [mobileFiltersOpen]);
 
   if (isDesktop === null) {
     return (
@@ -87,6 +79,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
   return (
     <aside aria-label="Directory filters" className="lg:hidden">
       <button
+        ref={mobileTriggerRef}
         type="button"
         aria-controls="mobile-filter-screen"
         aria-expanded={mobileFiltersOpen}
@@ -115,12 +108,14 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
         </>
       ) : null}
 
-      {mobileFiltersOpen ? (
+      {mobileFiltersOpen ? createPortal(
         <div
+          ref={mobileDialogRef}
           id="mobile-filter-screen"
           role="dialog"
           aria-modal="true"
           aria-labelledby="mobile-filter-title"
+          tabIndex={-1}
           className="fixed inset-0 z-50 flex flex-col bg-white lg:hidden"
         >
           <header className="flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 py-3">
@@ -128,6 +123,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
               Filters
             </h2>
             <button
+              ref={mobileCloseRef}
               type="button"
               aria-label="Close filters"
               onClick={() => setMobileFiltersOpen(false)}
@@ -156,7 +152,8 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
               Show results
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       ) : null}
     </aside>
   );
