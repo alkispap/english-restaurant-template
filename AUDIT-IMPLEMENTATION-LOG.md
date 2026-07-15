@@ -458,10 +458,61 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 3C complete; Phase 3 remains in progress.
 
+### 2026-07-15 - Phase 3D: surface async failures and prevent stale shortlist sync
+
+**Confirmed functional findings**
+
+- Supabase authentication and private-note calls ignored returned error objects. Email sign-in and note saving could therefore show success after the backend rejected the operation.
+- Saved-listing writes dispatched a same-tab change event before the remote update completed. The save button, header count, and compare page responded by immediately fetching stale remote state; a signed-in removal could be merged back into the shortlist.
+- Directory and SEO-landing query enhancers did not expose loading state or catch lazy-module failures. The URL could change while old results remained with no recovery message.
+- Map initialization failures left `Loading map...` indefinitely. The generated map-popup action also retained the old `#e67e22` background, which fails white-text contrast.
+- Compare, save/remove, account, and private-note async actions did not consistently expose busy or failure states.
+
+**Implementation**
+
+- `AccountProvider.tsx`
+  - Checks authentication, saved-listing, and private-note response errors and rejects failed operations instead of returning false success.
+  - Always releases account initialization from its loading state after session failures.
+  - Removes the redundant same-tab shortlist event; the external account store now handles same-tab state and its existing storage listener handles cross-tab updates.
+- `AccountMenu.tsx`, `ListingPrivateNote.tsx`, and `SaveListingButton.tsx`
+  - Add disabled/`aria-busy` action states, safe user-facing failure messages, and polite/assertive outcome announcements.
+  - Distinguish successful browser persistence from failed signed-in account synchronization.
+- `SavedListingsLink.tsx` and `CompareSavedListings.tsx`
+  - Consume the shared account snapshot directly instead of starting redundant remote refreshes on same-tab writes.
+  - Compare now announces loading, note/sync failures, removal progress, and removal outcomes.
+- `DirectoryListingsQueryEnhancer.tsx` and `SeoLandingQueryEnhancer.tsx`
+  - Mark active result regions busy, announce configured listing counts after updates, catch lazy-module failures, reset rejected module promises, and show reload guidance.
+- `ListingMap.tsx`
+  - Catches initialization failures, replaces loading with a visible alert, marks map busy state, announces the no-coordinate state, and changes the popup action to accessible primary `#c2410c`.
+
+**Regression coverage**
+
+- `scripts/async-state-accessibility.test.ts`
+  - Requires backend error propagation, safe account and note failures, busy states, live announcements, query-module recovery, map failure replacement, accessible popup contrast, and removal of the stale same-tab event path.
+
+**Verification**
+
+- Focused async-state, shortlist, account-boundary, compare-payload, query-enhancer, and source-hygiene tests: passed.
+- ESLint and TypeScript: passed.
+- Full suite after the final stale-sync correction: 135/135 passed in 1m 50.97s.
+- Standard production build after the final correction: passed in 85.7s; all route, search-chunk, and compare payload budgets passed.
+- Built directory/map journey:
+  - Switching to map announced `3,187 restaurants updated.`
+  - Client results and map completed at `aria-busy=false`; map loading cleared and no map alert remained.
+- Built detail-page shortlist journey after removing the custom event:
+  - Saving updated the button, status announcement, and header count from 0 to 1 through the shared store.
+  - Removing updated all three back to the unsaved/0 state.
+  - The test shortlist item was removed before browser cleanup.
+- Browser console warnings/errors: none.
+- Auth failure branches are protected by static regression and type checks; live Supabase failure injection was not available because auth is disabled in the current local configuration.
+- `git diff --check`: passed.
+
+**Status:** Phase 3D complete; Phase 3 remains in progress.
+
 ## Exact next checkpoint
 
-1. Audit error handling and busy/loading/empty-state announcements for account actions, compare loading, maps, and browser-filtered listing results.
-2. Remove or replace the unused inaccessible `SearchableSelect` custom widget during the maintainability cleanup.
+1. Remove the unused inaccessible `SearchableSelect` custom widget and run a dead-code/duplication cleanup without changing live behavior.
+2. Audit keyboard and accessible names for navigation menus, carousels, map controls, and third-party embeds.
 3. Run mobile lab performance on a deployed preview when one is available.
 
 ## Template for future entries
