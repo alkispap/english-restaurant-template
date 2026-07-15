@@ -29,8 +29,11 @@ const expected = [
     title: "Privacy Policy",
     heading: "Privacy Policy for This Restaurant Directory",
     sectionHeadings: [
-      "Information This Restaurant Directory May Use",
-      "Saved Restaurant Listings",
+      "Current Analytics and Data Collection",
+      "Browser Storage for Saved Listings and Comments",
+      "Location Permission",
+      "Optional Account Synchronisation",
+      "Contact and Update Requests",
       "Third-Party Restaurant Links",
       "Advertising and Cookies"
     ]

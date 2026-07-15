@@ -75,12 +75,24 @@ export const trustPages = [
     description: `Privacy information for visitors using ${siteConfig.name}.`,
     sections: [
       {
-        heading: "Information This Restaurant Directory May Use",
-        body: "The directory may use privacy-friendly analytics, browser storage for saved listings, and information submitted voluntarily through contact or update requests."
+        heading: "Current Analytics and Data Collection",
+        body: "The current site does not send analytics events to an external analytics provider and does not set analytics cookies. Interface events stay in the page unless a separately configured analytics adapter is added later. This policy and any required consent controls must be updated before external analytics is enabled."
       },
       {
-        heading: "Saved Restaurant Listings",
-        body: "Saved and compared listings can work in the visitor's browser, so they may remain on the device unless the browser data is cleared."
+        heading: "Browser Storage for Saved Listings and Comments",
+        body: "Saved and compared restaurant identifiers and listing comments are stored in the visitor's browser so those requested features work. Browser comments are private to that browser: they are not published or sent to this directory. This data remains on the device until it is removed in the interface or the browser data is cleared."
+      },
+      {
+        heading: "Location Permission",
+        body: "The near-you feature asks for location only after the visitor selects it. Coordinates are used in the browser to choose the nearest directory area and are not stored or sent to this directory. The browser, device, or location provider may apply its own privacy terms."
+      },
+      {
+        heading: "Optional Account Synchronisation",
+        body: "Account synchronisation is currently disabled. If it is enabled with Supabase, sign-in details, saved restaurant identifiers, and private notes will be sent to the configured account service; Google or Microsoft will also process data when that sign-in option is chosen. The production privacy notice and provider details must be reviewed before activation."
+      },
+      {
+        heading: "Contact and Update Requests",
+        body: "The current contact and suggest-an-update pages provide guidance but do not contain a form or transmit a message. If a contact form or email workflow is added, the notice must identify what is collected, why it is used, and how long it is retained."
       },
       {
         heading: "Third-Party Restaurant Links",
@@ -88,7 +100,7 @@ export const trustPages = [
       },
       {
         heading: "Advertising and Cookies",
-        body: "This directory may show advertising from third-party ad partners. These partners may use cookies or similar technologies to deliver ads, measure performance, prevent fraud, and understand interactions with adverts. Ads and ad links are controlled by those third parties and may be subject to their own privacy policies."
+        body: "Third-party advertising network loading is currently disabled, so the visible advertisement placeholders do not load partner scripts or advertising cookies. Before ads are enabled, the operator must review the provider, update this notice, add any consent controls required for cookies or similar technologies, and identify the third-party ad partners and their privacy terms."
       }
     ]
   },
