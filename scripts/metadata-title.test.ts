@@ -33,6 +33,12 @@ async function homepageMetadataUsesApprovedDirectoryTitle() {
   const metadata = await homepageMetadata();
 
   assert.equal(metadata.title, "Indian Restaurants in London Directory");
+  assert.equal(
+    metadata.description,
+    "Browse Indian restaurants in London by area, rating, cuisine, takeaway, delivery, halal options, vegetarian options, and dining style."
+  );
+  assert.equal(metadata.openGraph?.description, metadata.description);
+  assert.equal(metadata.twitter?.description, metadata.description);
   assert.ok(
     !(metadata.title as string).includes(`| ${siteConfig.siteName}`),
     "homepage metadata title should let the root title template append the site name"

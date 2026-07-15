@@ -8,6 +8,7 @@ import {
 } from "@/lib/directory-listings-search-params";
 import type { SeoLandingResultsShell } from "@/components/SeoLandingResultsShell";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
+import { getSeoLandingHiddenFilterGroups } from "@/lib/seo-landing-filter-context";
 
 type SeoLandingResultsShellComponent = typeof SeoLandingResultsShell;
 type SeoLandingBrowserModule = typeof import("@/lib/seo-landing-listings-browser");
@@ -24,6 +25,9 @@ type SeoLandingQueryEnhancerProps = {
       description: string;
     };
     resultsHeadingContext?: string;
+    definingContext?: {
+      key: "neighborhood" | "type" | "dietary" | "service" | "offering";
+    };
   };
 };
 
@@ -41,7 +45,7 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
   const [activeModel, setActiveModel] = useState<DirectoryListingsModel | null>(null);
   const [ActiveResultsShell, setActiveResultsShell] = useState<SeoLandingResultsShellComponent | null>(null);
   const [clientResultsRoot, setClientResultsRoot] = useState<HTMLElement | null>(null);
-  const hiddenGroups = initialPage.kind === "area" ? (["area"] as const) : [];
+  const hiddenGroups = getSeoLandingHiddenFilterGroups(initialPage);
 
   useEffect(() => {
     const serverResults = document.getElementById("seo-landing-server-results");
@@ -133,5 +137,12 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
 
   if (!activeModel || !ActiveResultsShell || !clientResultsRoot) return null;
 
-  return createPortal(<ActiveResultsShell model={activeModel} hiddenGroups={[...hiddenGroups]} />, clientResultsRoot);
+  return createPortal(
+    <ActiveResultsShell
+      model={activeModel}
+      hiddenGroups={[...hiddenGroups]}
+      definingContextKey={initialPage.definingContext?.key}
+    />,
+    clientResultsRoot
+  );
 }

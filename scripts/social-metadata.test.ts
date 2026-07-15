@@ -54,7 +54,7 @@ function assertSocialMetadata(metadata: MetadataLike, canonical: string, image: 
 
 async function corePagesExposeSocialMetadata() {
   assertSocialMetadata(await homepageMetadata(), "/");
-  assertSocialMetadata(restaurantsMetadata(), "/restaurants");
+  assertSocialMetadata(restaurantsMetadata(), "/restaurants/");
   assertSocialMetadata(areasMetadata, "/areas");
   assertSocialMetadata(categoriesMetadata, "/categories");
   assertSocialMetadata(await guidesMetadata(), "/guides");

@@ -136,8 +136,8 @@ function areaLandingPageKeepsFiltersFocusedOnCurrentArea() {
   );
   assert.match(
     componentBody,
-    /hiddenGroups=\{areaScopedHiddenFilterGroups\(page\)\}/,
-    "area-scoped SEO landing pages should hide the already-selected area filter group"
+    /hiddenGroups=\{getSeoLandingHiddenFilterGroups\(page\)\}/,
+    "SEO landing pages should hide route-defined filter groups through the shared context helper"
   );
   assert.doesNotMatch(
     componentBody,

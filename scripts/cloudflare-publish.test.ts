@@ -9,8 +9,9 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package
 assert.equal(packageJson.scripts?.["check:cloudflare"], "tsx scripts/check-cloudflare-export.ts");
 assert.equal(
   packageJson.scripts?.["build:static"],
-  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\""
+  "npm run generate:redirects && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\""
 );
+assert.equal(packageJson.scripts?.["generate:redirects"], "tsx scripts/generate-cloudflare-redirects.ts");
 assert.equal(packageJson.scripts?.["diagnose:static"], "tsx scripts/static-export-diagnostics.ts");
 assert.equal(
   packageJson.scripts?.["prepare:cloudflare"],
@@ -68,12 +69,16 @@ const redirectsPath = path.join(process.cwd(), "public", "_redirects");
 assert.ok(fs.existsSync(redirectsPath), "public/_redirects should define static-hosting redirects");
 const redirects = fs.readFileSync(redirectsPath, "utf8");
 assert.ok(
-  redirects.includes("/listings/:slug /restaurants/:slug 301"),
-  "legacy listing detail URLs should permanently redirect to canonical restaurant URLs"
+  redirects.includes("/listings/:slug/ /restaurants/:slug/ 301"),
+  "trailing-slash legacy listing detail URLs should permanently redirect to canonical restaurant URLs"
 );
 assert.ok(
-  redirects.includes("/listings /restaurants 301"),
+  redirects.includes("/listings/ /restaurants/ 301"),
   "legacy listing index URL should permanently redirect to canonical restaurant index"
+);
+assert.ok(
+  redirects.includes("/restaurants/hyderabad-darbar-2/ /restaurants/hyderabad-darbar-redbridge/ 301"),
+  "renamed restaurant URLs should use one-hop permanent redirects"
 );
 
 console.log("Cloudflare publish tests passed");

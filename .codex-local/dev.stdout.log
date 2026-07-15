@@ -1,0 +1,19 @@
+
+> english-restaurant-template@0.1.0 dev:next
+> next dev --turbo --hostname 127.0.0.1 --port 3000
+
+   ▲ Next.js 15.5.18 (Turbopack)
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+
+ ✓ Starting...
+ ✓ Ready in 10s
+ ○ Compiling / ...
+ ✓ Compiled / in 25.1s
+ GET / 200 in 5024ms
+ GET / 200 in 2123ms
+ GET / 200 in 3756ms
+ GET / 200 in 6741ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 9.6s
+ ✓ Compiled in 840ms

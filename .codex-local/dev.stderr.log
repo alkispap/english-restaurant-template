@@ -1,0 +1,60 @@
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\server\app\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\server\\app\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\static\development\_buildManifest.js.tmp.igtuumot12d'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\static\\development\\_buildManifest.js.tmp.igtuumot12d'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\server\app\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\server\\app\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\static\development\_buildManifest.js.tmp.da9bydpl8zt'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\static\\development\\_buildManifest.js.tmp.da9bydpl8zt'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\static\development\_buildManifest.js.tmp.x4h1pumoovn'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\static\\development\\_buildManifest.js.tmp.x4h1pumoovn'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\server\app\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\server\\app\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\static\development\_buildManifest.js.tmp.3nzgmu8rkxx'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\static\\development\\_buildManifest.js.tmp.3nzgmu8rkxx'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\server\app\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\server\\app\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\static\development\_buildManifest.js.tmp.1dcbss0srlv'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\static\\development\\_buildManifest.js.tmp.1dcbss0srlv'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\user\Desktop\Websites\Templates\Restaurant Template\English Restaurant Template\.next\static\development\_buildManifest.js.tmp.gpliorepxm'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\user\\Desktop\\Websites\\Templates\\Restaurant Template\\English Restaurant Template\\.next\\static\\development\\_buildManifest.js.tmp.gpliorepxm'
+}

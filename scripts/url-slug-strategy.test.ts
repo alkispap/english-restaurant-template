@@ -27,7 +27,7 @@ function currentContentSlugsAreCleanAndUnique() {
 }
 
 function routeHelpersKeepCanonicalDirectoryUrls() {
-  assert.equal(directorySearchPath(), "/restaurants");
+  assert.equal(directorySearchPath(), "/restaurants/");
   assert.equal(listingDetailPath("dishoom-camden"), "/restaurants/dishoom-camden");
   assert.equal(areaPath("camden"), "/areas/camden");
   assert.equal(neighborhoodPath("camden-town"), "/neighborhoods/camden-town");
@@ -39,7 +39,7 @@ function detailFilterLinksUseCanonicalRestaurantSearchPath() {
   assert.equal(buildDetailFilterHref("offering", "Vegan options", "Redbridge"), "/offerings/vegan-options");
   assert.equal(
     buildDetailFilterHref("highlight", "Great dessert", "Redbridge"),
-    "/restaurants?area=redbridge&highlight=great-dessert"
+    "/restaurants/?area=redbridge&highlight=great-dessert"
   );
 }
 

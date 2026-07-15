@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { directoryConfig } from "@/config/directory";
+import { featuredDiningHubs, getFeaturedDiningHub } from "@/config/featured-dining-hubs";
 import { siteConfig } from "@/config/site";
 import { listings, type Listing } from "@/data/listings";
 import { getAreaGuideModel, type AreaGuideModel } from "@/lib/area-guide";
@@ -48,12 +49,17 @@ import {
   categoryPath,
   dietaryPath,
   directoryIndexPath,
+  directorySearchPath,
   neighborhoodPath,
   offeringPath,
   servicePath,
   typePath
 } from "@/lib/routes";
 import { seoLandingHeadings } from "@/lib/seo-landing-headings";
+import {
+  getSeoLandingPresentationValues,
+  type SeoLandingRouteContextKey
+} from "@/lib/seo-landing-filter-context";
 import { pageShareMetadata } from "@/lib/share-metadata";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/structured-data";
 
@@ -86,6 +92,18 @@ export type SeoInformationGainBlock = {
   items: string[];
 };
 
+export type SeoDefiningContext = {
+  key: SeoLandingRouteContextKey;
+  slug: string;
+  label: string;
+  navigation?: {
+    label: string;
+    items: SeoRelatedLink[];
+    allLabel: string;
+    allHref: string;
+  };
+};
+
 export type SeoPageModel = {
   kind: "area" | "neighborhood" | "category" | "areaCategory" | "best" | "facet";
   metadata: {
@@ -107,6 +125,7 @@ export type SeoPageModel = {
     body: string;
   };
   resultsHeadingContext?: string;
+  definingContext?: SeoDefiningContext;
   areaGuide?: AreaGuideModel;
   informationGainBlocks: SeoInformationGainBlock[];
   faqs: SeoFaq[];
@@ -135,6 +154,7 @@ type BasePageInput = {
   guideTitle: string;
   guideBody: string;
   resultsHeadingContext?: string;
+  definingContext?: SeoDefiningContext;
   canonical: string;
   minIndexableResults: number;
   baseFilters: ListingFilters;
@@ -217,6 +237,9 @@ export function getNeighborhoodSeoPage(neighborhoodSlug: string, searchParams: S
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
     resultsHeadingContext: headings.resultsHeadingContext,
+    definingContext: getFeaturedDiningHub(neighborhoodSlug)
+      ? diningHubDefiningContext(neighborhoodSlug, label)
+      : undefined,
     canonical,
     minIndexableResults: SEO_POLICY.routeThresholds.neighborhood,
     baseFilters: { neighborhood: neighborhoodSlug, sort: directoryConfig.defaultSort },
@@ -399,6 +422,7 @@ export function getFacetSeoPage(facet: FacetKey, valueSlug: string, searchParams
     guideTitle: headings.guideTitle,
     guideBody: headings.guideBody,
     resultsHeadingContext: headings.resultsHeadingContext,
+    definingContext: facet === "dietary" ? dietaryDefiningContext(valueSlug, label) : undefined,
     canonical,
     minIndexableResults: SEO_POLICY.routeThresholds.facet,
     forceNoindex: !isApprovedHighIntentFacet(facet, valueSlug),
@@ -503,7 +527,7 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
     breadcrumbJsonLd(input.breadcrumbs),
     ...(isIndexable ? [itemListJsonLd(page.items, input.canonical)] : [])
   ];
-  const linkValues: ListingsPageLinkValues = {
+  const rawLinkValues: ListingsPageLinkValues = {
     ...filters,
     basePath: input.canonical,
     rating: filters.rating ? String(filters.rating) : undefined,
@@ -511,6 +535,9 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
     view: viewMode,
     page: page.currentPage
   };
+  const linkValues = input.definingContext
+    ? getSeoLandingPresentationValues(rawLinkValues, input.definingContext.key, Boolean(single(input.searchParams.sort)))
+    : rawLinkValues;
 
   return {
     kind: input.kind,
@@ -533,6 +560,7 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
       body: buildUniqueGuideBody(input, filteredResults)
     },
     resultsHeadingContext: input.resultsHeadingContext,
+    definingContext: input.definingContext,
     areaGuide: input.areaGuide,
     informationGainBlocks: informationGainBlocks(input, filteredResults),
     faqs: input.faqs,
@@ -549,6 +577,40 @@ function buildSeoPage(input: BasePageInput): SeoPageModel {
     linkValues,
     filterPanelValues: linkValues,
     structuredData
+  };
+}
+
+function dietaryDefiningContext(valueSlug: string, label: string): SeoDefiningContext {
+  const dietaryLabels = new Map(getFacetLabels("dietary").map((item) => [slugify(item), item]));
+  const switcherSlugs = ["halal", "vegetarian", "vegan", "gluten-free"];
+
+  return {
+    key: "dietary",
+    slug: valueSlug,
+    label,
+    navigation: {
+      label: "Dietary options",
+      items: switcherSlugs.flatMap((slug) => {
+        const itemLabel = dietaryLabels.get(slug);
+        return itemLabel ? [{ label: itemLabel, href: dietaryPath(slug) }] : [];
+      }),
+      allLabel: `All ${directoryConfig.listingPluralLabel.toLowerCase()}`,
+      allHref: directorySearchPath()
+    }
+  };
+}
+
+function diningHubDefiningContext(valueSlug: string, label: string): SeoDefiningContext {
+  return {
+    key: "neighborhood",
+    slug: valueSlug,
+    label,
+    navigation: {
+      label: "Dining hubs",
+      items: featuredDiningHubs.map((hub) => ({ label: hub.title, href: neighborhoodPath(hub.slug) })),
+      allLabel: `All ${directoryConfig.listingPluralLabel.toLowerCase()}`,
+      allHref: directorySearchPath()
+    }
   };
 }
 

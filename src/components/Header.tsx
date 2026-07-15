@@ -14,7 +14,7 @@ export function Header() {
           <span className="grid h-9 w-9 place-items-center rounded-md bg-orange-100 text-ink">
             {siteConfig.logoInitials}
           </span>
-          <span>{siteConfig.name}</span>
+          <span className="hidden sm:inline">{siteConfig.name}</span>
         </Link>
         <div className="hidden min-w-0 flex-1 lg:block">
           <HeaderSearch className="mx-auto max-w-sm" />

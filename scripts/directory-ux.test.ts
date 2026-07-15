@@ -89,8 +89,8 @@ function homepageListingRowsResolveExpectedUrlsAndListings() {
   const rated = rows.find((row) => row.id === "highly-rated");
   const recent = rows.find((row) => row.id === "recently-added");
 
-  assert.equal(budget?.seeAllHref, "/restaurants?sort=price");
-  assert.equal(rated?.seeAllHref, "/restaurants?sort=rating");
+  assert.equal(budget?.seeAllHref, "/restaurants/?sort=price");
+  assert.equal(rated?.seeAllHref, "/restaurants/?sort=rating");
   assert.deepEqual(
     recent?.listings.slice(0, 3).map((listing) => listing.slug),
     listings.slice(0, 3).map((listing) => listing.slug)
@@ -98,8 +98,8 @@ function homepageListingRowsResolveExpectedUrlsAndListings() {
 }
 
 function directorySearchPathTargetsRestaurantsWorkspace() {
-  assert.equal(directorySearchPath(), "/restaurants");
-  assert.equal(directorySearchPath("?open=1"), "/restaurants?open=1");
+  assert.equal(directorySearchPath(), "/restaurants/");
+  assert.equal(directorySearchPath("?open=1"), "/restaurants/?open=1");
 }
 
 function clientUserFilterLinksUseListingsWorkspace() {
@@ -108,7 +108,7 @@ function clientUserFilterLinksUseListingsWorkspace() {
 
   assert.ok(filterLinks.length > 0, "expected default sidebar to expose user filter links");
   assert.ok(
-    filterLinks.every((link) => link.href.startsWith("/restaurants?")),
+    filterLinks.every((link) => link.href.startsWith("/restaurants/?")),
     "user filter links should point at the restaurants workspace"
   );
 }

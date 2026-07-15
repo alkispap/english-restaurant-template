@@ -52,15 +52,19 @@ assert.ok(typeParams.length > 0, "type pages should expose static params");
 assert.ok(areaParams.every((params) => typeof params.area === "string" && params.area.length > 0), "area params should include area");
 assert.ok(listingParams.every((params) => typeof params.slug === "string" && params.slug.length > 0), "listing params should include slug");
 assert.ok(
-  listingParams.some((params) => params.slug === "hyderabad-darbar-2"),
-  "listing params should include old restaurant slugs so static export can emit redirects"
+  !listingParams.some((params) => params.slug === "hyderabad-darbar-2"),
+  "renamed restaurant slugs should be handled by HTTP redirects instead of static redirect shells"
 );
 assert.equal(listingSlugRedirects["hyderabad-darbar-2"], "hyderabad-darbar-redbridge");
 const redirects = fs.readFileSync(path.join(process.cwd(), "public", "_redirects"), "utf8");
 const legacyListingRouteSource = fs.readFileSync(path.join(process.cwd(), "src", "app", "listings", "[slug]", "page.tsx"), "utf8");
 assert.ok(
-  redirects.includes("/listings/:slug /restaurants/:slug 301"),
-  "legacy listing detail URLs should be handled by static hosting redirects"
+  redirects.includes("/listings/:slug/ /restaurants/:slug/ 301"),
+  "trailing-slash legacy listing detail URLs should be handled by static hosting redirects"
+);
+assert.ok(
+  redirects.includes("/listings/hyderabad-darbar-2/ /restaurants/hyderabad-darbar-redbridge/ 301"),
+  "renamed legacy restaurant URLs should redirect directly to their canonical slug"
 );
 assert.ok(
   legacyListingRouteSource.includes("dynamicParams = false"),

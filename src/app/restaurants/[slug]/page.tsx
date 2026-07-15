@@ -54,7 +54,7 @@ import { buildListingEavSummary } from "@/lib/listing-eav-summary";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
 import { listings } from "@/data/listings";
-import { listingSlugRedirects, resolveListingSlugRedirect } from "@/data/listing-slug-redirects";
+import { resolveListingSlugRedirect } from "@/data/listing-slug-redirects";
 import { getListingBySlug, getRelatedListings, isCategoryTag, slugify } from "@/lib/directory";
 import {
   buildListingDetailTabs,
@@ -65,7 +65,7 @@ import {
   hasServiceFeatures,
   hasTransport
 } from "@/lib/listing-detail-nav";
-import { areaPath, categoryPath, dietaryPath, directoryIndexPath, directorySearchPath, listingDetailPath, typePath } from "@/lib/routes";
+import { areaPath, directoryIndexPath, directorySearchPath, listingDetailPath } from "@/lib/routes";
 import { localBusinessJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 import { getListingMapsUrl } from "@/lib/listing-links";
 import { getListingExploreLinks } from "@/lib/directory-growth";
@@ -74,6 +74,7 @@ import { buildDetailFilterHref, type DetailFilterName } from "@/lib/listing-deta
 import { buildListingImageAlt } from "@/lib/listing-image-alt";
 import { getSocialPlatform, type SocialPlatformId } from "@/lib/social-platforms";
 import { listingShareMetadata } from "@/lib/share-metadata";
+import { directoryRouteLink } from "@/lib/directory-route-links";
 import { getListingRobots } from "@/lib/seo-policy";
 import { shouldGenerateFullStaticParams } from "@/lib/static-build";
 import { buildListingDetailHeadings } from "@/lib/listing-detail-headings";
@@ -91,8 +92,7 @@ export function generateStaticParams() {
   if (!shouldGenerateFullStaticParams()) return [];
 
   return [
-    ...listings.map((listing) => ({ slug: listing.slug })),
-    ...Object.keys(listingSlugRedirects).map((slug) => ({ slug }))
+    ...listings.map((listing) => ({ slug: listing.slug }))
   ];
 }
 
@@ -428,7 +428,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <TrackedActionLink href={`tel:${listing.contact.phone.replace(/\s+/g, "")}`} label={listing.contact.phone} icon={<Phone className="h-4 w-4" />} pageType="listing_detail" action="phone_click" route={route} listingSlug={listing.slug} />
               ) : null}
               {listing.contact?.email ? (
-                <TrackedActionLink href={`mailto:${listing.contact.email}`} label={actionLabels.email} icon={<Mail className="h-4 w-4" />} pageType="listing_detail" action="email_click" route={route} listingSlug={listing.slug} />
+                <TrackedActionLink encodedEmail={Buffer.from(listing.contact.email, "utf8").toString("base64")} label={actionLabels.email} icon={<Mail className="h-4 w-4" />} pageType="listing_detail" action="email_click" route={route} listingSlug={listing.slug} />
               ) : null}
               <div className="mt-2 border-t border-line pt-4">
                 <ShareButton 
@@ -553,9 +553,9 @@ function InfoCard({ icon, label, value, href }: { icon: React.ReactNode; label: 
 function getListingTagHref(listing: NonNullable<ReturnType<typeof getListingBySlug>>, tag: string) {
   const tagSlug = slugify(tag);
 
-  if (isCategoryTag(tag)) return categoryPath(tagSlug);
-  if (listing.dietaryOptions.some((value) => slugify(value) === tagSlug)) return dietaryPath(tagSlug);
-  if (listing.listingTypes.some((value) => slugify(value) === tagSlug)) return typePath(tagSlug);
+  if (isCategoryTag(tag)) return directoryRouteLink("category", tagSlug);
+  if (listing.dietaryOptions.some((value) => slugify(value) === tagSlug)) return directoryRouteLink("dietary", tagSlug);
+  if (listing.listingTypes.some((value) => slugify(value) === tagSlug)) return directoryRouteLink("type", tagSlug);
 
   return directorySearchPath(`?q=${encodeURIComponent(tag)}`);
 }

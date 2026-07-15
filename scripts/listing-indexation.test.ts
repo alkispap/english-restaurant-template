@@ -22,7 +22,7 @@ async function listingMetadataUsesQualityGate() {
 
   assert.equal(metadata.robots, undefined);
   assert.deepEqual(metadata.alternates, {
-    canonical: `${siteConfig.url}${listingDetailPath(activeListing.slug)}`
+    canonical: `${siteConfig.url}${listingDetailPath(activeListing.slug)}/`
   });
 }
 
@@ -31,7 +31,7 @@ async function listingMetadataNoindexesWeakListings() {
 
   assert.deepEqual(metadata.robots, { index: false, follow: true });
   assert.deepEqual(metadata.alternates, {
-    canonical: `${siteConfig.url}${listingDetailPath(noindexListing.slug)}`
+    canonical: `${siteConfig.url}${listingDetailPath(noindexListing.slug)}/`
   });
 }
 
@@ -39,10 +39,11 @@ function sitemapUsesListingQualityGate() {
   const sitemapListingUrls = sitemap()
     .map((entry) => entry.url)
     .filter((url) => url.includes(`/${siteConfig.listingBasePath}/`))
+    .filter((url) => url !== `${siteConfig.url}/${siteConfig.listingBasePath}/`)
     .sort();
   const expectedListingUrls = listings
     .filter(isListingIndexable)
-    .map((listing) => `${siteConfig.url}${listingDetailPath(listing.slug)}`)
+    .map((listing) => `${siteConfig.url}${listingDetailPath(listing.slug)}/`)
     .sort();
 
   assert.deepEqual(sitemapListingUrls, expectedListingUrls);

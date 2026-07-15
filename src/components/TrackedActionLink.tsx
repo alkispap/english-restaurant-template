@@ -10,6 +10,7 @@ import { cleanListingUrl } from "@/lib/listing-links";
 
 type TrackedActionLinkProps = {
   href?: string;
+  encodedEmail?: string;
   label: string;
   icon: ReactNode;
   primary?: boolean;
@@ -21,6 +22,7 @@ type TrackedActionLinkProps = {
 
 export function TrackedActionLink({
   href,
+  encodedEmail,
   label,
   icon,
   primary = false,
@@ -30,26 +32,46 @@ export function TrackedActionLink({
   listingSlug
 }: TrackedActionLinkProps) {
   const safeHref = cleanListingUrl(href);
-  if (!safeHref) return null;
+  if (!safeHref && !encodedEmail) return null;
+
+  const className = `focus-ring inline-flex items-center justify-center gap-2 rounded-md px-4 py-3 text-sm font-bold ${
+    primary ? "bg-primary text-white" : "border border-line text-ink"
+  }`;
+
+  const trackClick = (targetUrl?: string) =>
+    trackDirectoryEvent({
+      pageType,
+      action,
+      route,
+      listingSlug,
+      label,
+      targetUrl
+    });
+
+  if (encodedEmail) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          const emailHref = cleanListingUrl(`mailto:${window.atob(encodedEmail)}`);
+          if (!emailHref) return;
+          trackClick(emailHref);
+          window.location.href = emailHref;
+        }}
+        className={className}
+      >
+        {label} {icon}
+      </button>
+    );
+  }
 
   return (
     <a
-      href={safeHref}
-      target={safeHref.startsWith("http") ? "_blank" : undefined}
-      rel={safeHref.startsWith("http") ? "noreferrer" : undefined}
-      onClick={() =>
-        trackDirectoryEvent({
-          pageType,
-          action,
-          route,
-          listingSlug,
-          label,
-          targetUrl: safeHref
-        })
-      }
-      className={`focus-ring inline-flex items-center justify-center gap-2 rounded-md px-4 py-3 text-sm font-bold ${
-        primary ? "bg-primary text-white" : "border border-line text-ink"
-      }`}
+      href={safeHref!}
+      target={safeHref!.startsWith("http") ? "_blank" : undefined}
+      rel={safeHref!.startsWith("http") ? "noreferrer" : undefined}
+      onClick={() => trackClick(safeHref)}
+      className={className}
     >
       {label} {icon}
     </a>

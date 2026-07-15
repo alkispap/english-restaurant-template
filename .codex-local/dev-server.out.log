@@ -1,0 +1,19 @@
+   ▲ Next.js 15.5.18 (Turbopack)
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+
+ ✓ Starting...
+ ✓ Ready in 4.8s
+ ○ Compiling /neighborhoods/[neighborhood] ...
+ ✓ Compiled /neighborhoods/[neighborhood] in 14.1s
+ GET /neighborhoods/southall/ 200 in 10026ms
+ GET /neighborhoods/southall/ 200 in 10893ms
+ GET /neighborhoods/southall/ 200 in 2172ms
+ GET /neighborhoods/harrow/ 200 in 2075ms
+ GET /neighborhoods/harrow/ 200 in 9236ms
+ GET /neighborhoods/southall/ 200 in 1008ms
+ GET /neighborhoods/wembley/ 200 in 1088ms
+ ○ Compiling /restaurants ...
+ ✓ Compiled /restaurants in 1382ms
+ GET /restaurants/ 200 in 2423ms
+[?25h

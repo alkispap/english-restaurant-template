@@ -338,7 +338,7 @@ const sharedFooterGroups = [
     limit: 6
   },
   {
-    title: "{localNicheSingularTitle} Needs",
+    title: "Services and dietary needs",
     links: [
       { label: "Takeaway {listingPluralLabelLower}", href: "/services/takeaway" },
       { label: "Delivery {listingPluralLabelLower}", href: "/services/delivery" },

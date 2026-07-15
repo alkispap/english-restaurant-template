@@ -52,7 +52,7 @@ function localBusinessUrlUsesDirectoryPage() {
   };
   const schema = localBusinessJsonLd(listing);
 
-  assert.equal(schema.url, `${getSiteUrl()}/restaurants/sample-restaurant`);
+  assert.equal(schema.url, `${getSiteUrl()}/restaurants/sample-restaurant/`);
   assert.deepEqual(schema.sameAs, ["https://restaurant.example.com/"]);
 }
 
@@ -100,13 +100,14 @@ function siteSchemaDescribesTheDirectory() {
   assert.equal(organization["@type"], "Organization");
   assert.equal(organization.name, "Indian Restaurants London");
   assert.equal(organization.url, getSiteUrl());
-  assert.equal(typeof organization.description, "string");
-  assert.ok(organization.description.includes("Indian restaurants in London"));
+  assert.equal(
+    organization.description,
+    "Browse Indian restaurants in London by area, rating, cuisine, takeaway, delivery, halal options, vegetarian options, and dining style."
+  );
   assert.equal(website["@type"], "WebSite");
   assert.equal(website.name, "Indian Restaurants London");
   assert.equal(website.url, getSiteUrl());
-  assert.equal(typeof website.description, "string");
-  assert.ok(website.description.includes("imported local business data"));
+  assert.equal(website.description, organization.description);
   assert.deepEqual(website.publisher, {
     "@type": "Organization",
     name: "Indian Restaurants London",

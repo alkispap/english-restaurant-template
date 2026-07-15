@@ -19,8 +19,8 @@ import { SaveListingButton } from "@/components/SaveListingButton";
 import { directoryConfig } from "@/config/directory";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { openStatus } from "@/lib/opening-hours";
-import { categoryPath, listingDetailPath } from "@/lib/routes";
-import { slugify } from "@/lib/slug";
+import { listingDetailPath } from "@/lib/routes";
+import { directoryRouteLink } from "@/lib/directory-route-links";
 import { buildListingImageAlt } from "@/lib/listing-image-alt";
 import type { ListingResultSummary } from "@/lib/listings-page";
 
@@ -156,7 +156,7 @@ export function ListingResultsRow({ listing, rank }: ListingResultsRowProps) {
             {listing.categories.slice(0, 3).map((category) => (
               <Link
                 key={category}
-                href={categoryPath(slugify(category))}
+                href={directoryRouteLink("category", category)}
                 className="rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-accent transition hover:bg-orange-100"
               >
                 {category}

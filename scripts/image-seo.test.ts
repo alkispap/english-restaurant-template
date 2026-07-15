@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { getAllArticles, getPublicGuideArticles } from "../src/lib/articles";
+import { getDirectoryLandingModel } from "../src/lib/directory-landing";
 import { siteConfig } from "../src/config/site";
 
-const homepageSource = fs.readFileSync("src/components/DirectoryListingsView.tsx", "utf8");
+const homepageSource = fs.readFileSync("src/components/DirectoryLandingPage.tsx", "utf8");
+const homepageModelSource = fs.readFileSync("src/lib/directory-landing.ts", "utf8");
+const globalStylesSource = fs.readFileSync("src/app/globals.css", "utf8");
 const genericAltPattern = /\b(visual guide|visual summary|image|photo|picture)\b/i;
 
 function homepageHeroUsesSeoVisibleImage() {
@@ -35,33 +38,69 @@ function homepageHeroUsesSeoVisibleImage() {
 }
 
 function homepageDiscoveryCardsUseLocalGeneratedImages() {
-  const discoveryImages = [
-    "/images/homepage/discovery-area.webp",
-    "/images/homepage/discovery-cuisines.webp",
-    "/images/homepage/discovery-takeaway.webp",
-    "/images/homepage/discovery-halal.webp",
-    "/images/homepage/discovery-vegetarian.webp",
-    "/images/homepage/discovery-best-rated.webp"
-  ];
+  assert.ok(homepageSource.includes("<LandingCardSection section={model.primaryNeeds}"), "homepage should render primary dietary cards");
+  assert.ok(homepageSource.includes("<LandingCardSection section={model.diningHubs}"), "homepage should render dining hub cards");
+  assert.ok(homepageSource.includes("<LandingCardSection section={model.serviceNeeds}"), "homepage should render service cards");
+  assert.ok(homepageModelSource.includes("imageAlt:"), "homepage card model should provide meaningful image alt text");
+  assert.ok(homepageSource.includes("alt={item.imageAlt}"), "homepage image cards should render their model alt text");
+}
 
-  discoveryImages.forEach((src) => {
-    assert.ok(homepageSource.includes(src), `homepage discovery cards should reference ${src}`);
-    assert.ok(fs.existsSync(publicPath(src)), `${src} should exist`);
-    assert.ok(fileSize(publicPath(src)) < 250_000, `${src} should stay below 250 KB`);
-    const dimensions = webpDimensions(publicPath(src));
-    assert.ok(dimensions.width > dimensions.height, `${src} should use a landscape crop`);
-  });
+function diningHubImagesUseOptimizedLocalAssets() {
+  const hubCards = getDirectoryLandingModel().diningHubs.items;
 
-  [
-    "London street with Indian restaurants for browsing by area",
-    "Indian dishes showing different cuisines and restaurant styles",
-    "Indian takeaway containers ready for collection",
-    "Halal-friendly Indian restaurant table with shared dishes",
-    "Vegetarian Indian thali with colourful vegetable dishes",
-    "Highly rated Indian restaurant table with polished dishes"
-  ].forEach((alt) => {
-    assert.ok(homepageSource.includes(alt), `homepage discovery image alt text should include "${alt}"`);
+  assert.equal(hubCards.length, 5, "homepage should render five London dining hub cards");
+  hubCards.forEach((card) => {
+    const image = card.image;
+    assert.ok(image, `${card.title} should have an image`);
+    assert.ok(image.startsWith("/images/homepage/dining-hubs/"), `${card.title} should use a local dining hub image`);
+    assert.ok(image.endsWith(".webp"), `${card.title} dining hub image should be WebP`);
+    assert.ok(card.imageAlt.length >= 30, `${card.title} should have meaningful image alt text`);
+    assert.ok(card.imageCredit?.sourceUrl, `${card.title} should include a source URL`);
+    assert.ok(card.imageCredit?.licenseUrl, `${card.title} should include a license URL`);
+
+    const imagePath = publicPath(image);
+    assert.ok(fs.existsSync(imagePath), `${image} should exist`);
+    assert.ok(fileSize(imagePath) < 250_000, `${image} should stay below 250 KB`);
+    const dimensions = webpDimensions(imagePath);
+    assert.equal(dimensions.width, 800, `${image} should use the shared card width`);
+    assert.equal(dimensions.height, 450, `${image} should use the shared card height`);
   });
+}
+
+function dietaryCardImagesUseOptimizedLocalAssets() {
+  const dietaryCards = getDirectoryLandingModel().primaryNeeds.items;
+
+  assert.equal(dietaryCards.length, 4, "homepage should render four primary dietary cards");
+  dietaryCards.forEach((card) => {
+    const image = card.image;
+    assert.ok(image, `${card.title} should have an image`);
+    assert.ok(image.startsWith("/images/homepage/dietary/"), `${card.title} should use a local dietary illustration`);
+    assert.ok(image.endsWith(".webp"), `${card.title} dietary image should be WebP`);
+    assert.ok(card.imageAlt.length >= 40, `${card.title} should have meaningful image alt text`);
+    assert.equal(card.imageCredit, undefined, `${card.title} generated illustration should not require a photo credit`);
+
+    const imagePath = publicPath(image);
+    assert.ok(fs.existsSync(imagePath), `${image} should exist`);
+    assert.ok(fileSize(imagePath) < 250_000, `${image} should stay below 250 KB`);
+    const dimensions = webpDimensions(imagePath);
+    assert.equal(dimensions.width, 800, `${image} should use the shared card width`);
+    assert.equal(dimensions.height, 450, `${image} should use the shared card height`);
+  });
+}
+
+function homepageOrnamentUsesOptimizedDecorativeAsset() {
+  const ornament = "/images/homepage/decorative/indian-editorial-ornament.webp";
+  const ornamentPath = publicPath(ornament);
+
+  assert.ok(fs.existsSync(ornamentPath), "homepage decorative ornament should exist");
+  assert.ok(fileSize(ornamentPath) < 200_000, "homepage decorative ornament should stay below 200 KB");
+  assert.deepEqual(webpDimensions(ornamentPath), { width: 1600, height: 800 });
+  assert.ok(globalStylesSource.includes(`url("${ornament}")`), "homepage CSS should reference the local ornament");
+  assert.ok(
+    globalStylesSource.includes(".directory-home .home-band--ornament::before"),
+    "homepage ornament should be rendered through a homepage-scoped pseudo-element"
+  );
+  assert.ok(!homepageSource.includes(ornament), "decorative ornament should not be rendered as announced image content");
 }
 
 function articleImagesUseMeaningfulAltText() {
@@ -151,6 +190,9 @@ function articleImages(article: ReturnType<typeof getAllArticles>[number]) {
 
 homepageHeroUsesSeoVisibleImage();
 homepageDiscoveryCardsUseLocalGeneratedImages();
+dietaryCardImagesUseOptimizedLocalAssets();
+diningHubImagesUseOptimizedLocalAssets();
+homepageOrnamentUsesOptimizedDecorativeAsset();
 articleImagesUseMeaningfulAltText();
 publishedArticleLocalImagesExist();
 localImageAssetsStayPerformanceFriendly();

@@ -17,7 +17,7 @@ async function homepageAndIndexDescriptionsAreSpecific() {
 
   assert.equal(
     homepage.description,
-    "A searchable directory of Indian restaurants in London with filters for areas, cuisines, ratings, services, transport, and dining options."
+    "Browse Indian restaurants in London by area, rating, cuisine, takeaway, delivery, halal options, vegetarian options, and dining style."
   );
   assert.equal(
     restaurants.description,

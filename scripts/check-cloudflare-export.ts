@@ -60,12 +60,16 @@ assert.ok(
   "out/_headers must keep sitemap and robots revalidated."
 );
 assert.ok(
-  redirects.includes("/listings/:slug /restaurants/:slug 301"),
-  "out/_redirects must permanently redirect legacy listing detail URLs to canonical restaurant URLs."
+  redirects.includes("/listings/:slug/ /restaurants/:slug/ 301"),
+  "out/_redirects must permanently redirect trailing-slash legacy listing URLs."
 );
 assert.ok(
-  redirects.includes("/listings /restaurants 301"),
+  redirects.includes("/listings/ /restaurants/ 301"),
   "out/_redirects must permanently redirect the legacy listing index to /restaurants."
+);
+assert.ok(
+  redirects.includes("/restaurants/hyderabad-darbar-2/ /restaurants/hyderabad-darbar-redbridge/ 301"),
+  "out/_redirects must send renamed restaurant slugs directly to their canonical URL."
 );
 
 console.log(`Cloudflare export checks passed: ${files.length.toLocaleString()} files, no asset over 25 MiB.`);

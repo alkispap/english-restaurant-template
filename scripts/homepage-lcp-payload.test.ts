@@ -19,7 +19,7 @@ function homepagePreloadsResponsiveHeroImages() {
 }
 
 function homepageHeroImageIsLcpFriendly() {
-  const viewSource = source("src", "components", "DirectoryListingsView.tsx");
+  const viewSource = source("src", "components", "DirectoryLandingPage.tsx");
   const heroImageStart = viewSource.indexOf(`src={siteConfig.heroImage}`);
   assert.ok(heroImageStart >= 0, "homepage hero image should use the configured hero image");
 

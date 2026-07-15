@@ -4,15 +4,24 @@ import { ListingsResults } from "@/components/ListingsResults";
 import { ResponsiveDirectoryFilters } from "@/components/ResponsiveDirectoryFilters";
 import type { FilterPanelOptionGroup } from "@/lib/filter-panel-options";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
+import {
+  getSeoLandingPresentationValues,
+  type SeoLandingRouteContextKey
+} from "@/lib/seo-landing-filter-context";
 
 type SeoLandingResultsShellProps = {
   model: DirectoryListingsModel;
   hiddenGroups?: FilterPanelOptionGroup["name"][];
+  definingContextKey?: SeoLandingRouteContextKey;
 };
 
-export function SeoLandingResultsShell({ model, hiddenGroups = [] }: SeoLandingResultsShellProps) {
+export function SeoLandingResultsShell({ model, hiddenGroups = [], definingContextKey }: SeoLandingResultsShellProps) {
+  const keepExplicitSort = new URLSearchParams(model.searchQuery).has("sort");
+  const presentationValues = definingContextKey
+    ? getSeoLandingPresentationValues(model.linkValues, definingContextKey, keepExplicitSort)
+    : model.linkValues;
   const filterModel = {
-    filterPanelValues: model.filterPanelValues,
+    filterPanelValues: presentationValues,
     filterOptionGroups: model.filterOptionGroups,
     sidebarContext: model.sidebarContext,
     sidebarBlocks: model.sidebarBlocks
@@ -31,7 +40,7 @@ export function SeoLandingResultsShell({ model, hiddenGroups = [] }: SeoLandingR
           totalPages={model.totalPages}
           viewMode={model.viewMode}
           openOnly={model.openOnly}
-          linkValues={model.linkValues}
+          linkValues={presentationValues}
           headingContext={model.headingContext}
         />
       </div>

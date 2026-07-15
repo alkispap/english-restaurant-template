@@ -22,7 +22,7 @@ async function corePagesDeclareCanonicalUrls() {
   const guides = guidesIndexMetadata();
 
   assert.deepEqual(homepage.alternates, { canonical: "/" });
-  assert.deepEqual(restaurants.alternates, { canonical: "/restaurants" });
+  assert.deepEqual(restaurants.alternates, { canonical: "/restaurants/" });
   assert.deepEqual(areasIndexMetadata.alternates, { canonical: "/areas" });
   assert.deepEqual(categoriesIndexMetadata.alternates, { canonical: "/categories" });
   assert.deepEqual(guides.alternates, { canonical: "/guides" });
@@ -36,7 +36,7 @@ async function restaurantPagesUseAbsoluteCanonicalUrls() {
   const metadata = await listingDetailMetadata({ params: Promise.resolve({ slug: listing.slug }) });
 
   assert.deepEqual(metadata.alternates, {
-    canonical: `${siteConfig.url}${listingDetailPath(listing.slug)}`
+    canonical: `${siteConfig.url}${listingDetailPath(listing.slug)}/`
   });
 }
 
@@ -75,7 +75,7 @@ function sitemapOnlyIncludesCanonicalIndexableUrls() {
   const urls = sitemap().map((entry) => entry.url);
 
   assert.ok(urls.includes(siteConfig.url), "homepage should be in sitemap");
-  assert.ok(urls.includes(`${siteConfig.url}/restaurants`), "/restaurants should be in sitemap");
+  assert.ok(urls.includes(`${siteConfig.url}/restaurants/`), "/restaurants/ should be in sitemap");
   assert.ok(!urls.includes(`${siteConfig.url}/listings`), "legacy /listings should not be in sitemap");
   assert.ok(!urls.includes(`${siteConfig.url}/compare`), "/compare utility page should not be in sitemap");
   assert.ok(!urls.some((url) => url.includes("?")), "query URLs should not be in sitemap");

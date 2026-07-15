@@ -6,6 +6,7 @@ import { getFeaturedCategoryCards } from "@/lib/directory";
 import { categoriesIndexHeadings } from "@/lib/categories-index-headings";
 import { getPopularSearches } from "@/lib/directory-growth";
 import { pageShareMetadata } from "@/lib/share-metadata";
+import { directoryRouteLink } from "@/lib/directory-route-links";
 
 const metadataTitle = "Indian Restaurants in London by Cuisine";
 const metadataDescription =
@@ -45,7 +46,7 @@ export default function CategoriesPage() {
           {categories.map((category) => (
             <Link
               key={category.slug}
-              href={`/categories/${category.slug}`}
+              href={directoryRouteLink("category", category.slug)}
               className="focus-ring group flex min-h-32 flex-col justify-between rounded-lg border border-line bg-white p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-primary"
             >
               <span>
