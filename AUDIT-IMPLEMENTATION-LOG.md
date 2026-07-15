@@ -369,10 +369,52 @@ DevTools device metrics were then forced to a true 390 CSS-pixel mobile viewport
 
 **Status:** Phase 3A complete; Phase 3 remains in progress.
 
+### 2026-07-15 - Phase 3B: make filter dialogs keyboard-safe
+
+**Confirmed finding:** Both modal filter interfaces exposed `role="dialog"`, `aria-modal`, and accessible names, but neither implemented complete focus management. The filter-choice dialog lacked initial focus, Tab containment, Escape handling, background isolation, scroll locking, and focus restoration. The mobile filter screen handled Escape and scroll locking but still allowed focus and assistive-technology navigation to reach the page behind it and did not restore focus.
+
+**Implementation**
+
+- `src/lib/use-modal-dialog.ts`
+  - Adds one shared modal behavior for initial focus, forward and reverse Tab containment, Escape, body scroll locking, inert/`aria-hidden` background isolation, and exact focus restoration.
+  - Preserves prior body and background states during cleanup.
+  - Detects the topmost active dialog so the filter-choice dialog can safely open inside the mobile filter screen without one Escape key closing both layers.
+- `src/components/FilterCheckboxGroup.tsx`
+  - Focuses the search field when the choice dialog opens and restores focus to the exact `Show more` trigger when it closes.
+  - Adds a programmatic dialog focus fallback.
+- `src/components/ResponsiveDirectoryFilters.tsx`
+  - Moves the full-screen mobile dialog to a page-level portal so the rest of the page can be isolated safely.
+  - Focuses the close control on open and restores focus to the `Filters` trigger on close.
+  - Replaces duplicated Escape and scroll-lock effects with the shared modal behavior.
+
+**Regression coverage**
+
+- `scripts/dialog-focus-management.test.ts`
+  - Requires all dialog focus, keyboard, scroll-lock, background-isolation, nested-layer, portal, and restoration contracts.
+- `scripts/responsive-directory-filters.test.ts`
+  - Requires the mobile screen to use the shared behavior, page-level portal, initial-focus control, and restoration trigger.
+
+**Verification**
+
+- Focused dialog tests: passed.
+- ESLint and TypeScript: passed.
+- Full suite: 133/133 passed in 1m 47.69s.
+- Standard production build: passed in 98s; all route, async-search, and compare payload budgets passed.
+- Built `/restaurants` tested at a true 390 x 844 viewport:
+  - Opening mobile filters focused `Close filters`, locked body scroll, and made page siblings inert and hidden from assistive technology.
+  - Shift+Tab from the first control wrapped to `Show results`; Tab from the last control wrapped to `Close filters`.
+  - Opening the nested `Show more` dialog focused its search field and isolated the outer modal.
+  - The first Escape closed only the nested dialog and restored its exact `Show more` trigger; the second closed mobile filters and restored `Filters`.
+  - Cleanup removed all temporary inert, `aria-hidden`, and overflow states.
+  - Browser console warnings/errors: none.
+- `git diff --check`: passed.
+
+**Status:** Phase 3B complete; Phase 3 remains in progress.
+
 ## Exact next checkpoint
 
-1. Audit dialog focus handling with focused regressions for labels, initial focus, containment, Escape, background interaction, and focus restoration.
-2. Audit persistent programmatic labels and associated help/error messages for search, filters, and submission forms.
+1. Audit persistent programmatic labels and associated help/error messages for search, filters, and submission forms.
+2. Audit error summaries, validation announcements, and loading/empty-state announcements for forms and dynamic result regions.
 3. Run mobile lab performance on a deployed preview when one is available.
 
 ## Template for future entries
