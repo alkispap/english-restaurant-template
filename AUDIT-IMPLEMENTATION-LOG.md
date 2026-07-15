@@ -780,9 +780,40 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5B import-pipeline implementation is complete. Current-data provenance remains a deliberate open backfill decision, and no record is falsely marked verified.
 
+### 2026-07-15 - Phase 5C: resolve confirmed listing entities without guessing
+
+**Confirmed findings**
+
+- `yummy-dosa-catering` was not a separate restaurant location after the existing local correction: it shared Yummy Dosa's name, 68 Cranbrook Road address, postcode, main phone, and official website. The official site presents catering/live dosa as a service of that restaurant.
+- The importer used stable place IDs for listing fields and provenance but generic CSV role inference did not use them for deduplication. The Yummy alias could therefore return on a future import.
+- The existing Monty's Nepalese Cuisine merge also relied on normalized name/address matching even though its two source rows have different historical/current place IDs.
+- The Wimbledon pair shares a phone, postcode, adjacent address numbers, and operational lineage, but first-party sources conflict over its current name, 26/28 Ridgway address, and primary domain. A canonical merge would currently require guessing.
+
+**Implementation**
+
+- Added a reviewed entity-resolution registry for confirmed source-ID aliases.
+- Generic imports now classify stable source-ID columns for deduplication while retaining the original source ID in provenance.
+- Made the Monty's merge explicit and added the confirmed Yummy Dosa alias.
+- Added a dry-run-by-default entity migration that validates canonical/alias source IDs and updates the canonical JSON plus all derived indexes only with `--write`.
+- Consolidated Yummy Dosa from 3,187 to 3,186 canonical listings and removed the retired slug from search and shortlist data.
+- Added a one-hop permanent redirect from `yummy-dosa-catering` to `yummy-dosa`.
+- Documented the evidence and kept Wimbledon open pending authoritative identity confirmation.
+
+**Verification**
+
+- TypeScript, focused ESLint, importer tests, and entity-resolution tests: passed.
+- Resolver dry run before migration: exactly one alias found; 3,187 -> 3,186 predicted.
+- Full source CSV dry run after importer change: 3,188 rows -> 3,186 listings, two merges, no writes.
+- Post-migration canonical, search-record, and shortlist counts: 3,186 each; retired Yummy slug absent.
+- Redirect generation includes all four legacy/current trailing-slash variants for the retired slug.
+- Listing audit: 0 critical, 3 high, 4 medium; candidate duplicates reduced from four records/two groups to two records/one group.
+- Wimbledon records were not modified or suppressed.
+
+**Status:** Phase 5C confirmed-duplicate implementation is complete. One evidence-blocked Wimbledon group remains intentionally unresolved and visible in the launch gate.
+
 ## Exact next checkpoint
 
-1. Start Phase 5C by reviewing the two candidate duplicate-location groups against their source rows and current page data; merge only confirmed duplicates and document legitimate exceptions.
+1. Confirm the Wimbledon business's current trading name, premises number, domain, and authoritative identifier before merging either record.
 2. Establish the current-data provenance backfill only after the source/provider identity and defensible extraction/import date are confirmed.
 3. Define the image licensing/provenance policy and a high-value enrichment priority before changing thousands of image-deficient records.
 4. Continue category, hours, rating/review, contact-action, and external-link remediation by measured priority.
