@@ -608,7 +608,7 @@ function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
       "Google Reviews": "255",
       "Reserve a Table": "",
       "Book Appointment": "",
-      place_id: "old-place-id"
+      place_id: "ChIJLY76B5ANdkgR2lrh_0eC_k8"
     },
     {
       "Restaurant Name": "MONTYS NEPALESE CUISINE",
@@ -625,7 +625,7 @@ function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
       longitude: "-0.3177137",
       "Reserve a Table": "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g",
       "Book Appointment": "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g",
-      place_id: "new-place-id"
+      place_id: "ChIJuUWujUYNdkgRO_H-QCUjQ0o"
     }
   ];
 
@@ -646,6 +646,47 @@ function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
   assert.equal(listing.neighborhood, "Northfield Avenue");
   assert.equal(listing.rating, 5);
   assert.equal(listing.reviewCount, 255);
+}
+
+function confirmedEntityAliasesMergeWithoutLosingSourceProvenance() {
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "South Indian",
+      Website: "https://yummydosarestaurant.co.uk/",
+      Phone: "+44 20 8637 3026",
+      Postcode: "IG1 4NH",
+      "Street Address": "68 Cranbrook Rd",
+      "Google Rating": "5",
+      "Google Reviews": "2160",
+      place_id: "ChIJHW95Q7an2EcRTtMQy-XzTBg"
+    },
+    {
+      "Restaurant Name": "Yummy Dosa Catering",
+      "Cuisine Type": "South Indian",
+      Website: "https://yummydosarestaurant.co.uk/",
+      Phone: "+44 7776 675146",
+      Postcode: "IG11 0NY",
+      "Street Address": "5 Farr Ave",
+      place_id: "ChIJocOA2Stm2qoRoXP2Vrhu6T4"
+    }
+  ];
+
+  const result = analyzeDirectoryRows(rows, "test.csv", "normal import", undefined, {
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const [listing] = result.listings;
+
+  assert.equal(result.listings.length, 1);
+  assert.equal(result.reportData.duplicateCount, 1);
+  assert.equal(listing.slug, "yummy-dosa");
+  assert.equal(listing.rating, 5);
+  assert.equal(listing.reviewCount, 2160);
+  assert.equal(listing.provenance.sourceId, "ChIJHW95Q7an2EcRTtMQy-XzTBg");
+  assert.match(
+    result.report,
+    /confirmed entity alias "ChIJocOA2Stm2qoRoXP2Vrhu6T4" -> "ChIJHW95Q7an2EcRTtMQy-XzTBg"/
+  );
 }
 
 function importProvenanceIsExplicitAndCannotClaimVerification() {
@@ -703,6 +744,7 @@ duplicateListingSlugsPreferLocalAreaBeforeNumbers();
 missingCategoriesUseConservativeInferenceAndReview();
 sourceDataOverridesCorrectKnownLocalBusinessErrors();
 duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping();
+confirmedEntityAliasesMergeWithoutLosingSourceProvenance();
 importProvenanceIsExplicitAndCannotClaimVerification();
 
 console.log("import-directory behavior tests passed");

@@ -143,6 +143,7 @@ export const listingSlugRedirects = {
   "vaghaar-2": "vaghaar-harrow",
   "village-tandoori-2": "village-tandoori-southwark",
   "wimbledon-tandoori-2": "wimbledon-tandoori-merton",
+  "yummy-dosa-catering": "yummy-dosa",
   "yako-2": "yako-harrow",
   "yasmin-restaurant-2": "yasmin-restaurant-bromley",
   "zaika-2": "zaika-bromley",

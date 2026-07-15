@@ -2104,7 +2104,8 @@
     "fullAddress": "68 Cranbrook Rd, Ilford, IG1 4NH, London",
     "city": "London",
     "categories": [
-      "South Indian"
+      "South Indian",
+      "Indian"
     ],
     "listingTypes": [],
     "dietaryOptions": [],
@@ -2125,7 +2126,9 @@
       "Quick bite",
       "Small plates",
       "Vegan options",
-      "Vegetarian options"
+      "Vegetarian options",
+      "Indian",
+      "Caterer"
     ],
     "priceLevel": "££",
     "rating": 5,
@@ -2226,7 +2229,8 @@
         "Delivery",
         "Drive-through",
         "Takeaway",
-        "Dine-in"
+        "Dine-in",
+        "Caterer"
       ],
       "highlights": [
         "Great coffee",
@@ -502297,91 +502301,6 @@
       ],
       "googleVerified": true,
       "placeId": "ChIJCRl7lfSm2EcRFkcXbKfWEaA"
-    }
-  },
-  {
-    "name": "Yummy Dosa",
-    "slug": "yummy-dosa-catering",
-    "metaTitle": "Yummy Dosa Catering | Farr Avenue Area, Barking - London",
-    "metaDescription": "Yummy Dosa is a South Indian restaurant in Ilford, Redbridge serving South Indian food. Details include delivery and caterer service.",
-    "description": "Yummy Dosa is a South Indian restaurant in Ilford, Redbridge serving South Indian food. Details include delivery and caterer service.",
-    "logo": "https://lh4.googleusercontent.com/-JgBt7Y0VKG8/AAAAAAAAAAI/AAAAAAAAAAA/ylodEOYHvw4/s44-p-k-no-ns-nd/photo.jpg",
-    "images": [],
-    "imageFallbackLabel": "South Indian",
-    "area": "Redbridge",
-    "neighborhood": "Ilford",
-    "borough": "Redbridge",
-    "postcode": "IG1 4NH",
-    "address": "68 Cranbrook Rd",
-    "fullAddress": "68 Cranbrook Rd, Ilford, IG1 4NH, London",
-    "city": "London",
-    "categories": [
-      "South Indian",
-      "Indian"
-    ],
-    "listingTypes": [],
-    "dietaryOptions": [],
-    "tags": [
-      "South Indian",
-      "Indian",
-      "Delivery",
-      "Caterer"
-    ],
-    "featured": false,
-    "contact": {
-      "website": "https://yummydosarestaurant.co.uk/",
-      "phone": "+44 20 8637 3026",
-      "phoneAlt": "+44 7776 675146",
-      "email": "yummydosailford@gmail.com",
-      "socials": {
-        "facebook": "https://www.facebook.com/yummydosailford/",
-        "instagram": "https://www.instagram.com/yummydosailford"
-      }
-    },
-    "location": {
-      "latitude": 51.5606646,
-      "longitude": 0.0697829,
-      "nightTubeAvailable": false,
-      "nightBusAvailable": false
-    },
-    "details": {
-      "workingHours": [
-        {
-          "day": "Monday",
-          "hours": "Open 24 hours"
-        },
-        {
-          "day": "Tuesday",
-          "hours": "Open 24 hours"
-        },
-        {
-          "day": "Wednesday",
-          "hours": "Open 24 hours"
-        },
-        {
-          "day": "Thursday",
-          "hours": "Open 24 hours"
-        },
-        {
-          "day": "Friday",
-          "hours": "Open 24 hours"
-        },
-        {
-          "day": "Saturday",
-          "hours": "Open 24 hours"
-        },
-        {
-          "day": "Sunday",
-          "hours": "Open 24 hours"
-        }
-      ],
-      "workingHoursText": "Sunday,Open 24 hours|Monday,Open 24 hours|Tuesday,Open 24 hours|Wednesday,Open 24 hours|Thursday,Open 24 hours|Friday,Open 24 hours|Saturday,Open 24 hours",
-      "serviceOptions": [
-        "Delivery",
-        "Caterer"
-      ],
-      "googleVerified": true,
-      "placeId": "ChIJocOA2Stm2qoRoXP2Vrhu6T4"
     }
   },
   {

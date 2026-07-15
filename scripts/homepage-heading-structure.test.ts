@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import Module from "node:module";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { listings } from "../src/data/listings";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -108,7 +109,10 @@ async function restaurantsPageRendersFullSearchAndFilterWorkspace() {
   assert.ok(html.includes('action="/restaurants/"'), "restaurants page search form should submit directly to /restaurants/");
   assert.ok(html.includes('aria-label="Directory filters"'), "restaurants page should render the responsive filter workspace");
   assert.ok(!html.includes("Apply filters"), "restaurants page filters should auto-apply without a manual Apply button");
-  assert.ok(h2s.includes("3,187 restaurants found"), "restaurants page should render the full results heading");
+  assert.ok(
+    h2s.includes(`${listings.length.toLocaleString("en-GB")} restaurants found`),
+    "restaurants page should render the full results heading"
+  );
   assert.ok(html.includes("Open now"), "restaurants page should render the open-now control");
   assert.ok(html.includes('aria-label="List view"'), "restaurants page should render the list view control");
   assert.ok(html.includes('aria-label="Map view"'), "restaurants page should render the map view control");

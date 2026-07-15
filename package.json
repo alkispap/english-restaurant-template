@@ -25,6 +25,7 @@
     "prepare:cloudflare": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-cloudflare-upload.ps1",
     "publish:cloudflare": "tsx scripts/publish-cloudflare.ts",
     "import:directory": "tsx scripts/import-directory.ts",
+    "resolve:listing-entities": "tsx scripts/resolve-listing-entities.ts",
     "enrich:outscraper-media": "tsx scripts/enrich-outscraper-media.ts",
     "article:duplicates": "tsx scripts/article-duplicate-report.ts",
     "article:next-planned": "tsx scripts/article-next-planned.ts",

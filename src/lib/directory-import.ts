@@ -7,6 +7,7 @@ import { packListingSearchRecords } from "@/lib/listing-search-index";
 import { packShortlistSummaries } from "@/lib/shortlist-index";
 import { getAllShortlistListingSummaries } from "@/lib/shortlist";
 import type { ListingSearchRecord } from "@/data/listing-search-records";
+import { resolveListingEntitySourceId } from "@/data/listing-entity-resolutions";
 
 export type ImportMode = "dry run" | "normal import" | "preview";
 
@@ -220,6 +221,7 @@ const fieldAliases: Record<string, string[]> = {
   latitude: ["latitude", "lat"],
   longitude: ["longitude", "lng", "long"],
   googleMapsUrl: ["google maps url", "maps url", "location_link"],
+  sourceId: ["source id", "place id", "place_id", "google id", "google_id", "cid"],
   facebook: ["facebook"],
   instagram: ["instagram"],
   whatsapp: ["whatsapp"],
@@ -285,6 +287,7 @@ function analyzeRows(
     }
 
     const sourceId = dedupeKey(row, analysis);
+    const entitySourceId = resolveListingEntitySourceId(sourceId);
     if (isNonOperational(row, analysis)) {
       analysis.nonOperationalCount += 1;
       analysis.warnings.push(`Row ${index + 2}: "${firstByRole(row, analysis, "name") || "Listing"}" is not marked operational.`);
@@ -297,16 +300,19 @@ function analyzeRows(
       return;
     }
 
-    if (sourceId && listingBySourceId.has(sourceId)) {
+    if (entitySourceId && listingBySourceId.has(entitySourceId)) {
       analysis.duplicateCount += 1;
-      mergeDuplicateListing(listingBySourceId.get(sourceId)!, listing);
-      analysis.warnings.push(`Row ${index + 2}: duplicate source ID "${sourceId}" was merged into the existing listing.`);
+      mergeDuplicateListing(listingBySourceId.get(entitySourceId)!, listing);
+      const reason = entitySourceId === sourceId
+        ? `duplicate source ID "${sourceId}"`
+        : `confirmed entity alias "${sourceId}" -> "${entitySourceId}"`;
+      analysis.warnings.push(`Row ${index + 2}: ${reason} was merged into the existing listing.`);
       return;
     }
 
     const baseSlug = listing.slug || stableSlug(listing.name, row, index, analysis);
     listing.slug = uniqueListingSlug(baseSlug, listing, usedSlugs, index, analysis);
-    if (sourceId) listingBySourceId.set(sourceId, listing);
+    if (entitySourceId) listingBySourceId.set(entitySourceId, listing);
 
     addRowWarnings(row, index, listing, analysis);
     listings.push(listing);
@@ -458,7 +464,8 @@ function genericRoles(headers: string[]): Record<string, ImportFieldRole> {
     postcode: "postcode",
     latitude: "latitude",
     longitude: "longitude",
-    logo: "logo"
+    logo: "logo",
+    sourceId: "dedupeId"
   };
 
   Object.entries(fieldAliases).forEach(([field, aliases]) => {
@@ -761,7 +768,7 @@ function applyListingSourceOverride(listing: ImportedListing) {
   };
 }
 
-function mergeDuplicateListing(target: ImportedListing, duplicate: ImportedListing) {
+export function mergeDuplicateListing(target: ImportedListing, duplicate: ImportedListing) {
   target.categories = unique([...target.categories, ...duplicate.categories]);
   target.listingTypes = unique([...target.listingTypes, ...duplicate.listingTypes]);
   target.dietaryOptions = unique([...target.dietaryOptions, ...duplicate.dietaryOptions]);
@@ -1596,7 +1603,7 @@ function toListingSearchRecord(listing: ImportedListing) {
     slug: listing.slug,
     name: listing.name,
     description: listing.description,
-    images: asStringArray(listing.images).slice(0, 2),
+    images: asStringArray(listing.images).slice(0, 3),
     imageFallbackLabel: listing.imageFallbackLabel,
     area: listing.area,
     neighborhood: listing.neighborhood,
