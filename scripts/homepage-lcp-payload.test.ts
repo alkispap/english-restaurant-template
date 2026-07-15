@@ -49,12 +49,12 @@ function cleanHomepageDoesNotHydrateDirectoryModel() {
 
 function searchBarUsesCompactAreaCentroids() {
   const searchBarSource = source("src", "components", "SearchBar.tsx");
-  const searchClientSource = source("src", "components", "SearchBarClient.tsx");
+  const locateAreaSource = source("src", "components", "LocateAreaButton.tsx");
 
   assert.doesNotMatch(searchBarSource, /mapPoints:/, "SearchBar should not require full map point props");
   assert.doesNotMatch(searchBarSource, /<SearchBarClient/, "first-paint SearchBar should render server HTML");
   assert.match(searchBarSource, /areaCentroids/, "SearchBar should pass compact area centroids to geolocation only");
-  assert.doesNotMatch(searchClientSource, /mapPoints:/, "SearchBarClient should not require full map point props");
+  assert.doesNotMatch(locateAreaSource, /mapPoints:/, "geolocation should not require full map point props");
 }
 
 function homepageRowsUseListingSummaries() {

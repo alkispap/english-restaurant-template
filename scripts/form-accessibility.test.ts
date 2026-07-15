@@ -12,7 +12,6 @@ const accountMenu = read("src/components/AccountMenu.tsx");
 const cardGrid = read("src/components/SearchableCardGrid.tsx");
 const filterChoices = read("src/components/FilterCheckboxGroup.tsx");
 const locateArea = read("src/components/LocateAreaButton.tsx");
-const searchBarClient = read("src/components/SearchBarClient.tsx");
 
 assert.match(headerSearch, /aria-label=\{`Search \$\{directoryConfig\.listingPluralLabel/, "header search input should have a persistent programmatic label");
 
@@ -33,11 +32,6 @@ assert.match(cardGrid, /role="group" aria-label=\{alphabetLabel/, "alphabet cont
 assert.match(cardGrid, /role="status"[\s\S]*\{visibleItems\.length\.toLocaleString\(\)\} results/, "filtered card count should be announced");
 assert.match(filterChoices, /role="status"[\s\S]*\{filteredOptions\.length\.toLocaleString\(\)\} choices available/, "filtered modal choices should be announced");
 
-for (const [name, source] of [
-  ["location button", locateArea],
-  ["client search bar", searchBarClient]
-] as const) {
-  assert.match(source, /role="status"[\s\S]*aria-live="polite"[\s\S]*Finding your area\./, `${name} should announce location progress and failures`);
-}
+assert.match(locateArea, /role="status"[\s\S]*aria-live="polite"[\s\S]*Finding your area\./, "location button should announce progress and failures");
 
 console.log("form accessibility tests passed");

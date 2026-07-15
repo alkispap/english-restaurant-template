@@ -9,7 +9,6 @@ const ratingPill = read("src/components/RatingPill.tsx");
 const openStatusBadge = read("src/components/OpenStatusBadge.tsx");
 const globalsCss = read("src/app/globals.css");
 const searchBar = read("src/components/SearchBar.tsx");
-const searchBarClient = read("src/components/SearchBarClient.tsx");
 const directoryLandingPage = read("src/components/DirectoryLandingPage.tsx");
 
 assert.ok(
@@ -47,7 +46,6 @@ assertContrast("White text and primary hover", "#ffffff", "#9a3412");
 
 for (const [label, source] of [
   ["SearchBar", searchBar],
-  ["SearchBarClient", searchBarClient],
   ["DirectoryLandingPage", directoryLandingPage]
 ] as const) {
   assert.ok(!source.includes("hover:bg-orange-600"), `${label} should not lighten white-text actions to a failing hover colour`);

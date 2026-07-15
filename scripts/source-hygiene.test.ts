@@ -15,7 +15,6 @@ const directoryListingsInteractiveShellPath = path.join(process.cwd(), "src", "c
 const filterPanelOptionsPath = path.join(process.cwd(), "src", "lib", "filter-panel-options.ts");
 const searchBarPath = path.join(process.cwd(), "src", "components", "SearchBar.tsx");
 const directorySidebarPath = path.join(process.cwd(), "src", "components", "DirectorySidebar.tsx");
-const homepageSeoLinksPath = path.join(process.cwd(), "src", "components", "HomepageSeoLinks.tsx");
 const geoAreaPath = path.join(process.cwd(), "src", "lib", "geo-area.ts");
 const shortlistSummariesPath = path.join(process.cwd(), "src", "data", "shortlist-summaries.ts");
 const shortlistIndexJsonPath = path.join(process.cwd(), "data", "shortlist-index.json");
@@ -129,8 +128,7 @@ assert.ok(
 for (const browserComponentPath of [
   directoryListingsInteractiveShellPath,
   searchBarPath,
-  directorySidebarPath,
-  homepageSeoLinksPath
+  directorySidebarPath
 ]) {
   if (!fs.existsSync(browserComponentPath)) continue;
   const content = fs.readFileSync(browserComponentPath, "utf8");
@@ -149,7 +147,6 @@ for (const browserComponentPath of [
 for (const clientDataPath of [
   searchBarPath,
   directorySidebarPath,
-  homepageSeoLinksPath,
   geoAreaPath,
   shortlistSummariesPath
 ]) {
