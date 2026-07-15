@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { DirectoryLandingPage } from "@/components/DirectoryLandingPage";
+import { JsonLd } from "@/components/JsonLd";
 import { siteConfig } from "@/config/site";
 import { getDirectorySummary } from "@/lib/directory-summary";
 import { pageShareMetadata } from "@/lib/share-metadata";
@@ -38,14 +39,8 @@ export default function HomePage() {
         fetchPriority="high"
       />
       <DirectoryAnalyticsTracker pageType="homepage" route="/" />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
-      />
+      <JsonLd data={organizationJsonLd()} />
+      <JsonLd data={websiteJsonLd()} />
       <DirectoryLandingPage />
     </>
   );

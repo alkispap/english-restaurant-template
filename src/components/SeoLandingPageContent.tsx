@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
 import { ListingsResults } from "@/components/ListingsResults";
+import { JsonLd } from "@/components/JsonLd";
 import { ResponsiveDirectoryFilters } from "@/components/ResponsiveDirectoryFilters";
 import { SearchBar } from "@/components/SearchBar";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -27,11 +28,7 @@ export function SeoLandingPageContent({ page, viewId }: SeoLandingPageContentPro
   return (
     <main id={viewId} className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       {page.structuredData.map((item, index) => (
-        <script
-          key={index}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }}
-        />
+        <JsonLd key={index} data={item} />
       ))}
 
       <section className="mb-8 rounded-lg border border-line bg-white p-6 shadow-soft">

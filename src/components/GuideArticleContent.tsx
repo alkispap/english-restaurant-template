@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, CheckCircle2 } from "lucide-react";
 import { AdsterraAd } from "@/components/AdsterraAd";
+import { JsonLd } from "@/components/JsonLd";
 import type {
   ArticleComparisonTable as ArticleComparisonTableModel,
   ArticleContent,
@@ -23,13 +24,8 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
     <main className="bg-page">
       {!preview ? (
         <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(buildArticleJsonLd(article)) }}
-          />
-          {faqSchema ? (
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-          ) : null}
+          <JsonLd data={buildArticleJsonLd(article)} />
+          {faqSchema ? <JsonLd data={faqSchema} /> : null}
         </>
       ) : null}
 

@@ -49,6 +49,7 @@ import { ListingComments } from "@/components/ListingComments";
 import { FactAnswer } from "@/components/FactAnswer";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
+import { JsonLd } from "@/components/JsonLd";
 import { TrackedActionLink } from "@/components/TrackedActionLink";
 import { buildListingEavSummary } from "@/lib/listing-eav-summary";
 import { directoryConfig } from "@/config/directory";
@@ -174,14 +175,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
       <ListingNav name={listing.name} tabs={tabs} />
       <ListingDetailMobileChrome listing={mobileChromeListing} tabs={tabs} shareUrl={share.url} route={route} />
       <DirectoryAnalyticsTracker pageType="listing_detail" route={route} listingSlug={listing.slug} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(listing)) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(breadcrumbs)) }}
-      />
+      <JsonLd data={localBusinessJsonLd(listing)} />
+      <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
       <section id="photos" className="scroll-mt-20 bg-white">
         <div className="mx-auto max-w-7xl px-0 py-0 sm:px-6 sm:py-8 lg:px-8">
           <div className="mb-6 hidden flex-wrap items-center gap-2 text-sm text-muted md:flex">
