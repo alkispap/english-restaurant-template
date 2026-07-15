@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageSquare, Send, Trash2 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useId, useMemo, useState } from "react";
 
 type ListingComment = {
   id: string;
@@ -18,6 +18,10 @@ function commentsStorageKey(slug: string) {
 export function ListingComments({ slug, heading = "Comments" }: { slug: string; heading?: string }) {
   const [comments, setComments] = useState<ListingComment[]>([]);
   const [value, setValue] = useState("");
+  const [status, setStatus] = useState("");
+  const commentId = useId();
+  const helpId = `${commentId}-help`;
+  const countId = `${commentId}-count`;
 
   useEffect(() => {
     try {
@@ -54,10 +58,12 @@ export function ListingComments({ slug, heading = "Comments" }: { slug: string; 
 
     setComments((current) => [...current, nextComment]);
     setValue("");
+    setStatus("Comment posted.");
   }
 
   function removeComment(id: string) {
     setComments((current) => current.filter((comment) => comment.id !== id));
+    setStatus("Comment removed.");
   }
 
   return (
@@ -66,18 +72,26 @@ export function ListingComments({ slug, heading = "Comments" }: { slug: string; 
         <MessageSquare className="h-5 w-5 text-primary" aria-hidden />
         <h2 className="text-2xl font-bold text-ink">{heading}</h2>
       </div>
-      <p className="mt-2 text-sm text-muted">Share your thoughts about this listing. Comments are saved in this browser only.</p>
+      <p id={helpId} className="mt-2 text-sm text-muted">Share your thoughts about this listing. Comments are saved in this browser only.</p>
 
       <form onSubmit={submitComment} className="mt-4 grid gap-3">
+        <label htmlFor={commentId} className="sr-only">
+          Comment
+        </label>
         <textarea
+          id={commentId}
+          aria-describedby={`${helpId} ${countId}`}
           value={value}
-          onChange={(event) => setValue(event.target.value.slice(0, LISTING_COMMENT_MAX_LENGTH))}
+          onChange={(event) => {
+            setValue(event.target.value.slice(0, LISTING_COMMENT_MAX_LENGTH));
+            setStatus("");
+          }}
           className="min-h-28 rounded-md border border-line px-3 py-2 text-sm leading-6 text-ink outline-none focus:border-primary"
           placeholder="Write a comment about this restaurant..."
           maxLength={LISTING_COMMENT_MAX_LENGTH}
         />
         <div className="flex items-center justify-between gap-3">
-          <span className="text-xs text-muted">{value.length}/{LISTING_COMMENT_MAX_LENGTH}</span>
+          <span id={countId} className="text-xs text-muted">{value.length}/{LISTING_COMMENT_MAX_LENGTH}</span>
           <button
             type="submit"
             disabled={!value.trim() || hasReachedLimit}
@@ -87,6 +101,9 @@ export function ListingComments({ slug, heading = "Comments" }: { slug: string; 
             Post comment
           </button>
         </div>
+        <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {status}
+        </p>
       </form>
 
       <div className="mt-6 space-y-3">
@@ -101,6 +118,7 @@ export function ListingComments({ slug, heading = "Comments" }: { slug: string; 
                   type="button"
                   onClick={() => removeComment(comment.id)}
                   className="focus-ring inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-muted hover:bg-white hover:text-accent"
+                  aria-label={`Remove comment posted ${new Date(comment.createdAt).toLocaleString()}`}
                 >
                   <Trash2 className="h-3.5 w-3.5" aria-hidden />
                   Remove

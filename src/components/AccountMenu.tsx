@@ -77,6 +77,9 @@ export function AccountMenu() {
                   <input
                     id="account-email"
                     type="email"
+                    required
+                    autoComplete="email"
+                    aria-describedby="account-email-status"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="you@example.com"
@@ -91,7 +94,15 @@ export function AccountMenu() {
                     <Mail className="h-4 w-4" aria-hidden />
                   </button>
                 </div>
-                {message ? <p className="text-xs font-semibold text-emerald-700">{message}</p> : null}
+                <p
+                  id="account-email-status"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  className={message ? "text-xs font-semibold text-emerald-700" : "sr-only"}
+                >
+                  {message}
+                </p>
               </form>
             </div>
           )}

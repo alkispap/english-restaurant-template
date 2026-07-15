@@ -1,7 +1,7 @@
 "use client";
 
 import { Lock, Save } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { LISTING_NOTE_MAX_LENGTH } from "@/lib/account-sync";
 import { useAccount } from "@/components/AccountProvider";
 
@@ -9,6 +9,8 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
   const { authEnabled, user, noteBySlug, loadNotesForSlugs, saveNote } = useAccount();
   const [value, setValue] = useState("");
   const [status, setStatus] = useState("");
+  const noteId = useId();
+  const countId = `${noteId}-count`;
 
   useEffect(() => {
     if (!user) return;
@@ -46,7 +48,12 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
     <section className="mt-6 rounded-lg border border-line bg-white p-5">
       <h2 className="font-bold text-ink">Private notes</h2>
       <form className="mt-3 grid gap-3" onSubmit={submitNote}>
+        <label htmlFor={noteId} className="sr-only">
+          Private note
+        </label>
         <textarea
+          id={noteId}
+          aria-describedby={countId}
           value={value}
           onChange={(event) => {
             setValue(event.target.value.slice(0, LISTING_NOTE_MAX_LENGTH));
@@ -57,7 +64,7 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
           maxLength={LISTING_NOTE_MAX_LENGTH}
         />
         <div className="flex items-center justify-between gap-3">
-          <span className="text-xs text-muted">
+          <span id={countId} className="text-xs text-muted">
             {value.length}/{LISTING_NOTE_MAX_LENGTH}
           </span>
           <button type="submit" className="focus-ring inline-flex items-center gap-2 rounded-md bg-ink px-4 py-2 text-sm font-bold text-white">
@@ -65,7 +72,14 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
             Save note
           </button>
         </div>
-        {status ? <p className="text-xs font-semibold text-emerald-700">{status}</p> : null}
+        <p
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className={status ? "text-xs font-semibold text-emerald-700" : "sr-only"}
+        >
+          {status}
+        </p>
       </form>
     </section>
   );

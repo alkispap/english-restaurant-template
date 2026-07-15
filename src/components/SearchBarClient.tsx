@@ -142,9 +142,18 @@ export function SearchBarClient({
             ? "Finding your area..."
             : `Find ${directoryConfig.listingPluralLabel.toLowerCase()} near you`}
         </button>
-        {locateStatus !== "idle" && locateStatus !== "locating" ? (
-          <p className="text-sm font-semibold text-muted">{locateStatusMessage[locateStatus]}</p>
-        ) : null}
+        <p
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className={locateStatus !== "idle" && locateStatus !== "locating" ? "text-sm font-semibold text-muted" : "sr-only"}
+        >
+          {locateStatus === "locating"
+            ? "Finding your area."
+            : locateStatus === "idle"
+              ? ""
+              : locateStatusMessage[locateStatus]}
+        </p>
       </div>
       )}
     </div>

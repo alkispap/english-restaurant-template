@@ -97,6 +97,9 @@ export function FilterCheckboxGroup({ label, modalLabel, name, value, options }:
             />
             <Search aria-hidden="true" className="h-4 w-4 text-emerald-950" />
           </label>
+          <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+            {filteredOptions.length.toLocaleString()} choices available
+          </p>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto border-b border-line px-6 pb-6 sm:px-10">
