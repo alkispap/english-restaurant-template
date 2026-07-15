@@ -9,6 +9,7 @@ import {
 import type { SeoLandingResultsShell } from "@/components/SeoLandingResultsShell";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 import { getSeoLandingHiddenFilterGroups } from "@/lib/seo-landing-filter-context";
+import { directoryConfig } from "@/config/directory";
 
 type SeoLandingResultsShellComponent = typeof SeoLandingResultsShell;
 type SeoLandingBrowserModule = typeof import("@/lib/seo-landing-listings-browser");
@@ -45,6 +46,9 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
   const [activeModel, setActiveModel] = useState<DirectoryListingsModel | null>(null);
   const [ActiveResultsShell, setActiveResultsShell] = useState<SeoLandingResultsShellComponent | null>(null);
   const [clientResultsRoot, setClientResultsRoot] = useState<HTMLElement | null>(null);
+  const [queryBusy, setQueryBusy] = useState(false);
+  const [queryMessage, setQueryMessage] = useState("");
+  const [queryError, setQueryError] = useState(false);
   const hiddenGroups = getSeoLandingHiddenFilterGroups(initialPage);
 
   useEffect(() => {
@@ -61,6 +65,16 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
       }
     };
   }, [activeModel]);
+
+  useEffect(() => {
+    const results = [
+      document.getElementById("seo-landing-server-results"),
+      document.getElementById("seo-landing-client-results")
+    ].filter((element): element is HTMLElement => Boolean(element));
+
+    results.forEach((element) => element.setAttribute("aria-busy", String(queryBusy)));
+    return () => results.forEach((element) => element.removeAttribute("aria-busy"));
+  }, [activeModel, queryBusy]);
 
   useEffect(() => {
     setClientResultsRoot(document.getElementById("seo-landing-client-results-root"));
@@ -82,23 +96,42 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
       const nextQuery = normalizeSearchParams(searchParamsRecordFromUrlSearchParams(currentParams));
       if (!nextQuery) {
         setActiveModel(null);
+        setQueryBusy(false);
+        setQueryError(false);
+        setQueryMessage("Filters cleared.");
         return;
       }
 
-      const [{ buildBrowserSeoLandingListingsModel }, shellModule] = await loadSeoLandingClientModules();
-      if (cancelled || version !== requestVersion) return;
+      setQueryBusy(true);
+      setQueryError(false);
+      setQueryMessage(`Updating ${directoryConfig.listingPluralLabel.toLowerCase()}.`);
+      try {
+        const [{ buildBrowserSeoLandingListingsModel }, shellModule] = await loadSeoLandingClientModules();
+        if (cancelled || version !== requestVersion) return;
 
-      setActiveResultsShell(() => shellModule.SeoLandingResultsShell);
-      setActiveModel(
-        buildBrowserSeoLandingListingsModel({
+        const nextModel = buildBrowserSeoLandingListingsModel({
           pathname: window.location.pathname,
           searchParams: currentParams,
           basePath: initialPage.metadata.canonical,
           title: initialPage.hero.title,
           description: initialPage.hero.description,
           headingContext: initialPage.resultsHeadingContext
-        }) ?? null
-      );
+        }) ?? null;
+        setActiveResultsShell(() => shellModule.SeoLandingResultsShell);
+        setActiveModel(nextModel);
+        setQueryMessage(
+          nextModel
+            ? `${nextModel.totalCount.toLocaleString()} ${directoryConfig.listingPluralLabel.toLowerCase()} updated.`
+            : "Filters cleared."
+        );
+      } catch {
+        if (cancelled || version !== requestVersion) return;
+        seoLandingClientModulesPromise = null;
+        setQueryError(true);
+        setQueryMessage(`${directoryConfig.listingPluralLabel} could not be updated. Reload the page to try again.`);
+      } finally {
+        if (!cancelled && version === requestVersion) setQueryBusy(false);
+      }
     }
 
     function scheduleUpdateFromCurrentUrl() {
@@ -141,14 +174,26 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
     };
   }, [initialPage.hero.description, initialPage.hero.title, initialPage.metadata.canonical, initialPage.resultsHeadingContext]);
 
-  if (!activeModel || !ActiveResultsShell || !clientResultsRoot) return null;
-
-  return createPortal(
-    <ActiveResultsShell
-      model={activeModel}
-      hiddenGroups={[...hiddenGroups]}
-      definingContextKey={initialPage.definingContext?.key}
-    />,
-    clientResultsRoot
+  return (
+    <>
+      <p
+        role={queryError ? "alert" : "status"}
+        aria-live={queryError ? "assertive" : "polite"}
+        aria-atomic="true"
+        className={queryError ? "mx-auto my-4 max-w-7xl rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" : "sr-only"}
+      >
+        {queryMessage}
+      </p>
+      {activeModel && ActiveResultsShell && clientResultsRoot
+        ? createPortal(
+            <ActiveResultsShell
+              model={activeModel}
+              hiddenGroups={[...hiddenGroups]}
+              definingContextKey={initialPage.definingContext?.key}
+            />,
+            clientResultsRoot
+          )
+        : null}
+    </>
   );
 }

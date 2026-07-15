@@ -18,26 +18,26 @@ export function CompareSavedListings() {
   const { authEnabled, user, savedSlugs, noteBySlug, removeSavedSlug, refreshSavedSlugs, loadNotesForSlugs } = useAccount();
   const [isReady, setIsReady] = useState(false);
   const [savedListings, setSavedListings] = useState<ShortlistListingSummary[]>([]);
+  const [status, setStatus] = useState("");
+  const [statusIsError, setStatusIsError] = useState(false);
+  const [removingSlug, setRemovingSlug] = useState<string | null>(null);
   const missingCount = savedSlugs.length - savedListings.length;
 
   useEffect(() => {
-    void refreshSavedSlugs().finally(() => setIsReady(true));
-
-    function handleChange() {
-      void refreshSavedSlugs();
-    }
-
-    window.addEventListener("directory-shortlist-change", handleChange);
-    window.addEventListener("storage", handleChange);
-    return () => {
-      window.removeEventListener("directory-shortlist-change", handleChange);
-      window.removeEventListener("storage", handleChange);
-    };
+    void refreshSavedSlugs()
+      .catch(() => {
+        setStatusIsError(true);
+        setStatus("Saved listings could not be synced. Browser-saved items are still available.");
+      })
+      .finally(() => setIsReady(true));
   }, [refreshSavedSlugs]);
 
   useEffect(() => {
     if (user && savedSlugs.length) {
-      void loadNotesForSlugs(savedSlugs);
+      void loadNotesForSlugs(savedSlugs).catch(() => {
+        setStatusIsError(true);
+        setStatus("Private notes could not be loaded for comparison.");
+      });
     }
   }, [user, savedSlugs, loadNotesForSlugs]);
 
@@ -51,19 +51,34 @@ export function CompareSavedListings() {
     setSavedListings(getClientShortlistListingSummaries(savedSlugs));
   }, [isReady, savedSlugs]);
 
-  async function removeListing(slug: string) {
-    await removeSavedSlug(slug);
-    trackDirectoryEvent({
-      pageType: "compare",
-      action: "remove_saved_listing",
-      route: "/compare",
-      listingSlug: slug
-    });
+  async function removeListing(listing: ShortlistListingSummary) {
+    setRemovingSlug(listing.slug);
+    setStatus("");
+    try {
+      await removeSavedSlug(listing.slug);
+      setStatusIsError(false);
+      setStatus(`${listing.name} removed from comparison.`);
+      trackDirectoryEvent({
+        pageType: "compare",
+        action: "remove_saved_listing",
+        route: "/compare",
+        listingSlug: listing.slug
+      });
+    } catch {
+      setStatusIsError(true);
+      setStatus(
+        user
+          ? `${listing.name} was removed in this browser, but account sync failed.`
+          : `${listing.name} could not be removed. Please try again.`
+      );
+    } finally {
+      setRemovingSlug(null);
+    }
   }
 
   if (!isReady) {
     return (
-      <section className="rounded-lg border border-line bg-white p-8 text-center shadow-soft">
+      <section role="status" aria-live="polite" aria-busy="true" className="rounded-lg border border-line bg-white p-8 text-center shadow-soft">
         <h2 className="text-2xl font-bold text-ink">Loading saved listings</h2>
       </section>
     );
@@ -71,12 +86,13 @@ export function CompareSavedListings() {
 
   if (!savedSlugs.length) {
     return (
-      <section className="rounded-lg border border-line bg-white p-8 text-center shadow-soft">
+      <section aria-live="polite" className="rounded-lg border border-line bg-white p-8 text-center shadow-soft">
         <h2 className="text-2xl font-bold text-ink">No saved listings yet</h2>
         <p className="mx-auto mt-3 max-w-xl text-muted">Save listings from the directory cards or detail pages, then compare them here.</p>
         {authEnabled && !user ? (
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted">Sign in from the header to keep saved listings across devices.</p>
         ) : null}
+        {status ? <p role={statusIsError ? "alert" : "status"} className={`mx-auto mt-3 max-w-xl text-sm font-semibold ${statusIsError ? "text-red-700" : "text-emerald-700"}`}>{status}</p> : null}
         <Link href="/" className="mt-6 inline-flex rounded-md bg-ink px-5 py-3 text-sm font-bold text-white">
           Browse {directoryConfig.listingPluralLabel.toLowerCase()}
         </Link>
@@ -95,6 +111,14 @@ export function CompareSavedListings() {
         {authEnabled && !user ? (
           <p className="mt-2 text-sm font-semibold text-accent">Saved listings stay in this browser. Sign in to sync across devices.</p>
         ) : null}
+        <p
+          role={statusIsError ? "alert" : "status"}
+          aria-live={statusIsError ? "assertive" : "polite"}
+          aria-atomic="true"
+          className={status ? `mt-2 text-sm font-semibold ${statusIsError ? "text-red-700" : "text-emerald-700"}` : "sr-only"}
+        >
+          {status}
+        </p>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-left text-sm">
@@ -123,7 +147,9 @@ export function CompareSavedListings() {
                       type="button"
                       className="focus-ring rounded-md border border-line p-1.5 text-muted hover:text-accent"
                       aria-label={`Remove ${listing.name}`}
-                      onClick={() => removeListing(listing.slug)}
+                      aria-busy={removingSlug === listing.slug}
+                      disabled={removingSlug !== null}
+                      onClick={() => void removeListing(listing)}
                     >
                       <X className="h-4 w-4" aria-hidden />
                     </button>

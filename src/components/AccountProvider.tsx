@@ -95,14 +95,21 @@ function initializeAccountStore() {
 }
 
 async function initializeRemoteAccountStore() {
-  const supabase = await getSupabaseBrowserClient();
+  let supabase: Awaited<ReturnType<typeof getSupabaseBrowserClient>>;
+  try {
+    supabase = await getSupabaseBrowserClient();
+  } catch {
+    setAccountState({ loading: false });
+    return;
+  }
 
   if (!supabase) {
     setAccountState({ loading: false });
     return;
   }
 
-  void supabase.auth.getSession().then(async ({ data }) => {
+  void supabase.auth.getSession().then(async ({ data, error }) => {
+    if (error) throw error;
     const sessionUser = data.session?.user ?? null;
     setAccountState({ user: sessionUser });
     if (sessionUser) {
@@ -111,13 +118,13 @@ async function initializeRemoteAccountStore() {
       setAccountState({ savedSlugs: readLocalSavedSlugs() });
     }
     setAccountState({ loading: false });
-  });
+  }).catch(() => setAccountState({ loading: false }));
 
   supabase.auth.onAuthStateChange((_event, session) => {
     const sessionUser = session?.user ?? null;
     setAccountState({ user: sessionUser });
     if (sessionUser) {
-      void syncSavedSlugs(sessionUser.id);
+      void syncSavedSlugs(sessionUser.id).catch(() => undefined);
     } else {
       setAccountState({ savedSlugs: readLocalSavedSlugs(), noteBySlug: {} });
     }
@@ -134,17 +141,18 @@ async function fetchAccountSavedSlugs(userId: string) {
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
-  if (error) return [];
+  if (error) throw error;
   return normalizeShortlistSlugs((data ?? []).map((item) => item.listing_slug), DEFAULT_SHORTLIST_LIMIT);
 }
 
 async function upsertAccountSavedSlugs(userId: string, slugs: string[]) {
   const supabase = await getSupabaseBrowserClient();
   if (!supabase || !slugs.length) return;
-  await supabase.from("saved_listings").upsert(
+  const { error } = await supabase.from("saved_listings").upsert(
     slugs.map((slug) => ({ user_id: userId, listing_slug: slug })),
     { onConflict: "user_id,listing_slug" }
   );
+  if (error) throw error;
 }
 
 async function replaceAccountSavedSlugs(userId: string, slugs: string[]) {
@@ -154,7 +162,8 @@ async function replaceAccountSavedSlugs(userId: string, slugs: string[]) {
   const removed = existing.filter((slug) => !slugs.includes(slug));
 
   if (removed.length) {
-    await supabase.from("saved_listings").delete().eq("user_id", userId).in("listing_slug", removed);
+    const { error } = await supabase.from("saved_listings").delete().eq("user_id", userId).in("listing_slug", removed);
+    if (error) throw error;
   }
 
   await upsertAccountSavedSlugs(userId, slugs);
@@ -215,7 +224,7 @@ async function loadNotesForSlugs(slugs: string[]) {
     .eq("user_id", state.user.id)
     .in("listing_slug", normalized);
 
-  if (error) return {};
+  if (error) throw error;
   const notes = Object.fromEntries((data ?? []).map((item) => [item.listing_slug, item.note ?? ""]));
   setAccountState({ noteBySlug: { ...state.noteBySlug, ...notes } });
   return notes;
@@ -227,14 +236,16 @@ async function saveNote(slug: string, note: string) {
   if (!supabase || !state.user) return cleaned;
 
   if (!cleaned) {
-    await supabase.from("listing_notes").delete().eq("user_id", state.user.id).eq("listing_slug", slug);
+    const { error } = await supabase.from("listing_notes").delete().eq("user_id", state.user.id).eq("listing_slug", slug);
+    if (error) throw error;
   } else {
-    await supabase
+    const { error } = await supabase
       .from("listing_notes")
       .upsert(
         { user_id: state.user.id, listing_slug: slug, note: cleaned, updated_at: new Date().toISOString() },
         { onConflict: "user_id,listing_slug" }
       );
+    if (error) throw error;
   }
 
   const noteBySlug = { ...state.noteBySlug };
@@ -249,26 +260,29 @@ async function saveNote(slug: string, note: string) {
 
 async function signInWithProvider(provider: "google" | "azure") {
   const supabase = await getSupabaseBrowserClient();
-  if (!supabase) return;
-  await supabase.auth.signInWithOAuth({
+  if (!supabase) throw new Error("Account service is unavailable.");
+  const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: { redirectTo: window.location.origin }
   });
+  if (error) throw error;
 }
 
 async function signInWithEmail(email: string) {
   const supabase = await getSupabaseBrowserClient();
-  if (!supabase) return;
-  await supabase.auth.signInWithOtp({
+  if (!supabase) throw new Error("Account service is unavailable.");
+  const { error } = await supabase.auth.signInWithOtp({
     email,
     options: { emailRedirectTo: window.location.origin }
   });
+  if (error) throw error;
 }
 
 async function signOut() {
   const supabase = await getSupabaseBrowserClient();
-  if (!supabase) return;
-  await supabase.auth.signOut();
+  if (!supabase) throw new Error("Account service is unavailable.");
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
 }
 
 function readLocalSavedSlugs() {
@@ -282,5 +296,4 @@ function readLocalSavedSlugs() {
 
 function writeLocalSavedSlugs(slugs: string[]) {
   window.localStorage.setItem(SHORTLIST_STORAGE_KEY, JSON.stringify(slugs));
-  window.dispatchEvent(new Event("directory-shortlist-change"));
 }

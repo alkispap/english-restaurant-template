@@ -9,12 +9,17 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
   const { authEnabled, user, noteBySlug, loadNotesForSlugs, saveNote } = useAccount();
   const [value, setValue] = useState("");
   const [status, setStatus] = useState("");
+  const [statusIsError, setStatusIsError] = useState(false);
+  const [saving, setSaving] = useState(false);
   const noteId = useId();
   const countId = `${noteId}-count`;
 
   useEffect(() => {
     if (!user) return;
-    void loadNotesForSlugs([slug]);
+    void loadNotesForSlugs([slug]).catch(() => {
+      setStatusIsError(true);
+      setStatus("Private notes could not be loaded.");
+    });
   }, [user, slug, loadNotesForSlugs]);
 
   useEffect(() => {
@@ -39,9 +44,18 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
 
   async function submitNote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const saved = await saveNote(slug, value);
-    setValue(saved);
-    setStatus(saved ? "Note saved." : "Note cleared.");
+    setSaving(true);
+    try {
+      const saved = await saveNote(slug, value);
+      setValue(saved);
+      setStatusIsError(false);
+      setStatus(saved ? "Note saved." : "Note cleared.");
+    } catch {
+      setStatusIsError(true);
+      setStatus("Note could not be saved. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -58,6 +72,7 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
           onChange={(event) => {
             setValue(event.target.value.slice(0, LISTING_NOTE_MAX_LENGTH));
             setStatus("");
+            setStatusIsError(false);
           }}
           className="min-h-28 rounded-md border border-line px-3 py-2 text-sm leading-6 text-ink outline-none focus:border-primary"
           placeholder="Add your own reminder for this restaurant."
@@ -67,16 +82,16 @@ export function ListingPrivateNote({ slug }: { slug: string }) {
           <span id={countId} className="text-xs text-muted">
             {value.length}/{LISTING_NOTE_MAX_LENGTH}
           </span>
-          <button type="submit" className="focus-ring inline-flex items-center gap-2 rounded-md bg-ink px-4 py-2 text-sm font-bold text-white">
+          <button type="submit" disabled={saving} aria-busy={saving} className="focus-ring inline-flex items-center gap-2 rounded-md bg-ink px-4 py-2 text-sm font-bold text-white disabled:cursor-wait disabled:opacity-60">
             <Save className="h-4 w-4" aria-hidden />
-            Save note
+            {saving ? "Saving note..." : "Save note"}
           </button>
         </div>
         <p
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className={status ? "text-xs font-semibold text-emerald-700" : "sr-only"}
+          className={status ? `text-xs font-semibold ${statusIsError ? "text-red-700" : "text-emerald-700"}` : "sr-only"}
         >
           {status}
         </p>

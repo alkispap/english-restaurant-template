@@ -2,28 +2,13 @@
 
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import { useEffect } from "react";
 import { directoryConfig } from "@/config/directory";
 import { useAccount } from "@/components/AccountProvider";
 import { trackDirectoryEvent } from "@/lib/directory-analytics";
 
 export function SavedListingsLink() {
-  const { savedSlugs, refreshSavedSlugs } = useAccount();
+  const { savedSlugs } = useAccount();
   const shortlist = directoryConfig.shortlist;
-
-  useEffect(() => {
-    function refreshCount() {
-      void refreshSavedSlugs();
-    }
-
-    refreshCount();
-    window.addEventListener("directory-shortlist-change", refreshCount);
-    window.addEventListener("storage", refreshCount);
-    return () => {
-      window.removeEventListener("directory-shortlist-change", refreshCount);
-      window.removeEventListener("storage", refreshCount);
-    };
-  }, [refreshSavedSlugs]);
 
   return (
     <Link

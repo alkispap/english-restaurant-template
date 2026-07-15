@@ -6,6 +6,7 @@ import {
   searchParamsRecordFromUrlSearchParams
 } from "@/lib/directory-listings-search-params";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
+import { directoryConfig } from "@/config/directory";
 
 type DirectoryListingsInteractiveShellComponent = typeof import("@/components/DirectoryListingsInteractiveShell").DirectoryListingsInteractiveShell;
 type DirectoryListingsBrowserModule = typeof import("@/lib/directory-listings-browser");
@@ -28,6 +29,9 @@ function loadDirectoryListingsClientModules() {
 export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListingsQueryEnhancerProps) {
   const [activeModel, setActiveModel] = useState<DirectoryListingsModel | null>(null);
   const [InteractiveShell, setInteractiveShell] = useState<DirectoryListingsInteractiveShellComponent | null>(null);
+  const [queryBusy, setQueryBusy] = useState(false);
+  const [queryMessage, setQueryMessage] = useState("");
+  const [queryError, setQueryError] = useState(false);
 
   useEffect(() => {
     const serverMain = document.getElementById("directory-listings-server-main");
@@ -37,6 +41,16 @@ export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListing
       if (serverMain) serverMain.hidden = false;
     };
   }, [activeModel]);
+
+  useEffect(() => {
+    const results = [
+      document.getElementById("directory-listings-server-main"),
+      document.getElementById("directory-listings-client-main")
+    ].filter((element): element is HTMLElement => Boolean(element));
+
+    results.forEach((element) => element.setAttribute("aria-busy", String(queryBusy)));
+    return () => results.forEach((element) => element.removeAttribute("aria-busy"));
+  }, [activeModel, queryBusy]);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,21 +68,36 @@ export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListing
       const nextQuery = normalizeSearchParams(searchParamsRecordFromUrlSearchParams(currentParams));
       if (!nextQuery) {
         setActiveModel(null);
+        setQueryBusy(false);
+        setQueryError(false);
+        setQueryMessage("Filters cleared.");
         return;
       }
 
-      const [{ buildBrowserDirectoryListingsModel }, shellModule] = await loadDirectoryListingsClientModules();
-      if (cancelled || version !== requestVersion) return;
+      setQueryBusy(true);
+      setQueryError(false);
+      setQueryMessage(`Updating ${directoryConfig.listingPluralLabel.toLowerCase()}.`);
+      try {
+        const [{ buildBrowserDirectoryListingsModel }, shellModule] = await loadDirectoryListingsClientModules();
+        if (cancelled || version !== requestVersion) return;
 
-      setInteractiveShell(() => shellModule.DirectoryListingsInteractiveShell);
-      setActiveModel(
-        buildBrowserDirectoryListingsModel({
+        const nextModel = buildBrowserDirectoryListingsModel({
           searchParams: currentParams,
           basePath: initialPage.basePath,
           title: initialPage.title,
           description: initialPage.description
-        })
-      );
+        });
+        setInteractiveShell(() => shellModule.DirectoryListingsInteractiveShell);
+        setActiveModel(nextModel);
+        setQueryMessage(`${nextModel.totalCount.toLocaleString()} ${directoryConfig.listingPluralLabel.toLowerCase()} updated.`);
+      } catch {
+        if (cancelled || version !== requestVersion) return;
+        directoryListingsClientModulesPromise = null;
+        setQueryError(true);
+        setQueryMessage(`${directoryConfig.listingPluralLabel} could not be updated. Reload the page to try again.`);
+      } finally {
+        if (!cancelled && version === requestVersion) setQueryBusy(false);
+      }
     }
 
     function scheduleUpdateFromCurrentUrl() {
@@ -111,7 +140,17 @@ export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListing
     };
   }, [initialPage.basePath, initialPage.description, initialPage.title]);
 
-  if (!activeModel || !InteractiveShell) return null;
-
-  return <InteractiveShell initialModel={activeModel} />;
+  return (
+    <>
+      <p
+        role={queryError ? "alert" : "status"}
+        aria-live={queryError ? "assertive" : "polite"}
+        aria-atomic="true"
+        className={queryError ? "mx-auto my-4 max-w-7xl rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" : "sr-only"}
+      >
+        {queryMessage}
+      </p>
+      {activeModel && InteractiveShell ? <InteractiveShell initialModel={activeModel} /> : null}
+    </>
+  );
 }

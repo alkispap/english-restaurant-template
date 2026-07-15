@@ -19,54 +19,64 @@ type SaveListingButtonProps = {
 };
 
 export function SaveListingButton({ slug, label = "Save", compact = false, className = "", pageType, route }: SaveListingButtonProps) {
-  const { savedSlugs, toggleSavedSlug, refreshSavedSlugs } = useAccount();
+  const { user, savedSlugs, toggleSavedSlug } = useAccount();
   const [isSaved, setIsSaved] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     setIsSaved(savedSlugs.includes(slug));
   }, [savedSlugs, slug]);
 
-  useEffect(() => {
-    function handleChange() {
-      void refreshSavedSlugs();
-    }
-
-    window.addEventListener("directory-shortlist-change", handleChange);
-    window.addEventListener("storage", handleChange);
-    return () => {
-      window.removeEventListener("directory-shortlist-change", handleChange);
-      window.removeEventListener("storage", handleChange);
-    };
-  }, [refreshSavedSlugs]);
-
   async function toggleSaved() {
-    const next = await toggleSavedSlug(slug);
-    const nextIsSaved = next.includes(slug);
-    const pathname = typeof window === "undefined" ? route : window.location.pathname;
+    const intendedSavedState = !isSaved;
+    setPending(true);
+    setStatus("");
+    try {
+      const next = await toggleSavedSlug(slug);
+      const nextIsSaved = next.includes(slug);
+      const pathname = typeof window === "undefined" ? route : window.location.pathname;
 
-    setIsSaved(nextIsSaved);
-    trackDirectoryEvent({
-      pageType: pageType ?? inferDirectoryPageTypeFromPath(pathname ?? "/"),
-      action: nextIsSaved ? "save_listing" : "remove_saved_listing",
-      route: route ?? pathname,
-      listingSlug: slug
-    });
+      setIsSaved(nextIsSaved);
+      setStatus(nextIsSaved ? "Listing saved." : "Listing removed from saved listings.");
+      trackDirectoryEvent({
+        pageType: pageType ?? inferDirectoryPageTypeFromPath(pathname ?? "/"),
+        action: nextIsSaved ? "save_listing" : "remove_saved_listing",
+        route: route ?? pathname,
+        listingSlug: slug
+      });
+    } catch {
+      setStatus(
+        user
+          ? `Listing ${intendedSavedState ? "saved" : "removed"} in this browser, but account sync failed.`
+          : "Saved listings could not be updated. Please try again."
+      );
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
-    <button
-      type="button"
-      className={`focus-ring inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold transition ${
-        isSaved
-          ? "border-accent bg-orange-50 text-accent"
-          : "border-line bg-white text-ink hover:border-primary"
-      } ${className}`}
-      aria-pressed={isSaved}
-      aria-label={isSaved ? `Remove ${slug} from saved listings` : `Save ${slug}`}
-      onClick={toggleSaved}
-    >
-      <Heart className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`} aria-hidden />
-      {compact ? null : <span>{isSaved ? "Saved" : label}</span>}
-    </button>
+    <>
+      <button
+        type="button"
+        className={`focus-ring inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold transition ${
+          isSaved
+            ? "border-accent bg-orange-50 text-accent"
+            : "border-line bg-white text-ink hover:border-primary"
+        } ${className}`}
+        aria-pressed={isSaved}
+        aria-label={isSaved ? `Remove ${slug} from saved listings` : `Save ${slug}`}
+        aria-busy={pending}
+        disabled={pending}
+        onClick={() => void toggleSaved()}
+      >
+        <Heart className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`} aria-hidden />
+        {compact ? null : <span>{isSaved ? "Saved" : label}</span>}
+      </button>
+      <span role="status" aria-live="polite" className="sr-only">
+        {status}
+      </span>
+    </>
   );
 }

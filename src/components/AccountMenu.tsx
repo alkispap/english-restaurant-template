@@ -10,14 +10,53 @@ export function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [messageIsError, setMessageIsError] = useState(false);
+  const [actionPending, setActionPending] = useState(false);
+  const busy = loading || actionPending;
 
   if (!authEnabled) return null;
 
   async function submitEmail(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!email.trim()) return;
-    await signInWithEmail(email.trim());
-    setMessage("Check your email for the sign-in link.");
+    setActionPending(true);
+    setMessage("");
+    try {
+      await signInWithEmail(email.trim());
+      setMessageIsError(false);
+      setMessage("Check your email for the sign-in link.");
+    } catch {
+      setMessageIsError(true);
+      setMessage("The sign-in link could not be sent. Please try again.");
+    } finally {
+      setActionPending(false);
+    }
+  }
+
+  async function startProviderSignIn(provider: "google" | "azure") {
+    setActionPending(true);
+    setMessage("");
+    try {
+      await signInWithProvider(provider);
+    } catch {
+      setMessageIsError(true);
+      setMessage("Sign-in could not be started. Please try again.");
+    } finally {
+      setActionPending(false);
+    }
+  }
+
+  async function submitSignOut() {
+    setActionPending(true);
+    setMessage("");
+    try {
+      await signOut();
+    } catch {
+      setMessageIsError(true);
+      setMessage("Sign-out failed. Please try again.");
+    } finally {
+      setActionPending(false);
+    }
   }
 
   return (
@@ -41,11 +80,19 @@ export function AccountMenu() {
               <button
                 type="button"
                   className="focus-ring mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary"
-                onClick={() => void signOut()}
+                disabled={busy}
+                onClick={() => void submitSignOut()}
               >
                 <LogOut className="h-4 w-4" aria-hidden />
                 Sign out
               </button>
+              <p
+                role={messageIsError ? "alert" : "status"}
+                aria-live={messageIsError ? "assertive" : "polite"}
+                className={message ? `mt-3 text-xs font-semibold ${messageIsError ? "text-red-700" : "text-emerald-700"}` : "sr-only"}
+              >
+                {message}
+              </p>
             </div>
           ) : (
             <div>
@@ -55,16 +102,16 @@ export function AccountMenu() {
                 <button
                   type="button"
                   className="focus-ring rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary"
-                  disabled={loading}
-                  onClick={() => void signInWithProvider("google")}
+                  disabled={busy}
+                  onClick={() => void startProviderSignIn("google")}
                 >
                   Continue with Google
                 </button>
                 <button
                   type="button"
                   className="focus-ring rounded-md border border-line px-3 py-2 font-bold text-ink hover:border-primary"
-                  disabled={loading}
-                  onClick={() => void signInWithProvider("azure")}
+                  disabled={busy}
+                  onClick={() => void startProviderSignIn("azure")}
                 >
                   Continue with Microsoft
                 </button>
@@ -89,7 +136,7 @@ export function AccountMenu() {
                     type="submit"
                     className="focus-ring inline-flex items-center justify-center rounded-md bg-ink px-3 py-2 text-white"
                     aria-label="Send magic link"
-                    disabled={loading}
+                    disabled={busy}
                   >
                     <Mail className="h-4 w-4" aria-hidden />
                   </button>
@@ -99,7 +146,7 @@ export function AccountMenu() {
                   role="status"
                   aria-live="polite"
                   aria-atomic="true"
-                  className={message ? "text-xs font-semibold text-emerald-700" : "sr-only"}
+                  className={message ? `text-xs font-semibold ${messageIsError ? "text-red-700" : "text-emerald-700"}` : "sr-only"}
                 >
                   {message}
                 </p>
