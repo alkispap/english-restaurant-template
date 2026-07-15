@@ -125,7 +125,7 @@ export function SearchBarClient({
             </select>
           </label>
         )}
-        <button type="submit" className="focus-ring rounded-md bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-orange-600">
+        <button type="submit" className="focus-ring rounded-md bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-orange-800">
           Search
         </button>
       </form>

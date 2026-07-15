@@ -93,7 +93,7 @@ export function DirectoryLandingPage() {
           </div>
           <Link
             href={model.finalCta.href}
-            className="focus-ring mt-5 inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600 sm:mt-0"
+            className="focus-ring mt-5 inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-800 sm:mt-0"
           >
             {model.finalCta.label}
             <ArrowRight className="h-4 w-4" aria-hidden />
