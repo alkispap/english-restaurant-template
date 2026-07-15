@@ -52,6 +52,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `3c5b3b7` | Phase 3E interactive control accessibility |
 | `e04920c` | Phase 3E verification record |
 | `2a1c9d8` | Phase 4A dependency updates and enforced advisory policy |
+| `6cc0129` | Phase 4A verification and risk decision record |
+| `bb245a8` | Phase 4B script-safe JSON-LD serialization |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -62,7 +64,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
-| 4. Security/privacy/deployment | In progress | Dependency policy complete; JSON-LD, headers, third-party flows, and deployment documentation remain |
+| 4. Security/privacy/deployment | In progress | Dependency policy and JSON-LD hardening complete; headers, third-party flows, and deployment documentation remain |
 | 5. Listing quality/operations | Pending | Not started |
 | 6. Reusable directory packs | Pending | Not started |
 
@@ -608,10 +610,32 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 4A complete. The remaining moderate advisory has an explicit, constrained reachability decision and is guarded against accidental expansion.
 
+### 2026-07-15 - Phase 4B: prevent JSON-LD script termination
+
+**Confirmed finding:** Seven live JSON-LD emissions across the homepage, restaurant detail, guide/FAQ, and SEO landing renderers inserted raw `JSON.stringify` output through `dangerouslySetInnerHTML`. Imported content containing `</script>` could terminate the structured-data element and inject markup.
+
+**Implementation**
+
+- Added `serializeJsonLd` to serialize once and escape `<`, `>`, `&`, U+2028, and U+2029 as JSON Unicode escapes; unserializable values fail explicitly.
+- Added one `JsonLd` server component as the sole owner of `application/ld+json` and `dangerouslySetInnerHTML`.
+- Migrated all seven schema emissions in four live renderers to the shared component without changing schema objects.
+- Added a repository-wide emitter scan and hostile payload containing closing/opening script tags, HTML-significant characters, and JavaScript line separators.
+
+**Verification**
+
+- Hostile serialization contained no literal closing-script sequence or HTML-significant/separator character and parsed back to the exact original object.
+- Focused JSON-LD security, structured-data, homepage, article, TypeScript, and ESLint checks: passed.
+- Full suite: 139/139 passed in 1m 46.55s.
+- Production build: passed in 91.7s; all payload budgets passed.
+- Built homepage HTML contained exactly two valid parseable schemas (`Organization`, `WebSite`) and no embedded closing-script sequence.
+- `git diff --check`: passed.
+
+**Status:** Phase 4B complete. JSON-LD script emission is centralized and hostile imported strings cannot terminate its script element.
+
 ## Exact next checkpoint
 
-1. Start Phase 4B by centralizing JSON-LD serialization and proving hostile imported strings cannot terminate script elements.
-2. Test production security headers and CSP/static-export compatibility, then inventory enabled third-party data flows and privacy controls.
+1. Start Phase 4C by defining and testing production security headers with CSP/static-export compatibility.
+2. Inventory enabled third-party data flows and align privacy/consent controls and deployment documentation.
 3. On the first deployed preview, run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, and recheck any enabled third-party embeds.
 
 ## Template for future entries
