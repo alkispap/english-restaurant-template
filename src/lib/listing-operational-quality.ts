@@ -103,9 +103,9 @@ export function auditListingOperationalQuality(listings: Listing[]): ListingOper
   addMissingCollectionIssue(issues, listings, "missing_provenance", "high", (listing) => hasCompleteProvenance(listing),
     "Records cannot be traced, refreshed, disputed, or assigned a verification state.",
     "Store source name/ID, import date, verification status, and last verified date per listing.");
-  addMissingCollectionIssue(issues, listings, "missing_images", "high", (listing) => listing.images.some(isHttpUrl),
-    "The directory relies on fallbacks and cannot establish a consistent visual-quality or licensing trail.",
-    "Prioritize licensed, source-attributed images for high-value listings and validate URLs at import.");
+  addMissingCollectionIssue(issues, listings, "missing_images", "medium", (listing) => listing.images.some(isHttpUrl),
+    "The directory relies on fallbacks for listings without rights-approved gallery media.",
+    "Use npm run audit:media for the launch-priority rights gate, then enrich the long tail progressively.");
   addMissingCollectionIssue(issues, listings, "missing_core_location", "high", hasCoreLocation,
     "Local discovery, area filters, maps, and LocalBusiness address data lose reliability.",
     "Require address, postcode, area, neighborhood, and borough for published records.");
