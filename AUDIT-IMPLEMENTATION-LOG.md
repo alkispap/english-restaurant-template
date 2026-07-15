@@ -411,10 +411,57 @@ DevTools device metrics were then forced to a true 390 CSS-pixel mobile viewport
 
 **Status:** Phase 3B complete; Phase 3 remains in progress.
 
+### 2026-07-15 - Phase 3C: label forms and announce dynamic updates
+
+**Confirmed findings:** The global header search, private-note textarea, and listing-comment textarea relied on placeholders or surrounding context instead of persistent programmatic labels. Note, comment, magic-link, geolocation, filter-choice, and area-filter updates were visible but did not have reliable live-region announcements. Repeated comment-removal buttons also shared the same accessible name.
+
+The main directory search, native sidebar selects, checkbox groups, open-now control, and sort selector already had valid label associations and were left unchanged. `SearchableSelect.tsx` is not imported anywhere; its custom non-keyboard listbox pattern is tracked as dead/inaccessible code for a separate maintainability cleanup rather than reported as a live user defect.
+
+**Implementation**
+
+- `HeaderSearch.tsx`
+  - Gives the search input a configured, persistent accessible name independent of its placeholder.
+- `ListingPrivateNote.tsx` and `ListingComments.tsx`
+  - Add stable textarea labels and connect the controls to their character counts and supporting text.
+  - Add persistent polite status regions for note save/clear and comment post/remove outcomes.
+  - Give each comment removal control a contextual accessible name containing its timestamp.
+- `AccountMenu.tsx`
+  - Adds native email validation, email autocomplete metadata, a described status relationship, and a persistent sign-in result announcement.
+- `LocateAreaButton.tsx` and `SearchBarClient.tsx`
+  - Announce location lookup progress and all failure outcomes without removing the visible fallback guidance.
+- `SearchableCardGrid.tsx`
+  - Exposes the alphabet controls as a named group and announces the filtered result count.
+- `FilterCheckboxGroup.tsx`
+  - Announces the count of choices matching the modal search.
+
+**Regression coverage**
+
+- `scripts/form-accessibility.test.ts`
+  - Enforces labels, described-by relationships, validation/autocomplete metadata, named grouped controls, contextual removal labels, and persistent polite status regions across the affected components.
+
+**Verification**
+
+- Focused form, static accessibility, and header-search tests: passed.
+- ESLint and TypeScript: passed.
+- Full suite: 134/134 passed in 1m 56.62s.
+- Standard production build: passed in 92.6s; all client-payload budgets passed.
+- Built `/areas` browser journey:
+  - Header search exposed `Search restaurants` and the area input exposed `Search areas`.
+  - Filtering to no matches exposed `0 results` in the status region and retained the visible empty state.
+- Built restaurant-detail browser journey:
+  - Comment textarea exposed `Comment`.
+  - Posting exposed `Comment posted.` and rendered the browser-local comment.
+  - Removal exposed a timestamp-specific accessible name, then announced `Comment removed.` and restored the empty state.
+  - The temporary verification comment was removed before browser cleanup.
+  - Browser console warnings/errors: none.
+- `git diff --check`: passed.
+
+**Status:** Phase 3C complete; Phase 3 remains in progress.
+
 ## Exact next checkpoint
 
-1. Audit persistent programmatic labels and associated help/error messages for search, filters, and submission forms.
-2. Audit error summaries, validation announcements, and loading/empty-state announcements for forms and dynamic result regions.
+1. Audit error handling and busy/loading/empty-state announcements for account actions, compare loading, maps, and browser-filtered listing results.
+2. Remove or replace the unused inaccessible `SearchableSelect` custom widget during the maintainability cleanup.
 3. Run mobile lab performance on a deployed preview when one is available.
 
 ## Template for future entries
