@@ -39,6 +39,7 @@ These changes existed before remediation began and were reviewed and committed s
 | `21c4ca4` | Audit documents and durable remediation tracking |
 | `3439ece` | Reviewed pre-existing homepage service illustrations and tests |
 | `67c654f` | Phase 2B packed browser search index and async-chunk budget |
+| `805bcde` | Phase 2C packed compare index and route-specific payload budgets |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -47,7 +48,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | Phase | Status | Current checkpoint |
 | --- | --- | --- |
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
-| 2. Performance/export size | In progress | Initial payload and query-activated search chunk fixed and budgeted; export size/time and `/compare` remain |
+| 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | Pending | Not started |
 | 4. Security/privacy/deployment | Pending | Not started |
 | 5. Listing quality/operations | Pending | Not started |
@@ -278,11 +279,63 @@ The clean `/restaurants` route remains 145 KB first-load JavaScript and SEO land
 
 **Status:** Phase 2B complete; Phase 2 remains in progress.
 
+### 2026-07-15 — Phase 2C: measure static output and reduce `/compare` payload
+
+**Static-output finding:** The fresh export contains 7,411 files totalling 1,097,900,917 bytes. Restaurant detail routes account for 906,179,647 bytes (82.5%). HTML is 737,834,278 bytes and RSC text is 350,512,160 bytes, together accounting for 99.1% of the export.
+
+The 4,841 files at or above 100 KB had no exact duplicate hash groups. The size is therefore dominated by the unique HTML/RSC representation of 3,187 rich listing pages, not by safely removable duplicate files. Removing RSC files would risk breaking Next client navigation, and reducing generated detail routes would change the directory's indexation strategy; neither was treated as a safe mechanical optimization.
+
+**Compare finding:** `/compare` shipped a 2,281,416-byte raw route chunk because it embedded the 2,269,647-byte verbose shortlist-summary array in initial JavaScript.
+
+**Implementation**
+
+- `data/shortlist-index.json`
+  - New generated tuple/dictionary index for all compare fields.
+  - Omits derivable listing href strings and reconstructs them from the configured route helper.
+- `src/lib/shortlist-index.ts`
+  - Packs and validates shortlist summaries while preserving optional URLs and the distinction between missing and present opening-hours data.
+- `src/data/shortlist-summaries.ts`
+  - Decodes the packed index instead of importing verbose summary objects.
+- `src/lib/directory-import.ts` and `scripts/import-directory.ts`
+  - Generate the shortlist index on normal and curated imports.
+- `scripts/check-client-payload.ts`
+  - Adds `/compare` to automatic build enforcement with a 1,300,000-byte total raw-JavaScript budget and a 900,000-byte largest-chunk budget.
+
+**Regression coverage and corrective iteration**
+
+- The first full parity check failed because summaries without `workingHours` decoded to an empty array. This was a real representation mismatch.
+- The packed format was corrected to retain an explicit missing-value sentinel, regenerated, and rerun through field-complete import parity plus all 3,187 production summaries.
+- Compare payload tests require the packed index and enforce a 900 KB raw-data ceiling.
+- Storage and source-hygiene checks require the generated file and lossless decode.
+
+**Measured result**
+
+| Artifact | Before | After | Reduction |
+| --- | ---: | ---: | ---: |
+| Shortlist summary data, raw | 2,269,647 bytes | 625,450 bytes | 72.4% |
+| `/compare` route chunk, raw | 2,281,416 bytes | 633,631 bytes | 72.2% |
+| Next reported `/compare` first-load JS | 364 KB | 302 KB | 17.0% |
+| `/compare` total initial raw JS | Unbudgeted | 990.0 KiB | Enforced below 1.3 MB |
+
+**Verification**
+
+- Focused compare, import, storage, source-hygiene, lint, and TypeScript checks: passed after the corrective iteration.
+- Full suite: 132/132 passed in 2m 12.03s.
+- Standard production build: passed in 141.3s; `/compare` and all existing payload budgets passed.
+- Static export: 3,660 pages passed in 608.3s; payload budgets passed automatically.
+- Cloudflare export: 7,411 files passed; no asset exceeded 25 MiB.
+- Hydrated populated `/compare`: three saved Dishoom listings resolved with no missing records; rating, reviews, price, area, open status, cuisines, dietary, services, parking, notes, and external links rendered.
+- Desktop and 390 px mobile screenshots confirmed the populated comparison table. The table intentionally scrolls horizontally; the separately logged page-level mobile clipping remains assigned to the responsive/accessibility phase.
+- `git diff --check`: passed.
+
+**Status:** Phase 2C complete. Local payload work is complete; Phase 2 remains open only for lab/field measurement on a deployed preview and any resulting targeted work.
+
 ## Exact next checkpoint
 
-1. Measure static-output bytes by file family and repeated content before changing route generation.
-2. Trace the 364 KB `/compare` route payload and separate avoidable data from required UI code.
-3. Separately diagnose the observed 390 px horizontal clipping in the responsive/accessibility workstream.
+1. Start Phase 3 by diagnosing and fixing the observed 390 px page-level horizontal clipping.
+2. Introduce accessible action-colour tokens and replace confirmed failing white-on-orange combinations.
+3. Audit dialog focus handling and persistent form labels with focused regressions.
+4. Run mobile lab performance on a deployed preview when one is available.
 
 ## Template for future entries
 
