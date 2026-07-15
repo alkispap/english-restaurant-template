@@ -88,6 +88,27 @@ function dietaryCardImagesUseOptimizedLocalAssets() {
   });
 }
 
+function serviceCardImagesUseOptimizedLocalAssets() {
+  const serviceCards = getDirectoryLandingModel().serviceNeeds.items;
+
+  assert.equal(serviceCards.length, 3, "homepage should render three service cards");
+  serviceCards.forEach((card) => {
+    const image = card.image;
+    assert.ok(image, `${card.title} should have an image`);
+    assert.ok(image.startsWith("/images/homepage/services/"), `${card.title} should use a local service illustration`);
+    assert.ok(image.endsWith(".webp"), `${card.title} service image should be WebP`);
+    assert.ok(card.imageAlt.length >= 40, `${card.title} should have meaningful image alt text`);
+    assert.equal(card.imageCredit, undefined, `${card.title} generated illustration should not require a photo credit`);
+
+    const imagePath = publicPath(image);
+    assert.ok(fs.existsSync(imagePath), `${image} should exist`);
+    assert.ok(fileSize(imagePath) < 250_000, `${image} should stay below 250 KB`);
+    const dimensions = webpDimensions(imagePath);
+    assert.equal(dimensions.width, 800, `${image} should use the shared card width`);
+    assert.equal(dimensions.height, 450, `${image} should use the shared card height`);
+  });
+}
+
 function homepageOrnamentUsesOptimizedDecorativeAsset() {
   const ornament = "/images/homepage/decorative/indian-editorial-ornament.webp";
   const ornamentPath = publicPath(ornament);
@@ -192,6 +213,7 @@ homepageHeroUsesSeoVisibleImage();
 homepageDiscoveryCardsUseLocalGeneratedImages();
 dietaryCardImagesUseOptimizedLocalAssets();
 diningHubImagesUseOptimizedLocalAssets();
+serviceCardImagesUseOptimizedLocalAssets();
 homepageOrnamentUsesOptimizedDecorativeAsset();
 articleImagesUseMeaningfulAltText();
 publishedArticleLocalImagesExist();
