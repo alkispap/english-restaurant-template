@@ -73,4 +73,36 @@ const invalidProvenance = auditListingOperationalQuality([
 ]);
 assert.equal(invalidProvenance.issues.find((issue) => issue.code === "missing_provenance")?.count, 1);
 
+const historicalProvenance = auditListingOperationalQuality([
+  {
+    ...completeListing,
+    provenance: {
+      sourceName: "Historical source.csv",
+      sourceId: "place-1",
+      firstRecordedAt: "2026-07-01T04:40:55.000Z",
+      recordDateBasis: "first-committed",
+      sourceCommit: "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
+      sourceSnapshotSha256: "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
+      verificationStatus: "unverified"
+    }
+  }
+]);
+assert.equal(historicalProvenance.issues.find((issue) => issue.code === "missing_provenance"), undefined);
+
+const unsupportedHistoricalDate = auditListingOperationalQuality([
+  {
+    ...completeListing,
+    provenance: {
+      sourceName: "Historical source.csv",
+      sourceId: "place-1",
+      firstRecordedAt: "2026-07-01T04:40:55.000Z",
+      recordDateBasis: "first-committed",
+      sourceCommit: "not-a-commit",
+      sourceSnapshotSha256: "not-a-hash",
+      verificationStatus: "unverified"
+    }
+  }
+]);
+assert.equal(unsupportedHistoricalDate.issues.find((issue) => issue.code === "missing_provenance")?.count, 1);
+
 console.log("listing operational quality tests passed");

@@ -243,13 +243,18 @@ function hasCompleteProvenance(listing: Listing) {
   const provenance = listing.provenance;
   if (!provenance) return false;
   const importedAtIsValid = isValidDate(provenance.importedAt);
+  const historicalRecordIsValid =
+    isValidDate(provenance.firstRecordedAt) &&
+    provenance.recordDateBasis === "first-committed" &&
+    /^[a-f0-9]{40}$/i.test(clean(provenance.sourceCommit)) &&
+    /^[a-f0-9]{64}$/i.test(clean(provenance.sourceSnapshotSha256));
   const verificationDateIsValid =
     provenance.verificationStatus === "unverified" || isValidDate(provenance.lastVerifiedAt);
   const sourceUrlIsValid = !provenance.sourceUrl || isHttpUrl(provenance.sourceUrl);
   return Boolean(
-    clean(provenance.sourceName) &&
+      clean(provenance.sourceName) &&
       clean(provenance.sourceId) &&
-      importedAtIsValid &&
+      (importedAtIsValid || historicalRecordIsValid) &&
       verificationDateIsValid &&
       sourceUrlIsValid
   );

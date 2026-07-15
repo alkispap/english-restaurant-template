@@ -23,7 +23,11 @@ export type ListingProvenance = {
   sourceName: string;
   sourceId?: string;
   sourceUrl?: string;
-  importedAt: string;
+  importedAt?: string;
+  firstRecordedAt?: string;
+  recordDateBasis?: "first-committed";
+  sourceCommit?: string;
+  sourceSnapshotSha256?: string;
   lastVerifiedAt?: string;
   verificationStatus: "unverified" | "source-verified" | "editor-verified";
 };

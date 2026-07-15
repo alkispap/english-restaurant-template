@@ -78,7 +78,11 @@ export type ImportedListing = {
     sourceName: string;
     sourceId?: string;
     sourceUrl?: string;
-    importedAt: string;
+    importedAt?: string;
+    firstRecordedAt?: string;
+    recordDateBasis?: "first-committed";
+    sourceCommit?: string;
+    sourceSnapshotSha256?: string;
     verificationStatus: "unverified";
   };
   featured?: boolean;
@@ -91,6 +95,13 @@ export type ImportProvenanceOptions = {
   sourceName?: string;
   sourceUrl?: string;
   importedAt?: string;
+};
+
+type NewImportProvenance = {
+  sourceName: string;
+  sourceUrl?: string;
+  importedAt: string;
+  verificationStatus: "unverified";
 };
 
 export type ImportSummary = {
@@ -575,7 +586,7 @@ function toListing(
   row: Row,
   index: number,
   analysis: ImportAnalysis,
-  provenance: Omit<ImportedListing["provenance"], "sourceId">,
+  provenance: NewImportProvenance,
   sourceId: string
 ): ImportedListing {
   const get = (field: string) => valueAt(row, analysis.mapped[field]);
@@ -1227,7 +1238,7 @@ function buildReportData(
   analysis: ImportAnalysis,
   mode: ImportMode,
   rows: Row[],
-  provenance: Omit<ImportedListing["provenance"], "sourceId">
+  provenance: NewImportProvenance
 ): ImportReportData {
   return {
     summary: {
@@ -1424,7 +1435,11 @@ export type ListingProvenance = {
   sourceName: string;
   sourceId?: string;
   sourceUrl?: string;
-  importedAt: string;
+  importedAt?: string;
+  firstRecordedAt?: string;
+  recordDateBasis?: "first-committed";
+  sourceCommit?: string;
+  sourceSnapshotSha256?: string;
   lastVerifiedAt?: string;
   verificationStatus: "unverified" | "source-verified" | "editor-verified";
 };
@@ -1676,7 +1691,7 @@ function valueAt(row: Row, header?: string) {
 function importProvenance(
   sourceFile: string,
   options?: ImportProvenanceOptions
-): Omit<ImportedListing["provenance"], "sourceId"> {
+): NewImportProvenance {
   const sourceName = options?.sourceName?.trim() || sourceFile;
   const requestedImportedAt = options?.importedAt?.trim() || new Date().toISOString();
   const parsedImportedAt = new Date(requestedImportedAt);
