@@ -6,6 +6,7 @@ import {
   renderListingsFile,
   renderListingsJsonFile,
   renderListingSearchRecordsJsonFile,
+  renderListingFilterCountsJsonFile,
   renderShortlistSummariesJsonFile,
   renderMissingCategoryReview,
   renderReport,
@@ -23,6 +24,7 @@ const inputPath = path.resolve(root, inputArg ?? "data/directory.csv");
 const listingsSourcePath = path.resolve(root, "src/data/listings.ts");
 const listingsJsonPath = path.resolve(root, "data/listings.json");
 const listingSearchRecordsJsonPath = path.resolve(root, "data/listing-search-records.json");
+const listingFilterCountsJsonPath = path.resolve(root, "data/listing-filter-counts.json");
 const shortlistSummariesJsonPath = path.resolve(root, "data/shortlist-summaries.json");
 const reportPath = path.resolve(root, "data/import-report.md");
 const categoryReviewPath = path.resolve(root, "data/category-inference-review.md");
@@ -58,6 +60,11 @@ if (dryRun) {
     "utf8"
   );
   fs.writeFileSync(
+    listingFilterCountsJsonPath,
+    sampleSize ? renderListingFilterCountsJsonFile(importedListings) : result.listingFilterCountsJsonFile,
+    "utf8"
+  );
+  fs.writeFileSync(
     shortlistSummariesJsonPath,
     sampleSize ? renderShortlistSummariesJsonFile(importedListings) : result.shortlistSummariesJsonFile,
     "utf8"
@@ -69,6 +76,7 @@ if (dryRun) {
   console.log(`Updated ${path.relative(root, listingsSourcePath)}`);
   console.log(`Updated ${path.relative(root, listingsJsonPath)}`);
   console.log(`Updated ${path.relative(root, listingSearchRecordsJsonPath)}`);
+  console.log(`Updated ${path.relative(root, listingFilterCountsJsonPath)}`);
   console.log(`Updated ${path.relative(root, shortlistSummariesJsonPath)}`);
   console.log(`Wrote ${path.relative(root, reportPath)}`);
   console.log(`Wrote ${path.relative(root, categoryReviewPath)}`);

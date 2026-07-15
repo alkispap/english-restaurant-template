@@ -9,8 +9,9 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package
 assert.equal(packageJson.scripts?.["check:cloudflare"], "tsx scripts/check-cloudflare-export.ts");
 assert.equal(
   packageJson.scripts?.["build:static"],
-  "npm run generate:redirects && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\""
+  "npm run generate:redirects && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\" && npm run audit:payload"
 );
+assert.equal(packageJson.scripts?.["audit:payload"], "tsx scripts/check-client-payload.ts");
 assert.equal(packageJson.scripts?.["generate:redirects"], "tsx scripts/generate-cloudflare-redirects.ts");
 assert.equal(packageJson.scripts?.["diagnose:static"], "tsx scripts/static-export-diagnostics.ts");
 assert.equal(

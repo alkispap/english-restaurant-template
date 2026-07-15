@@ -1,9 +1,23 @@
-import { listings } from "@/data/listings";
+import listingFilterCountsData from "../../data/listing-filter-counts.json";
 import type { ListingFilters } from "@/lib/directory";
 import { slugify } from "@/lib/slug";
 
 export type CountedListingFilterKey = "area" | "neighborhood" | "category" | "type" | "dietary" | "service" | "offering" | "price";
 
+const countedListingFilterKeys: CountedListingFilterKey[] = [
+  "area",
+  "neighborhood",
+  "category",
+  "type",
+  "dietary",
+  "service",
+  "offering",
+  "price"
+];
+const serializedListingFilterCounts = listingFilterCountsData as Record<
+  CountedListingFilterKey,
+  Record<string, number>
+>;
 let listingFilterCountsCache: Record<CountedListingFilterKey, Map<string, number>> | null = null;
 
 export function getListingFilterCount(key: CountedListingFilterKey, slug: string) {
@@ -24,41 +38,10 @@ export function getIndexedListingFilterCount(filters: ListingFilters): number | 
 export function getListingFilterCounts() {
   if (listingFilterCountsCache) return listingFilterCountsCache;
 
-  const counts: Record<CountedListingFilterKey, Map<string, number>> = {
-    area: new Map(),
-    neighborhood: new Map(),
-    category: new Map(),
-    type: new Map(),
-    dietary: new Map(),
-    service: new Map(),
-    offering: new Map(),
-    price: new Map()
-  };
-
-  listings.forEach((listing) => {
-    increment(counts.area, listing.area);
-    increment(counts.neighborhood, listing.neighborhood);
-    listing.categories.forEach((value) => increment(counts.category, value));
-    listing.listingTypes.forEach((value) => increment(counts.type, value));
-    listing.dietaryOptions.forEach((value) => increment(counts.dietary, value));
-    (listing.details?.serviceOptions ?? []).forEach((value) => increment(counts.service, value));
-    (listing.details?.offerings ?? []).forEach((value) => increment(counts.offering, value));
-    incrementExact(counts.price, listing.priceLevel);
-  });
-
-  listingFilterCountsCache = counts;
-  return counts;
-}
-
-function increment(counts: Map<string, number>, value?: string) {
-  if (!value) return;
-  const slug = slugify(value);
-  counts.set(slug, (counts.get(slug) ?? 0) + 1);
-}
-
-function incrementExact(counts: Map<string, number>, value?: string) {
-  if (!value) return;
-  counts.set(value, (counts.get(value) ?? 0) + 1);
+  listingFilterCountsCache = Object.fromEntries(
+    countedListingFilterKeys.map((key) => [key, new Map(Object.entries(serializedListingFilterCounts[key]))])
+  ) as Record<CountedListingFilterKey, Map<string, number>>;
+  return listingFilterCountsCache;
 }
 
 function isCountedListingFilterKey(key: string): key is CountedListingFilterKey {

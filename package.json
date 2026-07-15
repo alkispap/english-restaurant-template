@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-dev-server.ps1",
     "dev:next": "next dev --turbo --hostname 127.0.0.1 --port 3000",
-    "build": "next build",
-    "build:static": "npm run generate:redirects && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\"",
+    "build": "next build && npm run audit:payload",
+    "build:static": "npm run generate:redirects && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\" && npm run audit:payload",
     "start": "next start",
     "lint": "eslint .",
     "test": "tsx scripts/run-tests.ts",
@@ -16,6 +16,7 @@
     "audit:links": "tsx scripts/check-internal-link-governance.ts",
     "audit:freshness": "tsx scripts/check-freshness.ts",
     "audit:template": "tsx scripts/check-template-readiness.ts",
+    "audit:payload": "tsx scripts/check-client-payload.ts",
     "check:cloudflare": "tsx scripts/check-cloudflare-export.ts",
     "diagnose:static": "tsx scripts/static-export-diagnostics.ts",
     "generate:redirects": "tsx scripts/generate-cloudflare-redirects.ts",

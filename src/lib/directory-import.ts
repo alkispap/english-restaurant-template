@@ -142,6 +142,7 @@ export type ImportResult = {
   listingsFile: string;
   listingsJsonFile: string;
   listingSearchRecordsJsonFile: string;
+  listingFilterCountsJsonFile: string;
   shortlistSummariesJsonFile: string;
   sourceFile: string;
   rows: Row[];
@@ -277,6 +278,7 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     listingsFile: renderListingsFile(),
     listingsJsonFile: renderListingsJsonFile(listings),
     listingSearchRecordsJsonFile: renderListingSearchRecordsJsonFile(listings),
+    listingFilterCountsJsonFile: renderListingFilterCountsJsonFile(listings),
     shortlistSummariesJsonFile: renderShortlistSummariesJsonFile(listings),
     sourceFile,
     rows
@@ -1432,6 +1434,32 @@ export function renderListingSearchRecordsJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(items.map(toListingSearchRecord))}\n`;
 }
 
+export function renderListingFilterCountsJsonFile(items: ImportedListing[]) {
+  const counts = {
+    area: {} as Record<string, number>,
+    neighborhood: {} as Record<string, number>,
+    category: {} as Record<string, number>,
+    type: {} as Record<string, number>,
+    dietary: {} as Record<string, number>,
+    service: {} as Record<string, number>,
+    offering: {} as Record<string, number>,
+    price: {} as Record<string, number>
+  };
+
+  for (const listing of items) {
+    incrementSlugCount(counts.area, listing.area);
+    incrementSlugCount(counts.neighborhood, listing.neighborhood);
+    listing.categories.forEach((value) => incrementSlugCount(counts.category, value));
+    listing.listingTypes.forEach((value) => incrementSlugCount(counts.type, value));
+    listing.dietaryOptions.forEach((value) => incrementSlugCount(counts.dietary, value));
+    asStringArray(listing.details?.serviceOptions).forEach((value) => incrementSlugCount(counts.service, value));
+    asStringArray(listing.details?.offerings).forEach((value) => incrementSlugCount(counts.offering, value));
+    incrementExactCount(counts.price, listing.priceLevel);
+  }
+
+  return `${JSON.stringify(counts)}\n`;
+}
+
 export function renderShortlistSummariesJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(getAllShortlistListingSummaries(items))}\n`;
 }
@@ -1752,6 +1780,17 @@ function countValues(items: Array<string | number | undefined>) {
 
 function asStringArray(value: unknown) {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+function incrementSlugCount(counts: Record<string, number>, value?: string) {
+  if (!value) return;
+  const slug = slugify(value);
+  counts[slug] = (counts[slug] ?? 0) + 1;
+}
+
+function incrementExactCount(counts: Record<string, number>, value?: string) {
+  if (!value) return;
+  counts[value] = (counts[value] ?? 0) + 1;
 }
 
 function allFeatureValues(item: ImportedListing) {

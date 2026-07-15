@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   analyzeDirectoryRows,
   analyzeDirectoryBuffer,
+  renderListingFilterCountsJsonFile,
   renderMissingCategoryReview,
   renderReportForListings,
   selectCuratedRestaurantSample,
@@ -168,6 +169,50 @@ function serviceFilterExcludesAdvancedOnlyValues() {
   assert.ok(!serviceOptions.includes("Good for kids"));
   assert.ok(!serviceOptions.includes("Paid street parking"));
   assert.ok(!serviceOptions.includes("Casual"));
+}
+
+function importGeneratesCompactNormalizedFilterCounts() {
+  const listings = [
+    {
+      name: "First Kitchen",
+      slug: "first-kitchen",
+      images: [],
+      categories: ["Indian", "South Indian"],
+      listingTypes: ["Casual Dining"],
+      dietaryOptions: ["Vegan"],
+      tags: [],
+      area: "Tower Hamlets",
+      neighborhood: "Brick Lane",
+      priceLevel: "££" as const,
+      details: { serviceOptions: ["Delivery", "Takeaway"], offerings: ["Coffee"] }
+    },
+    {
+      name: "Second Kitchen",
+      slug: "second-kitchen",
+      images: [],
+      categories: ["Indian"],
+      listingTypes: ["Fine Dining"],
+      dietaryOptions: ["Vegan"],
+      tags: [],
+      area: "Tower Hamlets",
+      neighborhood: "Whitechapel",
+      priceLevel: "££" as const,
+      details: { serviceOptions: ["Delivery"], offerings: ["Coffee"] }
+    }
+  ];
+
+  const counts = JSON.parse(renderListingFilterCountsJsonFile(listings));
+
+  assert.equal(counts.area["tower-hamlets"], 2);
+  assert.equal(counts.neighborhood["brick-lane"], 1);
+  assert.equal(counts.category.indian, 2);
+  assert.equal(counts.category["south-indian"], 1);
+  assert.equal(counts.type["casual-dining"], 1);
+  assert.equal(counts.dietary.vegan, 2);
+  assert.equal(counts.service.delivery, 2);
+  assert.equal(counts.service.takeaway, 1);
+  assert.equal(counts.offering.coffee, 2);
+  assert.equal(counts.price["££"], 2);
 }
 
 function listingDescriptionsUseDataRichCopy() {
@@ -522,6 +567,7 @@ nonCsvBuffersAreRejected();
 ignoredColumnsAreReported();
 sampledReportsUseSampledCounts();
 serviceFilterExcludesAdvancedOnlyValues();
+importGeneratesCompactNormalizedFilterCounts();
 listingDescriptionsUseDataRichCopy();
 listingDescriptionVariantsAreStableAndVaried();
 listingMetaDescriptionsAvoidBrokenTruncation();
