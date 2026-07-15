@@ -21,7 +21,7 @@ An item is only marked **Complete** after its acceptance criteria and verificati
 
 ## Protected pre-existing user work
 
-These changes existed before remediation began and must not be overwritten or attributed to the audit implementation:
+These changes existed before remediation began and were reviewed and committed separately as `3439ece`; they are not attributed to the audit implementation:
 
 - `scripts/directory-landing.test.ts`
 - `scripts/image-seo.test.ts`
@@ -36,6 +36,9 @@ These changes existed before remediation began and must not be overwritten or at
 | --- | --- |
 | `d1bb341` | Phase 1 functional query fixes and regression coverage |
 | `0575f50` | Phase 2A initial-payload reduction, generated count index, and enforced build budgets |
+| `21c4ca4` | Audit documents and durable remediation tracking |
+| `3439ece` | Reviewed pre-existing homepage service illustrations and tests |
+| `67c654f` | Phase 2B packed browser search index and async-chunk budget |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -44,7 +47,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | Phase | Status | Current checkpoint |
 | --- | --- | --- |
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
-| 2. Performance/export size | In progress | Initial route payload fixed and budgeted; on-demand search chunk and export size/time remain |
+| 2. Performance/export size | In progress | Initial payload and query-activated search chunk fixed and budgeted; export size/time and `/compare` remain |
 | 3. WCAG 2.2 AA accessibility | Pending | Not started |
 | 4. Security/privacy/deployment | Pending | Not started |
 | 5. Listing quality/operations | Pending | Not started |
@@ -220,13 +223,66 @@ The reported `/restaurants` first-load payload fell by approximately 89%. The cl
 
 **Status:** Phase 2A complete; Phase 2 remains in progress.
 
+### 2026-07-15 — Phase 2B: reduce and budget query-activated search data
+
+**Finding:** Activating a supported directory or SEO-landing query lazy-loaded a 6,873,540-byte raw JavaScript chunk. The chunk embedded the 6,842,190-byte verbose `listing-search-records.json` array.
+
+**Root cause:** The client search records were already smaller than full listings, but they repeated long property names and common filter strings across all 3,187 records. Because the JSON was imported by the lazy browser module, that representation became JavaScript source and parse work.
+
+**Implementation**
+
+- `data/listing-search-index.json`
+  - New generated versioned index using fixed record positions plus a dictionary for repeated strings.
+  - Preserves unique strings directly and uses one-based dictionary tokens so zero remains an unambiguous optional-string sentinel.
+- `src/lib/listing-search-index.ts`
+  - Deterministically packs records during import and validates/decodes the generated format for search.
+  - Retains every existing search, filter, card, map, opening-hours, contact, and detail field.
+- `src/data/listing-search-records.ts`
+  - Loads and decodes the packed index instead of bundling the verbose search-record JSON.
+- `src/lib/directory-import.ts` and `scripts/import-directory.ts`
+  - Generate the packed index for normal and curated-sample imports so it cannot drift from source data.
+- `scripts/check-client-payload.ts`
+  - Adds a 3,000,000-byte ceiling for every initial or async client chunk.
+
+**Regression coverage**
+
+- Import tests require the packed format to round-trip a field-complete record without loss.
+- Storage tests decode all 3,187 records and compare them to the verbose canonical search records.
+- Payload tests require the generated index to remain below 3 MB and less than half the verbose representation.
+- Source-hygiene tests require the generated packed asset to exist.
+
+**Measured result**
+
+| Artifact | Before | After | Reduction |
+| --- | ---: | ---: | ---: |
+| Browser search data, raw | 6,842,190 bytes | 2,556,838 bytes | 62.6% |
+| Largest compiled client chunk, raw | 6,873,540 bytes | 2,583,546 bytes | 62.4% |
+| Current compiled search chunk, gzip | — | 570,613 bytes | — |
+| Current compiled search chunk, Brotli | — | 409,887 bytes | — |
+
+The clean `/restaurants` route remains 145 KB first-load JavaScript and SEO landing routes remain 143 KB. The query chunk is absent from initial route assets.
+
+**Verification**
+
+- Focused import, storage, payload, source-hygiene, search, filter, query-enhancer, and SEO-query tests: passed.
+- ESLint: passed.
+- TypeScript: passed.
+- Full suite: 132/132 passed in 2m 11.62s.
+- Standard production build: passed in 138.6s; initial and async payload budgets passed.
+- Static export: 3,660 pages passed in 640.2s; payload budgets passed automatically.
+- Cloudflare export guard correctly rejected a missing production URL; with `NEXT_PUBLIC_SITE_URL=https://indianrestaurantlondon.co.uk`, validation passed for 7,411 files with no asset over 25 MiB.
+- Hydrated `/restaurants/?q=Dishoom`: server region hidden, query retained, and 9 client results rendered.
+- Hydrated `/areas/harrow/?open=1`: client results rendered; server region had `hidden` and `display:none`.
+- Desktop and 390 px mobile screenshots confirmed the query result state. The previously recorded mobile horizontal clipping remains and is not attributed to this payload-only change.
+- `git diff --check`: passed.
+
+**Status:** Phase 2B complete; Phase 2 remains in progress.
+
 ## Exact next checkpoint
 
-1. Trace how the on-demand 6.87 MB browser search chunk is consumed and identify a safe sharding/fetch strategy.
-2. Add a separate budget for query-activated data without forcing it into clean first load.
-3. Measure static-output bytes by file family and repeated content before changing route generation.
-4. Trace the 364 KB `/compare` route payload.
-5. Separately diagnose the observed 390 px horizontal clipping in the responsive/accessibility workstream.
+1. Measure static-output bytes by file family and repeated content before changing route generation.
+2. Trace the 364 KB `/compare` route payload and separate avoidable data from required UI code.
+3. Separately diagnose the observed 390 px horizontal clipping in the responsive/accessibility workstream.
 
 ## Template for future entries
 
