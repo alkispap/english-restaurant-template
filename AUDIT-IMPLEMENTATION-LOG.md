@@ -40,6 +40,7 @@ These changes existed before remediation began and were reviewed and committed s
 | `3439ece` | Reviewed pre-existing homepage service illustrations and tests |
 | `67c654f` | Phase 2B packed browser search index and async-chunk budget |
 | `805bcde` | Phase 2C packed compare index and route-specific payload budgets |
+| `d09777e` | Phase 3A accessible primary colour and hover states |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -49,7 +50,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | --- | --- | --- |
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
-| 3. WCAG 2.2 AA accessibility | Pending | Not started |
+| 3. WCAG 2.2 AA accessibility | In progress | Primary colour contrast fixed; dialogs and persistent form labels remain |
 | 4. Security/privacy/deployment | Pending | Not started |
 | 5. Listing quality/operations | Pending | Not started |
 | 6. Reusable directory packs | Pending | Not started |
@@ -151,7 +152,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 
 The in-app browser was attempted first, but its session dropped every localhost tab, including `/about`, while the local HTTP server continued returning valid 200 responses. The rendered checks therefore used the installed Microsoft Edge browser in headless mode against the exact `out` export.
 
-This fallback produced hydrated DOM evidence and 390×844 screenshots. It also exposed apparent horizontal clipping on the mobile directory and SEO landing layouts. Because the query journeys themselves work and the clipping needs its own width/overflow diagnosis, it is recorded as a new follow-up for the responsive/accessibility phase rather than being folded into the query fix.
+This fallback produced hydrated DOM evidence and nominal 390×844 screenshots. It also appeared to show horizontal clipping on the mobile directory and SEO landing layouts. Phase 3A later proved that the Edge command-line window had retained a 492 CSS-pixel viewport while cropping the screenshot to 390 physical pixels; true 390 CSS-pixel device emulation has no page-level overflow. No responsive defect is attributed to those original screenshots.
 
 **Mobile evidence**
 
@@ -325,17 +326,54 @@ The 4,841 files at or above 100 KB had no exact duplicate hash groups. The size 
 - Static export: 3,660 pages passed in 608.3s; payload budgets passed automatically.
 - Cloudflare export: 7,411 files passed; no asset exceeded 25 MiB.
 - Hydrated populated `/compare`: three saved Dishoom listings resolved with no missing records; rating, reviews, price, area, open status, cuisines, dietary, services, parking, notes, and external links rendered.
-- Desktop and 390 px mobile screenshots confirmed the populated comparison table. The table intentionally scrolls horizontally; the separately logged page-level mobile clipping remains assigned to the responsive/accessibility phase.
+- Desktop and nominal 390 px mobile screenshots confirmed the populated comparison table. The table intentionally scrolls horizontally; Phase 3A later confirmed the apparent page-level clipping was caused by the screenshot tool retaining a wider CSS viewport.
 - `git diff --check`: passed.
 
 **Status:** Phase 2C complete. Local payload work is complete; Phase 2 remains open only for lab/field measurement on a deployed preview and any resulting targeted work.
 
+### 2026-07-15 — Phase 3A: verify mobile overflow and correct primary contrast
+
+**Responsive diagnosis:** The earlier mobile screenshots appeared horizontally clipped, but the browser was not using the requested CSS viewport. With `--window-size=390,844`, Edge reported `innerWidth=492`, `clientWidth=477`, and `documentScrollWidth=477`; the 390-pixel image was a crop of that wider layout.
+
+DevTools device metrics were then forced to a true 390 CSS-pixel mobile viewport. The hydrated query page reported:
+
+- `innerWidth=390`
+- `clientWidth=390`
+- `documentScrollWidth=390`
+- body width and right edge both 390
+
+**Decision:** The page-level horizontal-overflow follow-up was a tooling false positive. No layout change or regression test was added for a defect that does not exist. Horizontally scrollable carousels and comparison tables remain intentionally contained.
+
+**Confirmed contrast finding:** The primary `#f97316` token measured 2.80:1 against white and 2.70:1 against the paper background. The reciprocal foreground/background usage affected primary text, icons, borders, focus rings, and white-text buttons—not only the originally sampled actions.
+
+**Implementation**
+
+- `src/app/globals.css`
+  - Changes the primary token to standard orange-700 `#c2410c`.
+  - The new token measures 5.18:1 against white and 4.99:1 against the paper background.
+- `src/components/SearchBar.tsx`, `SearchBarClient.tsx`, and `DirectoryLandingPage.tsx`
+  - Replace the lighter `hover:bg-orange-600` state with orange-800 `#9a3412`, which measures 7.31:1 against white.
+- `scripts/accessibility-static.test.ts`
+  - Reads the real CSS token and enforces primary-on-white, primary-on-paper, white-on-primary, and white-on-hover contrast.
+  - Prevents the three primary actions from regressing to the failing lighter hover state.
+
+**Verification**
+
+- Focused accessibility, homepage-theme, directory-landing, and search tests: passed.
+- ESLint and TypeScript: passed.
+- Full suite: 132/132 passed in 2m 35.47s.
+- Standard production build: passed in 130.1s; all initial, async-search, and compare payload budgets passed.
+- Generated browser CSS exposed `--color-primary: #c2410c`.
+- True 390 CSS-pixel mobile and 1440 px desktop homepage screenshots showed the darker action colour without layout regression.
+- `git diff --check`: passed.
+
+**Status:** Phase 3A complete; Phase 3 remains in progress.
+
 ## Exact next checkpoint
 
-1. Start Phase 3 by diagnosing and fixing the observed 390 px page-level horizontal clipping.
-2. Introduce accessible action-colour tokens and replace confirmed failing white-on-orange combinations.
-3. Audit dialog focus handling and persistent form labels with focused regressions.
-4. Run mobile lab performance on a deployed preview when one is available.
+1. Audit dialog focus handling with focused regressions for labels, initial focus, containment, Escape, background interaction, and focus restoration.
+2. Audit persistent programmatic labels and associated help/error messages for search, filters, and submission forms.
+3. Run mobile lab performance on a deployed preview when one is available.
 
 ## Template for future entries
 
