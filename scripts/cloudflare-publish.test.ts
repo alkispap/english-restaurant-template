@@ -54,6 +54,9 @@ const headersPath = path.join(process.cwd(), "public", "_headers");
 const headers = fs.readFileSync(headersPath, "utf8");
 assert.ok(headers.includes("/robots.txt"), "public/_headers should set robots cache policy by path");
 assert.ok(headers.includes("/sitemap.xml"), "public/_headers should set sitemap cache policy by path");
+assert.ok(headers.includes("Content-Security-Policy:"), "public/_headers should apply the production CSP");
+assert.ok(headers.includes("X-Content-Type-Options: nosniff"), "public/_headers should prevent MIME sniffing");
+assert.ok(headers.includes("Permissions-Policy:"), "public/_headers should restrict sensitive browser capabilities");
 assert.ok(
   !headers.includes("https://indianrestaurantlondon.co.uk/robots.txt") &&
     !headers.includes("https://www.indianrestaurantlondon.co.uk/robots.txt") &&

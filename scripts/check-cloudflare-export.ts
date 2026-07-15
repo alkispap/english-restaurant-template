@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
+import { securityHeaders } from "../src/config/security-headers.mjs";
 
 const outDir = path.join(process.cwd(), "out");
 const maxFiles = 20_000;
@@ -46,6 +47,9 @@ assert.ok(sitemap.includes(publicSiteUrl), "sitemap.xml does not include NEXT_PU
 assert.ok(robots.includes(`${publicSiteUrl.replace(/\/$/, "")}/sitemap.xml`), "robots.txt does not point to the production sitemap.");
 assert.ok(headers.includes("/_next/static/*"), "out/_headers must include long-cache rules for hashed Next assets.");
 assert.ok(headers.includes("/vendor/leaflet/*"), "out/_headers must include long-cache rules for map vendor assets.");
+for (const { key, value } of securityHeaders) {
+  assert.ok(headers.includes(`  ${key}: ${value}`), `out/_headers must include the shared ${key} policy.`);
+}
 assert.ok(
   !headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/robots.txt`) &&
     !headers.includes(`${publicSiteUrl.replace(/\/$/, "")}/sitemap.xml`),

@@ -1,6 +1,7 @@
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants.js";
+import { securityHeaders } from "./src/config/security-headers.mjs";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -51,7 +52,14 @@ const nextConfig = (phase) => {
           hostname: "thecurryclub.uk"
         }
       ]
-    }
+    },
+    ...(!isStaticExport || isDevServer
+      ? {
+          async headers() {
+            return [{ source: "/:path*", headers: securityHeaders }];
+          }
+        }
+      : {})
   };
 };
 
