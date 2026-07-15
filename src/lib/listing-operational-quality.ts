@@ -242,7 +242,17 @@ function hasRatingAndReviews(listing: Listing) {
 function hasCompleteProvenance(listing: Listing) {
   const provenance = listing.provenance;
   if (!provenance) return false;
-  return Boolean(clean(provenance.sourceName) && clean(provenance.importedAt) && provenance.verificationStatus);
+  const importedAtIsValid = isValidDate(provenance.importedAt);
+  const verificationDateIsValid =
+    provenance.verificationStatus === "unverified" || isValidDate(provenance.lastVerifiedAt);
+  const sourceUrlIsValid = !provenance.sourceUrl || isHttpUrl(provenance.sourceUrl);
+  return Boolean(
+    clean(provenance.sourceName) &&
+      clean(provenance.sourceId) &&
+      importedAtIsValid &&
+      verificationDateIsValid &&
+      sourceUrlIsValid
+  );
 }
 
 function hasContactAction(listing: Listing) {
@@ -275,6 +285,11 @@ function normalizeText(value: unknown) {
 
 function clean(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function isValidDate(value: unknown) {
+  if (!clean(value)) return false;
+  return !Number.isNaN(new Date(String(value)).getTime());
 }
 
 function coverage(count: number, total: number) {

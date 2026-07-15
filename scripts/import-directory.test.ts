@@ -16,6 +16,13 @@ import { getServiceOptions } from "../src/lib/directory";
 import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
 import { unpackShortlistSummaries } from "../src/lib/shortlist-index";
 
+const fixtureProvenance = {
+  sourceName: "test.csv",
+  sourceId: "fixture-source-id",
+  importedAt: "2026-07-15T12:00:00.000Z",
+  verificationStatus: "unverified" as const
+};
+
 function repeatedHeaderRowsAreSkipped() {
   const rows: Row[] = [
     {
@@ -84,6 +91,9 @@ function restaurantFeatureColumnsMapToDetails() {
   assert.deepEqual(listing.details?.parking, ["Paid street parking"]);
   assert.equal(listing.details?.googleVerified, true);
   assert.equal(listing.details?.placeId, "sample-place");
+  assert.equal(listing.provenance.sourceName, "test.csv");
+  assert.equal(listing.provenance.sourceId, "sample-place");
+  assert.equal(listing.provenance.verificationStatus, "unverified");
   assert.equal(listing.contact?.orderOnlineUrl, "https://example.com/order");
   assert.equal(listing.contact?.reserveUrl, "https://example.com/reserve");
   assert.equal(listing.contact?.menuUrl, "https://example.com/menu");
@@ -182,6 +192,7 @@ function importGeneratesCompactNormalizedFilterCounts() {
     {
       name: "First Kitchen",
       slug: "first-kitchen",
+      provenance: fixtureProvenance,
       images: [],
       categories: ["Indian", "South Indian"],
       listingTypes: ["Casual Dining"],
@@ -195,6 +206,7 @@ function importGeneratesCompactNormalizedFilterCounts() {
     {
       name: "Second Kitchen",
       slug: "second-kitchen",
+      provenance: fixtureProvenance,
       images: [],
       categories: ["Indian"],
       listingTypes: ["Fine Dining"],
@@ -226,6 +238,7 @@ function importGeneratesLosslessPackedSearchIndex() {
     {
       name: "Packed Kitchen",
       slug: "packed-kitchen",
+      provenance: fixtureProvenance,
       description: "A complete record used to verify the browser search index.",
       images: ["/images/packed-kitchen.webp"],
       categories: ["Indian", "South Indian"],
@@ -635,6 +648,43 @@ function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
   assert.equal(listing.reviewCount, 255);
 }
 
+function importProvenanceIsExplicitAndCannotClaimVerification() {
+  const rows: Row[] = [{ "Restaurant Name": "Provenance Kitchen", place_id: "source-123" }];
+  const result = analyzeDirectoryRows(rows, "upload.csv", "normal import", undefined, {
+    sourceName: "Restaurant source export",
+    sourceUrl: "https://example.com/source",
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const provenance = result.listings[0].provenance;
+
+  assert.deepEqual(provenance, {
+    sourceName: "Restaurant source export",
+    sourceId: "source-123",
+    sourceUrl: "https://example.com/source",
+    importedAt: "2026-07-15T12:00:00.000Z",
+    verificationStatus: "unverified"
+  });
+  assert.equal(result.reportData.summary.provenanceSourceName, "Restaurant source export");
+  assert.match(result.report, /Initial verification status: unverified/);
+  assert.throws(
+    () => analyzeDirectoryRows(rows, "upload.csv", "normal import", undefined, { importedAt: "not-a-date" }),
+    /Invalid provenance import timestamp/
+  );
+  assert.throws(
+    () => analyzeDirectoryRows(rows, "upload.csv", "normal import", undefined, { sourceUrl: "file:\/\/private.csv" }),
+    /must use HTTP\(S\)/
+  );
+
+  const rowFallback = analyzeDirectoryRows(
+    [{ "Restaurant Name": "No Upstream ID" }],
+    "fallback.csv",
+    "normal import",
+    undefined,
+    { importedAt: "2026-07-15T12:00:00Z" }
+  ).listings[0].provenance;
+  assert.equal(rowFallback.sourceId, "fallback.csv#row=2");
+}
+
 repeatedHeaderRowsAreSkipped();
 restaurantFeatureColumnsMapToDetails();
 actionLinksAreCleanedForSafeDisplay();
@@ -653,5 +703,6 @@ duplicateListingSlugsPreferLocalAreaBeforeNumbers();
 missingCategoriesUseConservativeInferenceAndReview();
 sourceDataOverridesCorrectKnownLocalBusinessErrors();
 duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping();
+importProvenanceIsExplicitAndCannotClaimVerification();
 
 console.log("import-directory behavior tests passed");

@@ -22,6 +22,11 @@ const dryRun = args.includes("--dry-run");
 const sampleArg = args.find((arg) => arg.startsWith("--sample"));
 const sampleSize = sampleArg ? parseSampleSize(sampleArg) : undefined;
 const inputArg = args.find((arg) => !arg.startsWith("--"));
+const provenanceOptions = {
+  sourceName: optionValue("--source-name"),
+  sourceUrl: optionValue("--source-url"),
+  importedAt: optionValue("--imported-at")
+};
 const inputPath = path.resolve(root, inputArg ?? "data/directory.csv");
 const listingsSourcePath = path.resolve(root, "src/data/listings.ts");
 const listingsJsonPath = path.resolve(root, "data/listings.json");
@@ -39,7 +44,7 @@ if (!fs.existsSync(inputPath)) {
   process.exit(1);
 }
 
-const result = analyzeDirectoryFile(inputPath, dryRun ? "dry run" : "normal import");
+const result = analyzeDirectoryFile(inputPath, dryRun ? "dry run" : "normal import", undefined, provenanceOptions);
 const importedListings = sampleSize ? selectCuratedRestaurantSample(result.listings, { size: sampleSize }) : result.listings;
 const reportData = sampleSize ? renderReportForListings(result.reportData, importedListings, "curated sample") : result.reportData;
 const report = sampleSize
@@ -102,4 +107,9 @@ function parseSampleSize(value: string) {
   const explicit = value.includes("=") ? value.split("=").at(-1) : undefined;
   const parsed = Number(explicit || 120);
   return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 120;
+}
+
+function optionValue(name: string) {
+  const argument = args.find((value) => value.startsWith(`${name}=`));
+  return argument?.slice(name.length + 1).trim() || undefined;
 }

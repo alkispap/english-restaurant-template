@@ -73,14 +73,30 @@ export type ImportedListing = {
   rating?: number;
   reviewCount?: number;
   businessStatus?: string;
+  provenance: {
+    sourceName: string;
+    sourceId?: string;
+    sourceUrl?: string;
+    importedAt: string;
+    verificationStatus: "unverified";
+  };
   featured?: boolean;
   contact?: Record<string, unknown>;
   location?: Record<string, unknown>;
   details?: Record<string, unknown>;
 };
 
+export type ImportProvenanceOptions = {
+  sourceName?: string;
+  sourceUrl?: string;
+  importedAt?: string;
+};
+
 export type ImportSummary = {
   sourceFile: string;
+  provenanceSourceName: string;
+  importedAt: string;
+  verificationStatus: "unverified";
   sourceRows: number;
   importedListings: number;
   skippedRows: number;
@@ -214,25 +230,49 @@ const fieldAliases: Record<string, string[]> = {
   featured: ["featured", "highlighted"]
 };
 
-export function analyzeDirectoryFile(filePath: string, mode: ImportMode, roleOverrides?: Record<string, ImportFieldRole>): ImportResult {
+export function analyzeDirectoryFile(
+  filePath: string,
+  mode: ImportMode,
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+): ImportResult {
   const sourceFile = path.basename(filePath);
   assertCsvSource(sourceFile);
-  return analyzeRows(parseCsvRows(fs.readFileSync(filePath, "utf8")), sourceFile, mode, roleOverrides);
+  return analyzeRows(parseCsvRows(fs.readFileSync(filePath, "utf8")), sourceFile, mode, roleOverrides, provenanceOptions);
 }
 
-export function analyzeDirectoryBuffer(buffer: ArrayBuffer | Buffer, sourceFile: string, mode: ImportMode = "preview", roleOverrides?: Record<string, ImportFieldRole>) {
+export function analyzeDirectoryBuffer(
+  buffer: ArrayBuffer | Buffer,
+  sourceFile: string,
+  mode: ImportMode = "preview",
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+) {
   assertCsvSource(sourceFile);
   const text = Buffer.isBuffer(buffer) ? buffer.toString("utf8") : Buffer.from(new Uint8Array(buffer)).toString("utf8");
-  return analyzeRows(parseCsvRows(text), sourceFile, mode, roleOverrides);
+  return analyzeRows(parseCsvRows(text), sourceFile, mode, roleOverrides, provenanceOptions);
 }
 
-export function analyzeDirectoryRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOverrides?: Record<string, ImportFieldRole>): ImportResult {
-  return analyzeRows(rows, sourceFile, mode, roleOverrides);
+export function analyzeDirectoryRows(
+  rows: Row[],
+  sourceFile: string,
+  mode: ImportMode,
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+): ImportResult {
+  return analyzeRows(rows, sourceFile, mode, roleOverrides, provenanceOptions);
 }
 
-function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOverrides?: Record<string, ImportFieldRole>): ImportResult {
+function analyzeRows(
+  rows: Row[],
+  sourceFile: string,
+  mode: ImportMode,
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+): ImportResult {
   const headers = Object.keys(rows[0] ?? {});
   const analysis = analyzeColumns(headers, rows, roleOverrides);
+  const provenance = importProvenance(sourceFile, provenanceOptions);
   const listings: ImportedListing[] = [];
   const usedSlugs = new Map<string, number>();
   const listingBySourceId = new Map<string, ImportedListing>();
@@ -250,7 +290,7 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
       analysis.warnings.push(`Row ${index + 2}: "${firstByRole(row, analysis, "name") || "Listing"}" is not marked operational.`);
     }
 
-    const listing = toListing(row, index, analysis);
+    const listing = toListing(row, index, analysis, provenance, sourceId);
     if (!listing.name) {
       analysis.skippedCount += 1;
       analysis.warnings.push(`Row ${index + 2}: skipped because no listing name was found.`);
@@ -272,7 +312,7 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     listings.push(listing);
   });
 
-  const reportData = buildReportData(sourceFile, rows.length, listings, analysis, mode, rows);
+  const reportData = buildReportData(sourceFile, rows.length, listings, analysis, mode, rows, provenance);
   const report = renderReport(reportData);
 
   return {
@@ -524,7 +564,13 @@ function inferFilterColumns(headers: string[], rows: Row[], usedHeaders: Set<str
     });
 }
 
-function toListing(row: Row, index: number, analysis: ImportAnalysis): ImportedListing {
+function toListing(
+  row: Row,
+  index: number,
+  analysis: ImportAnalysis,
+  provenance: Omit<ImportedListing["provenance"], "sourceId">,
+  sourceId: string
+): ImportedListing {
   const get = (field: string) => valueAt(row, analysis.mapped[field]);
   const sourceCategoryValues = unique([...valuesByRole(row, analysis, "category"), ...list(get("category"))]);
   const typeValues = unique([...valuesByRole(row, analysis, "typeFilter"), ...list(get("type"))]).filter((value) => !sourceCategoryValues.includes(value));
@@ -589,6 +635,14 @@ function toListing(row: Row, index: number, analysis: ImportAnalysis): ImportedL
     rating: number(firstByRole(row, analysis, "rating") || get("rating")),
     reviewCount: number(firstByRole(row, analysis, "reviews") || get("reviewCount")),
     businessStatus: firstByRole(row, analysis, "sourceStatus") || undefined,
+    provenance: {
+      ...provenance,
+      sourceId:
+        sourceId ||
+        firstByRole(row, analysis, "dedupeId") ||
+        valueAt(row, "place_id") ||
+        `${provenance.sourceName}#row=${index + 2}`
+    },
     featured: truthy(get("featured")),
     contact: compact({
       website: cleanListingUrl(get("website")),
@@ -1165,11 +1219,15 @@ function buildReportData(
   items: ImportedListing[],
   analysis: ImportAnalysis,
   mode: ImportMode,
-  rows: Row[]
+  rows: Row[],
+  provenance: Omit<ImportedListing["provenance"], "sourceId">
 ): ImportReportData {
   return {
     summary: {
       sourceFile,
+      provenanceSourceName: provenance.sourceName,
+      importedAt: provenance.importedAt,
+      verificationStatus: provenance.verificationStatus,
       sourceRows: sourceCount,
       importedListings: items.length,
       skippedRows: analysis.skippedCount,
@@ -1202,6 +1260,9 @@ export function renderReport(data: ImportReportData) {
   return `# Import Report
 
 - Source file: ${data.summary.sourceFile}
+- Provenance source name: ${data.summary.provenanceSourceName}
+- Imported at: ${data.summary.importedAt}
+- Initial verification status: ${data.summary.verificationStatus}
 - Source rows: ${data.summary.sourceRows}
 - Imported listings: ${data.summary.importedListings}
 - Skipped rows: ${data.summary.skippedRows}
@@ -1352,6 +1413,15 @@ export type ReviewDistribution = {
   1: number;
 };
 
+export type ListingProvenance = {
+  sourceName: string;
+  sourceId?: string;
+  sourceUrl?: string;
+  importedAt: string;
+  lastVerifiedAt?: string;
+  verificationStatus: "unverified" | "source-verified" | "editor-verified";
+};
+
 export type Listing = {
   name: string;
   slug: string;
@@ -1376,6 +1446,7 @@ export type Listing = {
   rating?: number;
   reviewCount?: number;
   businessStatus?: string;
+  provenance?: ListingProvenance;
   featured?: boolean;
   reviewDistribution?: ReviewDistribution;
   contact?: {
@@ -1593,6 +1664,38 @@ function valueAt(row: Row, header?: string) {
   if (!header) return "";
   const value = row[header];
   return value === undefined || value === null ? "" : String(value).trim();
+}
+
+function importProvenance(
+  sourceFile: string,
+  options?: ImportProvenanceOptions
+): Omit<ImportedListing["provenance"], "sourceId"> {
+  const sourceName = options?.sourceName?.trim() || sourceFile;
+  const requestedImportedAt = options?.importedAt?.trim() || new Date().toISOString();
+  const parsedImportedAt = new Date(requestedImportedAt);
+  if (Number.isNaN(parsedImportedAt.getTime())) {
+    throw new Error(`Invalid provenance import timestamp: ${requestedImportedAt}`);
+  }
+
+  const sourceUrl = options?.sourceUrl?.trim();
+  if (sourceUrl) {
+    let parsedSourceUrl: URL;
+    try {
+      parsedSourceUrl = new URL(sourceUrl);
+    } catch {
+      throw new Error(`Invalid provenance source URL: ${sourceUrl}`);
+    }
+    if (parsedSourceUrl.protocol !== "http:" && parsedSourceUrl.protocol !== "https:") {
+      throw new Error(`Provenance source URL must use HTTP(S): ${sourceUrl}`);
+    }
+  }
+
+  return {
+    sourceName,
+    sourceUrl: sourceUrl || undefined,
+    importedAt: parsedImportedAt.toISOString(),
+    verificationStatus: "unverified"
+  };
 }
 
 function assertCsvSource(sourceFile: string) {

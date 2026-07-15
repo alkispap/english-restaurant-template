@@ -60,4 +60,17 @@ assert.equal(byCode.get("missing_categories")?.severity, "medium");
 assert.equal(byCode.get("missing_contact_action")?.count, 1);
 assert.match(renderListingOperationalQualityReport(report), /one row per restaurant location/);
 
+const invalidProvenance = auditListingOperationalQuality([
+  {
+    ...completeListing,
+    provenance: {
+      sourceName: "Example source",
+      sourceId: "place-1",
+      importedAt: "not-a-date",
+      verificationStatus: "editor-verified"
+    }
+  }
+]);
+assert.equal(invalidProvenance.issues.find((issue) => issue.code === "missing_provenance")?.count, 1);
+
 console.log("listing operational quality tests passed");
