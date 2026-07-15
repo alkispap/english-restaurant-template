@@ -22,7 +22,7 @@ function listingShareMetadataUsesListingContent() {
 
   assert.equal(metadata.title, "Sample Restaurant | London");
   assert.equal(metadata.description, "Sample description for sharing.");
-  assert.equal(metadata.url, `${getSiteUrl()}/restaurants/sample-restaurant`);
+  assert.equal(metadata.url, `${getSiteUrl()}/restaurants/sample-restaurant/`);
   assert.deepEqual(metadata.images, ["https://images.unsplash.com/photo-1"]);
 }
 

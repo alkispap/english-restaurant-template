@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdsterraAd } from "@/components/AdsterraAd";
 import { DirectoryListingRows } from "@/components/DirectoryListingRows";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
 import { DirectoryImage } from "@/components/DirectoryImage";
@@ -27,7 +28,13 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
       defaultArea={first(model.filters.area)}
       basePath={searchBasePath}
       areas={model.searchAreas}
-      mapPoints={model.searchMapPoints}
+      areaCentroids={model.searchMapPoints.map((point) => ({
+        slug: point.slug,
+        name: point.name,
+        area: point.area,
+        latitude: point.latitude,
+        longitude: point.longitude
+      }))}
     />
   );
 
@@ -43,7 +50,10 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
               <img
                 src={siteConfig.heroImage}
                 alt={siteConfig.heroImageAlt}
+                width={1280}
+                height={720}
                 className="h-full w-full object-cover object-center"
+                loading="eager"
                 fetchPriority="high"
                 decoding="async"
               />
@@ -70,24 +80,26 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
           </div>
         </>
       ) : (
-        <div className="mb-6 rounded-lg border border-line bg-white p-5 shadow-soft">
-          <h1 className="text-3xl font-bold text-ink">{model.title}</h1>
+        <section className="mb-6 max-w-3xl">
+          <h1 className="text-3xl font-bold leading-tight text-ink sm:text-4xl">{model.title}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">{model.description}</p>
-          <div className="mt-6">
-            <SearchBar
-              compact
-              defaultQuery={model.filters.q}
-              defaultArea={first(model.filters.area)}
-              basePath={model.basePath}
-              areas={model.searchAreas}
-              mapPoints={model.searchMapPoints}
-            />
+          <div className="mt-5">
+            {homepageSearch}
           </div>
-        </div>
+        </section>
       )}
+      <div className="mb-8 hidden justify-center lg:flex">
+        <AdsterraAd placement="728x90" />
+      </div>
+      <div className="mb-6 flex justify-center lg:hidden">
+        <AdsterraAd placement="320x50" />
+      </div>
       {isCleanHomepage ? (
         <>
           <HomepageDiscoveryCards />
+          <div className="mt-8 hidden justify-center lg:flex">
+            <AdsterraAd placement="468x60" />
+          </div>
           <DirectoryListingRows rows={homepageStartRows(model.relatedRows)} className="mt-6" />
         </>
       ) : (

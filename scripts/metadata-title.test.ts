@@ -33,6 +33,12 @@ async function homepageMetadataUsesApprovedDirectoryTitle() {
   const metadata = await homepageMetadata();
 
   assert.equal(metadata.title, "Indian Restaurants in London Directory");
+  assert.equal(
+    metadata.description,
+    "Browse Indian restaurants in London by area, rating, cuisine, takeaway, delivery, halal options, vegetarian options, and dining style."
+  );
+  assert.equal(metadata.openGraph?.description, metadata.description);
+  assert.equal(metadata.twitter?.description, metadata.description);
   assert.ok(
     !(metadata.title as string).includes(`| ${siteConfig.siteName}`),
     "homepage metadata title should let the root title template append the site name"
@@ -58,9 +64,9 @@ async function directoryIndexMetadataUsesApprovedTitles() {
 
 async function restaurantDetailMetadataUsesGeneratedLocalTitles() {
   const samples = [
-    { slug: "the-curry-club-london", expected: "The Curry Club London in Redbridge, London" },
-    { slug: "hyderabad-darbar", expected: "HYDERABAD DARBAR in Redbridge, London" },
-    { slug: "saravanaa-bhavan", expected: "Saravanaa Bhavan in Redbridge, London" }
+    { slug: "the-curry-club-london", expected: "The Curry Club London in Redbridge, London - Reviews & Details" },
+    { slug: "hyderabad-darbar", expected: "HYDERABAD DARBAR in Redbridge, London - Reviews & Details" },
+    { slug: "saravanaa-bhavan", expected: "Saravanaa Bhavan in Redbridge, London - Reviews & Details" }
   ];
 
   for (const sample of samples) {

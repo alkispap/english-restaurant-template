@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import type { Listing } from "@/data/listings";
 import type { ListingNavTab } from "@/lib/listing-detail-nav";
 import { areaPath, directoryIndexPath } from "@/lib/routes";
 import { slugify } from "@/lib/slug";
@@ -11,8 +10,18 @@ import { siteConfig } from "@/config/site";
 import { SaveListingButton } from "@/components/SaveListingButton";
 import { ShareButton } from "@/components/ShareButton";
 
+export type MobileChromeListing = {
+  slug: string;
+  name: string;
+  area?: string;
+  categories: string[];
+  priceLevel?: string;
+  rating?: number;
+  reviewCount?: number;
+};
+
 type ListingDetailMobileChromeProps = {
-  listing: Listing;
+  listing: MobileChromeListing;
   tabs: ListingNavTab[];
   shareUrl: string;
   route: string;

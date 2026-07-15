@@ -1,7 +1,15 @@
-import type { MapPoint } from "@/lib/listings-page";
 import { slugify } from "@/lib/slug";
 
 export type BrowserCoordinates = {
+  latitude: number;
+  longitude: number;
+};
+
+export type AreaCentroid = {
+  slug?: string;
+  name: string;
+  area?: string;
+  categories?: string[];
   latitude: number;
   longitude: number;
 };
@@ -13,7 +21,7 @@ export type NearestAreaResult = {
 
 export function nearestAreaFromCoordinates(
   coordinates: BrowserCoordinates,
-  points: MapPoint[]
+  points: AreaCentroid[]
 ): NearestAreaResult | undefined {
   const nearest = points
     .filter((point) => point.area)
@@ -23,11 +31,12 @@ export function nearestAreaFromCoordinates(
     }))
     .sort((a, b) => a.distance - b.distance)[0]?.point;
 
-  if (!nearest?.area) return undefined;
+  const area = nearest?.area;
+  if (!area) return undefined;
 
   return {
-    area: nearest.area,
-    slug: slugify(nearest.area)
+    area,
+    slug: slugify(area)
   };
 }
 

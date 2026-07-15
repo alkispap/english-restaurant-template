@@ -32,15 +32,16 @@ import {
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { GoogleIcon } from "@/components/GoogleIcon";
+import { AdsterraAd } from "@/components/AdsterraAd";
 import { DirectoryImage } from "@/components/DirectoryImage";
 import { OpenStatusBadge } from "@/components/OpenStatusBadge";
 import { OpeningHoursList } from "@/components/OpeningHoursList";
 import { RatingPill } from "@/components/RatingPill";
 import { ReviewSummary } from "@/components/ReviewSummary";
 import { ListingNav } from "@/components/ListingNav";
-import { ListingDetailMobileChrome } from "@/components/ListingDetailMobileChrome";
+import { ListingDetailMobileChrome, type MobileChromeListing } from "@/components/ListingDetailMobileChrome";
 import { ListingEngagementStats } from "@/components/ListingEngagementStats";
-import { ListingGrid } from "@/components/ListingGrid";
+import { ListingGrid, type RelatedListingCard } from "@/components/ListingGrid";
 import { ShareButton } from "@/components/ShareButton";
 import { SaveListingButton } from "@/components/SaveListingButton";
 import { ListingPrivateNote } from "@/components/ListingPrivateNote";
@@ -53,7 +54,7 @@ import { buildListingEavSummary } from "@/lib/listing-eav-summary";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
 import { listings } from "@/data/listings";
-import { listingSlugRedirects, resolveListingSlugRedirect } from "@/data/listing-slug-redirects";
+import { resolveListingSlugRedirect } from "@/data/listing-slug-redirects";
 import { getListingBySlug, getRelatedListings, isCategoryTag, slugify } from "@/lib/directory";
 import {
   buildListingDetailTabs,
@@ -64,7 +65,7 @@ import {
   hasServiceFeatures,
   hasTransport
 } from "@/lib/listing-detail-nav";
-import { areaPath, categoryPath, dietaryPath, directoryIndexPath, directorySearchPath, listingDetailPath, typePath } from "@/lib/routes";
+import { areaPath, directoryIndexPath, directorySearchPath, listingDetailPath } from "@/lib/routes";
 import { localBusinessJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 import { getListingMapsUrl } from "@/lib/listing-links";
 import { getListingExploreLinks } from "@/lib/directory-growth";
@@ -73,10 +74,15 @@ import { buildDetailFilterHref, type DetailFilterName } from "@/lib/listing-deta
 import { buildListingImageAlt } from "@/lib/listing-image-alt";
 import { getSocialPlatform, type SocialPlatformId } from "@/lib/social-platforms";
 import { listingShareMetadata } from "@/lib/share-metadata";
+import { directoryRouteLink } from "@/lib/directory-route-links";
 import { getListingRobots } from "@/lib/seo-policy";
 import { shouldGenerateFullStaticParams } from "@/lib/static-build";
-import { listingResultSummaryFromListing } from "@/lib/listings-page";
-import { buildListingDetailHeadings, buildListingDetailPageTitle } from "@/lib/listing-detail-headings";
+import { buildListingDetailHeadings } from "@/lib/listing-detail-headings";
+import {
+  buildListingDetailMetaDescription,
+  buildListingDetailPageSummary,
+  buildListingDetailSeoTitle
+} from "@/lib/listing-detail-seo";
 
 type ListingPageProps = {
   params: Promise<{ slug: string }>;
@@ -86,8 +92,7 @@ export function generateStaticParams() {
   if (!shouldGenerateFullStaticParams()) return [];
 
   return [
-    ...listings.map((listing) => ({ slug: listing.slug })),
-    ...Object.keys(listingSlugRedirects).map((slug) => ({ slug }))
+    ...listings.map((listing) => ({ slug: listing.slug }))
   ];
 }
 
@@ -97,15 +102,16 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
   const listing = getListingBySlug(redirectTarget ?? slug);
   if (!listing) return {};
 
-  const title = buildListingDetailPageTitle(listing);
+  const title = buildListingDetailSeoTitle(listing);
+  const description = buildListingDetailMetaDescription(listing);
   const share = listingShareMetadata(listing);
 
   return {
     title,
-    description: share.description,
+    description,
     openGraph: {
       title,
-      description: share.description,
+      description,
       type: "website",
       url: share.url,
       images: share.images.map((image) => ({ url: image })),
@@ -117,7 +123,7 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
     twitter: {
       card: "summary_large_image",
       title,
-      description: share.description,
+      description,
       images: share.images,
     },
   };
@@ -131,8 +137,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const listing = getListingBySlug(slug);
   if (!listing) notFound();
 
-  const related = getRelatedListings(listing, 8).map(listingResultSummaryFromListing);
+  const related = getRelatedListings(listing, 8).map(relatedListingCardFromListing);
   const gallery = listing.images.slice(0, 3);
+  const hasGallery = gallery.length > 0;
+  const hasSecondaryGalleryImages = gallery.length > 1;
+  const menuImages = listing.menuImages?.slice(0, 6) ?? [];
   const eavSummary = buildListingEavSummary(listing);
   const visibleFactBlocks = eavSummary.blocks.filter((block) => block.available);
   const tags = [...listing.categories, ...listing.listingTypes, ...listing.dietaryOptions];
@@ -151,6 +160,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const share = listingShareMetadata(listing);
   const route = `/${siteConfig.listingBasePath}/${listing.slug}`;
   const headings = buildListingDetailHeadings(listing);
+  const pageSummary = buildListingDetailPageSummary(listing);
+  const mobileChromeListing = mobileChromeListingFromListing(listing);
 
   const breadcrumbs = [
     { name: directoryConfig.listingPluralLabel, href: directoryIndexPath() },
@@ -161,7 +172,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   return (
     <main>
       <ListingNav name={listing.name} tabs={tabs} />
-      <ListingDetailMobileChrome listing={listing} tabs={tabs} shareUrl={share.url} route={route} />
+      <ListingDetailMobileChrome listing={mobileChromeListing} tabs={tabs} shareUrl={share.url} route={route} />
       <DirectoryAnalyticsTracker pageType="listing_detail" route={route} listingSlug={listing.slug} />
       <script
         type="application/ld+json"
@@ -184,7 +195,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </>
             ) : null}
           </div>
-          {gallery.length ? (
+          {hasGallery ? (
             <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
               <div className="relative h-[320px] overflow-hidden bg-orange-50 sm:h-[420px] sm:rounded-lg">
                 <DirectoryImage
@@ -197,7 +208,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   fallbackLabel={listing.imageFallbackLabel}
                 />
               </div>
-              {gallery.length > 1 ? (
+              {hasSecondaryGalleryImages ? (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   {gallery.slice(1, 3).map((image, index) => (
                     <div key={image} className="relative h-[202px] overflow-hidden rounded-lg bg-orange-50">
@@ -267,6 +278,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
           <DirectoryFreshnessLabel className="mt-3" />
           {listing.description ? <p className="mt-4 max-w-3xl text-lg leading-8 text-muted">{listing.description}</p> : null}
+          <p className="mt-4 max-w-3xl rounded-lg border border-line bg-slate-50 p-4 text-base leading-7 text-ink">
+            {pageSummary}
+          </p>
           <ListingPrivateNote slug={listing.slug} />
 
           <section id="mobile-at-a-glance" className="mt-8 scroll-mt-20 border-y border-line bg-white py-7 md:hidden">
@@ -341,6 +355,29 @@ export default async function ListingPage({ params }: ListingPageProps) {
             </div>
           </section>
 
+          {menuImages.length ? (
+            <section id="menu-photos" className="mt-10 scroll-mt-20 rounded-lg border border-line bg-white p-6">
+              <div className="flex items-center gap-2">
+                <MenuIcon className="h-5 w-5 text-primary" aria-hidden />
+                <h2 className="text-2xl font-bold text-ink">Menu photos</h2>
+              </div>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                {menuImages.map((image, index) => (
+                  <div key={image} className="relative aspect-[4/3] overflow-hidden rounded-lg bg-orange-50">
+                    <DirectoryImage
+                      src={image}
+                      alt={buildListingImageAlt(listing, { variant: "menu", index })}
+                      fill
+                      sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                      fallbackLabel="Menu"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
           {hasServiceFeaturesSection ? (
             <div id="services" className="scroll-mt-20">
               <ValueSection title={headings.services}>
@@ -391,7 +428,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <TrackedActionLink href={`tel:${listing.contact.phone.replace(/\s+/g, "")}`} label={listing.contact.phone} icon={<Phone className="h-4 w-4" />} pageType="listing_detail" action="phone_click" route={route} listingSlug={listing.slug} />
               ) : null}
               {listing.contact?.email ? (
-                <TrackedActionLink href={`mailto:${listing.contact.email}`} label={actionLabels.email} icon={<Mail className="h-4 w-4" />} pageType="listing_detail" action="email_click" route={route} listingSlug={listing.slug} />
+                <TrackedActionLink encodedEmail={Buffer.from(listing.contact.email, "utf8").toString("base64")} label={actionLabels.email} icon={<Mail className="h-4 w-4" />} pageType="listing_detail" action="email_click" route={route} listingSlug={listing.slug} />
               ) : null}
               <div className="mt-2 border-t border-line pt-4">
                 <ShareButton 
@@ -427,6 +464,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <OpeningHoursList workingHours={listing.details?.workingHours} />
               </div>
             ) : null}
+            <div className="-mx-2 mt-8 border-t border-line pt-8">
+              <AdsterraAd placement="300x250" />
+            </div>
           </aside>
         ) : null}
       </section>
@@ -465,6 +505,10 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
         </section>
       ) : null}
+
+      <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+        <AdsterraAd placement="300x250" />
+      </section>
 
       {related.length ? (
         <section className="mx-auto max-w-7xl px-4 pb-14 pt-10 sm:px-6 lg:px-8">
@@ -509,11 +553,36 @@ function InfoCard({ icon, label, value, href }: { icon: React.ReactNode; label: 
 function getListingTagHref(listing: NonNullable<ReturnType<typeof getListingBySlug>>, tag: string) {
   const tagSlug = slugify(tag);
 
-  if (isCategoryTag(tag)) return categoryPath(tagSlug);
-  if (listing.dietaryOptions.some((value) => slugify(value) === tagSlug)) return dietaryPath(tagSlug);
-  if (listing.listingTypes.some((value) => slugify(value) === tagSlug)) return typePath(tagSlug);
+  if (isCategoryTag(tag)) return directoryRouteLink("category", tagSlug);
+  if (listing.dietaryOptions.some((value) => slugify(value) === tagSlug)) return directoryRouteLink("dietary", tagSlug);
+  if (listing.listingTypes.some((value) => slugify(value) === tagSlug)) return directoryRouteLink("type", tagSlug);
 
   return directorySearchPath(`?q=${encodeURIComponent(tag)}`);
+}
+
+function relatedListingCardFromListing(listing: typeof listings[number]): RelatedListingCard {
+  return {
+    slug: listing.slug,
+    name: listing.name,
+    image: listing.images[0],
+    imageFallbackLabel: listing.imageFallbackLabel,
+    category: listing.categories[0],
+    priceLevel: listing.priceLevel,
+    rating: listing.rating,
+    reviewCount: listing.reviewCount
+  };
+}
+
+function mobileChromeListingFromListing(listing: typeof listings[number]): MobileChromeListing {
+  return {
+    slug: listing.slug,
+    name: listing.name,
+    area: listing.area,
+    categories: listing.categories.slice(0, 2),
+    priceLevel: listing.priceLevel,
+    rating: listing.rating,
+    reviewCount: listing.reviewCount
+  };
 }
 
 function StatusBanner({ status }: { status?: string }) {

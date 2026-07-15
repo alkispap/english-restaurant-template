@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { listings } from "@/data/listings";
 import { getPublicGuideArticles, guidePath } from "@/lib/articles";
+import { canonicalPagePath } from "@/lib/canonical-page-url";
 import {
   filterListings,
   getAreas,
@@ -141,16 +142,16 @@ export function renderIndexationCrawlReport(report: IndexationCrawlReport) {
 function getExpectedIndexablePaths() {
   if (expectedIndexablePathsCache) return expectedIndexablePathsCache;
 
-  const listingPaths = getIndexableListingPaths();
-  const seoHubPaths = getIndexableSeoHubPaths();
-  const guidePaths = getPublicGuidePaths();
+  const listingPaths = getIndexableListingPaths().map(canonicalPagePath);
+  const seoHubPaths = getIndexableSeoHubPaths().map(canonicalPagePath);
+  const guidePaths = getPublicGuidePaths().map(canonicalPagePath);
 
   expectedIndexablePathsCache = {
     all: new Set([
       "/",
-      "/restaurants",
-      "/areas",
-      "/categories",
+      "/restaurants/",
+      "/areas/",
+      "/categories/",
       ...listingPaths,
       ...seoHubPaths,
       ...guidePaths

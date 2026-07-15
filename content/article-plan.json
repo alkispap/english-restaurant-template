@@ -196,5 +196,44 @@
       "template-visitor-intent",
       "template-takeaway-intent"
     ]
+  },
+  {
+    "id": "template-group-dining-intent",
+    "cluster": "group-and-occasion-intent",
+    "title": "Indian Restaurants in London for Groups: How to Choose the Right Place",
+    "slug": "indian-restaurants-london-for-groups",
+    "primaryKeyword": "Indian restaurants in London for groups",
+    "supportingKeywords": [
+      "group dining Indian restaurant London",
+      "Indian restaurants London reservations",
+      "family style Indian restaurants London"
+    ],
+    "intent": "group-dining-and-booking",
+    "priority": 7,
+    "status": "drafted",
+    "plannedPublishDate": "2026-07-06",
+    "draftPath": "content/articles/indian-restaurants-london-for-groups.json",
+    "internalLinks": [
+      {
+        "label": "Indian restaurants in London",
+        "href": "/",
+        "reason": "Move readers from group-dining advice into the main comparison directory."
+      },
+      {
+        "label": "Areas",
+        "href": "/areas",
+        "reason": "Help readers narrow group-friendly options by borough once they know the occasion and booking fit."
+      },
+      {
+        "label": "Restaurant categories",
+        "href": "/categories",
+        "reason": "Let readers compare broad curry-house menus, South Indian specialists, Punjabi grills, and other style signals for shared meals."
+      }
+    ],
+    "researchNotesPath": "content/research/indian-restaurants-london-for-groups.md",
+    "similarTopicIds": [
+      "template-visitor-intent",
+      "template-halal-intent"
+    ]
   }
 ]

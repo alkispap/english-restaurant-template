@@ -16,6 +16,8 @@ import { generateStaticParams as serviceStaticParams } from "../src/app/services
 import { generateStaticParams as typeStaticParams } from "../src/app/types/[type]/page";
 import { listingSlugRedirects } from "../src/data/listing-slug-redirects";
 import { filterListings } from "../src/lib/directory";
+import fs from "node:fs";
+import path from "node:path";
 
 const areaParams = areaStaticParams();
 const areaCategoryParams = areaCategoryStaticParams();
@@ -36,7 +38,11 @@ assert.ok(popularSearchParams.length > 0, "popular search pages should expose st
 assert.ok(categoryParams.length > 0, "category pages should expose static params");
 assert.ok(dietaryParams.length > 0, "dietary pages should expose static params");
 assert.ok(Array.isArray(guidePreviewParams), "guide preview pages should expose static params for static export");
-assert.ok(legacyListingParams.length > 0, "legacy listing redirect pages should expose static params for static export");
+assert.deepEqual(
+  legacyListingParams,
+  [{ slug: "__legacy-listing-redirect-placeholder" }],
+  "legacy listing redirect pages should emit only a placeholder static page; public/_redirects handles real compatibility"
+);
 assert.ok(listingParams.length > 0, "listing detail pages should expose static params");
 assert.ok(neighborhoodParams.length > 0, "neighborhood pages should expose static params");
 assert.ok(offeringParams.length > 0, "offering pages should expose static params");
@@ -46,10 +52,24 @@ assert.ok(typeParams.length > 0, "type pages should expose static params");
 assert.ok(areaParams.every((params) => typeof params.area === "string" && params.area.length > 0), "area params should include area");
 assert.ok(listingParams.every((params) => typeof params.slug === "string" && params.slug.length > 0), "listing params should include slug");
 assert.ok(
-  listingParams.some((params) => params.slug === "hyderabad-darbar-2"),
-  "listing params should include old restaurant slugs so static export can emit redirects"
+  !listingParams.some((params) => params.slug === "hyderabad-darbar-2"),
+  "renamed restaurant slugs should be handled by HTTP redirects instead of static redirect shells"
 );
 assert.equal(listingSlugRedirects["hyderabad-darbar-2"], "hyderabad-darbar-redbridge");
+const redirects = fs.readFileSync(path.join(process.cwd(), "public", "_redirects"), "utf8");
+const legacyListingRouteSource = fs.readFileSync(path.join(process.cwd(), "src", "app", "listings", "[slug]", "page.tsx"), "utf8");
+assert.ok(
+  redirects.includes("/listings/:slug/ /restaurants/:slug/ 301"),
+  "trailing-slash legacy listing detail URLs should be handled by static hosting redirects"
+);
+assert.ok(
+  redirects.includes("/listings/hyderabad-darbar-2/ /restaurants/hyderabad-darbar-redbridge/ 301"),
+  "renamed legacy restaurant URLs should redirect directly to their canonical slug"
+);
+assert.ok(
+  legacyListingRouteSource.includes("dynamicParams = false"),
+  "legacy listing dynamic route should opt out of ungenerated params for static export"
+);
 assert.ok(
   areaCategoryParams.every((params) => typeof params.area === "string" && typeof params.category === "string" && params.area.length > 0 && params.category.length > 0),
   "area/category params should include area and category"

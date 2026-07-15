@@ -7,7 +7,7 @@ export type ListingImageAltInput = {
 };
 
 export type ListingImageAltOptions = {
-  variant?: "card" | "featured" | "gallery";
+  variant?: "card" | "featured" | "gallery" | "menu";
   index?: number;
 };
 
@@ -47,8 +47,10 @@ function buildLocationText(name: string, location?: string, city?: string) {
 }
 
 function buildVariantSuffix(options: ListingImageAltOptions) {
-  if (options.variant !== "gallery" || options.index === undefined) return "";
-  return `photo ${options.index + 1}`;
+  if (options.index === undefined) return "";
+  if (options.variant === "gallery") return `photo ${options.index + 1}`;
+  if (options.variant === "menu") return `menu photo ${options.index + 1}`;
+  return "";
 }
 
 function cleanText(value?: string) {

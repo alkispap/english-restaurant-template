@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Metadata, MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
+import { canonicalPageUrl } from "@/lib/canonical-page-url";
 import type { ArticleContent, ArticleImage, ArticlePlanItem } from "@/lib/article-types";
 import { pageShareMetadata } from "@/lib/share-metadata";
 
@@ -103,7 +104,7 @@ export function getDraftPreviewRouteMetadata(article: ArticleContent): Metadata 
 
 export function articleSitemapRoutes(baseUrl: string, articles: ArticleContent[] = getPublicGuideArticles()): MetadataRoute.Sitemap {
   return getPublicGuideArticles(articles).map((article) => ({
-    url: `${baseUrl}${guidePath(article.slug)}`,
+    url: canonicalPageUrl(baseUrl, guidePath(article.slug)),
     lastModified: article.updatedAt || article.publishedAt
   }));
 }
@@ -116,7 +117,7 @@ export function buildArticleJsonLd(article: ArticleContent): Record<string, unkn
     "@type": "Article",
     headline: article.title,
     description: article.metaDescription,
-    mainEntityOfPage: `${siteConfig.url}${guidePath(article.slug)}`,
+    mainEntityOfPage: canonicalPageUrl(siteConfig.url, guidePath(article.slug)),
     datePublished: article.publishedAt,
     dateModified: article.updatedAt || article.publishedAt,
     author: {

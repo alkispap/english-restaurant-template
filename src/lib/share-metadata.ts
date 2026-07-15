@@ -1,5 +1,6 @@
 import type { Listing } from "@/data/listings";
 import { siteConfig } from "@/config/site";
+import { canonicalPageUrl } from "@/lib/canonical-page-url";
 import type { Metadata } from "next";
 
 export type ListingShareMetadata = {
@@ -15,7 +16,7 @@ export function listingShareMetadata(listing: Listing): ListingShareMetadata {
     listing.metaDescription ||
     listing.description ||
     `${listing.name} ${listing.categories.slice(0, 2).join(", ")} listing.`;
-  const url = `${siteConfig.url}/${siteConfig.listingBasePath}/${listing.slug}`;
+  const url = canonicalPageUrl(siteConfig.url, `/${siteConfig.listingBasePath}/${listing.slug}`);
   const images = listing.images[0] ? [listing.images[0]] : [siteConfig.heroImage];
 
   return {

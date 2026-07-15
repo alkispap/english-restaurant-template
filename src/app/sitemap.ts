@@ -2,6 +2,7 @@
 import { siteConfig } from "@/config/site";
 import { listings } from "@/data/listings";
 import { articleSitemapRoutes } from "@/lib/articles";
+import { canonicalPageUrl } from "@/lib/canonical-page-url";
 import {
   filterListings,
   getAreas,
@@ -37,27 +38,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
   const enabledRoutes = getEnabledSitemapRouteKinds();
   const routes = ["", directorySearchPath(), "/areas", "/categories"].map((route) => ({
-    url: `${baseUrl}${route}`,
+    url: canonicalPageUrl(baseUrl, route),
     lastModified: directoryLastModified
   }));
 
   const listingRoutes = listings.filter(isListingIndexable).map((listing) => ({
-    url: `${baseUrl}${listingDetailPath(listing.slug)}`,
+    url: canonicalPageUrl(baseUrl, listingDetailPath(listing.slug)),
     lastModified: directoryLastModified
   }));
 
   const areaRoutes = getAreas().filter((area) => getListingFilterCount("area", slugify(area)) >= SEO_POLICY.routeThresholds.area).map((area) => ({
-    url: `${baseUrl}${areaPath(slugify(area))}`,
+    url: canonicalPageUrl(baseUrl, areaPath(slugify(area))),
     lastModified: directoryLastModified
   }));
 
   const categoryRoutes = getCategories().filter((category) => getListingFilterCount("category", slugify(category)) >= SEO_POLICY.routeThresholds.category).map((category) => ({
-    url: `${baseUrl}${categoryPath(slugify(category))}`,
+    url: canonicalPageUrl(baseUrl, categoryPath(slugify(category))),
     lastModified: directoryLastModified
   }));
 
   const neighborhoodRoutes = getNeighborhoods().filter((neighborhood) => getListingFilterCount("neighborhood", slugify(neighborhood)) >= SEO_POLICY.routeThresholds.neighborhood).map((neighborhood) => ({
-    url: `${baseUrl}${neighborhoodPath(slugify(neighborhood))}`,
+    url: canonicalPageUrl(baseUrl, neighborhoodPath(slugify(neighborhood))),
     lastModified: directoryLastModified
   }));
 
@@ -69,12 +70,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const popularSearchRoutes = enabledRoutes.popularSearches ? getPopularSearches().filter((search) => routeFilterCount(search.filters) >= SEO_POLICY.routeThresholds.best).map((search) => ({
-    url: `${baseUrl}${popularSearchPath(search.slug)}`,
+    url: canonicalPageUrl(baseUrl, popularSearchPath(search.slug)),
     lastModified: directoryLastModified
   })) : [];
 
   const areaCategoryRoutes = enabledRoutes.areaCategories ? getAreaCategoryCombinations().filter((combination) => combination.count >= SEO_POLICY.routeThresholds.areaCategory).map((combination) => ({
-    url: `${baseUrl}${areaCategoryPath(combination.areaSlug, combination.categorySlug)}`,
+    url: canonicalPageUrl(baseUrl, areaCategoryPath(combination.areaSlug, combination.categorySlug)),
     lastModified: directoryLastModified
   })) : [];
   const guideRoutes = articleSitemapRoutes(baseUrl);
@@ -99,7 +100,7 @@ function facetSitemapRoutes(facet: FacetKey, baseUrl: string) {
     .filter((label) => isHighIntentFacet(facet, slugify(label)))
     .filter((label) => getListingFilterCount(facet, slugify(label)) >= SEO_POLICY.routeThresholds.facet)
     .map((label) => ({
-      url: `${baseUrl}${facetPath(facet, slugify(label))}`,
+      url: canonicalPageUrl(baseUrl, facetPath(facet, slugify(label))),
       lastModified: directoryLastModified
     }));
 }

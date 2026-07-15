@@ -1,5 +1,7 @@
 import type { Listing } from "@/data/listings";
 import { siteConfig } from "@/config/site";
+import { canonicalPageUrl } from "@/lib/canonical-page-url";
+import { getDirectorySummary } from "@/lib/directory-summary";
 import { cleanListingUrl, getListingMapsUrl } from "@/lib/listing-links";
 
 export function localBusinessJsonLd(listing: Listing) {
@@ -7,7 +9,7 @@ export function localBusinessJsonLd(listing: Listing) {
     "@context": "https://schema.org",
     "@type": "Restaurant",
     name: listing.name,
-    url: `${siteConfig.url}/${siteConfig.listingBasePath}/${listing.slug}`
+    url: canonicalPageUrl(siteConfig.url, `/${siteConfig.listingBasePath}/${listing.slug}`)
   };
 
   if (listing.description) schema.description = listing.description;
@@ -116,7 +118,7 @@ export function breadcrumbJsonLd(items: { name: string; href: string }[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${siteConfig.url}${item.href}`
+      item: canonicalPageUrl(siteConfig.url, item.href)
     }))
   };
 }
@@ -125,7 +127,7 @@ export function itemListJsonLd(items: Listing[], pageHref: string) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    url: `${siteConfig.url}${pageHref}`,
+    url: canonicalPageUrl(siteConfig.url, pageHref),
     numberOfItems: items.length,
     itemListElement: items.map((listing, index) => ({
       "@type": "ListItem",
@@ -195,5 +197,5 @@ function to24h(hours: number, minutes: number, period?: string): string | undefi
 }
 
 function schemaDescription() {
-  return `${siteConfig.name} is a directory for comparing Indian restaurants in London using imported local business data, ratings, review counts, areas, services, and contact links where available.`;
+  return getDirectorySummary();
 }

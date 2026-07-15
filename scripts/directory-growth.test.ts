@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { canonicalPagePath } from "../src/lib/canonical-page-url";
 import sitemap from "../src/app/sitemap";
 import { directoryConfig } from "../src/config/directory";
 import {
@@ -70,7 +71,7 @@ function footerGroupsGenerateMixedLinks() {
       "Browse Indian Restaurants in London",
       "Popular Indian Restaurant Searches",
       "Top London Areas for Indian Restaurants",
-      "Indian Restaurant Needs",
+      "Services and dietary needs",
       "Useful Indian Restaurant Searches",
       "About This Indian Restaurant Directory"
     ],
@@ -129,8 +130,8 @@ function sitemapIncludesGeneratedGrowthRoutes() {
 
   assert.ok(popularSearch, "expected at least one popular search config");
   assert.ok(combination, "expected at least one area/category combination");
-  assert.ok(urls.some((url) => url.endsWith(popularSearchPath(popularSearch.slug))));
-  assert.ok(urls.some((url) => url.endsWith(areaCategoryPath(combination.areaSlug, combination.categorySlug))));
+  assert.ok(urls.some((url) => url.endsWith(canonicalPagePath(popularSearchPath(popularSearch.slug)))));
+  assert.ok(urls.some((url) => url.endsWith(canonicalPagePath(areaCategoryPath(combination.areaSlug, combination.categorySlug)))));
 }
 
 function templateResolverUsesDirectoryLabels() {

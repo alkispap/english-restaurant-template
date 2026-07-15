@@ -1,12 +1,11 @@
-import { listingSearchRecords } from "@/data/listing-search-records";
+import shortlistSummariesData from "../../data/shortlist-summaries.json";
 import {
   DEFAULT_SHORTLIST_LIMIT,
-  getAllShortlistListingSummaries,
   normalizeShortlistSlugs,
   type ShortlistListingSummary
 } from "@/lib/shortlist";
 
-export const shortlistListingSummaries = getAllShortlistListingSummaries(listingSearchRecords);
+export const shortlistListingSummaries = shortlistSummariesData as ShortlistListingSummary[];
 
 const shortlistSummaryBySlug = new Map(shortlistListingSummaries.map((listing) => [listing.slug, listing]));
 

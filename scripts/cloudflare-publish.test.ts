@@ -9,8 +9,9 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package
 assert.equal(packageJson.scripts?.["check:cloudflare"], "tsx scripts/check-cloudflare-export.ts");
 assert.equal(
   packageJson.scripts?.["build:static"],
-  "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\""
+  "npm run generate:redirects && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\""
 );
+assert.equal(packageJson.scripts?.["generate:redirects"], "tsx scripts/generate-cloudflare-redirects.ts");
 assert.equal(packageJson.scripts?.["diagnose:static"], "tsx scripts/static-export-diagnostics.ts");
 assert.equal(
   packageJson.scripts?.["prepare:cloudflare"],
@@ -32,6 +33,7 @@ assert.ok(prepareScript.includes("check:cloudflare"), "prepare script should run
 assert.ok(prepareScript.includes("Upload-ready folder:"), "prepare script should report the upload-ready out folder");
 
 const publishScript = fs.readFileSync(path.join(process.cwd(), "scripts", "publish-cloudflare.ts"), "utf8");
+const exportCheckScript = fs.readFileSync(path.join(process.cwd(), "scripts", "check-cloudflare-export.ts"), "utf8");
 
 assert.ok(publishScript.includes("CLOUDFLARE_PROJECT_NAME"), "publish script should require a Cloudflare project name");
 assert.ok(
@@ -41,6 +43,10 @@ assert.ok(
 assert.ok(
   publishScript.includes('"npm", ["run", "prepare:cloudflare"]'),
   "publish script should run the full Cloudflare preparation workflow before deployment"
+);
+assert.ok(
+  exportCheckScript.includes("_redirects"),
+  "Cloudflare export checks should verify redirect rules are present in out/_redirects"
 );
 
 const headersPath = path.join(process.cwd(), "public", "_headers");
@@ -57,6 +63,22 @@ assert.ok(
 assert.ok(
   !fs.existsSync(path.join(process.cwd(), "public", "_worker.js")),
   "robots cache policy should not require a Pages advanced-mode worker"
+);
+
+const redirectsPath = path.join(process.cwd(), "public", "_redirects");
+assert.ok(fs.existsSync(redirectsPath), "public/_redirects should define static-hosting redirects");
+const redirects = fs.readFileSync(redirectsPath, "utf8");
+assert.ok(
+  redirects.includes("/listings/:slug/ /restaurants/:slug/ 301"),
+  "trailing-slash legacy listing detail URLs should permanently redirect to canonical restaurant URLs"
+);
+assert.ok(
+  redirects.includes("/listings/ /restaurants/ 301"),
+  "legacy listing index URL should permanently redirect to canonical restaurant index"
+);
+assert.ok(
+  redirects.includes("/restaurants/hyderabad-darbar-2/ /restaurants/hyderabad-darbar-redbridge/ 301"),
+  "renamed restaurant URLs should use one-hop permanent redirects"
 );
 
 console.log("Cloudflare publish tests passed");

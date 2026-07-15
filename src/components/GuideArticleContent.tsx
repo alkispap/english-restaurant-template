@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, CheckCircle2 } from "lucide-react";
+import { AdsterraAd } from "@/components/AdsterraAd";
 import type {
   ArticleComparisonTable as ArticleComparisonTableModel,
   ArticleContent,
@@ -97,6 +98,11 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
                   </div>
 
                   {index === 1 && article.visualBlocks?.[0] ? <ArticleVisualBlock block={article.visualBlocks[0]} /> : null}
+                  {index === 1 ? (
+                    <div className="mt-7">
+                      <AdsterraAd placement="300x250" />
+                    </div>
+                  ) : null}
                   {index === 2 && article.comparisonTables?.[0] ? <ArticleComparisonTable table={article.comparisonTables[0]} /> : null}
                   {index === 3 && article.dataBlocks?.[0] ? <ArticleDataBlock block={article.dataBlocks[0]} /> : null}
                   {index === 4 && article.ctaBlocks?.[1] ? <ArticleCta block={article.ctaBlocks[1]} /> : null}
@@ -131,8 +137,13 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
                 </div>
               </div>
             ) : null}
+            <AdsterraAd placement="160x300" />
           </aside>
         </div>
+
+        <section className="mx-auto max-w-6xl px-4 pb-8 sm:px-6 lg:px-8">
+          <AdsterraAd placement="NativeBanner" />
+        </section>
 
         {article.internalLinks.length ? (
           <section className="mx-auto max-w-6xl border-t border-line px-4 py-8 sm:px-6 lg:px-8">

@@ -261,6 +261,10 @@ function normalizeDirectorySearchHref(href: string | undefined) {
   if (!href) return undefined;
   if (href === "/") return directorySearchPath();
   if (href.startsWith("/?")) return directorySearchPath(href.slice(1));
+  const canonicalBase = directorySearchPath();
+  const nonSlashBase = canonicalBase.replace(/\/$/, "");
+  if (href === nonSlashBase) return canonicalBase;
+  if (href.startsWith(`${nonSlashBase}?`)) return `${canonicalBase}${href.slice(nonSlashBase.length)}`;
   return href;
 }
 

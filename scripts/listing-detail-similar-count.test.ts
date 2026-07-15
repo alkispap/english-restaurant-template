@@ -10,6 +10,16 @@ assert.ok(
 );
 
 assert.ok(
+  source.includes("relatedListingCardFromListing"),
+  "listing detail pages should map similar restaurants to compact related card props"
+);
+
+assert.ok(
+  !source.includes("getRelatedListings(listing, 8).map(listingResultSummaryFromListing)"),
+  "listing detail pages should not use broad listing result summaries for the similar restaurants section"
+);
+
+assert.ok(
   !source.includes("getRelatedListings(listing, 9)"),
   "listing detail pages should not request 9 similar listings because that leaves a single card on the third desktop row"
 );

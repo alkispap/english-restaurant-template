@@ -10,7 +10,7 @@ export function directoryIndexPath(path = "") {
 
 export function directorySearchPath(path = "") {
   const suffix = path ? path.replace(/^\//, "") : "";
-  return `/${siteConfig.listingBasePath}${suffix}`;
+  return `/${siteConfig.listingBasePath}/${suffix}`;
 }
 
 export function listingDetailPath(slug: string) {

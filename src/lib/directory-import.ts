@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { importRoleLabels, importRoleOptions, type ImportFieldRole } from "@/lib/import-roles";
 import { cleanListingUrl } from "@/lib/listing-links";
 import { buildListingDescriptions } from "@/lib/listing-description";
+import { getAllShortlistListingSummaries } from "@/lib/shortlist";
 
 export type ImportMode = "dry run" | "normal import" | "preview";
 
@@ -141,6 +142,7 @@ export type ImportResult = {
   listingsFile: string;
   listingsJsonFile: string;
   listingSearchRecordsJsonFile: string;
+  shortlistSummariesJsonFile: string;
   sourceFile: string;
   rows: Row[];
 };
@@ -275,6 +277,7 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     listingsFile: renderListingsFile(),
     listingsJsonFile: renderListingsJsonFile(listings),
     listingSearchRecordsJsonFile: renderListingSearchRecordsJsonFile(listings),
+    shortlistSummariesJsonFile: renderShortlistSummariesJsonFile(listings),
     sourceFile,
     rows
   };
@@ -1427,6 +1430,10 @@ export function renderListingsJsonFile(items: ImportedListing[]) {
 
 export function renderListingSearchRecordsJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(items.map(toListingSearchRecord))}\n`;
+}
+
+export function renderShortlistSummariesJsonFile(items: ImportedListing[]) {
+  return `${JSON.stringify(getAllShortlistListingSummaries(items))}\n`;
 }
 
 function toListingSearchRecord(listing: ImportedListing) {

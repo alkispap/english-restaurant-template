@@ -17,16 +17,16 @@ assert.ok(
   "restaurant detail area info card should not link to query-filter URLs"
 );
 assert.ok(
-  listingPageSource.includes("categoryPath(tagSlug)"),
-  "category tags should link to clean category pages"
+  listingPageSource.includes('directoryRouteLink("category", tagSlug)'),
+  "category tags should use a generated-route-aware link"
 );
 assert.ok(
-  listingPageSource.includes("dietaryPath(tagSlug)"),
-  "dietary tags should link to clean dietary pages when available"
+  listingPageSource.includes('directoryRouteLink("dietary", tagSlug)'),
+  "dietary tags should use a generated-route-aware link"
 );
 assert.ok(
-  listingPageSource.includes("typePath(tagSlug)"),
-  "listing type tags should link to clean type pages when available"
+  listingPageSource.includes('directoryRouteLink("type", tagSlug)'),
+  "listing type tags should use a generated-route-aware link"
 );
 
 console.log("listing detail internal link tests passed");

@@ -85,6 +85,10 @@ export const trustPages = [
       {
         heading: "Third-Party Restaurant Links",
         body: "Restaurant websites, maps, booking platforms, delivery platforms, review pages, and social links are controlled by third parties with their own privacy practices."
+      },
+      {
+        heading: "Advertising and Cookies",
+        body: "This directory may show advertising from third-party ad partners. These partners may use cookies or similar technologies to deliver ads, measure performance, prevent fraud, and understand interactions with adverts. Ads and ad links are controlled by those third parties and may be subject to their own privacy policies."
       }
     ]
   },

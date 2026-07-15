@@ -111,7 +111,7 @@ assert.equal(
 const routes = articleSitemapRoutes("https://directory.example", [draft, published]);
 assert.deepEqual(
   routes.map((route) => route.url),
-  ["https://directory.example/guides/published-guide"],
+  ["https://directory.example/guides/published-guide/"],
   "draft articles should be excluded from article sitemap routes"
 );
 
@@ -119,7 +119,7 @@ const articleSchema = buildArticleJsonLd(published);
 const siteUrl = getSiteUrl();
 assert.equal(articleSchema["@type"], "Article");
 assert.equal(articleSchema.headline, "Sample Guide");
-assert.equal(articleSchema.mainEntityOfPage, `${siteUrl}/guides/published-guide`);
+assert.equal(articleSchema.mainEntityOfPage, `${siteUrl}/guides/published-guide/`);
 assert.deepEqual(articleSchema.image, [`${siteUrl}/images/articles/sample-guide/hero.svg`]);
 assert.equal(getArticlePrimaryImage(published), "/images/articles/sample-guide/hero.svg");
 

@@ -60,8 +60,8 @@ function siteSchemaDescribesDirectoryTrustContext() {
     "Organization schema should describe the directory topic"
   );
   assert.ok(
-    website.description.includes("imported local business data"),
-    "WebSite schema should mention the directory data basis"
+    website.description.includes("area, rating, cuisine, takeaway, delivery"),
+    "WebSite schema should use the shared directory summary"
   );
 }
 

@@ -6,6 +6,7 @@ import { ResponsiveDirectoryFilters } from "@/components/ResponsiveDirectoryFilt
 import { SearchBar } from "@/components/SearchBar";
 import { SectionHeading } from "@/components/SectionHeading";
 import { buildDirectoryListingsChrome } from "@/lib/directory-listings-model";
+import { getSeoLandingHiddenFilterGroups } from "@/lib/seo-landing-filter-context";
 import { seoLandingHeadings } from "@/lib/seo-landing-headings";
 import type { SeoPageModel } from "@/lib/seo-pages";
 
@@ -46,17 +47,25 @@ export function SeoLandingPageContent({ page, viewId }: SeoLandingPageContentPro
             defaultArea={first(page.linkValues.area)}
             basePath={page.metadata.canonical}
             areas={chrome.searchAreas}
-            mapPoints={chrome.searchMapPoints}
+            areaCentroids={chrome.searchMapPoints.map((point) => ({
+              slug: point.slug,
+              name: point.name,
+              area: point.area,
+              latitude: point.latitude,
+              longitude: point.longitude
+            }))}
             hideAreaChoice={page.kind === "area"}
           />
         </div>
       </section>
 
-      <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <DefiningContextNavigation page={page} />
+
+      <div id="seo-landing-server-results" className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
         <ResponsiveDirectoryFilters
           model={filterModel}
           action={page.metadata.canonical}
-          hiddenGroups={areaScopedHiddenFilterGroups(page)}
+          hiddenGroups={getSeoLandingHiddenFilterGroups(page)}
         />
 
         <div className="min-w-0">
@@ -72,7 +81,12 @@ export function SeoLandingPageContent({ page, viewId }: SeoLandingPageContentPro
             linkValues={page.linkValues}
             headingContext={page.resultsHeadingContext}
           />
-
+        </div>
+      </div>
+      <div id="seo-landing-client-results-root" />
+      <div id="seo-landing-stable-content" className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="hidden lg:block" aria-hidden />
+        <div className="min-w-0">
           <GuideSection page={page} />
           <InformationGain page={page} />
           <RelatedLinks groups={page.relatedLinkGroups} />
@@ -80,6 +94,47 @@ export function SeoLandingPageContent({ page, viewId }: SeoLandingPageContentPro
         </div>
       </div>
     </main>
+  );
+}
+
+function DefiningContextNavigation({ page }: { page: SeoPageModel }) {
+  const context = page.definingContext;
+  const navigation = context?.navigation;
+  if (!context || !navigation) return null;
+
+  return (
+    <nav className="mb-6" aria-label={navigation.label}>
+      <h2 className="text-sm font-bold text-ink">{navigation.label}</h2>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {navigation.items.map((item) => {
+          const isCurrent = item.href === page.metadata.canonical;
+
+          return isCurrent ? (
+            <span
+              key={item.href}
+              aria-current="page"
+              className="inline-flex min-h-10 items-center rounded-md border border-emerald-950 bg-emerald-950 px-4 py-2 text-sm font-bold text-white"
+            >
+              {item.label}
+            </span>
+          ) : (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="focus-ring inline-flex min-h-10 items-center rounded-md border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-emerald-900 hover:bg-emerald-50 hover:text-emerald-950"
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+        <Link
+          href={navigation.allHref}
+          className="focus-ring inline-flex min-h-10 items-center rounded-md px-3 py-2 text-sm font-bold text-emerald-950 underline decoration-emerald-900 underline-offset-4"
+        >
+          {navigation.allLabel}
+        </Link>
+      </div>
+    </nav>
   );
 }
 
@@ -188,10 +243,6 @@ function Faqs({ faqs }: { faqs: SeoPageModel["faqs"] }) {
 
 function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
-}
-
-function areaScopedHiddenFilterGroups(page: SeoPageModel) {
-  return page.kind === "area" ? ["area"] : [];
 }
 
 function areaScopedSidebarBlocks(page: SeoPageModel, blocks: ReturnType<typeof buildDirectoryListingsChrome>["sidebarBlocks"]) {

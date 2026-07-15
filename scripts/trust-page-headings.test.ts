@@ -31,7 +31,8 @@ const expected = [
     sectionHeadings: [
       "Information This Restaurant Directory May Use",
       "Saved Restaurant Listings",
-      "Third-Party Restaurant Links"
+      "Third-Party Restaurant Links",
+      "Advertising and Cookies"
     ]
   },
   {

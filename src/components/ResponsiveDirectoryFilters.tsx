@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
+import { AdsterraAd } from "@/components/AdsterraAd";
 import { DirectorySidebar } from "@/components/DirectorySidebar";
 import { FilterPanel, SelectedFilterChips, getSelectedFilters } from "@/components/FilterPanel";
 import type { FilterPanelOptionGroup } from "@/lib/filter-panel-options";
@@ -74,6 +75,9 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
           hiddenGroups={hiddenGroups}
         />
         <DirectorySidebar context={model.sidebarContext} blocks={model.sidebarBlocks} />
+        <div className="mt-5">
+          <AdsterraAd placement="160x600" />
+        </div>
       </aside>
     );
   }
@@ -99,11 +103,16 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
       </button>
 
       {!mobileFiltersOpen ? (
-        <SelectedFilterChips
-          values={model.filterPanelValues}
-          filters={selectedFilters}
-          className="mt-3 rounded-lg border border-line bg-white p-4 shadow-soft"
-        />
+        <>
+          <SelectedFilterChips
+            values={model.filterPanelValues}
+            filters={selectedFilters}
+            className="mt-3 rounded-lg border border-line bg-white p-4 shadow-soft"
+          />
+          <div className="mt-4 flex justify-center">
+            <AdsterraAd placement="320x50" />
+          </div>
+        </>
       ) : null}
 
       {mobileFiltersOpen ? (
