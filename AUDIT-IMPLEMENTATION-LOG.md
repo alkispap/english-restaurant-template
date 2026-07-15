@@ -60,6 +60,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `8800080` | Phase 4D privacy/data-flow alignment and regression policy |
 | `28244cd` | Phase 4D verification record |
 | `dbc62ee` | Phase 4E guarded Cloudflare production release workflow |
+| `2b15e68` | Phase 4E verification record |
+| `de980fc` | Phase 5A listing operational-quality model and launch gate |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -71,7 +73,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | Pending | Not started |
+| 5. Listing quality/operations | In progress | Measured baseline and launch gate complete; provenance, duplicate review, images, and completeness remediation remain |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log
@@ -715,11 +717,46 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 4E local implementation is complete. Phase 4 remains open only for an explicitly authorized production publish and post-release live verification.
 
+### 2026-07-15 - Phase 5A: establish listing-quality baseline and launch gates
+
+**Dataset and grain:** The canonical `data/listings.json` contains 3,187 records at an intended grain of one physical restaurant location. The import report records 3,188 source rows, one merged duplicate, and 3,187 imported listings.
+
+**Confirmed findings**
+
+- No critical identity, place-ID, coordinate, rating/review, or public-URL integrity defect was found.
+- All 3,187 records lack structured per-record provenance.
+- 3,163 records (99.25%) lack a usable image.
+- Four records form two normalized name-and-postcode near-duplicate groups and require manual review.
+- 492 records lack categories, 129 lack opening hours, 68 lack a complete rating/review pair, and 31 lack a useful contact or map action.
+
+**Implementation**
+
+- Added an explicit provenance model containing source identity, import/verification dates, and verification status without mutating current records or inventing unavailable evidence.
+- Added a deterministic operational-quality report with critical/high/medium/low severity, affected counts/rates, samples, impact, remediation, coverage metrics, and a launch verdict.
+- Added `npm run audit:listings`; it exits non-zero whenever critical or high findings exist.
+- Added tests for clean data plus duplicate identity, possible entity duplication, invalid rating pairs, missing provenance/images/categories/contact actions, report rendering, and launch verdict behavior.
+- Added a durable technical baseline report at `docs/listing-quality-baseline-2026-07-15.md`.
+
+**Verification**
+
+- TypeScript and focused ESLint: passed.
+- Focused listing operational-quality test: passed.
+- Full suite: 142/142 passed in 2m 8.51s.
+- Full ESLint: passed.
+- Current `npm run audit:listings`: intentionally exits 1 with 0 critical, 3 high, and 4 medium issue classes; this is the correct not-ready launch verdict.
+- The analytical MCP report validator was attempted but rejected the local JSON/TypeScript source because its chart/table contract requires SQL provenance. The findings were preserved in Markdown rather than fabricating SQL.
+- Current listing records were not edited, merged, enriched, or deleted.
+- `git diff --check`: passed.
+
+**Status:** Phase 5A is complete. The audit framework is enforceable and the dataset's launch blockers are quantified; Phase 5 remains in progress for provenance, duplicate resolution, images, and record remediation.
+
 ## Exact next checkpoint
 
-1. Start Phase 5A by defining measurable listing-quality, image-provenance, source-traceability, and external-link health gates against the current dataset.
-2. Prioritize confirmed record defects by listing value and automate checks that can run during future imports.
-3. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and then run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, live header/redirect checks, and any enabled third-party embed checks.
+1. Start Phase 5B by adding provenance to the import/output pipeline without inventing verification claims for the existing dataset.
+2. Establish an explicit backfill decision for the current source/provider and extraction/import dates, then make provenance coverage measurable per record.
+3. Review the two candidate duplicate-location groups and add documented exceptions or canonical redirects as appropriate.
+4. Define the image licensing/provenance policy and a high-value enrichment priority before changing 3,163 image-deficient records.
+5. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
 
 ## Template for future entries
 
