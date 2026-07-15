@@ -57,12 +57,18 @@ Check:
 
 Do:
 
-- Run `npm run prepare:cloudflare` before upload.
-- Use direct upload only if `prepare:cloudflare` passed and no files changed after it:
+- Commit the intended release and confirm `git status --short` is empty.
+- Use `npm run prepare:cloudflare` for a local, non-publishing artifact check.
+- Publish only through the guarded production workflow:
 
-```txt
-npx wrangler pages deploy out --project-name indianrestaurantlondon
+```powershell
+$env:CLOUDFLARE_PROJECT_NAME = "indianrestaurantlondon"
+$env:CLOUDFLARE_PRODUCTION_BRANCH = "main"
+npm run publish:cloudflare -- --confirm-project=indianrestaurantlondon
 ```
+
+- Do not deploy `out/` with a raw Wrangler command; ignored output can be stale.
+- Follow `docs/cloudflare-upload-checklist.md` for the complete release and live-verification sequence.
 
 - Keep `public/_headers` included in the export.
 - Keep these long-cache rules:

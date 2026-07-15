@@ -1,85 +1,82 @@
-# Cloudflare Upload Checklist
+# Cloudflare Production Release Checklist
 
-Use this checklist before uploading a new static version of the site to Cloudflare.
+This is the authoritative commit-to-production workflow. Do not upload `out/` with a raw Wrangler command: the folder is ignored by Git and may be stale even when the source tree is clean.
 
-## Latest Prepared Upload
+## 1. Finish And Commit A Release Checkpoint
 
-Status on 2026-06-27:
+- Review `git status --short` and confirm every change belongs in the release.
+- Run the normal verification appropriate to the change.
+- Commit the intended source changes on the release branch.
+- Confirm `git status --short` is empty.
+- Record the branch and commit shown by `git branch --show-current` and `git rev-parse --short HEAD`.
 
-- Upload-ready folder: `out/`
-- Production domain used for the export: `https://indianrestaurantlondon.co.uk`
-- Cloudflare export check: passed
-- Files ready: `13,746`
-- Oversized assets: none over `25 MiB`
-- Typecheck: passed
+The publish command refuses tracked or untracked changes. Ignored build output such as `.next/` and `out/` does not make the worktree dirty.
 
-If no files are changed after this point, upload the current `out/` folder to Cloudflare.
+## 2. Prepare Without Publishing
 
-## Before Upload
+Run:
 
-- Run the upload preparation workflow:
-  - `npm run prepare:cloudflare`
-- This command stops this project’s local dev server if it is running, rebuilds the static export with the live domain, and runs the Cloudflare export checks.
-- Confirm the upload folder is the latest `out/` folder.
-- Confirm `out/sitemap.xml` and `out/robots.txt` use:
-  - `https://indianrestaurantlondon.co.uk`
-- Confirm the homepage is from the latest build, not an older export.
-- Confirm new public assets are included, especially:
-  - `/vendor/leaflet/leaflet.css`
-  - `/vendor/leaflet/directory-map.css`
-  - `/vendor/leaflet/images/*`
-
-## Upload Rule
-
-- If `npm run prepare:cloudflare` has already passed and no files changed after it, do not run the full publish workflow again.
-- Use direct Cloudflare upload only:
-
-```txt
-npx wrangler pages deploy out --project-name indianrestaurantlondon
+```powershell
+npm run prepare:cloudflare
 ```
 
-- Reason:
-  - `prepare:cloudflare` already rebuilds and checks the upload-ready `out/` folder.
-  - Running the full publish workflow again repeats typecheck, tests, static export, and Cloudflare checks before upload.
-  - The current static export contains `13,746` files, so direct upload can still take a long time by itself.
-- Use the full publish workflow only when we intentionally want one command to run all checks and deploy from scratch.
+This stops this project's local development server, rebuilds `out/` with `https://indianrestaurantlondon.co.uk`, runs the client-payload audit, and validates the Cloudflare artifact. It does not upload anything.
 
-## Cache Header Rules To Include
+Confirm the final output reports:
 
-If using Cloudflare Pages Direct Upload, add these rules through the Cloudflare `_headers` file or equivalent Cloudflare header settings.
+- The upload-ready folder is `out/`.
+- `out/sitemap.xml` and `out/robots.txt` use `https://indianrestaurantlondon.co.uk`.
+- `out/_headers` and `out/_redirects` are present.
+- No file exceeds `25 MiB` and the export stays below Cloudflare's file-count limit.
 
-Long cache for hashed Next assets:
+If source files change after preparation, treat the output as stale and prepare it again.
+
+## 3. Publish The Exact Committed Source
+
+Wrangler must already be available locally or in the npm cache and authenticated with the intended Cloudflare account. The workflow uses `npx --no-install`, so it will fail instead of downloading a package during a production release.
+
+In PowerShell, set the target for the current terminal and run the guarded publisher:
+
+```powershell
+$env:CLOUDFLARE_PROJECT_NAME = "indianrestaurantlondon"
+$env:CLOUDFLARE_PRODUCTION_BRANCH = "main"
+npm run publish:cloudflare -- --confirm-project=indianrestaurantlondon
+```
+
+The command:
+
+1. Requires the confirmation value to exactly match `CLOUDFLARE_PROJECT_NAME`.
+2. Refuses a dirty Git worktree.
+3. Reports the source branch, commit, target project, target production branch, and Wrangler version.
+4. Runs type-checking, all tests, a fresh static export, payload checks, and Cloudflare artifact validation.
+5. Checks the worktree again in case generation changed a tracked file.
+6. Deploys the freshly generated `out/` directory.
+
+Never paste Cloudflare API tokens into a command, source file, commit, screenshot, or audit log. Use Wrangler authentication or a private environment variable outside the repository.
+
+## Cache And Security Rules Included In The Artifact
+
+`public/_headers` is copied into the export. Keep the specific asset rules before the general document rule:
 
 ```txt
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
-```
 
-Long cache for map vendor assets:
-
-```txt
 /vendor/leaflet/*
   Cache-Control: public, max-age=31536000, immutable
-```
 
-Short cache or revalidation for documents:
-
-```txt
 /*
   Cache-Control: public, max-age=0, must-revalidate
 ```
 
-Important:
+The same file also carries the production Content Security Policy and related browser security headers. `public/_redirects` carries legacy and renamed-listing redirects. Both files are required by `check:cloudflare`.
 
-- The long-cache rules must be more specific than the general `/*` rule.
-- Keep HTML pages, `sitemap.xml`, and `robots.txt` easy to refresh.
-- Third-party Googleusercontent images and Cloudflare Insights script headers are not controlled by this repo.
+## 4. Verify The Live Release
 
-## After Upload Verification
-
-Check the live response headers:
+Check these live paths:
 
 - `/`
+- One `/restaurants/.../` detail page
 - `/_next/static/css/...`
 - `/_next/static/chunks/...`
 - `/vendor/leaflet/leaflet.css`
@@ -90,18 +87,16 @@ Check the live response headers:
 
 Expected results:
 
-- `/_next/static/*` should return:
-  - `Cache-Control: public, max-age=31536000, immutable`
-- `/vendor/leaflet/*` should return:
-  - `Cache-Control: public, max-age=31536000, immutable`
-- `/`, HTML pages, `sitemap.xml`, and `robots.txt` should stay short-cache or revalidated.
+- `/_next/static/*` and `/vendor/leaflet/*` return `Cache-Control: public, max-age=31536000, immutable`.
+- HTML, `sitemap.xml`, and `robots.txt` remain short-cache or revalidated.
+- The shared CSP, `X-Content-Type-Options`, frame protection, referrer policy, and permissions policy are present.
+- The homepage and restaurant detail page work at desktop and mobile widths.
+- Search/filtering and the map view hydrate without console errors.
+- A legacy `/listings/.../` URL redirects once to its canonical `/restaurants/.../` URL.
+- The sitemap and robots file reference the production domain.
 
-## Why This Matters
+Record the deployment time, Git commit, Cloudflare deployment URL or identifier, and verification result in the release log or pull request.
 
-The live site previously returned this for hashed Next files:
+## Why The Guardrails Matter
 
-```txt
-Cache-Control: public, max-age=14400, must-revalidate
-```
-
-That is only `4 hours`. Because `/_next/static/*` filenames are content-hashed, browsers can safely cache them for much longer. This helps repeat visitors and can reduce PageSpeed caching warnings.
+The guarded workflow prevents deploying stale ignored output, uncommitted work, an unintended project, or shell-interpreted target values. Long-lived caching for content-hashed assets improves repeat-load performance while revalidation keeps HTML and search-engine control files fresh.

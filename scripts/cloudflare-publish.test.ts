@@ -38,12 +38,30 @@ const exportCheckScript = fs.readFileSync(path.join(process.cwd(), "scripts", "c
 
 assert.ok(publishScript.includes("CLOUDFLARE_PROJECT_NAME"), "publish script should require a Cloudflare project name");
 assert.ok(
-  publishScript.includes('"wrangler", "pages", "deploy"'),
+  publishScript.includes('"--confirm-project"'),
+  "publish script should require confirmation of the exact Cloudflare project"
+);
+assert.ok(
+  publishScript.includes('assertCleanWorktree("before release checks")') &&
+    publishScript.includes('assertCleanWorktree("after release checks and static export")'),
+  "publish script should reject uncommitted changes before checks and after export"
+);
+assert.ok(
+  publishScript.includes('"--no-install"') && publishScript.includes('"wrangler"'),
+  "publish script should use an existing Wrangler installation without installing packages"
+);
+assert.ok(
+  publishScript.includes('"pages",') && publishScript.includes('"deploy",'),
   "publish script should deploy with Wrangler Direct Upload"
 );
 assert.ok(
   publishScript.includes('"npm", ["run", "prepare:cloudflare"]'),
   "publish script should run the full Cloudflare preparation workflow before deployment"
+);
+assert.ok(publishScript.includes("shell: false"), "publish script should not pass deployment arguments through a shell");
+assert.ok(
+  publishScript.includes('"--branch"') && publishScript.includes("productionBranch"),
+  "publish script should explicitly identify the Cloudflare production branch"
 );
 assert.ok(
   exportCheckScript.includes("_redirects"),
