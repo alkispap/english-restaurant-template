@@ -54,6 +54,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `2a1c9d8` | Phase 4A dependency updates and enforced advisory policy |
 | `6cc0129` | Phase 4A verification and risk decision record |
 | `bb245a8` | Phase 4B script-safe JSON-LD serialization |
+| `db75c6e` | Phase 4B verification record |
+| `661c891` | Phase 4C production security headers and CSP |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -64,7 +66,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 1. Query-driven listing journeys | Complete | All tests, builds, export checks, and desktop/mobile rendered-state checks passed |
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
-| 4. Security/privacy/deployment | In progress | Dependency policy and JSON-LD hardening complete; headers, third-party flows, and deployment documentation remain |
+| 4. Security/privacy/deployment | In progress | Dependencies, JSON-LD, and security headers complete; third-party flows and deployment documentation remain |
 | 5. Listing quality/operations | Pending | Not started |
 | 6. Reusable directory packs | Pending | Not started |
 
@@ -632,10 +634,35 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 4B complete. JSON-LD script emission is centralized and hostile imported strings cannot terminate its script element.
 
+### 2026-07-15 - Phase 4C: enforce production security headers
+
+**Confirmed finding:** The Cloudflare deployment defined cache rules but no CSP or browser security headers. The normal Next server likewise returned no application-defined security policy.
+
+**Compatibility decision:** Static Next output requires inline framework bootstrap scripts and authored/React inline styles, so this export architecture cannot use nonce-only CSP. The policy permits `'unsafe-inline'` for scripts/styles but does not permit `unsafe-eval` or external scripts. HTTPS directory images, same-origin resources/geolocation, blob workers, and optional Supabase HTTPS/WebSocket connections remain supported. Ad network scripts remain blocked while ads are disabled.
+
+**Implementation**
+
+- Added one shared security policy with CSP, strict referrer handling, MIME-sniff protection, frame denial, restricted browser permissions, and one-year HSTS.
+- Normal Next responses use the shared policy through `headers()`; static export deliberately omits that unsupported runtime hook.
+- Cloudflare `public/_headers` mirrors the policy for every path while preserving existing asset/SEO cache rules.
+- Cloudflare artifact validation now checks every shared header/value, and static tests prevent drift or accidental external-script/eval permissions.
+
+**Verification**
+
+- Focused security-header and Cloudflare publishing tests, TypeScript, ESLint, and diff checks: passed.
+- Full suite: 140/140 passed in 1m 41.62s.
+- Normal production build: passed in 87.7s; all payload budgets passed.
+- Live normal server returned all six intended headers exactly.
+- True 390 x 844 CSP browser journey: directory map hydrated, reached `aria-busy=false`, loaded six map tiles, retained named Zoom controls, had no page overflow, and produced no browser error or warning.
+- Static export: all 3,660 pages generated in 539.2s without an unsupported-header warning; payload budgets passed.
+- Cloudflare artifact check: 7,411 files passed, `_headers` contained every policy value, and no asset exceeded 25 MiB.
+
+**Status:** Phase 4C complete. Both deployment modes enforce the same tested browser security baseline.
+
 ## Exact next checkpoint
 
-1. Start Phase 4C by defining and testing production security headers with CSP/static-export compatibility.
-2. Inventory enabled third-party data flows and align privacy/consent controls and deployment documentation.
+1. Start Phase 4D by inventorying enabled third-party data flows and aligning privacy/consent controls with actual behavior.
+2. Consolidate Cloudflare deployment documentation and launch verification into one authoritative workflow.
 3. On the first deployed preview, run mobile lab performance, a formal automated accessibility scan, an assisted screen-reader pass, and recheck any enabled third-party embeds.
 
 ## Template for future entries
