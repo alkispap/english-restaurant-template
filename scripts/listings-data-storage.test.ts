@@ -1,17 +1,23 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
+import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
 
 const root = process.cwd();
 const listingsSourcePath = path.join(root, "src", "data", "listings.ts");
 const listingsJsonPath = path.join(root, "data", "listings.json");
 const listingSearchRecordsJsonPath = path.join(root, "data", "listing-search-records.json");
+const listingSearchIndexJsonPath = path.join(root, "data", "listing-search-index.json");
 const shortlistSummariesJsonPath = path.join(root, "data", "shortlist-summaries.json");
 
 assert.ok(fs.existsSync(listingsJsonPath), "listing records should be stored in data/listings.json");
 assert.ok(
   fs.existsSync(listingSearchRecordsJsonPath),
   "compact client search records should be stored in data/listing-search-records.json"
+);
+assert.ok(
+  fs.existsSync(listingSearchIndexJsonPath),
+  "browser search records should have a generated packed index"
 );
 assert.ok(
   fs.existsSync(shortlistSummariesJsonPath),
@@ -42,6 +48,18 @@ assert.equal(
 assert.ok(
   fs.statSync(listingSearchRecordsJsonPath).size < fs.statSync(listingsJsonPath).size,
   "compact client search records should be smaller than full listing records"
+);
+
+const packedSearchIndex = JSON.parse(fs.readFileSync(listingSearchIndexJsonPath, "utf8"));
+const unpackedSearchRecords = JSON.parse(JSON.stringify(unpackListingSearchRecords(packedSearchIndex)));
+assert.deepEqual(
+  unpackedSearchRecords,
+  searchRecords,
+  "packed browser search records should decode without losing listing fields"
+);
+assert.ok(
+  fs.statSync(listingSearchIndexJsonPath).size < fs.statSync(listingSearchRecordsJsonPath).size / 2,
+  "packed browser search index should remain less than half the verbose search-record size"
 );
 
 const shortlistSummaries = JSON.parse(fs.readFileSync(shortlistSummariesJsonPath, "utf8"));

@@ -7,6 +7,7 @@ const rootEntries = fs.readdirSync(process.cwd(), { withFileTypes: true });
 const listingsSourcePath = path.join(process.cwd(), "src", "data", "listings.ts");
 const listingsJsonPath = path.join(process.cwd(), "data", "listings.json");
 const listingSearchRecordsJsonPath = path.join(process.cwd(), "data", "listing-search-records.json");
+const listingSearchIndexJsonPath = path.join(process.cwd(), "data", "listing-search-index.json");
 const directoryListingsPagePath = path.join(process.cwd(), "src", "components", "DirectoryListingsPage.tsx");
 const listingsPagePath = path.join(process.cwd(), "src", "app", "listings", "page.tsx");
 const restaurantsPagePath = path.join(process.cwd(), "src", "app", "restaurants", "page.tsx");
@@ -44,6 +45,10 @@ assert.ok(fs.existsSync(listingsJsonPath), "large listing records should live in
 assert.ok(
   fs.existsSync(listingSearchRecordsJsonPath),
   "browser-facing search records should live in data/listing-search-records.json"
+);
+assert.ok(
+  fs.existsSync(listingSearchIndexJsonPath),
+  "browser-facing search records should have a generated packed index"
 );
 
 const listingsSource = fs.readFileSync(listingsSourcePath, "utf8");

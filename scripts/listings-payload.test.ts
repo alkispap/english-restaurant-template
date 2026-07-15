@@ -8,6 +8,7 @@ const serializedBytes = Buffer.byteLength(JSON.stringify(groups), "utf8");
 const root = process.cwd();
 const listingsJsonPath = path.join(root, "data", "listings.json");
 const listingSearchRecordsJsonPath = path.join(root, "data", "listing-search-records.json");
+const listingSearchIndexJsonPath = path.join(root, "data", "listing-search-index.json");
 const listingFilterCountsJsonPath = path.join(root, "data", "listing-filter-counts.json");
 const listingFilterCountsSourcePath = path.join(root, "src", "lib", "listing-filter-counts.ts");
 
@@ -17,6 +18,11 @@ assert.ok(groups.some((group) => group.name === "category"), "expected category 
 assert.ok(
   fs.statSync(listingSearchRecordsJsonPath).size < fs.statSync(listingsJsonPath).size,
   "browser search records should be smaller than full listing records"
+);
+assert.ok(fs.existsSync(listingSearchIndexJsonPath), "browser search should use a generated packed index");
+assert.ok(
+  fs.statSync(listingSearchIndexJsonPath).size <= 3_000_000,
+  "packed browser search index should stay within its 3MB raw-data budget"
 );
 assert.ok(fs.existsSync(listingFilterCountsJsonPath), "directory imports should generate compact listing filter counts");
 assert.ok(

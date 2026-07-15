@@ -23,6 +23,7 @@ const routeBudgets = [
 ];
 const MAX_INITIAL_ROUTE_JS_BYTES = 650_000;
 const MAX_INITIAL_CHUNK_BYTES = 250_000;
+const MAX_ASYNC_CHUNK_BYTES = 3_000_000;
 
 assert.ok(fs.existsSync(manifestPath), "Run a production build before checking client payload budgets.");
 
@@ -60,7 +61,30 @@ for (const result of results) {
   );
 }
 
+const clientChunks = collectFiles(path.join(nextDir, "static", "chunks")).filter((file) => file.endsWith(".js"));
+const largestClientChunk = clientChunks
+  .map((file) => ({
+    asset: path.relative(nextDir, file).replaceAll("\\", "/"),
+    bytes: fs.statSync(file).size
+  }))
+  .reduce((current, item) => (item.bytes > current.bytes ? item : current), { asset: "", bytes: 0 });
+
+assert.ok(
+  largestClientChunk.bytes <= MAX_ASYNC_CHUNK_BYTES,
+  `${largestClientChunk.asset} is ${formatBytes(largestClientChunk.bytes)}; async chunk budget is ${formatBytes(MAX_ASYNC_CHUNK_BYTES)}.`
+);
+console.log(
+  `Largest initial or async client chunk: ${largestClientChunk.asset} at ${formatBytes(largestClientChunk.bytes)}`
+);
+
 console.log("Client payload budgets passed.");
+
+function collectFiles(directory: string): string[] {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(directory, entry.name);
+    return entry.isDirectory() ? collectFiles(fullPath) : [fullPath];
+  });
+}
 
 function formatBytes(bytes: number) {
   return `${(bytes / 1024).toFixed(1)} KiB`;

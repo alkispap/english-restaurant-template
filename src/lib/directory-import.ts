@@ -3,7 +3,9 @@ import fs from "node:fs";
 import { importRoleLabels, importRoleOptions, type ImportFieldRole } from "@/lib/import-roles";
 import { cleanListingUrl } from "@/lib/listing-links";
 import { buildListingDescriptions } from "@/lib/listing-description";
+import { packListingSearchRecords } from "@/lib/listing-search-index";
 import { getAllShortlistListingSummaries } from "@/lib/shortlist";
+import type { ListingSearchRecord } from "@/data/listing-search-records";
 
 export type ImportMode = "dry run" | "normal import" | "preview";
 
@@ -142,6 +144,7 @@ export type ImportResult = {
   listingsFile: string;
   listingsJsonFile: string;
   listingSearchRecordsJsonFile: string;
+  listingSearchIndexJsonFile: string;
   listingFilterCountsJsonFile: string;
   shortlistSummariesJsonFile: string;
   sourceFile: string;
@@ -278,6 +281,7 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     listingsFile: renderListingsFile(),
     listingsJsonFile: renderListingsJsonFile(listings),
     listingSearchRecordsJsonFile: renderListingSearchRecordsJsonFile(listings),
+    listingSearchIndexJsonFile: renderListingSearchIndexJsonFile(listings),
     listingFilterCountsJsonFile: renderListingFilterCountsJsonFile(listings),
     shortlistSummariesJsonFile: renderShortlistSummariesJsonFile(listings),
     sourceFile,
@@ -1432,6 +1436,11 @@ export function renderListingsJsonFile(items: ImportedListing[]) {
 
 export function renderListingSearchRecordsJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(items.map(toListingSearchRecord))}\n`;
+}
+
+export function renderListingSearchIndexJsonFile(items: ImportedListing[]) {
+  const records = items.map(toListingSearchRecord) as ListingSearchRecord[];
+  return `${JSON.stringify(packListingSearchRecords(records))}\n`;
 }
 
 export function renderListingFilterCountsJsonFile(items: ImportedListing[]) {

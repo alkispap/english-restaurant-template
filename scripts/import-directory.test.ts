@@ -3,12 +3,15 @@ import {
   analyzeDirectoryRows,
   analyzeDirectoryBuffer,
   renderListingFilterCountsJsonFile,
+  renderListingSearchIndexJsonFile,
+  renderListingSearchRecordsJsonFile,
   renderMissingCategoryReview,
   renderReportForListings,
   selectCuratedRestaurantSample,
   type Row
 } from "../src/lib/directory-import";
 import { getServiceOptions } from "../src/lib/directory";
+import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
 
 function repeatedHeaderRowsAreSkipped() {
   const rows: Row[] = [
@@ -213,6 +216,69 @@ function importGeneratesCompactNormalizedFilterCounts() {
   assert.equal(counts.service.takeaway, 1);
   assert.equal(counts.offering.coffee, 2);
   assert.equal(counts.price["££"], 2);
+}
+
+function importGeneratesLosslessPackedSearchIndex() {
+  const listings = [
+    {
+      name: "Packed Kitchen",
+      slug: "packed-kitchen",
+      description: "A complete record used to verify the browser search index.",
+      images: ["/images/packed-kitchen.webp"],
+      categories: ["Indian", "South Indian"],
+      listingTypes: ["Casual Dining"],
+      dietaryOptions: ["Vegan"],
+      tags: ["Family friendly"],
+      area: "Tower Hamlets",
+      neighborhood: "Brick Lane",
+      borough: "Tower Hamlets",
+      address: "1 Test Street",
+      fullAddress: "1 Test Street, London E1",
+      postcode: "E1",
+      priceLevel: "££" as const,
+      rating: 4.7,
+      reviewCount: 125,
+      featured: true,
+      contact: {
+        website: "https://example.com",
+        googleReviewsUrl: "https://example.com/reviews",
+        menuUrl: "https://example.com/menu"
+      },
+      location: {
+        googleMapsUrl: "https://maps.google.com/example",
+        latitude: 51.5,
+        longitude: -0.1,
+        tubeStation: "Aldgate East",
+        busStop: "Brick Lane",
+        nearbyPlaces: [{ name: "Spitalfields Market" }]
+      },
+      details: {
+        workingHours: [{ day: "Monday", hours: "10am-10pm" }],
+        serviceOptions: ["Delivery", "Takeaway"],
+        offerings: ["Coffee"],
+        highlights: ["Fast service"],
+        popularFor: ["Dinner"],
+        diningOptions: ["Dine-in"],
+        amenities: ["Wi-Fi"],
+        accessibility: ["Wheelchair accessible entrance"],
+        atmosphere: ["Casual"],
+        crowd: ["Groups"],
+        planning: ["Reservations required"],
+        payments: ["Credit cards"],
+        children: ["Good for kids"],
+        parking: ["Street parking"],
+        pets: ["Dogs allowed"],
+        googleVerified: true
+      }
+    }
+  ];
+
+  const verboseRecords = JSON.parse(renderListingSearchRecordsJsonFile(listings));
+  const packedIndex = JSON.parse(renderListingSearchIndexJsonFile(listings));
+  const unpackedRecords = JSON.parse(JSON.stringify(unpackListingSearchRecords(packedIndex)));
+
+  assert.equal(packedIndex.version, 1);
+  assert.deepEqual(unpackedRecords, verboseRecords);
 }
 
 function listingDescriptionsUseDataRichCopy() {
@@ -568,6 +634,7 @@ ignoredColumnsAreReported();
 sampledReportsUseSampledCounts();
 serviceFilterExcludesAdvancedOnlyValues();
 importGeneratesCompactNormalizedFilterCounts();
+importGeneratesLosslessPackedSearchIndex();
 listingDescriptionsUseDataRichCopy();
 listingDescriptionVariantsAreStableAndVaried();
 listingMetaDescriptionsAvoidBrokenTruncation();
