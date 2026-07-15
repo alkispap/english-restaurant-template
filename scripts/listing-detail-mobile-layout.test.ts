@@ -73,6 +73,21 @@ assert.match(
 );
 assert.match(
   mobileChromeSource,
+  /inert=\{!showStickyAreaBar\}/,
+  "mobile sticky area bar controls should not remain focusable while the bar is off-screen"
+);
+assert.match(
+  mobileChromeSource,
+  /aria-hidden=\{!showStickyAreaBar\}/,
+  "mobile sticky area bar should leave the accessibility tree while it is off-screen"
+);
+assert.match(
+  mobileChromeSource,
+  /inert=\{showStickyAreaBar\}/,
+  "original mobile actions should not duplicate sticky keyboard stops after scrolling"
+);
+assert.match(
+  mobileChromeSource,
   /md:hidden/,
   "mobile TripAdvisor-style chrome should be hidden on tablet and desktop layouts"
 );

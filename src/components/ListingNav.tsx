@@ -41,11 +41,12 @@ export function ListingNav({ name, tabs }: { name: string; tabs: ListingNavTab[]
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-8">
           <div className="hidden truncate text-lg font-bold text-ink sm:block">{name}</div>
-          <nav className="flex h-full gap-6 overflow-x-auto no-scrollbar">
+          <nav aria-label="Restaurant sections" className="flex h-full gap-6 overflow-x-auto no-scrollbar">
             {tabs.map((tab) => (
               <a
                 key={tab.href}
                 href={tab.href}
+                aria-current={activeTab === tab.href ? "location" : undefined}
                 className={`inline-flex items-center border-b-2 px-1 text-sm font-bold transition-all ${
                   activeTab === tab.href
                     ? "border-emerald-600 text-ink"

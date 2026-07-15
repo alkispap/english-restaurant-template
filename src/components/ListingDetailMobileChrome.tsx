@@ -51,8 +51,10 @@ export function ListingDetailMobileChrome({ listing, tabs, shareUrl, route }: Li
   return (
     <div className="md:hidden">
       <div
-        className={`fixed inset-x-0 top-0 z-40 border-b border-line bg-white shadow-sm transition-transform duration-200 ${
-          showStickyAreaBar ? "translate-y-0" : "-translate-y-full"
+        aria-hidden={!showStickyAreaBar}
+        inert={!showStickyAreaBar}
+        className={`fixed inset-x-0 top-0 z-40 border-b border-line bg-white shadow-sm transition-[transform,visibility] duration-200 ${
+          showStickyAreaBar ? "visible translate-y-0 pointer-events-auto" : "invisible -translate-y-full pointer-events-none"
         }`}
       >
         <div className="flex h-14 items-center justify-between gap-3 px-4">
@@ -81,7 +83,11 @@ export function ListingDetailMobileChrome({ listing, tabs, shareUrl, route }: Li
       <section className="border-b border-line bg-white px-4 pb-5 pt-4">
         <div className="flex items-center justify-between gap-3">
           <AreaBackLink href={areaHref} label={areaLabel} />
-          <div className="flex shrink-0 items-center gap-2">
+          <div
+            aria-hidden={showStickyAreaBar}
+            inert={showStickyAreaBar}
+            className="flex shrink-0 items-center gap-2"
+          >
             <SaveListingButton
               slug={listing.slug}
               compact
@@ -116,7 +122,7 @@ export function ListingDetailMobileChrome({ listing, tabs, shareUrl, route }: Li
         ) : null}
       </section>
 
-      <nav className="sticky top-0 z-30 flex gap-8 overflow-x-auto border-b border-line bg-white px-4 shadow-sm scrollbar-hide">
+      <nav aria-label="Restaurant sections" className="sticky top-0 z-30 flex gap-8 overflow-x-auto border-b border-line bg-white px-4 shadow-sm scrollbar-hide">
         {tabs.map((tab) => (
           <a
             key={tab.href}

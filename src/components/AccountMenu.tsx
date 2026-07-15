@@ -1,9 +1,10 @@
 "use client";
 
 import { LogIn, LogOut, Mail, UserRound } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import { useAccount } from "@/components/AccountProvider";
 import { directoryConfig } from "@/config/directory";
+import { useDismissiblePopover } from "@/lib/use-dismissible-popover";
 
 export function AccountMenu() {
   const { authEnabled, loading, user, signInWithProvider, signInWithEmail, signOut } = useAccount();
@@ -13,6 +14,17 @@ export function AccountMenu() {
   const [messageIsError, setMessageIsError] = useState(false);
   const [actionPending, setActionPending] = useState(false);
   const busy = loading || actionPending;
+  const menuId = useId();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+
+  useDismissiblePopover({
+    open: isOpen,
+    onClose: closeMenu,
+    popoverRef: menuRef,
+    triggerRef: menuTriggerRef
+  });
 
   if (!authEnabled) return null;
 
@@ -62,9 +74,11 @@ export function AccountMenu() {
   return (
     <div className="relative">
       <button
+        ref={menuTriggerRef}
         type="button"
         className="focus-ring inline-flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-ink hover:border-primary"
         aria-expanded={isOpen}
+        aria-controls={menuId}
         onClick={() => setIsOpen((open) => !open)}
       >
         {user ? <UserRound className="h-4 w-4 text-primary" aria-hidden /> : <LogIn className="h-4 w-4 text-primary" aria-hidden />}
@@ -72,7 +86,12 @@ export function AccountMenu() {
       </button>
 
       {isOpen ? (
-        <div className="absolute right-0 top-12 z-50 w-80 rounded-lg border border-line bg-white p-4 text-sm shadow-soft">
+        <div
+          ref={menuRef}
+          id={menuId}
+          aria-label="Account options"
+          className="absolute right-0 top-12 z-50 w-80 rounded-lg border border-line bg-white p-4 text-sm shadow-soft"
+        >
           {user ? (
             <div>
               <p className="font-bold text-ink">Signed in</p>

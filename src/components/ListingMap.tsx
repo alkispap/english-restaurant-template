@@ -120,7 +120,13 @@ export function ListingMap({ listings }: ListingMapProps) {
 
   return (
     <div aria-busy={!loaded && !loadError} className="overflow-hidden rounded-lg border border-line shadow-soft">
-      <div ref={mapRef} className="h-[500px] w-full lg:h-[600px]" style={{ zIndex: 0 }} />
+      <div
+        ref={mapRef}
+        role="region"
+        aria-label={`Map showing ${listings.length} ${listings.length === 1 ? "restaurant" : "restaurants"}`}
+        className="h-[500px] w-full lg:h-[600px]"
+        style={{ zIndex: 0 }}
+      />
       {!loaded && !loadError ? (
         <div role="status" aria-live="polite" className="flex items-center justify-center bg-slate-50 p-4 text-sm text-muted">
           Loading map...
