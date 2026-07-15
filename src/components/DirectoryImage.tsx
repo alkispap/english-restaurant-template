@@ -34,7 +34,7 @@ export function DirectoryImage({
   }, [src]);
 
   useEffect(() => {
-    if (!src || loaded || failed) return;
+    if (!src || loaded || failed || !shouldUseImageFallbackTimeout(src)) return;
 
     const timeout = window.setTimeout(() => {
       setTimedOut(true);
@@ -73,6 +73,10 @@ export function DirectoryImage({
 }
 
 export const IMAGE_FALLBACK_TIMEOUT_MS = 3000;
+
+export function shouldUseImageFallbackTimeout(src?: string) {
+  return Boolean(src && /^https?:\/\//i.test(src));
+}
 
 export function shouldBypassImageOptimization(src?: string) {
   if (!src) return false;
