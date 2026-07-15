@@ -5,6 +5,8 @@ import {
   renderListingFilterCountsJsonFile,
   renderListingSearchIndexJsonFile,
   renderListingSearchRecordsJsonFile,
+  renderShortlistIndexJsonFile,
+  renderShortlistSummariesJsonFile,
   renderMissingCategoryReview,
   renderReportForListings,
   selectCuratedRestaurantSample,
@@ -12,6 +14,7 @@ import {
 } from "../src/lib/directory-import";
 import { getServiceOptions } from "../src/lib/directory";
 import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
+import { unpackShortlistSummaries } from "../src/lib/shortlist-index";
 
 function repeatedHeaderRowsAreSkipped() {
   const rows: Row[] = [
@@ -279,6 +282,13 @@ function importGeneratesLosslessPackedSearchIndex() {
 
   assert.equal(packedIndex.version, 1);
   assert.deepEqual(unpackedRecords, verboseRecords);
+
+  const verboseShortlist = JSON.parse(renderShortlistSummariesJsonFile(listings));
+  const packedShortlist = JSON.parse(renderShortlistIndexJsonFile(listings));
+  const unpackedShortlist = JSON.parse(JSON.stringify(unpackShortlistSummaries(packedShortlist)));
+
+  assert.equal(packedShortlist.version, 1);
+  assert.deepEqual(unpackedShortlist, verboseShortlist);
 }
 
 function listingDescriptionsUseDataRichCopy() {

@@ -1,11 +1,14 @@
-import shortlistSummariesData from "../../data/shortlist-summaries.json";
+import shortlistIndexData from "../../data/shortlist-index.json";
 import {
   DEFAULT_SHORTLIST_LIMIT,
   normalizeShortlistSlugs,
   type ShortlistListingSummary
 } from "@/lib/shortlist";
+import { unpackShortlistSummaries, type PackedShortlistIndex } from "@/lib/shortlist-index";
 
-export const shortlistListingSummaries = shortlistSummariesData as ShortlistListingSummary[];
+export const shortlistListingSummaries = unpackShortlistSummaries(
+  shortlistIndexData as PackedShortlistIndex
+);
 
 const shortlistSummaryBySlug = new Map(shortlistListingSummaries.map((listing) => [listing.slug, listing]));
 

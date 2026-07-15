@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
+import { unpackShortlistSummaries } from "../src/lib/shortlist-index";
 
 const root = process.cwd();
 const listingsSourcePath = path.join(root, "src", "data", "listings.ts");
@@ -9,6 +10,7 @@ const listingsJsonPath = path.join(root, "data", "listings.json");
 const listingSearchRecordsJsonPath = path.join(root, "data", "listing-search-records.json");
 const listingSearchIndexJsonPath = path.join(root, "data", "listing-search-index.json");
 const shortlistSummariesJsonPath = path.join(root, "data", "shortlist-summaries.json");
+const shortlistIndexJsonPath = path.join(root, "data", "shortlist-index.json");
 
 assert.ok(fs.existsSync(listingsJsonPath), "listing records should be stored in data/listings.json");
 assert.ok(
@@ -23,6 +25,7 @@ assert.ok(
   fs.existsSync(shortlistSummariesJsonPath),
   "compact compare shortlist summaries should be stored in data/shortlist-summaries.json"
 );
+assert.ok(fs.existsSync(shortlistIndexJsonPath), "compare summaries should have a generated packed index");
 
 const listingsSource = fs.readFileSync(listingsSourcePath, "utf8");
 assert.ok(
@@ -76,6 +79,18 @@ assert.ok(
 assert.ok(
   shortlistSummaries.every((summary) => !("description" in summary) && !("images" in summary) && !("details" in summary)),
   "compare shortlist summaries should not carry full search-card fields"
+);
+
+const packedShortlistIndex = JSON.parse(fs.readFileSync(shortlistIndexJsonPath, "utf8"));
+const unpackedShortlistSummaries = JSON.parse(JSON.stringify(unpackShortlistSummaries(packedShortlistIndex)));
+assert.deepEqual(
+  unpackedShortlistSummaries,
+  shortlistSummaries,
+  "packed shortlist summaries should decode without losing compare fields"
+);
+assert.ok(
+  fs.statSync(shortlistIndexJsonPath).size < fs.statSync(shortlistSummariesJsonPath).size / 2,
+  "packed shortlist index should remain less than half the verbose summary size"
 );
 
 const listingImagesBySlug = new Map(listings.map((listing) => [listing.slug, listing.images.slice(0, 3)]));

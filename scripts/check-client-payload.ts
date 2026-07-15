@@ -9,6 +9,9 @@ type AppBuildManifest = {
 const root = process.cwd();
 const nextDir = path.join(root, ".next");
 const manifestPath = path.join(nextDir, "app-build-manifest.json");
+const MAX_INITIAL_ROUTE_JS_BYTES = 650_000;
+const MAX_INITIAL_CHUNK_BYTES = 250_000;
+const MAX_ASYNC_CHUNK_BYTES = 3_000_000;
 const routeBudgets = [
   "/restaurants/page",
   "/areas/[area]/page",
@@ -20,15 +23,22 @@ const routeBudgets = [
   "/offerings/[offering]/page",
   "/services/[service]/page",
   "/types/[type]/page"
-];
-const MAX_INITIAL_ROUTE_JS_BYTES = 650_000;
-const MAX_INITIAL_CHUNK_BYTES = 250_000;
-const MAX_ASYNC_CHUNK_BYTES = 3_000_000;
+].map((route) => ({
+  route,
+  maxTotalBytes: MAX_INITIAL_ROUTE_JS_BYTES,
+  maxChunkBytes: MAX_INITIAL_CHUNK_BYTES
+}));
+
+routeBudgets.push({
+  route: "/compare/page",
+  maxTotalBytes: 1_300_000,
+  maxChunkBytes: 900_000
+});
 
 assert.ok(fs.existsSync(manifestPath), "Run a production build before checking client payload budgets.");
 
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as AppBuildManifest;
-const results = routeBudgets.map((route) => {
+const results = routeBudgets.map(({ route, maxTotalBytes, maxChunkBytes }) => {
   const assets = manifest.pages[route];
   assert.ok(assets, `Missing ${route} from the app build manifest.`);
 
@@ -44,12 +54,12 @@ const results = routeBudgets.map((route) => {
   });
 
   assert.ok(
-    totalBytes <= MAX_INITIAL_ROUTE_JS_BYTES,
-    `${route} initial JavaScript is ${formatBytes(totalBytes)}; budget is ${formatBytes(MAX_INITIAL_ROUTE_JS_BYTES)}.`
+    totalBytes <= maxTotalBytes,
+    `${route} initial JavaScript is ${formatBytes(totalBytes)}; budget is ${formatBytes(maxTotalBytes)}.`
   );
   assert.ok(
-    largest.bytes <= MAX_INITIAL_CHUNK_BYTES,
-    `${route} includes ${largest.asset} at ${formatBytes(largest.bytes)}; per-chunk budget is ${formatBytes(MAX_INITIAL_CHUNK_BYTES)}.`
+    largest.bytes <= maxChunkBytes,
+    `${route} includes ${largest.asset} at ${formatBytes(largest.bytes)}; per-chunk budget is ${formatBytes(maxChunkBytes)}.`
   );
 
   return { route, totalBytes, largestChunkBytes: largest.bytes };

@@ -18,6 +18,7 @@ const directorySidebarPath = path.join(process.cwd(), "src", "components", "Dire
 const homepageSeoLinksPath = path.join(process.cwd(), "src", "components", "HomepageSeoLinks.tsx");
 const geoAreaPath = path.join(process.cwd(), "src", "lib", "geo-area.ts");
 const shortlistSummariesPath = path.join(process.cwd(), "src", "data", "shortlist-summaries.ts");
+const shortlistIndexJsonPath = path.join(process.cwd(), "data", "shortlist-index.json");
 const globalsCssPath = path.join(process.cwd(), "src", "app", "globals.css");
 const listingMapPath = path.join(process.cwd(), "src", "components", "ListingMap.tsx");
 const supabaseBrowserPath = path.join(process.cwd(), "src", "lib", "supabase-browser.ts");
@@ -50,6 +51,7 @@ assert.ok(
   fs.existsSync(listingSearchIndexJsonPath),
   "browser-facing search records should have a generated packed index"
 );
+assert.ok(fs.existsSync(shortlistIndexJsonPath), "compare summaries should have a generated packed index");
 
 const listingsSource = fs.readFileSync(listingsSourcePath, "utf8");
 const listingsSourceSize = fs.statSync(listingsSourcePath).size;

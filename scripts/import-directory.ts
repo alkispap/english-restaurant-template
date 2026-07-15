@@ -8,6 +8,7 @@ import {
   renderListingSearchIndexJsonFile,
   renderListingSearchRecordsJsonFile,
   renderListingFilterCountsJsonFile,
+  renderShortlistIndexJsonFile,
   renderShortlistSummariesJsonFile,
   renderMissingCategoryReview,
   renderReport,
@@ -28,6 +29,7 @@ const listingSearchRecordsJsonPath = path.resolve(root, "data/listing-search-rec
 const listingSearchIndexJsonPath = path.resolve(root, "data/listing-search-index.json");
 const listingFilterCountsJsonPath = path.resolve(root, "data/listing-filter-counts.json");
 const shortlistSummariesJsonPath = path.resolve(root, "data/shortlist-summaries.json");
+const shortlistIndexJsonPath = path.resolve(root, "data/shortlist-index.json");
 const reportPath = path.resolve(root, "data/import-report.md");
 const categoryReviewPath = path.resolve(root, "data/category-inference-review.md");
 
@@ -76,6 +78,11 @@ if (dryRun) {
     sampleSize ? renderShortlistSummariesJsonFile(importedListings) : result.shortlistSummariesJsonFile,
     "utf8"
   );
+  fs.writeFileSync(
+    shortlistIndexJsonPath,
+    sampleSize ? renderShortlistIndexJsonFile(importedListings) : result.shortlistIndexJsonFile,
+    "utf8"
+  );
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
   fs.writeFileSync(reportPath, report, "utf8");
   fs.writeFileSync(categoryReviewPath, renderMissingCategoryReview(result.categoryReview), "utf8");
@@ -86,6 +93,7 @@ if (dryRun) {
   console.log(`Updated ${path.relative(root, listingSearchIndexJsonPath)}`);
   console.log(`Updated ${path.relative(root, listingFilterCountsJsonPath)}`);
   console.log(`Updated ${path.relative(root, shortlistSummariesJsonPath)}`);
+  console.log(`Updated ${path.relative(root, shortlistIndexJsonPath)}`);
   console.log(`Wrote ${path.relative(root, reportPath)}`);
   console.log(`Wrote ${path.relative(root, categoryReviewPath)}`);
 }

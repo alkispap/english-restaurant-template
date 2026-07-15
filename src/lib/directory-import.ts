@@ -4,6 +4,7 @@ import { importRoleLabels, importRoleOptions, type ImportFieldRole } from "@/lib
 import { cleanListingUrl } from "@/lib/listing-links";
 import { buildListingDescriptions } from "@/lib/listing-description";
 import { packListingSearchRecords } from "@/lib/listing-search-index";
+import { packShortlistSummaries } from "@/lib/shortlist-index";
 import { getAllShortlistListingSummaries } from "@/lib/shortlist";
 import type { ListingSearchRecord } from "@/data/listing-search-records";
 
@@ -147,6 +148,7 @@ export type ImportResult = {
   listingSearchIndexJsonFile: string;
   listingFilterCountsJsonFile: string;
   shortlistSummariesJsonFile: string;
+  shortlistIndexJsonFile: string;
   sourceFile: string;
   rows: Row[];
 };
@@ -284,6 +286,7 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     listingSearchIndexJsonFile: renderListingSearchIndexJsonFile(listings),
     listingFilterCountsJsonFile: renderListingFilterCountsJsonFile(listings),
     shortlistSummariesJsonFile: renderShortlistSummariesJsonFile(listings),
+    shortlistIndexJsonFile: renderShortlistIndexJsonFile(listings),
     sourceFile,
     rows
   };
@@ -1471,6 +1474,10 @@ export function renderListingFilterCountsJsonFile(items: ImportedListing[]) {
 
 export function renderShortlistSummariesJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(getAllShortlistListingSummaries(items))}\n`;
+}
+
+export function renderShortlistIndexJsonFile(items: ImportedListing[]) {
+  return `${JSON.stringify(packShortlistSummaries(getAllShortlistListingSummaries(items)))}\n`;
 }
 
 function toListingSearchRecord(listing: ImportedListing) {
