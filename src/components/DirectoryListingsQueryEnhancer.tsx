@@ -12,7 +12,7 @@ type DirectoryListingsBrowserModule = typeof import("@/lib/directory-listings-br
 type DirectoryListingsShellModule = typeof import("@/components/DirectoryListingsInteractiveShell");
 
 type DirectoryListingsQueryEnhancerProps = {
-  initialModel: DirectoryListingsModel;
+  initialPage: Pick<DirectoryListingsModel, "basePath" | "title" | "description">;
 };
 
 let directoryListingsClientModulesPromise: Promise<[DirectoryListingsBrowserModule, DirectoryListingsShellModule]> | null = null;
@@ -25,7 +25,7 @@ function loadDirectoryListingsClientModules() {
   return directoryListingsClientModulesPromise;
 }
 
-export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListingsQueryEnhancerProps) {
+export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListingsQueryEnhancerProps) {
   const [activeModel, setActiveModel] = useState<DirectoryListingsModel | null>(null);
   const [InteractiveShell, setInteractiveShell] = useState<DirectoryListingsInteractiveShellComponent | null>(null);
 
@@ -64,9 +64,9 @@ export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListin
       setActiveModel(
         buildBrowserDirectoryListingsModel({
           searchParams: currentParams,
-          basePath: initialModel.basePath,
-          title: initialModel.title,
-          description: initialModel.description
+          basePath: initialPage.basePath,
+          title: initialPage.title,
+          description: initialPage.description
         })
       );
     }
@@ -109,7 +109,7 @@ export function DirectoryListingsQueryEnhancer({ initialModel }: DirectoryListin
       window.removeEventListener("popstate", scheduleUpdateFromCurrentUrl);
       window.removeEventListener("directory-url-change", scheduleUpdateFromCurrentUrl);
     };
-  }, [initialModel.basePath, initialModel.description, initialModel.title]);
+  }, [initialPage.basePath, initialPage.description, initialPage.title]);
 
   if (!activeModel || !InteractiveShell) return null;
 

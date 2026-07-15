@@ -31,15 +31,19 @@ function homepageHeroImageIsLcpFriendly() {
 }
 
 function cleanHomepageDoesNotHydrateDirectoryModel() {
-  const pageSource = source("src", "components", "DirectoryListingsPage.tsx");
-  const enhancerStart = pageSource.indexOf("<DirectoryListingsQueryEnhancer");
-  assert.ok(enhancerStart >= 0, "directory listings page should still support query enhancement");
+  const homepageSource = source("src", "app", "page.tsx");
+  const listingsPageSource = source("src", "components", "DirectoryListingsPage.tsx");
 
-  const enhancerMarkup = pageSource.slice(Math.max(0, enhancerStart - 300), enhancerStart + 300);
-  assert.match(
-    enhancerMarkup,
-    /model\.searchQuery/,
-    "query enhancer should only mount when a query state exists, not on the clean homepage"
+  assert.match(homepageSource, /<DirectoryLandingPage \/>/, "homepage should use its static landing-page renderer");
+  assert.doesNotMatch(
+    homepageSource,
+    /DirectoryListingsPage|DirectoryListingsQueryEnhancer/,
+    "clean homepage should not mount or hydrate directory query results"
+  );
+  assert.doesNotMatch(
+    listingsPageSource,
+    /initialModel=\{model\}/,
+    "directory query enhancer should not serialize the full listings model across the client boundary"
   );
 }
 

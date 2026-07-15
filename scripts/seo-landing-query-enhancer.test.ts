@@ -105,6 +105,16 @@ function seoLandingQueryEnhancerMountsClientResultsIntoDedicatedRoot() {
     /seo-landing-client-results-root/,
     "SEO landing query enhancer should target the dedicated client results root"
   );
+  assert.match(
+    source,
+    /serverResults\.style\.display = activeModel !== null \? "none" : ""/,
+    "SEO landing query enhancer should explicitly hide the grid server region while client results are active"
+  );
+  assert.match(
+    source,
+    /serverResults\.style\.display = ""/,
+    "SEO landing query enhancer should restore the server region display state during cleanup"
+  );
 }
 
 function browserSeoLandingBuilderUsesCurrentQueryParams() {

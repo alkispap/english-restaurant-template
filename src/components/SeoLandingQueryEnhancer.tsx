@@ -49,10 +49,16 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
 
   useEffect(() => {
     const serverResults = document.getElementById("seo-landing-server-results");
-    if (serverResults) serverResults.hidden = activeModel !== null;
+    if (serverResults) {
+      serverResults.hidden = activeModel !== null;
+      serverResults.style.display = activeModel !== null ? "none" : "";
+    }
 
     return () => {
-      if (serverResults) serverResults.hidden = false;
+      if (serverResults) {
+        serverResults.hidden = false;
+        serverResults.style.display = "";
+      }
     };
   }, [activeModel]);
 
