@@ -28,6 +28,17 @@ Each generated listing receives:
 
 The source ID uses the upstream deduplication ID when available. If a generic source has no stable ID, the importer records a transparent row locator such as `source.csv#row=42`.
 
+## Historical datasets without a known import timestamp
+
+Do not invent `importedAt` for a dataset created before provenance tracking existed. A historical backfill may instead record:
+
+- `firstRecordedAt`: the earliest durable timestamp supported by version-control history
+- `recordDateBasis: "first-committed"`
+- `sourceCommit`: the full commit that first recorded the canonical dataset
+- `sourceSnapshotSha256`: the SHA-256 of the exact source snapshot
+
+This establishes lineage, not freshness or verification. The record must remain `unverified` until a separate source/editor verification event supplies `lastVerifiedAt`.
+
 There is intentionally no import option that marks records verified. A later source/editor verification workflow must set `source-verified` or `editor-verified` together with a real `lastVerifiedAt` value.
 
 ## Current dataset

@@ -811,11 +811,37 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5C confirmed-duplicate implementation is complete. One evidence-blocked Wimbledon group remains intentionally unresolved and visible in the launch gate.
 
+### 2026-07-15 - Phase 5D: backfill historical provenance without inventing dates
+
+**Evidence decision**
+
+- The exact source CSV has been byte-identical in Git since the initial repository commit.
+- The import report names that file and was updated in the same 1 July commit that first added the 3,187-record canonical JSON.
+- After the explicit Phase 5C entity rules, the source reproducibly generates 3,186 records and matches all 3,186 current canonical listings.
+- The original extraction/import-command time and provider URL are not durably known. Filesystem timestamps were rejected as provenance evidence.
+
+**Implementation**
+
+- Added a historical provenance path using `firstRecordedAt`, `recordDateBasis: first-committed`, full source commit, and source SHA-256 instead of a fabricated `importedAt`.
+- Added a dry-run-by-default backfill script that validates the immutable source hash, requires a complete source-to-canonical match, and refuses to overwrite existing provenance.
+- Backfilled all 3,186 records with exact source filename and per-record source ID while retaining `verificationStatus: unverified` and no `lastVerifiedAt`.
+- Updated the operational-quality gate to accept either a valid actual import timestamp or a fully supported historical first-commit record.
+- Added integrity tests for source hash, field consistency, full coverage, the no-invented-date rule, and the no-false-verification rule.
+
+**Measured result**
+
+- Provenance coverage: 0/3,186 -> 3,186/3,186.
+- High issue classes: 3 -> 2; `missing_provenance` is resolved.
+- Listing count and public search/shortlist counts remain 3,186.
+- Launch verdict remains `not_ready` because images and the unresolved Wimbledon group remain high severity.
+
+**Status:** Phase 5D is locally implemented. Historical lineage is complete; record freshness/verification remains a separate workflow.
+
 ## Exact next checkpoint
 
-1. Confirm the Wimbledon business's current trading name, premises number, domain, and authoritative identifier before merging either record.
-2. Establish the current-data provenance backfill only after the source/provider identity and defensible extraction/import date are confirmed.
-3. Define the image licensing/provenance policy and a high-value enrichment priority before changing thousands of image-deficient records.
+1. Define the image licensing/provenance policy and a high-value enrichment priority before changing thousands of image-deficient records.
+2. Confirm the Wimbledon business's current trading name, premises number, domain, and authoritative identifier before merging either record.
+3. Add a dated verification workflow for selected high-value records; historical provenance must not be treated as freshness.
 4. Continue category, hours, rating/review, contact-action, and external-link remediation by measured priority.
 5. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
 
