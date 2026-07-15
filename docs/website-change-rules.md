@@ -146,13 +146,14 @@ Check:
 
 Do:
 
-- Treat Googleusercontent restaurant images as allowed for now.
-- Keep the Royal Nawaab image warning documented as a known limitation.
-- Decide on a full local-image strategy before replacing images widely.
+- Treat Googleusercontent origin as traceability only, not reuse permission.
+- Publish listing media only when `data/listing-media-provenance.json` contains adequate rights evidence and any required licence/attribution fields.
+- Keep unknown-rights assets quarantined and use the designed fallback; do not restore URLs directly in listing JSON.
+- Decide on local hosting/optimization only after the evidence permits downloading, modification, and hosting.
 
 Do not:
 
-- Fix image strategy piecemeal without deciding whether images should become local assets.
+- Bypass `npm run enrich:outscraper-media` or manually add unregistered media to listing JSON.
 - Assume Google image cache/compression can be controlled from this repo.
 
 Check:

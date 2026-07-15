@@ -837,9 +837,48 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5D is locally implemented. Historical lineage is complete; record freshness/verification remains a separate workflow.
 
+### 2026-07-16 - Phase 5E: enforce listing-media rights and priority enrichment
+
+**Confirmed findings**
+
+- Canonical data exposed 59 gallery URLs across 24 listings and 2,877 remote logos; no menu images remained.
+- All 2,936 unique URLs were HTTPS and traceable to the immutable historical CSV, but none carried licence, permission, creator, or attribution evidence.
+- 2,935 URLs used Googleusercontent domains; one used a restaurant-site favicon.
+- The enrichment command wrote by default, contained two laptop-specific input paths, accepted media without rights metadata, and synchronized only the verbose search records—not the packed browser index.
+
+**Implementation**
+
+- Added a server-side registry separating source lineage, listing usage, publication state, rights status, evidence, licence, attribution, and validation date.
+- Backfilled all 2,936 historical assets as source-traced, rights-unknown, and quarantined.
+- Removed 59 gallery URLs and 2,877 logos from canonical/public search data while preserving the URLs in the registry.
+- Added `npm run audit:media` with critical unregistered-media, high public-rights, top-100 launch coverage, long-tail backlog, orphan-registry, domain, and deterministic priority checks.
+- Made media enrichment read-only by default, removed machine-specific paths, required explicit source/rights evidence for writes, and synchronized both browser search representations.
+- Added a dry-run-by-default quarantine command and integrity tests preventing unapproved registry assets from appearing in public listing data.
+- Reclassified general missing-image coverage as medium; the dedicated top-100 rights-approved cohort is the high launch gate.
+
+**Measured result**
+
+- Public unregistered/unapproved media URLs: 2,936 -> 0.
+- Traceable quarantined assets: 0 -> 2,936.
+- Launch-priority approved gallery coverage: 0/100 (high blocker).
+- Long-tail fallback backlog: 3,086 (medium).
+- Listing audit: 0 critical, 1 high, 5 medium; Wimbledon is the remaining high listing-identity issue.
+- No images were downloaded, approved, relicensed, or published.
+
+**Verification**
+
+- Full automated suite passed: 146/146 tests.
+- Full lint and TypeScript checks passed.
+- Production build passed: all 26 static pages generated successfully.
+- Client-payload audit passed for every guarded route and chunk budget.
+- Media quarantine was idempotent on a second dry run, and the unsafe enrichment write path refused to run without source and rights evidence.
+- `git diff --check` passed before staging.
+
+**Status:** Phase 5E policy and enforcement are implemented. Production remains not ready until the top-100 media cohort and Wimbledon identity are resolved.
+
 ## Exact next checkpoint
 
-1. Define the image licensing/provenance policy and a high-value enrichment priority before changing thousands of image-deficient records.
+1. Acquire and document rights-cleared media for the top-100 launch cohort, beginning with the first 25 in the media audit.
 2. Confirm the Wimbledon business's current trading name, premises number, domain, and authoritative identifier before merging either record.
 3. Add a dated verification workflow for selected high-value records; historical provenance must not be treated as freshness.
 4. Continue category, hours, rating/review, contact-action, and external-link remediation by measured priority.
