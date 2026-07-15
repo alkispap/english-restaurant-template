@@ -62,6 +62,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `dbc62ee` | Phase 4E guarded Cloudflare production release workflow |
 | `2b15e68` | Phase 4E verification record |
 | `de980fc` | Phase 5A listing operational-quality model and launch gate |
+| `7fc514d` | Phase 5A measured baseline and verification record |
+| `e27e4c6` | Phase 5B provenance-aware directory import pipeline |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -73,7 +75,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | In progress | Measured baseline and launch gate complete; provenance, duplicate review, images, and completeness remediation remain |
+| 5. Listing quality/operations | In progress | Launch gate and future-import provenance complete; current-data backfill, duplicate review, images, and completeness remediation remain |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log
@@ -750,12 +752,40 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5A is complete. The audit framework is enforceable and the dataset's launch blockers are quantified; Phase 5 remains in progress for provenance, duplicate resolution, images, and record remediation.
 
+### 2026-07-15 - Phase 5B: capture truthful provenance during directory imports
+
+**Confirmed pipeline gap:** The importer retained a Google place ID for deduplication but discarded dataset identity and import time when generating canonical listings. Re-running an import would also regenerate `src/data/listings.ts` without the new provenance type. There was no safe distinction between imported/unverified data and a later verified record.
+
+**Implementation**
+
+- Every newly imported listing now receives a required provenance object with source name, source ID, optional public source URL, normalized import timestamp, and forced `unverified` status.
+- Source name defaults to the CSV filename and import time defaults to the actual command time.
+- Upstream deduplication IDs are used as source IDs; generic rows without an ID receive a transparent `source-name#row=N` locator.
+- Optional `--source-name=`, `--source-url=`, and `--imported-at=` CLI inputs are validated and exposed in the import report.
+- Local/file URL provenance and invalid timestamps fail before output generation.
+- No import option can claim source/editor verification. Those statuses require a separate verified workflow and a valid `lastVerifiedAt` value.
+- Updated the generated listing TypeScript template so future imports preserve the provenance model.
+- Tightened the Phase 5A quality gate to require a source ID, valid import date, valid optional source URL, and a valid last-verified date for any verified status.
+- Added `docs/directory-import-provenance.md` with the safe dry-run and import contract.
+
+**Verification**
+
+- TypeScript, focused ESLint, importer tests, and listing-quality tests: passed.
+- Full source CSV dry run: 3,188 rows produced 3,187 listings, merged one duplicate, wrote no files, and reported the selected source, normalized timestamp, and `unverified` status.
+- Operational audit of that preview import: provenance coverage 3,187/3,187 (100%). The remaining not-ready findings were images and the two candidate duplicate-location groups; no provenance finding remained.
+- Full suite: 142/142 passed in 2m 5.51s.
+- Full ESLint: passed.
+- The current canonical dataset was deliberately not re-imported or backfilled because historical source/provider and import/verification evidence must not be guessed.
+- `git diff --check`: passed.
+
+**Status:** Phase 5B import-pipeline implementation is complete. Current-data provenance remains a deliberate open backfill decision, and no record is falsely marked verified.
+
 ## Exact next checkpoint
 
-1. Start Phase 5B by adding provenance to the import/output pipeline without inventing verification claims for the existing dataset.
-2. Establish an explicit backfill decision for the current source/provider and extraction/import dates, then make provenance coverage measurable per record.
-3. Review the two candidate duplicate-location groups and add documented exceptions or canonical redirects as appropriate.
-4. Define the image licensing/provenance policy and a high-value enrichment priority before changing 3,163 image-deficient records.
+1. Start Phase 5C by reviewing the two candidate duplicate-location groups against their source rows and current page data; merge only confirmed duplicates and document legitimate exceptions.
+2. Establish the current-data provenance backfill only after the source/provider identity and defensible extraction/import date are confirmed.
+3. Define the image licensing/provenance policy and a high-value enrichment priority before changing thousands of image-deficient records.
+4. Continue category, hours, rating/review, contact-action, and external-link remediation by measured priority.
 5. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
 
 ## Template for future entries
