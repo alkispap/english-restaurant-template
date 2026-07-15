@@ -11,9 +11,9 @@ export const siteConfig = {
   listingBasePath: "restaurants",
   heroEyebrow: "London Indian restaurant directory",
   heroImage:
-    "/images/homepage/indian-restaurants-london-hero.webp",
+    "/images/homepage/indian-restaurants-london-hero-bright-v2.webp",
   heroImageMobile:
-    "/images/homepage/indian-restaurants-london-hero-mobile.webp",
+    "/images/homepage/indian-restaurants-london-hero-bright-v2-mobile.webp",
   heroImageAlt: "Indian family sharing curry and naan in a London restaurant with Big Ben outside",
   heroCopy:
     "Find Indian restaurants across London by area, cuisine, service options, ratings, transport links, and dining style.",
