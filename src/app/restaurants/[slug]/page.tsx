@@ -404,6 +404,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
           {hasTransportSection ? <TransportSection listing={listing} heading={headings.transport} /> : null}
           {hasNearbySection ? <NearbySection listing={listing} heading={headings.nearby} /> : null}
           <ListingComments slug={listing.slug} heading={headings.comments} />
+          <div className="rounded-lg border border-line bg-white p-5 shadow-soft">
+            <h2 className="text-lg font-bold text-ink">Is this information incorrect?</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">Prepare a structured correction with a public source so the directory can review it before changing this listing.</p>
+            <Link
+              href={`/suggest-update?restaurant=${encodeURIComponent(listing.name)}&area=${encodeURIComponent(listing.area ?? listing.neighborhood ?? "")}&listing=${encodeURIComponent(listing.slug)}`}
+              className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark"
+            >
+              Suggest an update <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+          </div>
         </article>
 
         {hasContactSection ? (

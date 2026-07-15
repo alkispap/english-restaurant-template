@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "verification-2026-07-15-wimbledon-tandoori-merton-d184af1d280a",
+      "listingSlug": "wimbledon-tandoori-merton",
+      "listingSourceId": "ChIJZUKRbZUJdkgRruAFyYS048Q",
+      "recordedAt": "2026-07-15T22:57:23.976Z",
+      "checkedAt": "2026-07-15T22:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Wimbledon Village business directory - The Village Tandoori",
+          "sourceUrl": "https://wimbledonvillage.com/food-drink/restaurants/the-village-tandoori/",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        },
+        {
+          "sourceName": "London Borough of Merton - All Ratepayers and Property 1 July 2025",
+          "sourceUrl": "https://www.merton.gov.uk/sites/default/files/2025-07/All%20Ratepayers%20and%20Property%201%20July%202025.pdf",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        },
+        {
+          "sourceName": "The Village Tandoori website snapshot returned by public search",
+          "sourceUrl": "https://www.thevillagetandoori.co.uk/home/",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        },
+        {
+          "sourceName": "Previously recorded ordering website - DNS resolution failed",
+          "sourceUrl": "https://thevillagetandoorionline.com/",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "name",
+          "value": "The Village Tandoori",
+          "reason": "Current local-directory and restaurant-site evidence identifies the 28 Ridgway premises as The Village Tandoori, distinct from Wimbledon Tandoori at 26 Ridgway.",
+          "previousValue": "Wimbledon Tandoori",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current Wimbledon Village entry presents the restaurant as operating at 28 Ridgway.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": null,
+          "reason": "The recorded thevillagetandoorionline.com hostname did not resolve during the dated check; no replacement URL passed both identity and live-origin checks.",
+          "previousValue": "https://thevillagetandoorionline.com/",
+          "applied": true
+        }
+      ],
+      "notes": "This is a correction of the 28 Ridgway entity, not a merge with the separate 26 Ridgway Wimbledon Tandoori record. Rating and review totals were not verified by this event."
+    }
+  ]
+}

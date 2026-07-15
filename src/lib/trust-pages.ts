@@ -92,7 +92,7 @@ export const trustPages = [
       },
       {
         heading: "Contact and Update Requests",
-        body: "The current contact and suggest-an-update pages provide guidance but do not contain a form or transmit a message. If a contact form or email workflow is added, the notice must identify what is collected, why it is used, and how long it is retained."
+        body: "The current contact page provides guidance only. The suggest-an-update form prepares correction text in the visitor's browser and does not automatically submit, publish, or retain it. If a corrections email address is configured, choosing to open an email app passes the generated text to the visitor's email provider and the directory mailbox; their retention policies then apply."
       },
       {
         heading: "Third-Party Restaurant Links",
@@ -178,7 +178,7 @@ export const trustPages = [
       },
       {
         heading: "How Restaurant Updates Are Reviewed",
-        body: "Suggested changes should be reviewed before publication so the directory stays useful, factual, and consistent."
+        body: "Suggested changes are evidence requests, not automatic edits. A directory editor should compare the public source, record the fields checked and check date, and either verify the record or retain conflicting evidence for manual review."
       }
     ]
   }

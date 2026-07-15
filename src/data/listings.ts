@@ -29,6 +29,7 @@ export type ListingProvenance = {
   sourceCommit?: string;
   sourceSnapshotSha256?: string;
   lastVerifiedAt?: string;
+  lastVerificationEventId?: string;
   verificationStatus: "unverified" | "source-verified" | "editor-verified";
 };
 

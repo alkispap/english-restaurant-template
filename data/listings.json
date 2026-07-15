@@ -188881,7 +188881,7 @@
     }
   },
   {
-    "name": "Wimbledon Tandoori",
+    "name": "The Village Tandoori",
     "slug": "wimbledon-tandoori-merton",
     "metaTitle": "Wimbledon Tandoori | Wimbledon Village, Wimbledon - London",
     "metaDescription": "Wimbledon Tandoori is an Indian restaurant in Wimbledon, Merton serving Indian food. Details include takeaway, delivery, and dine-in service.",
@@ -188919,7 +188919,6 @@
     "reviewCount": 9,
     "featured": false,
     "contact": {
-      "website": "https://thevillagetandoorionline.com/",
       "phone": "+44 20 8617 3960",
       "googleReviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJZUKRbZUJdkgRruAFyYS048Q&q=*&authuser=0&hl=en&gl=GB"
     },
@@ -189028,8 +189027,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-15T22:55:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-15-wimbledon-tandoori-merton-d184af1d280a"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Sai Restaurant",

@@ -10,11 +10,13 @@ const analyticsSource = read("src/lib/directory-analytics.ts");
 const adsSource = read("src/config/adsterra.ts");
 const contactSource = read("src/app/contact/page.tsx");
 const updateSource = read("src/app/suggest-update/page.tsx");
+const updateFormSource = read("src/components/SuggestUpdateForm.tsx");
 
 assert.doesNotMatch(analyticsSource, /fetch\(|sendBeacon|XMLHttpRequest/, "current analytics should not transmit events externally");
 assert.match(adsSource, /adsterraAdsEnabled\s*=\s*false/, "advertising network loading should remain disabled");
 assert.doesNotMatch(contactSource, /<form|fetch\(/, "contact page should not claim to submit data when it only provides guidance");
-assert.doesNotMatch(updateSource, /<form|fetch\(/, "update page should not claim to submit data when it only provides guidance");
+assert.doesNotMatch(`${updateSource}\n${updateFormSource}`, /fetch\(|sendBeacon|XMLHttpRequest/, "update request builder should not transmit data from the website");
+assert.match(updateFormSource, /does not automatically submit, store, or publish/, "update form should disclose its local-only behavior");
 
 [
   /does not send analytics events to an external analytics provider/,
@@ -24,7 +26,8 @@ assert.doesNotMatch(updateSource, /<form|fetch\(/, "update page should not claim
   /Coordinates are used in the browser/,
   /are not stored or sent to this directory/,
   /Account synchronisation is currently disabled/,
-  /contact and suggest-an-update pages provide guidance but do not contain a form/,
+  /suggest-an-update form prepares correction text in the visitor's browser/,
+  /does not automatically submit, publish, or retain it/,
   /advertising network loading is currently disabled/,
   /consent controls required for cookies/
 ].forEach((pattern) => assert.match(privacyText, pattern, `privacy policy should disclose ${pattern}`));

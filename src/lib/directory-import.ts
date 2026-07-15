@@ -83,7 +83,9 @@ export type ImportedListing = {
     recordDateBasis?: "first-committed";
     sourceCommit?: string;
     sourceSnapshotSha256?: string;
-    verificationStatus: "unverified";
+    lastVerifiedAt?: string;
+    lastVerificationEventId?: string;
+    verificationStatus: "unverified" | "source-verified" | "editor-verified";
   };
   featured?: boolean;
   contact?: Record<string, unknown>;
@@ -1441,6 +1443,7 @@ export type ListingProvenance = {
   sourceCommit?: string;
   sourceSnapshotSha256?: string;
   lastVerifiedAt?: string;
+  lastVerificationEventId?: string;
   verificationStatus: "unverified" | "source-verified" | "editor-verified";
 };
 
