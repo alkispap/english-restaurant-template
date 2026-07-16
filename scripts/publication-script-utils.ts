@@ -27,6 +27,24 @@ export function writeTextFilesAtomically(files: ReadonlyMap<string, string>) {
   }
 }
 
+export function normalizeTextLineEndings(value: string) {
+  return value.replace(/\r\n?/g, "\n");
+}
+
+export function textContentsEqual(left: string, right: string) {
+  return normalizeTextLineEndings(left) === normalizeTextLineEndings(right);
+}
+
+export function writeTextFileIfChanged(filePath: string, contents: string) {
+  if (fs.existsSync(filePath) && textContentsEqual(fs.readFileSync(filePath, "utf8"), contents)) {
+    return false;
+  }
+
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, contents, "utf8");
+  return true;
+}
+
 export function jsonFile(value: unknown) {
   return `${JSON.stringify(value, null, 2)}\n`;
 }

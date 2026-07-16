@@ -8,6 +8,7 @@ import { renderPublishedDirectoryDataFiles, type ImportedListing } from "../src/
 import { unpackListingSearchRecords, type PackedListingSearchIndex } from "../src/lib/listing-search-index";
 import { unpackShortlistSummaries, type PackedShortlistIndex } from "../src/lib/shortlist-index";
 import { confirmedListingEntityResolutions } from "../src/data/listing-entity-resolutions";
+import { textContentsEqual } from "./publication-script-utils";
 
 const dataDirectory = path.join(process.cwd(), "data");
 const registry = readJson<ListingPublicationRegistry>(path.join(dataDirectory, "listing-publication-states.json"));
@@ -26,7 +27,9 @@ const expectedFiles = new Map([
   ["shortlist-summaries.json", rendered.shortlistSummariesJsonFile],
   ["shortlist-index.json", rendered.shortlistIndexJsonFile]
 ]);
-const derivativeIntegrityIssues = [...expectedFiles].filter(([filename, contents]) => fs.readFileSync(path.join(dataDirectory, filename), "utf8") !== contents).map(([filename]) => filename);
+const derivativeIntegrityIssues = [...expectedFiles]
+  .filter(([filename, contents]) => !textContentsEqual(fs.readFileSync(path.join(dataDirectory, filename), "utf8"), contents))
+  .map(([filename]) => filename);
 const report = auditListingPublicationQuality(listings, registry, ledger, {
   verificationLedger,
   entityResolutionIds: new Set(confirmedListingEntityResolutions.map((resolution) => resolution.id)),
