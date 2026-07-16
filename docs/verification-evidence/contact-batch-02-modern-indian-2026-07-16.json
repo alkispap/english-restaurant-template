@@ -1,0 +1,29 @@
+{
+  "listingSlug": "modern-indian",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Farzi London official contact page",
+      "sourceUrl": "https://farzilondon.com/contact",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "Farzi London official website",
+      "sourceUrl": "https://farzilondon.com/",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The exact 8 Haymarket premises is currently and explicitly operated by Farzi London, which already has a separate canonical directory record. No source corroborates a business whose customer-facing name is Modern Indian or proves that the imported place ID is an alias of Farzi. Do not copy Farzi contact details, merge records, redirect, or claim closure without explicit entity evidence. Hold this record pending identity resolution."
+}

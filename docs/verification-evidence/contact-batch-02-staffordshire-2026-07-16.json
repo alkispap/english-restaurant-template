@@ -1,0 +1,29 @@
+{
+  "listingSlug": "staffordshire",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Just Eat official terms and company address",
+      "sourceUrl": "https://www.just-eat.co.uk/info/terms-and-conditions",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS current EC4M 7RF premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=EC4M%207RF&pageSize=100",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "2 Fleet Place is the official Just Eat registered office, and current FSA records identify Fika Catering at Just Eat and Just Eat for Business at the premises. No source identifies a public Indian restaurant named Staffordshire. The name may be an import artefact, internal catering label, or invalid map entity, but current evidence does not establish which. Hold pending scope and identity evidence; do not attach Just Eat corporate contact details."
+}

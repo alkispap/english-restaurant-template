@@ -1,0 +1,21 @@
+{
+  "listingSlug": "taj",
+  "expectedSourceId": "ChIJ41FeQgCr2EcR6Nx-Xt9TAAk",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:23:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-taj-2e89d5d42847"
+    }
+  ],
+  "notes": "The imported record has no street number, current postcode evidence identifies caring premises, and a different Taj elsewhere in Bromley cannot be assumed to be a successor. Withhold pending exact premises and entity evidence."
+}

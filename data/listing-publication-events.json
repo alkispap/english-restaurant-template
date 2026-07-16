@@ -322,6 +322,144 @@
         }
       ],
       "notes": "The company and premises evidence do not establish that the Mile End restaurant still operates or identify a current successor/contact. Hold it without inferring permanent closure from the registered-office change or source absence."
+    },
+    {
+      "id": "publication-2026-07-16-modern-indian-cd39aec83b57",
+      "listingSlug": "modern-indian",
+      "listingSourceId": "ChIJcconfAAFdkgRD1hcO4PoaA8",
+      "recordedAt": "2026-07-16T09:24:50.327Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-modern-indian-75c0acddf997"
+        }
+      ],
+      "notes": "Farzi London currently and explicitly occupies 8 Haymarket and already has a separate canonical record. No source corroborates Modern Indian as a customer-facing business or proves it is a Farzi alias. Withhold this record from discovery until explicit entity evidence supports correction, merge, exclusion, or publication."
+    },
+    {
+      "id": "publication-2026-07-16-spice-garden-10441b2cd987",
+      "listingSlug": "spice-garden",
+      "listingSourceId": "ChIJ5RHe8JCp2EcRzEJIX5GXwXY",
+      "recordedAt": "2026-07-16T09:24:57.895Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-spice-garden-ed30d7abfcf9"
+        }
+      ],
+      "notes": "Current and historical official premises evidence identifies Beijing at 127/129 Chinbrook Road, while no source corroborates Spice Garden there. Do not infer closure or attach Beijing details; withhold pending identity evidence."
+    },
+    {
+      "id": "publication-2026-07-16-staffordshire-638cae5e87b4",
+      "listingSlug": "staffordshire",
+      "listingSourceId": "ChIJS7-SQAAbdkgRwJcA_qnpt8k",
+      "recordedAt": "2026-07-16T09:25:08.363Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "scope-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-staffordshire-0d2008cbac49"
+        }
+      ],
+      "notes": "The address is Just Eat's registered office and current FSA records identify workplace/corporate food operations, not a public restaurant named Staffordshire. Withhold until the imported identity and public-directory scope can be established."
+    },
+    {
+      "id": "publication-2026-07-16-sucess-worker-55e71d5a2795",
+      "listingSlug": "sucess-worker",
+      "listingSourceId": "ChIJBQt1YxkPdkgREqTLaIkJL6k",
+      "recordedAt": "2026-07-16T09:25:18.113Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-sucess-worker-6d0f0654f1f8"
+        }
+      ],
+      "notes": "The record has a misspelled generic name and no numbered address. No primary or authoritative source corroborates the entity among the many current businesses in W6 0RA. Withhold until exact premises and identity evidence exists."
+    },
+    {
+      "id": "publication-2026-07-16-taj-06e8943bfc25",
+      "listingSlug": "taj",
+      "listingSourceId": "ChIJ41FeQgCr2EcR6Nx-Xt9TAAk",
+      "recordedAt": "2026-07-16T09:25:29.649Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-taj-2e89d5d42847"
+        }
+      ],
+      "notes": "The imported record has no street number, current postcode evidence identifies caring premises, and a different Taj elsewhere in Bromley cannot be assumed to be a successor. Withhold pending exact premises and entity evidence."
+    },
+    {
+      "id": "publication-2026-07-16-thanjavur-food-lounge-ltd-0fdb80312403",
+      "listingSlug": "thanjavur-food-lounge-ltd",
+      "listingSourceId": "ChIJf4whtp4HdkgRZ1Q2X7e-zr0",
+      "recordedAt": "2026-07-16T09:25:39.020Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "operating-status-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-thanjavur-food-lounge-ltd-d39734159bac"
+        }
+      ],
+      "notes": "An active company registration exists, but current customer-facing operation, unit occupancy, contact details and hours are not corroborated; the FSA identifies a supermarket at the exact address. Withhold until direct operating evidence is available."
     }
   ]
 }

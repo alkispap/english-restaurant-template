@@ -1,0 +1,29 @@
+{
+  "listingSlug": "thanjavur-food-lounge-ltd",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Companies House company record",
+      "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/16418113",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS current CR0 2XP premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=CR0%202XP&pageSize=100",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Companies House confirms an active takeaway company registered at 70 Windmill Road, but company registration does not prove current customer-facing operation. Current FSA data identifies Food Land Supermarket at the exact address and does not identify Thanjavur Food Lounge. Search results provide no first-party contact, menu, order page, or unit evidence. Hold pending operating and premises evidence; do not copy the supermarket's details or infer closure."
+}

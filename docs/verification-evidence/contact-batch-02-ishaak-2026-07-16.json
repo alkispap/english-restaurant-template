@@ -1,0 +1,57 @@
+{
+  "listingSlug": "ishaak",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Ishaak official contact page",
+      "sourceUrl": "https://ishaak.co.uk/contact-us/",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Ishaak record",
+      "sourceUrl": "https://ratings.food.gov.uk/business/1920234/ishaak-bromley",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "address",
+      "value": "217 Southborough Lane",
+      "reason": "The official contact page and current FSA record both publish the unabbreviated street address."
+    },
+    {
+      "field": "fullAddress",
+      "value": "217 Southborough Lane, Bickley, Bromley, BR2 8AT",
+      "reason": "The official contact page identifies Bickley and Bromley, and the FSA corroborates the street and postcode."
+    },
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The live first-party site accepts current collection and delivery orders and publishes current contact details."
+    },
+    {
+      "field": "contact.website",
+      "value": "https://ishaak.co.uk/",
+      "reason": "This is the live official website for the exact business and premises."
+    },
+    {
+      "field": "contact.phone",
+      "value": "+44 20 4635 3356",
+      "reason": "The official contact page publishes this number for the exact location."
+    }
+  ],
+  "notes": "Ishaak is a current fine Indian takeaway at the imported premises. The official site and a March 2026 FSA inspection corroborate identity and location. No customer rating was copied from the FSA hygiene record, and no weekly hours were added because the inspected pages did not publish a complete permanent seven-day schedule."
+}

@@ -212486,8 +212486,8 @@
     "neighborhood": "Nine Elms",
     "borough": "Wandsworth",
     "postcode": "SW8 4DE",
-    "address": "Kitchen 23, 76 Stewart's Rd",
-    "fullAddress": "Kitchen 23, 76 Stewart's Rd, Nine Elms, SW8 4DE, London",
+    "address": "Kitchen 23, 76 Stewarts Road",
+    "fullAddress": "Kitchen 23, 76 Stewarts Road, Nine Elms, London, SW8 4DE",
     "city": "London",
     "categories": [
       "Indian"
@@ -212541,7 +212541,13 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T09:20:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-the-layered-biryani-by-mom-4b2c0918363b"
+    },
+    "businessStatus": "Operational",
+    "contact": {
+      "orderOnlineUrl": "https://deliveroo.co.uk/menu/London/nine-elms/the-layered-biryani-76-stewarts-rd-nine-elms"
     }
   },
   {
@@ -319084,8 +319090,8 @@
     "neighborhood": "Bickley",
     "borough": "Bromley",
     "postcode": "BR2 8AT",
-    "address": "217 Southborough Ln",
-    "fullAddress": "217 Southborough Ln, London, BR2 8AT",
+    "address": "217 Southborough Lane",
+    "fullAddress": "217 Southborough Lane, Bickley, Bromley, BR2 8AT",
     "city": "London",
     "categories": [
       "Indian"
@@ -319120,7 +319126,14 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T09:20:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-ishaak-05d42ce65ad5"
+    },
+    "businessStatus": "Operational",
+    "contact": {
+      "website": "https://ishaak.co.uk/",
+      "phone": "+44 20 4635 3356"
     }
   },
   {
@@ -341088,11 +341101,12 @@
     "neighborhood": "South End",
     "borough": "Croydon",
     "postcode": "CR0 1DP",
-    "address": "50C S End",
-    "fullAddress": "50C S End, London, CR0 1DP",
+    "address": "48-50 South End",
+    "fullAddress": "48-50 South End, Croydon, CR0 1DP",
     "city": "London",
     "categories": [
-      "Indian"
+      "Sri Lankan",
+      "South Indian"
     ],
     "listingTypes": [],
     "dietaryOptions": [],
@@ -341125,7 +341139,37 @@
     },
     "details": {
       "googleVerified": false,
-      "placeId": "ChIJweM5OAAHdkgR-N4eKq3nC7E"
+      "placeId": "ChIJweM5OAAHdkgR-N4eKq3nC7E",
+      "workingHours": [
+        {
+          "day": "Monday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Tuesday",
+          "hours": "Closed"
+        },
+        {
+          "day": "Wednesday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Thursday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Friday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Saturday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Sunday",
+          "hours": "11:00-23:00"
+        }
+      ]
     },
     "provenance": {
       "sourceName": "Indian Restaurants - Outscraper - Test.csv",
@@ -341134,7 +341178,15 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T09:20:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-kothu-04b3c5213516"
+    },
+    "businessStatus": "Operational",
+    "contact": {
+      "website": "https://kothurestaurant.co.uk/",
+      "phone": "+44 20 4635 4074",
+      "email": "kothurestaurant@gmail.com"
     }
   },
   {
@@ -530612,7 +530664,13 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T09:20:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-kundar-tandoori-05df04eea88b"
+    },
+    "businessStatus": "Operational",
+    "contact": {
+      "orderOnlineUrl": "https://deliveroo.co.uk/menu/london/north-kensington/kundar-tandoori"
     }
   },
   {

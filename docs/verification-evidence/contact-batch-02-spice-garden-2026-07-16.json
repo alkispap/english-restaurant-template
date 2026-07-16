@@ -1,0 +1,29 @@
+{
+  "listingSlug": "spice-garden",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS Beijing record at 127 Chinbrook Road",
+      "sourceUrl": "https://ratings.food.gov.uk/business/1799971",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "Lewisham Council Local Shopping Parade Survey",
+      "sourceUrl": "https://lewisham.gov.uk/-/media/archive/files/imported/localparadesretailsurvey2011.pdf?sc_lang=en",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Current FSA evidence identifies Beijing at 127 Chinbrook Road, and the official Lewisham retail survey identifies Beijing at 127/129 in both 2005 and 2011. No source corroborates Spice Garden at this address or connects it to Beijing. The imported identity is materially conflicted, but the evidence does not prove whether it was a temporary virtual brand, a wrong map pin, or another error. Do not copy Beijing contact details or infer closure; hold pending identity evidence."
+}

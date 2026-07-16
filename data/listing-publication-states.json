@@ -15467,11 +15467,12 @@
     {
       "listingSlug": "modern-indian",
       "listingSourceId": "ChIJcconfAAFdkgRD1hcO4PoaA8",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:23:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-modern-indian-cd39aec83b57"
     },
     {
       "listingSlug": "moe-s-peri-peri-grill",
@@ -22695,11 +22696,12 @@
     {
       "listingSlug": "spice-garden",
       "listingSourceId": "ChIJ5RHe8JCp2EcRzEJIX5GXwXY",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:23:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-spice-garden-10441b2cd987"
     },
     {
       "listingSlug": "spice-garden-bromley",
@@ -23290,11 +23292,12 @@
     {
       "listingSlug": "staffordshire",
       "listingSourceId": "ChIJS7-SQAAbdkgRwJcA_qnpt8k",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "scope-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:23:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-staffordshire-638cae5e87b4"
     },
     {
       "listingSlug": "standard-indian-takeaway",
@@ -23434,11 +23437,12 @@
     {
       "listingSlug": "sucess-worker",
       "listingSourceId": "ChIJBQt1YxkPdkgREqTLaIkJL6k",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:23:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-sucess-worker-55e71d5a2795"
     },
     {
       "listingSlug": "sugar-and-spice-lounge",
@@ -23776,11 +23780,12 @@
     {
       "listingSlug": "taj",
       "listingSourceId": "ChIJ41FeQgCr2EcR6Nx-Xt9TAAk",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:23:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-taj-06e8943bfc25"
     },
     {
       "listingSlug": "taj-grill",
@@ -24793,11 +24798,12 @@
     {
       "listingSlug": "thanjavur-food-lounge-ltd",
       "listingSourceId": "ChIJf4whtp4HdkgRZ1Q2X7e-zr0",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "operating-status-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:23:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-thanjavur-food-lounge-ltd-0fdb80312403"
     },
     {
       "listingSlug": "tharshini-s-takeaway",

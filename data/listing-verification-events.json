@@ -812,6 +812,496 @@
       ],
       "changes": [],
       "notes": "The company moved its registered office away from 88 Mile End Road in 2022 and current FSA data shows a multi-brand ghost-kitchen/food-production site without The Palm. A registered-office move and source absence do not prove the restaurant closed or identify a successor. No current location-specific phone, website, or hours could be validated. Hold for direct operator, licensing, rates, or premises evidence."
+    },
+    {
+      "id": "verification-2026-07-16-ishaak-05d42ce65ad5",
+      "listingSlug": "ishaak",
+      "listingSourceId": "ChIJ3w_RcgCr2EcRD8EKQSmfU-w",
+      "recordedAt": "2026-07-16T09:22:09.581Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Ishaak official contact page",
+          "sourceUrl": "https://ishaak.co.uk/contact-us/",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Ishaak record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1920234/ishaak-bromley",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "217 Southborough Lane",
+          "reason": "The official contact page and current FSA record both publish the unabbreviated street address.",
+          "previousValue": "217 Southborough Ln",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "217 Southborough Lane, Bickley, Bromley, BR2 8AT",
+          "reason": "The official contact page identifies Bickley and Bromley, and the FSA corroborates the street and postcode.",
+          "previousValue": "217 Southborough Ln, London, BR2 8AT",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The live first-party site accepts current collection and delivery orders and publishes current contact details.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://ishaak.co.uk/",
+          "reason": "This is the live official website for the exact business and premises.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 20 4635 3356",
+          "reason": "The official contact page publishes this number for the exact location.",
+          "applied": true
+        }
+      ],
+      "notes": "Ishaak is a current fine Indian takeaway at the imported premises. The official site and a March 2026 FSA inspection corroborate identity and location. No customer rating was copied from the FSA hygiene record, and no weekly hours were added because the inspected pages did not publish a complete permanent seven-day schedule."
+    },
+    {
+      "id": "verification-2026-07-16-kothu-04b3c5213516",
+      "listingSlug": "kothu",
+      "listingSourceId": "ChIJweM5OAAHdkgR-N4eKq3nC7E",
+      "recordedAt": "2026-07-16T09:22:12.897Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Kothu Restaurant official website",
+          "sourceUrl": "https://kothurestaurant.co.uk/",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Kothu record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1888353/kothu-croydon",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.email",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "48-50 South End",
+          "reason": "The official site and May 2026 FSA record identify the Croydon restaurant at 48-50 South End, not 50C South End.",
+          "previousValue": "50C S End",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "48-50 South End, Croydon, CR0 1DP",
+          "reason": "The current official and FSA sources agree on the corrected premises and postcode.",
+          "previousValue": "50C S End, London, CR0 1DP",
+          "applied": true
+        },
+        {
+          "field": "categories",
+          "value": [
+            "Sri Lankan",
+            "South Indian"
+          ],
+          "reason": "The official restaurant describes its food as Sri Lankan and South Indian; these are supported existing directory taxonomy values.",
+          "previousValue": [
+            "Indian"
+          ],
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The live official site publishes current contact, ordering and branch information, corroborated by a May 2026 FSA inspection.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://kothurestaurant.co.uk/",
+          "reason": "This is the live official multi-location website and explicitly lists the Croydon branch.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 20 4635 4074",
+          "reason": "The official site publishes this number specifically for the Croydon branch.",
+          "applied": true
+        },
+        {
+          "field": "contact.email",
+          "value": "kothurestaurant@gmail.com",
+          "reason": "The official site publishes this as the restaurant contact email.",
+          "applied": true
+        },
+        {
+          "field": "details.workingHours",
+          "value": [
+            {
+              "day": "Monday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Tuesday",
+              "hours": "Closed"
+            },
+            {
+              "day": "Wednesday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Thursday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Friday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Saturday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Sunday",
+              "hours": "11:00-23:00"
+            }
+          ],
+          "reason": "The official site publishes daily 11:00-23:00 hours for Croydon with Tuesday closed.",
+          "applied": true
+        }
+      ],
+      "notes": "The official site spells the postcode with the letter O in one visual location, but the FSA and canonical UK postcode use CR0 1DP. The FSA hygiene score was not copied into customer-rating fields."
+    },
+    {
+      "id": "verification-2026-07-16-kundar-tandoori-05df04eea88b",
+      "listingSlug": "kundar-tandoori",
+      "listingSourceId": "ChIJK0y7wyIQdkgRKrhlNLPAYBg",
+      "recordedAt": "2026-07-16T09:22:17.328Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Current Kundar Tandoori Deliveroo page",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/north-kensington/kundar-tandoori",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current 316B Ladbroke Grove premises record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1809354/taste-of-punjab",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current delivery page is accepting the exact Kundar Tandoori brand and publishes a live closing time and menu.",
+          "applied": true
+        },
+        {
+          "field": "contact.orderOnlineUrl",
+          "value": "https://deliveroo.co.uk/menu/london/north-kensington/kundar-tandoori",
+          "reason": "This current transactional page is the only contact/action source verified for the exact Kundar Tandoori brand.",
+          "applied": true
+        }
+      ],
+      "notes": "The premises also trades publicly as Taste of Punjab and has a separate canonical listing. Kundar Tandoori remains a distinct current delivery brand; same premises and overlapping menu do not justify merging the records. No Taste of Punjab phone, website or hours were copied to Kundar Tandoori."
+    },
+    {
+      "id": "verification-2026-07-16-modern-indian-75c0acddf997",
+      "listingSlug": "modern-indian",
+      "listingSourceId": "ChIJcconfAAFdkgRD1hcO4PoaA8",
+      "recordedAt": "2026-07-16T09:22:21.696Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Farzi London official contact page",
+          "sourceUrl": "https://farzilondon.com/contact",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "Farzi London official website",
+          "sourceUrl": "https://farzilondon.com/",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The exact 8 Haymarket premises is currently and explicitly operated by Farzi London, which already has a separate canonical directory record. No source corroborates a business whose customer-facing name is Modern Indian or proves that the imported place ID is an alias of Farzi. Do not copy Farzi contact details, merge records, redirect, or claim closure without explicit entity evidence. Hold this record pending identity resolution."
+    },
+    {
+      "id": "verification-2026-07-16-spice-garden-ed30d7abfcf9",
+      "listingSlug": "spice-garden",
+      "listingSourceId": "ChIJ5RHe8JCp2EcRzEJIX5GXwXY",
+      "recordedAt": "2026-07-16T09:23:01.646Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS Beijing record at 127 Chinbrook Road",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1799971",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "Lewisham Council Local Shopping Parade Survey",
+          "sourceUrl": "https://lewisham.gov.uk/-/media/archive/files/imported/localparadesretailsurvey2011.pdf?sc_lang=en",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current FSA evidence identifies Beijing at 127 Chinbrook Road, and the official Lewisham retail survey identifies Beijing at 127/129 in both 2005 and 2011. No source corroborates Spice Garden at this address or connects it to Beijing. The imported identity is materially conflicted, but the evidence does not prove whether it was a temporary virtual brand, a wrong map pin, or another error. Do not copy Beijing contact details or infer closure; hold pending identity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-staffordshire-0d2008cbac49",
+      "listingSlug": "staffordshire",
+      "listingSourceId": "ChIJS7-SQAAbdkgRwJcA_qnpt8k",
+      "recordedAt": "2026-07-16T09:23:13.280Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Just Eat official terms and company address",
+          "sourceUrl": "https://www.just-eat.co.uk/info/terms-and-conditions",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current EC4M 7RF premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=EC4M%207RF&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "2 Fleet Place is the official Just Eat registered office, and current FSA records identify Fika Catering at Just Eat and Just Eat for Business at the premises. No source identifies a public Indian restaurant named Staffordshire. The name may be an import artefact, internal catering label, or invalid map entity, but current evidence does not establish which. Hold pending scope and identity evidence; do not attach Just Eat corporate contact details."
+    },
+    {
+      "id": "verification-2026-07-16-sucess-worker-6d0f0654f1f8",
+      "listingSlug": "sucess-worker",
+      "listingSourceId": "ChIJBQt1YxkPdkgREqTLaIkJL6k",
+      "recordedAt": "2026-07-16T09:23:19.210Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=sucess%20worker&address=W6%200RA&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current W6 0RA premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=W6%200RA&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported name is misspelled and the address is only 'near Hammersmith'. Current FSA data identifies numerous real businesses at numbered King Street premises in W6 0RA but no Sucess Worker entity. Search results repeat the imported map label without a primary business source. Do not select a nearby restaurant, infer closure, or exclude automatically; hold pending a real street number and identity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-taj-2e89d5d42847",
+      "listingSlug": "taj",
+      "listingSourceId": "ChIJ41FeQgCr2EcR6Nx-Xt9TAAk",
+      "recordedAt": "2026-07-16T09:23:25.847Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Taj&address=BR1%202ND&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current BR1 2ND premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=BR1%202ND&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported record has no street number and the current postcode query identifies only caring premises at 11 and 21 Bickley Road. A separate Taj Authentic Indian Cuisine exists in Biggin Hill, but no evidence connects it to this imported place ID or address. Do not copy the other Taj's details, infer a move, or claim closure. Hold pending exact premises and entity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-thanjavur-food-lounge-ltd-d39734159bac",
+      "listingSlug": "thanjavur-food-lounge-ltd",
+      "listingSourceId": "ChIJf4whtp4HdkgRZ1Q2X7e-zr0",
+      "recordedAt": "2026-07-16T09:23:32.337Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Companies House company record",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/16418113",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current CR0 2XP premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=CR0%202XP&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Companies House confirms an active takeaway company registered at 70 Windmill Road, but company registration does not prove current customer-facing operation. Current FSA data identifies Food Land Supermarket at the exact address and does not identify Thanjavur Food Lounge. Search results provide no first-party contact, menu, order page, or unit evidence. Hold pending operating and premises evidence; do not copy the supermarket's details or infer closure."
+    },
+    {
+      "id": "verification-2026-07-16-the-layered-biryani-by-mom-4b2c0918363b",
+      "listingSlug": "the-layered-biryani-by-mom",
+      "listingSourceId": "ChIJi07kCgAFdkgRaRsazE3Vrj8",
+      "recordedAt": "2026-07-16T09:23:38.970Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Current The Layered Biryani By Mom Deliveroo page",
+          "sourceUrl": "https://deliveroo.co.uk/menu/London/nine-elms/the-layered-biryani-76-stewarts-rd-nine-elms",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS The Layered Biryani By Mom record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1793078/the-layered-biryani-by-mom",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "Kitchen 23, 76 Stewarts Road",
+          "reason": "The current FSA record identifies Kitchen 23 at 76 Stewarts Road without an apostrophe.",
+          "previousValue": "Kitchen 23, 76 Stewart's Rd",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "Kitchen 23, 76 Stewarts Road, Nine Elms, London, SW8 4DE",
+          "reason": "The current FSA and transactional sources agree on the exact kitchen and postcode.",
+          "previousValue": "Kitchen 23, 76 Stewart's Rd, Nine Elms, SW8 4DE, London",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The exact brand has a current delivery menu and a current FSA premises record.",
+          "applied": true
+        },
+        {
+          "field": "contact.orderOnlineUrl",
+          "value": "https://deliveroo.co.uk/menu/London/nine-elms/the-layered-biryani-76-stewarts-rd-nine-elms",
+          "reason": "This is the current transactional page for the exact brand and Nine Elms kitchen.",
+          "applied": true
+        }
+      ],
+      "notes": "The brand operates from a multi-brand commercial kitchen. The exact kitchen number and FSA identity prevent accidental attribution of another tenant's contact details. No phone, first-party website, or permanent weekly hours were found, and the FSA hygiene score was not copied into customer-rating fields."
     }
   ]
 }

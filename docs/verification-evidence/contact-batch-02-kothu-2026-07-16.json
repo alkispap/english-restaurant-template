@@ -1,0 +1,106 @@
+{
+  "listingSlug": "kothu",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Kothu Restaurant official website",
+      "sourceUrl": "https://kothurestaurant.co.uk/",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Kothu record",
+      "sourceUrl": "https://ratings.food.gov.uk/business/1888353/kothu-croydon",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "contact.email",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "address",
+      "value": "48-50 South End",
+      "reason": "The official site and May 2026 FSA record identify the Croydon restaurant at 48-50 South End, not 50C South End."
+    },
+    {
+      "field": "fullAddress",
+      "value": "48-50 South End, Croydon, CR0 1DP",
+      "reason": "The current official and FSA sources agree on the corrected premises and postcode."
+    },
+    {
+      "field": "categories",
+      "value": [
+        "Sri Lankan",
+        "South Indian"
+      ],
+      "reason": "The official restaurant describes its food as Sri Lankan and South Indian; these are supported existing directory taxonomy values."
+    },
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The live official site publishes current contact, ordering and branch information, corroborated by a May 2026 FSA inspection."
+    },
+    {
+      "field": "contact.website",
+      "value": "https://kothurestaurant.co.uk/",
+      "reason": "This is the live official multi-location website and explicitly lists the Croydon branch."
+    },
+    {
+      "field": "contact.phone",
+      "value": "+44 20 4635 4074",
+      "reason": "The official site publishes this number specifically for the Croydon branch."
+    },
+    {
+      "field": "contact.email",
+      "value": "kothurestaurant@gmail.com",
+      "reason": "The official site publishes this as the restaurant contact email."
+    },
+    {
+      "field": "details.workingHours",
+      "value": [
+        {
+          "day": "Monday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Tuesday",
+          "hours": "Closed"
+        },
+        {
+          "day": "Wednesday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Thursday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Friday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Saturday",
+          "hours": "11:00-23:00"
+        },
+        {
+          "day": "Sunday",
+          "hours": "11:00-23:00"
+        }
+      ],
+      "reason": "The official site publishes daily 11:00-23:00 hours for Croydon with Tuesday closed."
+    }
+  ],
+  "notes": "The official site spells the postcode with the letter O in one visual location, but the FSA and canonical UK postcode use CR0 1DP. The FSA hygiene score was not copied into customer-rating fields."
+}
