@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "publication-2026-07-16-biriyani-junction-b7afb2158e09",
+      "listingSlug": "biriyani-junction",
+      "listingSourceId": "ChIJAQAMzygHdkgR0OIzlZNS2CU",
+      "recordedAt": "2026-07-16T07:00:01.000Z",
+      "reviewedAt": "2026-07-16T07:00:01.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-biriyani-junction-238d8307d4f5"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-spikky-pepperdem-food-502d7496f23a",
+      "listingSlug": "spikky-pepperdem-food",
+      "listingSourceId": "ChIJE258j9up2EcR1Gj1X4sm6M4",
+      "recordedAt": "2026-07-16T07:00:02.000Z",
+      "reviewedAt": "2026-07-16T07:00:02.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-spikky-pepperdem-food-035d3e0d282d"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-chotiwala-1baec8d633bd",
+      "listingSlug": "chotiwala",
+      "listingSourceId": "ChIJRyq4CesPdkgRy1hZio7BcLs",
+      "recordedAt": "2026-07-16T07:00:03.000Z",
+      "reviewedAt": "2026-07-16T07:00:03.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-chotiwala-233f1ca317f1"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-golis-south-norwood-f45f9ecc72b7",
+      "listingSlug": "golis-south-norwood",
+      "listingSourceId": "ChIJ8-_5yzwBdkgRGs7oVdz_rCE",
+      "recordedAt": "2026-07-16T07:00:04.000Z",
+      "reviewedAt": "2026-07-16T07:00:04.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-golis-south-norwood-def1041be243"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    }
+  ]
+}
