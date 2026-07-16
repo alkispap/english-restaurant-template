@@ -1,0 +1,21 @@
+{
+  "listingSlug": "real-taste-of-india",
+  "expectedSourceId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "material-data-conflict"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-real-taste-of-india-50ac3a9c6711"
+    }
+  ],
+  "notes": "Kulcha Express currently operates at the exact address and uses the same phone historically associated with Real Taste of India, but no explicit evidence proves a rename, successor or merge. Withhold until entity continuity is established."
+}

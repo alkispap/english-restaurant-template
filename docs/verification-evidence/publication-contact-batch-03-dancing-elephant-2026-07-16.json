@@ -1,0 +1,21 @@
+{
+  "listingSlug": "dancing-elephant",
+  "expectedSourceId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "material-data-conflict"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-dancing-elephant-49e1ca5b692e"
+    }
+  ],
+  "notes": "Current FSA evidence identifies Shahi Catering at the imported Unit 23 address, while no evidence connects Dancing Elephant to that tenant or a current brand. Withhold until exact unit, identity and operating evidence is available."
+}

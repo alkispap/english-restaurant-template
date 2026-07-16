@@ -1,0 +1,21 @@
+{
+  "listingSlug": "ghani-food-and-spices",
+  "expectedSourceId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "scope-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-ghani-food-and-spices-7769ce2cfeb8"
+    }
+  ],
+  "notes": "Current evidence supports a company at an industrial-estate unit but classifies it as e-commerce, while current FSA data does not identify a Ghani restaurant. Withhold until public restaurant scope, exact unit and current operation are established."
+}

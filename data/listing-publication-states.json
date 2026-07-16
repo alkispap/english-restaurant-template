@@ -2046,20 +2046,22 @@
     {
       "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
       "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-660dd58fde93"
     },
     {
       "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
       "listingSourceId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-bazaar-london-s-indian-takeaway-hackney-917d169f1473"
     },
     {
       "listingSlug": "bazaar-london-s-indian-takeaway-tower-bridge",
@@ -4552,11 +4554,12 @@
     {
       "listingSlug": "chakra-indian-cuisine",
       "listingSourceId": "ChIJBWFjnlUPdkgRMAy1_il_Ag8",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-chakra-indian-cuisine-f0f0a8947124"
     },
     {
       "listingSlug": "chakra-kingston",
@@ -6364,11 +6367,12 @@
     {
       "listingSlug": "dancing-elephant",
       "listingSourceId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "material-data-conflict",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-dancing-elephant-6050ad90a820"
     },
     {
       "listingSlug": "danclair-s-kitchen",
@@ -8057,11 +8061,12 @@
     {
       "listingSlug": "faizan-ahmad",
       "listingSourceId": "ChIJyQzhQqEbdkgRmExK_r8zbu0",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-faizan-ahmad-f1e0edcb0c56"
     },
     {
       "listingSlug": "falcon-grill",
@@ -8813,11 +8818,12 @@
     {
       "listingSlug": "ghani-food-and-spices",
       "listingSourceId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "scope-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-ghani-food-and-spices-cd75da613ec0"
     },
     {
       "listingSlug": "ghara-home-of-indian-street-food",
@@ -19635,11 +19641,12 @@
     {
       "listingSlug": "real-taste-of-india",
       "listingSourceId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "material-data-conflict",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-real-taste-of-india-ac4dcc538514"
     },
     {
       "listingSlug": "real-taste-of-indian-street-food",

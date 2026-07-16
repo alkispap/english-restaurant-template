@@ -1,0 +1,36 @@
+{
+  "listingSlug": "ghani-food-and-spices",
+  "checkedAt": "2026-07-16T09:54:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current RM13 8ET premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=RM13%208ET&pageSize=100",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    },
+    {
+      "sourceName": "BT Havering business directory",
+      "sourceUrl": "https://img01.products.bt.co.uk/content/dam/bt/a-z-directory/haverg-a-z-directory.pdf",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    },
+    {
+      "sourceName": "Current Rainham company-category directory",
+      "sourceUrl": "https://www.192.com/atoz/business/rainham/e-commerce/",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Business directories identify Ghani Food & Spices Ltd at Unit 12, Fordview Estate and provide a telephone number, but classify it as e-commerce rather than a public restaurant. Current FSA postcode data identifies only Mimiann Kitchen at number 83 and no Ghani establishment. The imported address omits the unit and the stored hours are internally implausible. Do not publish a directory phone until restaurant scope, current operation and exact unit are established."
+}

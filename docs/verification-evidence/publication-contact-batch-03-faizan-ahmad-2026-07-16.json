@@ -1,0 +1,21 @@
+{
+  "listingSlug": "faizan-ahmad",
+  "expectedSourceId": "ChIJyQzhQqEbdkgRmExK_r8zbu0",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-faizan-ahmad-4fb013298625"
+    }
+  ],
+  "notes": "No authoritative or first-party source establishes Faizan Ahmad as a customer-facing restaurant at 115 Finchley Road. The personal-name label and conflicting premises history require identity review before publication."
+}

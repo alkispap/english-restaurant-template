@@ -15,15 +15,22 @@ import { generateMetadata, generateStaticParams } from "../src/app/restaurants/[
 
 const pendingSlugs = [
   "biriyani-junction",
+  "bazaar-london-s-indian-takeaway-aldgate",
+  "bazaar-london-s-indian-takeaway-hackney",
   "calm-indiana-cow",
+  "chakra-indian-cuisine",
   "chef-tazzy",
   "chotiwala",
   "contemporary-indian-cuisine",
+  "dancing-elephant",
   "delhiacacies-deliveroo",
+  "faizan-ahmad",
+  "ghani-food-and-spices",
   "golis-south-norwood",
   "home-kitchen",
   "indian-food-camden",
   "modern-indian",
+  "real-taste-of-india",
   "republic-restaurant-verney-road",
   "spice-garden",
   "spikky-pepperdem-food",
@@ -38,8 +45,8 @@ const excludedSlugs = ["bombay-kitchen-brixton", "borough-market"];
 main();
 
 async function main() {
-  assert.equal(publishedListings.length, 3166);
-  assert.equal(pendingReviewListings.length, 18);
+  assert.equal(publishedListings.length, 3159);
+  assert.equal(pendingReviewListings.length, 25);
   assert.deepEqual(pendingReviewListings.map((listing) => listing.slug).sort(), [...pendingSlugs].sort());
   assert.equal(publiclyRoutableListings.length, 3184, "pending review pages should retain their exact URL while excluded routes are omitted");
   assert.ok(pendingSlugs.every((slug) => getListingPublicationState(slug).status === "pending-review"));

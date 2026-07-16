@@ -1,0 +1,29 @@
+{
+  "listingSlug": "chakra-indian-cuisine",
+  "checkedAt": "2026-07-16T09:54:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Chakra Restaurant official locations",
+      "sourceUrl": "https://chakra.restaurant/",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS current SW17 0AR premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SW17%200AR&pageSize=100",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Chakra's current official site lists Little Venice, Kensington and Kingston but no Tooting or 15 Rosemary Road location. Current FSA data identifies multiple unrelated catering and manufacturing units in the Swan Centre but no Chakra entity. The imported record may be a historical delivery kitchen, unrelated business, or map error. Do not attach another Chakra branch's contact details, infer closure, or merge without explicit location evidence."
+}

@@ -30,10 +30,10 @@ moduleWithLoad._load = function patchedLoad(request: string, parent: unknown, is
 };
 
 const expectedCounts = new Map([
-  ["southall", 83],
+  ["southall", 82],
   ["wembley", 61],
   ["harrow", 43],
-  ["tooting", 37],
+  ["tooting", 36],
   ["brick-lane", 12]
 ]);
 const homepageHubs = getDirectoryLandingModel().diningHubs.items;

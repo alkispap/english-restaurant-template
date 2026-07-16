@@ -460,6 +460,167 @@
         }
       ],
       "notes": "An active company registration exists, but current customer-facing operation, unit occupancy, contact details and hours are not corroborated; the FSA identifies a supermarket at the exact address. Withhold until direct operating evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-660dd58fde93",
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "recordedAt": "2026-07-16T09:56:30.295Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-b5e10640cc58"
+        }
+      ],
+      "notes": "Current premises records identify The Empress and Burgers LDN at 141 Leman Street, while the Bazaar domain no longer identifies a restaurant location. Withhold until direct Bazaar identity, successor or closure evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-bazaar-london-s-indian-takeaway-hackney-917d169f1473",
+      "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+      "listingSourceId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
+      "recordedAt": "2026-07-16T09:56:34.580Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-hackney-4714cda58f2c"
+        }
+      ],
+      "notes": "Current premises evidence identifies Rays Curry Base Pizza at 92 Northwold Road, while the Bazaar domain no longer identifies a restaurant location. Withhold until direct Bazaar identity, successor or closure evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-chakra-indian-cuisine-f0f0a8947124",
+      "listingSlug": "chakra-indian-cuisine",
+      "listingSourceId": "ChIJBWFjnlUPdkgRMAy1_il_Ag8",
+      "recordedAt": "2026-07-16T09:56:38.511Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-chakra-indian-cuisine-d9ecafb86b27"
+        }
+      ],
+      "notes": "Chakra's official current location list does not include the imported Tooting industrial-unit address, and current FSA premises data does not identify Chakra. Withhold until exact branch or delivery-kitchen evidence supports publication, correction, exclusion, or entity resolution."
+    },
+    {
+      "id": "publication-2026-07-16-dancing-elephant-6050ad90a820",
+      "listingSlug": "dancing-elephant",
+      "listingSourceId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
+      "recordedAt": "2026-07-16T09:56:41.778Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-dancing-elephant-49e1ca5b692e"
+        }
+      ],
+      "notes": "Current FSA evidence identifies Shahi Catering at the imported Unit 23 address, while no evidence connects Dancing Elephant to that tenant or a current brand. Withhold until exact unit, identity and operating evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-faizan-ahmad-f1e0edcb0c56",
+      "listingSlug": "faizan-ahmad",
+      "listingSourceId": "ChIJyQzhQqEbdkgRmExK_r8zbu0",
+      "recordedAt": "2026-07-16T09:56:46.021Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-faizan-ahmad-4fb013298625"
+        }
+      ],
+      "notes": "No authoritative or first-party source establishes Faizan Ahmad as a customer-facing restaurant at 115 Finchley Road. The personal-name label and conflicting premises history require identity review before publication."
+    },
+    {
+      "id": "publication-2026-07-16-ghani-food-and-spices-cd75da613ec0",
+      "listingSlug": "ghani-food-and-spices",
+      "listingSourceId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
+      "recordedAt": "2026-07-16T09:56:49.987Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "scope-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-ghani-food-and-spices-7769ce2cfeb8"
+        }
+      ],
+      "notes": "Current evidence supports a company at an industrial-estate unit but classifies it as e-commerce, while current FSA data does not identify a Ghani restaurant. Withhold until public restaurant scope, exact unit and current operation are established."
+    },
+    {
+      "id": "publication-2026-07-16-real-taste-of-india-ac4dcc538514",
+      "listingSlug": "real-taste-of-india",
+      "listingSourceId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
+      "recordedAt": "2026-07-16T09:56:53.705Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-real-taste-of-india-50ac3a9c6711"
+        }
+      ],
+      "notes": "Kulcha Express currently operates at the exact address and uses the same phone historically associated with Real Taste of India, but no explicit evidence proves a rename, successor or merge. Withhold until entity continuity is established."
     }
   ]
 }
