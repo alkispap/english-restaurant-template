@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
 import { getPublicGuideArticles, guidePath } from "@/lib/articles";
 import { pageShareMetadata } from "@/lib/share-metadata";
 
 export function generateMetadata(): Metadata {
   const articles = getPublicGuideArticles();
-  const title = "Indian Food and Restaurant Guides in London";
-  const description =
-    "Indian food and restaurant guides for understanding dishes, cuisines, takeaway, dietary options, and local restaurant choices in London.";
+  const title = `${siteConfig.cuisineLabel} Food and Restaurant Guides in ${siteConfig.cityOrRegion}`;
+  const description = `${siteConfig.cuisineLabel} food and restaurant guides for understanding dishes, cuisines, takeaway, dietary options, and local restaurant choices in ${siteConfig.cityOrRegion}.`;
   const canonical = guidePath();
 
   return {
@@ -29,7 +29,7 @@ export default function GuidesPage() {
       <section className="border-b border-line bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <p className="text-sm font-bold uppercase tracking-wide text-primary">Guides</p>
-          <h1 className="mt-3 text-3xl font-bold text-ink sm:text-4xl">Indian Food and Restaurant Guides in London</h1>
+          <h1 className="mt-3 text-3xl font-bold text-ink sm:text-4xl">{siteConfig.cuisineLabel} Food and Restaurant Guides in {siteConfig.cityOrRegion}</h1>
           <p className="mt-4 max-w-3xl text-base text-muted">
             Practical articles that explain the topic behind the directory and connect readers to useful local pages.
           </p>
@@ -37,7 +37,7 @@ export default function GuidesPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-ink">Browse Indian Food and Restaurant Guides</h2>
+        <h2 className="text-2xl font-bold text-ink">Browse {siteConfig.cuisineLabel} Food and Restaurant Guides</h2>
         {articles.length ? (
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             {articles.map((article) => (

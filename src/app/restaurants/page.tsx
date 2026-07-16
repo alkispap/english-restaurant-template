@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { DirectoryListingsPage } from "@/components/DirectoryListingsPage";
+import { siteConfig } from "@/config/site";
 import { directoryIndexHeadings } from "@/lib/directory-index-headings";
 import { directorySearchPath } from "@/lib/routes";
 import { pageShareMetadata } from "@/lib/share-metadata";
 
 export function generateMetadata(): Metadata {
-  const title = "Search Indian Restaurants in London";
-  const description =
-    "Search Indian restaurants in London by area, cuisine, rating, service options, dietary needs, transport links, and dining style.";
+  const title = `Search ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion}`;
+  const description = `Search ${siteConfig.localNiche} in ${siteConfig.cityOrRegion} by area, cuisine, rating, service options, dietary needs, transport links, and dining style.`;
   const canonical = directorySearchPath();
 
   return {

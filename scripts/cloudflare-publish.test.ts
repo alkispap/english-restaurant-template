@@ -9,7 +9,7 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package
 assert.equal(packageJson.scripts?.["check:cloudflare"], "tsx scripts/check-cloudflare-export.ts");
 assert.equal(
   packageJson.scripts?.["build:static"],
-  "npm run generate:redirects && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:NEXT_PUBLIC_SITE_URL='https://indianrestaurantlondon.co.uk'; $env:NEXT_STATIC_EXPORT='1'; next build\" && npm run audit:payload"
+  "npm run generate:redirects && tsx scripts/run-static-build.ts && npm run audit:payload"
 );
 assert.equal(packageJson.scripts?.["audit:payload"], "tsx scripts/check-client-payload.ts");
 assert.equal(packageJson.scripts?.["generate:redirects"], "tsx scripts/generate-cloudflare-redirects.ts");
@@ -32,10 +32,8 @@ assert.ok(fs.existsSync(prepareScriptPath), "prepare:cloudflare should have a Po
 
 const prepareScript = fs.readFileSync(prepareScriptPath, "utf8");
 assert.ok(prepareScript.includes("Stop-ProjectDevServers"), "prepare script should stop this project's dev server before export");
-assert.ok(
-  prepareScript.includes("$env:NEXT_PUBLIC_SITE_URL = \"https://indianrestaurantlondon.co.uk\""),
-  "prepare script should set the production site URL for all publish checks"
-);
+assert.ok(!prepareScript.includes("indianrestaurantlondon.co.uk"), "prepare script should derive the domain from the selected directory pack");
+assert.ok(fs.existsSync(path.join(process.cwd(), "scripts", "run-static-build.ts")), "static builds should use the directory-pack-aware wrapper");
 assert.ok(prepareScript.includes("npm.cmd") && prepareScript.includes("run") && prepareScript.includes("build:static"), "prepare script should run the static export build");
 assert.ok(prepareScript.includes("check:cloudflare"), "prepare script should run Cloudflare export checks");
 assert.ok(prepareScript.includes("Upload-ready folder:"), "prepare script should report the upload-ready out folder");

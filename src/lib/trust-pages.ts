@@ -21,13 +21,13 @@ export const trustPages = [
   {
     key: "about",
     title: "About",
-    metadataTitle: "About This Indian Restaurant Directory",
-    heading: "About This Indian Restaurant Directory",
+    metadataTitle: `About This ${siteConfig.localNicheSingularTitle} Directory`,
+    heading: `About This ${siteConfig.localNicheSingularTitle} Directory`,
     href: "/about",
     description: `${siteConfig.name} is a local directory for comparing ${siteConfig.niche}.`,
     sections: [
       {
-        heading: "What This Indian Restaurant Directory Does",
+        heading: `What This ${siteConfig.localNicheSingularTitle} Directory Does`,
         body: `${siteConfig.name} helps visitors compare ${siteConfig.niche} by area, cuisine, service options, Google rating, Google review count, transport links, opening hours, and dining details.`
       },
       {
@@ -39,7 +39,7 @@ export const trustPages = [
         body: "This site is not a restaurant owner, booking agent, delivery provider, or official representative of the listed businesses."
       },
       {
-        heading: "How to Use the Indian Restaurant Directory",
+        heading: `How to Use the ${siteConfig.localNicheSingularTitle} Directory`,
         body: "Use the filters, area pages, category pages, comparison tools, and listing details to shortlist restaurants before checking directly with the restaurant."
       }
     ]
@@ -47,8 +47,8 @@ export const trustPages = [
   {
     key: "contact",
     title: "Contact",
-    metadataTitle: "Contact the Indian Restaurants in London Directory",
-    heading: "Contact the Indian Restaurants in London Directory",
+    metadataTitle: `Contact the ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion} Directory`,
+    heading: `Contact the ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion} Directory`,
     href: "/contact",
     description: `Contact ${siteConfig.name} about corrections, partnerships, listing updates, or general questions.`,
     sections: [
@@ -57,7 +57,7 @@ export const trustPages = [
         body: "Use this page as the contact point for directory questions, feedback, corrections, and partnership enquiries."
       },
       {
-        heading: "Indian Restaurant Listing Updates",
+        heading: `${siteConfig.cuisineLabel} Restaurant Listing Updates`,
         body: "Restaurants can request corrections for opening hours, contact links, service options, photos, categories, or closed-status information."
       },
       {
@@ -113,7 +113,7 @@ export const trustPages = [
     description: `Terms for using ${siteConfig.name}.`,
     sections: [
       {
-        heading: "Indian Restaurant Directory Information",
+        heading: `${siteConfig.cuisineLabel} Restaurant Directory Information`,
         body: "Listing details are provided for comparison and convenience. Restaurant hours, menus, prices, services, links, and availability can change."
       },
       {
@@ -129,13 +129,13 @@ export const trustPages = [
   {
     key: "methodology",
     title: "How We Rank",
-    metadataTitle: "How We Rank Indian Restaurants in London",
-    heading: "How We Rank Indian Restaurants in London",
+    metadataTitle: `How We Rank ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion}`,
+    heading: `How We Rank ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion}`,
     href: "/methodology",
     description: `How ${siteConfig.name} selects, sorts, and compares listings.`,
     sections: [
       {
-        heading: "How Indian Restaurant Listings Are Selected",
+        heading: `How ${siteConfig.cuisineLabel} Restaurant Listings Are Selected`,
         body: "Pages are built from the current directory dataset and focus on restaurants with enough useful information to help visitors compare options."
       },
       {
@@ -163,8 +163,8 @@ export const trustPages = [
   {
     key: "suggest-update",
     title: "Suggest an Update",
-    metadataTitle: "Suggest an Indian Restaurant Update",
-    heading: "Suggest an Indian Restaurant Update",
+    metadataTitle: `Suggest ${indefiniteArticle(siteConfig.cuisineLabel)} ${siteConfig.cuisineLabel} Restaurant Update`,
+    heading: `Suggest ${indefiniteArticle(siteConfig.cuisineLabel)} ${siteConfig.cuisineLabel} Restaurant Update`,
     href: "/suggest-update",
     description: `Suggest corrections or missing restaurant information for ${siteConfig.name}.`,
     sections: [
@@ -205,4 +205,8 @@ export function getTrustPageMetadata(page: TrustPage): Metadata {
       path: page.href
     })
   };
+}
+
+function indefiniteArticle(value: string) {
+  return /^[aeiou]/i.test(value) ? "an" : "a";
 }

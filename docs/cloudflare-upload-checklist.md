@@ -20,7 +20,7 @@ Run:
 npm run check:release
 ```
 
-This uses the pinned project-local Wrangler installation, runs type-checking and the complete test suite, stops this project's local development server, rebuilds `out/` with `https://indianrestaurantlondon.co.uk`, runs the client-payload audit, validates the Cloudflare artifact, and checks that generation left the Git worktree clean. It does not upload anything.
+This uses the pinned project-local Wrangler installation, runs type-checking and the complete test suite, stops this project's local development server, rebuilds `out/` with the production URL from the selected directory pack, runs the client-payload audit, validates the Cloudflare artifact, and checks that generation left the Git worktree clean. It does not upload anything.
 
 Use `npm run prepare:cloudflare` only when you need to rebuild and inspect `out/` without repeating the full type-check and test gate.
 

@@ -102,7 +102,7 @@ export const directorySemanticMap = {
   // these checks alert the developer to update niche-specific wording.
   copySafety: {
     // Terms that must be replaced before going live with a different niche.
-    blockedStaleTerms: ["indian", "curry", "tandoor", "biryani"],
+    blockedStaleTerms: [...siteConfig.copySafety.blockedStaleTerms],
 
     // Config fields that MUST be updated in siteConfig / directoryConfig
     // before launching a copied directory.
@@ -129,7 +129,7 @@ export const directorySemanticMap = {
       primaryEntity: "local directory",
       macroContext: "citywide directory comparison",
       networkRole: "core" as const,
-      searchIntent: "compare all Indian restaurants across London",
+      searchIntent: `compare all ${siteConfig.localNiche} across ${siteConfig.cityOrRegion}`,
       requiredEavGroups: ["identity", "location", "category", "freshness"] as EavGroup[],
       allowedLinkTargets: ["directory_search", "area_index", "category_index", "area_hub", "category_hub", "area_category_hub", "best_hub", "facet_hub", "trust_page"] as DirectoryPageTypeBrief[],
       indexationRole: "canonical_target" as const
@@ -139,7 +139,7 @@ export const directorySemanticMap = {
       primaryEntity: "restaurant search page",
       macroContext: "citywide directory search",
       networkRole: "core" as const,
-      searchIntent: "search and filter Indian restaurants across London",
+      searchIntent: `search and filter ${siteConfig.localNiche} across ${siteConfig.cityOrRegion}`,
       requiredEavGroups: ["identity", "location", "category"] as EavGroup[],
       allowedLinkTargets: ["listing_detail", "area_hub", "category_hub", "area_category_hub", "best_hub", "facet_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "canonical_target" as const
@@ -149,7 +149,7 @@ export const directorySemanticMap = {
       primaryEntity: "area index",
       macroContext: "browse restaurant areas",
       networkRole: "core" as const,
-      searchIntent: "choose a London area before comparing Indian restaurants",
+      searchIntent: `choose a ${siteConfig.cityOrRegion} area before comparing ${siteConfig.localNiche}`,
       requiredEavGroups: ["location", "freshness"] as EavGroup[],
       allowedLinkTargets: ["area_hub", "neighborhood_hub", "area_category_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "canonical_target" as const
@@ -159,7 +159,7 @@ export const directorySemanticMap = {
       primaryEntity: "category index",
       macroContext: "browse restaurant cuisines",
       networkRole: "core" as const,
-      searchIntent: "choose a cuisine or category before comparing Indian restaurants",
+      searchIntent: `choose a cuisine or category before comparing ${siteConfig.localNiche}`,
       requiredEavGroups: ["category", "freshness"] as EavGroup[],
       allowedLinkTargets: ["category_hub", "area_category_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "canonical_target" as const
@@ -179,7 +179,7 @@ export const directorySemanticMap = {
       primaryEntity: "area directory hub",
       macroContext: "local area comparison",
       networkRole: "core" as const,
-      searchIntent: "compare Indian restaurants in one local area of London",
+      searchIntent: `compare ${siteConfig.localNiche} in one local area of ${siteConfig.cityOrRegion}`,
       requiredEavGroups: ["location", "category", "reviews", "services"] as EavGroup[],
       allowedLinkTargets: ["area_hub", "category_hub", "area_category_hub", "listing_detail", "best_hub", "facet_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
@@ -189,7 +189,7 @@ export const directorySemanticMap = {
       primaryEntity: "category directory hub",
       macroContext: "category comparison across the city",
       networkRole: "core" as const,
-      searchIntent: "compare all restaurants in one cuisine category across London",
+      searchIntent: `compare all restaurants in one cuisine category across ${siteConfig.cityOrRegion}`,
       requiredEavGroups: ["category", "location", "reviews", "services"] as EavGroup[],
       allowedLinkTargets: ["area_hub", "category_hub", "area_category_hub", "listing_detail", "best_hub", "facet_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
@@ -199,7 +199,7 @@ export const directorySemanticMap = {
       primaryEntity: "area and category directory hub",
       macroContext: "local category comparison",
       networkRole: "core" as const,
-      searchIntent: "compare restaurants of one cuisine type in one specific area of London",
+      searchIntent: `compare restaurants of one cuisine type in one specific area of ${siteConfig.cityOrRegion}`,
       requiredEavGroups: ["location", "category", "reviews", "services", "freshness"] as EavGroup[],
       allowedLinkTargets: ["area_hub", "category_hub", "listing_detail"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
@@ -209,7 +209,7 @@ export const directorySemanticMap = {
       primaryEntity: "neighborhood directory hub",
       macroContext: "hyper-local neighborhood comparison",
       networkRole: "supporting" as const,
-      searchIntent: "find Indian restaurants within a specific London neighborhood",
+      searchIntent: `find ${siteConfig.localNiche} within a specific ${siteConfig.cityOrRegion} neighborhood`,
       requiredEavGroups: ["location", "category", "reviews"] as EavGroup[],
       allowedLinkTargets: ["area_hub", "listing_detail"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
@@ -219,7 +219,7 @@ export const directorySemanticMap = {
       primaryEntity: "best-of directory hub",
       macroContext: "curated ranked comparison",
       networkRole: "supporting" as const,
-      searchIntent: "find the top-rated or most-reviewed Indian restaurants in London",
+      searchIntent: `find the top-rated or most-reviewed ${siteConfig.localNiche} in ${siteConfig.cityOrRegion}`,
       requiredEavGroups: ["reviews", "category", "location"] as EavGroup[],
       allowedLinkTargets: ["listing_detail", "area_hub", "category_hub", "area_category_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
@@ -239,7 +239,7 @@ export const directorySemanticMap = {
       primaryEntity: "guide index",
       macroContext: "restaurant education hub",
       networkRole: "supporting" as const,
-      searchIntent: "learn before choosing an Indian restaurant in London",
+      searchIntent: `learn before choosing a ${siteConfig.cuisineLabel} restaurant in ${siteConfig.cityOrRegion}`,
       requiredEavGroups: ["identity", "category"] as EavGroup[],
       allowedLinkTargets: ["guide_article", "directory_search", "category_index", "area_index"] as DirectoryPageTypeBrief[],
       indexationRole: "canonical_target" as const
@@ -249,7 +249,7 @@ export const directorySemanticMap = {
       primaryEntity: "restaurant guide article",
       macroContext: "topic education with directory next steps",
       networkRole: "supporting" as const,
-      searchIntent: "understand an Indian food or restaurant topic before comparing local options",
+      searchIntent: `understand a ${siteConfig.cuisineLabel} food or restaurant topic before comparing local options`,
       requiredEavGroups: ["identity", "category"] as EavGroup[],
       allowedLinkTargets: ["directory_search", "category_index", "category_hub", "area_hub", "facet_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "canonical_target" as const

@@ -39,6 +39,7 @@ export type TemplateReadinessSiteConfig = {
   heroCopy?: string;
   description?: string;
   navigation?: readonly { label: string; href: string }[];
+  copySafety?: { blockedStaleTerms: readonly string[] };
 };
 
 export type TemplateReadinessDirectoryConfig = {
@@ -137,7 +138,7 @@ function identityIssues(site: TemplateReadinessSiteConfig, directory: TemplateRe
     .filter(Boolean)
     .join(" ");
   const expectedNicheTerms = nicheTerms(site);
-  const oldTerms = ["indian"];
+  const oldTerms = site.copySafety?.blockedStaleTerms ?? ["indian"];
   const staleTerms = oldTerms.filter((term) => !expectedNicheTerms.includes(term) && includesWord(mainCopy, term));
 
   if (!site.siteName || !site.name || !site.niche || !site.cityOrRegion) {

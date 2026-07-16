@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { securityHeaders } from "../src/config/security-headers.mjs";
+import { activeDirectoryPack } from "../src/config/directory-packs";
 
 const outDir = path.join(process.cwd(), "out");
 const maxFiles = 20_000;
@@ -38,9 +39,8 @@ const sitemap = fs.readFileSync(sitemapPath, "utf8");
 const robots = fs.readFileSync(robotsPath, "utf8");
 const headers = fs.readFileSync(headersPath, "utf8");
 const redirects = fs.readFileSync(redirectsPath, "utf8");
-const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || activeDirectoryPack.productionUrl;
 
-assert.ok(publicSiteUrl, "NEXT_PUBLIC_SITE_URL must be set to the final https production domain before publishing.");
 assert.ok(publicSiteUrl.startsWith("https://"), "NEXT_PUBLIC_SITE_URL must use https before publishing.");
 assert.ok(!publicSiteUrl.includes("localhost"), "NEXT_PUBLIC_SITE_URL must not point to localhost before publishing.");
 assert.ok(sitemap.includes(publicSiteUrl), "sitemap.xml does not include NEXT_PUBLIC_SITE_URL.");

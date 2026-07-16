@@ -5,12 +5,12 @@ const guidesIndexSource = fs.readFileSync("src/app/guides/page.tsx", "utf8");
 const guideArticleSource = fs.readFileSync("src/components/GuideArticleContent.tsx", "utf8");
 
 assert.ok(
-  guidesIndexSource.includes("Indian Food and Restaurant Guides in London"),
-  "guides index H1 should target Indian food and restaurant guide intent in London"
+  guidesIndexSource.includes("siteConfig.cuisineLabel") && guidesIndexSource.includes("siteConfig.cityOrRegion"),
+  "guides index H1 should derive cuisine and location intent from the active directory pack"
 );
 assert.ok(
-  guidesIndexSource.includes("Browse Indian Food and Restaurant Guides"),
-  "guides index should have one keyword-focused H2 for the article list"
+  guidesIndexSource.includes("Browse {siteConfig.cuisineLabel} Food and Restaurant Guides"),
+  "guides index should derive its article-list H2 from the active directory pack"
 );
 assert.ok(
   !guidesIndexSource.includes("<h2 className=\"mt-2 text-xl font-bold text-ink\">"),
@@ -22,16 +22,16 @@ assert.ok(
 );
 
 assert.ok(
-  guideArticleSource.includes("Related Indian Restaurant Directory Pages"),
-  "guide articles should use a keyword-focused related directory H2"
+  guideArticleSource.includes("siteConfig.localNicheSingularTitle"),
+  "guide articles should derive the related-directory H2 from the active pack"
 );
 assert.ok(
-  guideArticleSource.includes("Indian Food and Restaurant FAQs"),
-  "guide articles should use a topic-specific FAQ H2"
+  guideArticleSource.includes("{siteConfig.cuisineLabel} Food and Restaurant FAQs"),
+  "guide articles should derive the topic-specific FAQ H2 from the active pack"
 );
 assert.ok(
-  guideArticleSource.includes("Sources for This Indian Restaurant Guide"),
-  "guide articles should use a guide-specific sources H2"
+  guideArticleSource.includes("Sources for This {siteConfig.cuisineLabel} Restaurant Guide"),
+  "guide articles should derive the sources H2 from the active pack"
 );
 assert.ok(
   !guideArticleSource.includes("<h2 className=\"text-xl font-bold text-ink\">{block.title}</h2>"),

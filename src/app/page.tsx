@@ -8,7 +8,7 @@ import { pageShareMetadata } from "@/lib/share-metadata";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
 
 export function generateMetadata(): Metadata {
-  const title = "Indian Restaurants in London Directory";
+  const title = `${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion} Directory`;
   const description = getDirectorySummary();
 
   return {

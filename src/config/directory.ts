@@ -1,8 +1,9 @@
 import { directoryTemplatePresets } from "@/config/directory-presets";
+import { activeDirectoryPack } from "@/config/directory-packs";
 
-const restaurantPreset = directoryTemplatePresets.restaurant;
+const selectedPreset = directoryTemplatePresets[activeDirectoryPack.templatePreset];
 
 export const directoryConfig = {
-  templatePreset: "restaurant",
-  ...restaurantPreset
+  templatePreset: activeDirectoryPack.templatePreset,
+  ...selectedPreset
 } as const;
