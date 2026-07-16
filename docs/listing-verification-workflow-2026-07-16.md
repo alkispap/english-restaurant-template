@@ -106,26 +106,28 @@ Evidence is retained in `docs/verification-evidence/wimbledon-tandoori-merton-20
 | Measure | Result |
 | --- | ---: |
 | Canonical listings | 3,186 |
-| Verification ledger events | 31 |
-| Publication decision events | 20 |
+| Verification ledger events | 38 |
+| Publication decision events | 27 |
 | Fresh editor-verified listings | 7 |
 | Unverified listings | 3,179 |
-| Open evidence conflicts | 19 |
+| Open evidence conflicts | 26 |
 | Retained records with data gaps | 608 |
 | Ordinary queued records with data gaps | 602 |
-| Published listings | 3,166 |
-| Pending publication review | 18 |
+| Published listings | 3,159 |
+| Pending publication review | 25 |
 | Excluded listings | 2 |
-| Published records missing contact actions | 7 |
+| Published records missing contact actions | 0 |
+| Published records missing opening hours | 106 |
 | Ledger integrity issues | 0 |
 | Operational duplicate-name/postcode high issues | 0 |
 
-The verification audit remains `not_ready` because 99.78% of listings have not received a current scoped check and 19 evidence conflicts remain open. This is an explicit queue, not evidence that all 3,179 records are incorrect. One open verification conflict belongs to an excluded invalid import and remains retained for audit history.
+The verification audit remains `not_ready` because 99.78% of listings have not received a current scoped check and 26 evidence conflicts remain open. This is an explicit queue, not evidence that all 3,179 records are incorrect. One open verification conflict belongs to an excluded invalid import and remains retained for audit history.
 
 ## Next verification priority
 
-1. Finish the published missing-contact cohort with `chakra-indian-cuisine`, `dancing-elephant`, `bazaar-london-s-indian-takeaway-aldgate`, `bazaar-london-s-indian-takeaway-hackney`, `faizan-ahmad`, `ghani-food-and-spices`, and `real-taste-of-india`.
-2. Keep the 18 `pending-review` records withheld from normal discovery until stronger evidence supports publication, exclusion, correction, or entity resolution.
-3. Record verification and publication decisions separately when evidence changes both current facts and public eligibility.
-4. Configure a monitored corrections mailbox and retention policy before enabling email handoff.
-5. Keep the deferred Google media decision separate from restaurant-data verification.
+1. Start the published missing-hours cohort with `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
+2. Confirm restaurant-directory scope and the exact restaurant identity before adding venue-level hours for hotels, clubs, cinemas or community buildings.
+3. Keep the 25 `pending-review` records withheld from normal discovery until stronger evidence supports publication, exclusion, correction, or entity resolution.
+4. Record verification and publication decisions separately when evidence changes both current facts and public eligibility.
+5. Configure a monitored corrections mailbox and retention policy before enabling email handoff.
+6. Keep the deferred Google media decision separate from restaurant-data verification.

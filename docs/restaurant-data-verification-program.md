@@ -15,7 +15,7 @@ The goal is **100% evidence-checked coverage of the operational-gap cohort**, no
 
 ## 2. Current baseline
 
-Checkpoint after missing-contact batch 02:
+Checkpoint after completing the published missing-contact cohort:
 
 | Measure | Count | Meaning |
 | --- | ---: | --- |
@@ -24,12 +24,13 @@ Checkpoint after missing-contact batch 02:
 | Unverified records | 3,179 | Historically traceable but not fully checked for current facts |
 | Retained records with operational gaps | 608 | Unique canonical records missing at least one important data group |
 | Ordinary queued records with operational gaps | 602 | Excludes excluded records and fresh verified records from the ordinary unverified queue |
-| Open evidence conflicts | 19 | Reviewed records with insufficient or contradictory current evidence |
+| Open evidence conflicts | 26 | Reviewed records with insufficient or contradictory current evidence |
 | Missing contact action | 27 | No validated contact, transaction or map action |
 | Missing opening hours | 127 | No structured current hours |
 | Missing categories | 491 | No supported cuisine/category value |
 | Missing rating/review pair | 67 | Rating and review count are not both present and valid |
-| Published missing contact action | 7 | Remaining public records without a contact, transaction or map action |
+| Published missing contact action | 0 | Every public record has a contact, transaction or map action |
+| Published missing opening hours | 106 | Next public operational-gap cohort |
 
 The gap counts overlap. One restaurant can appear in several categories, so they must not be added to estimate unique records.
 
@@ -104,7 +105,7 @@ The public-eligibility control uses:
 
 Moved, renamed, or duplicate records can require a published canonical successor and permanent redirect. Do not treat them as ordinary exclusions when an active replacement exists.
 
-Current baseline: 3,166 `published`, 18 `pending-review`, and two `excluded`. Pending records retain a minimal, non-indexable route at their existing URL but are omitted from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data. Excluded records are retained in canonical/history data and either redirect to a validated published successor or return 404. Publication state is deliberately separate from provenance, verification outcome and business operating status.
+Current baseline: 3,159 `published`, 25 `pending-review`, and two `excluded`. Pending records retain a minimal, non-indexable route at their existing URL but are omitted from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data. Excluded records are retained in canonical/history data and either redirect to a validated published successor or return 404. Publication state is deliberately separate from provenance, verification outcome and business operating status.
 
 Every publication decision records the previous and next state, controlled reason, reviewer, reviewed timestamp, evidence references and notes. Direct manual edits to the materialized registry or ledger are prohibited.
 
@@ -440,13 +441,14 @@ Official references:
 
 ## 16. Exact next sequence
 
-1. Finish the published missing-contact cohort with `chakra-indian-cuisine`, `dancing-elephant`, `bazaar-london-s-indian-takeaway-aldgate`, `bazaar-london-s-indian-takeaway-hackney`, `faizan-ahmad`, `ghani-food-and-spices`, and `real-taste-of-india`.
-2. Keep the 18 current `pending-review` records in the explicit conflict queue and revisit them only when stronger evidence is available.
-3. Record verification and publication decisions separately through their guarded commands.
-4. Continue missing hours, categories and ratings in order, refreshing counts after every batch.
-5. Use import dry runs and expected-count guards; every genuinely new import begins as `pending-review`.
-6. Keep Google/Outscraper media restoration separate and on hold.
-7. Do not deploy without explicit authorization.
+1. Start the published missing-hours cohort with `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
+2. Confirm restaurant-directory scope and exact restaurant identity before applying venue-level opening hours to hotel, cinema, club or community-centre records.
+3. Keep the 25 current `pending-review` records in the explicit conflict queue and revisit them only when stronger evidence is available.
+4. Record verification and publication decisions separately through their guarded commands.
+5. Continue missing hours, categories and ratings in order, refreshing counts after every batch.
+6. Use import dry runs and expected-count guards; every genuinely new import begins as `pending-review`.
+7. Keep Google/Outscraper media restoration separate and on hold.
+8. Do not deploy without explicit authorization.
 
 ## Related references
 

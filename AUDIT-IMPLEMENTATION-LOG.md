@@ -88,6 +88,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `e3a90e7` | Phase 5 contact batch 01 evidence, decisions and synchronized public data |
 | `ca6d9ae` | Phase 5 contact batch 01 measured checkpoint |
 | `a272717` | Phase 5 contact batch 02 evidence, corrections and publication decisions |
+| `807cb11` | Phase 5 contact batch 02 measured checkpoint |
+| `24183c3` | Phase 5 published missing-contact cohort completion |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -99,7 +101,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | In progress | Two missing-contact batches complete; 3,166 published, 18 pending review, 2 excluded, and 7 published records still lack a contact action |
+| 5. Listing quality/operations | In progress | Published missing-contact cohort complete; 3,159 published, 25 pending review, 2 excluded, and every published record has a contact action |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log
@@ -1124,18 +1126,66 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 **Git checkpoint**
 
 - Evidence/data commit: `a272717` (`Verify second missing-contact listing batch`).
+- Documentation commit: `807cb11` (`Document second restaurant data batch`).
+- No push or deployment occurred.
+
+### 2026-07-16 — Phase 5 contact batch 03: complete published contact-action cohort
+
+**Cohort and scope**
+
+- Processed the final seven published missing-contact records: `chakra-indian-cuisine`, `dancing-elephant`, `bazaar-london-s-indian-takeaway-aldgate`, `bazaar-london-s-indian-takeaway-hackney`, `faizan-ahmad`, `ghani-food-and-spices`, and `real-taste-of-india`.
+- Checked current identity, exact premises, restaurant-directory scope, operating evidence and any safe contact or transaction action.
+- Did not copy a phone, website, hours or successor identity from a nearby or replacement business without explicit entity evidence.
+
+**Evidence outcomes**
+
+- `chakra-indian-cuisine`: current first-party location evidence does not include the imported Tooting premises, and the current premises evidence does not establish Chakra there; changed to `pending-review` for identity uncertainty.
+- `dancing-elephant`: the imported address appears malformed and current exact-unit evidence identifies a different caterer without an established entity link; changed to `pending-review` for a material data conflict.
+- Both Bazaar records: the former restaurant domain no longer supplies operational restaurant information, and current exact-premises evidence identifies other businesses without a confirmed continuity link; changed to `pending-review` for identity uncertainty.
+- `faizan-ahmad`: the record uses a personal name and current premises evidence does not establish an in-scope restaurant identity; changed to `pending-review` for identity uncertainty without exposing personal contact data.
+- `ghani-food-and-spices`: current directory evidence indicates an e-commerce/food-supply business rather than a confirmed restaurant, while current authoritative premises evidence is insufficient; changed to `pending-review` for scope uncertainty.
+- `real-taste-of-india`: current first-party and exact-premises evidence identifies Kulcha Express, with replacement signals but no explicit legal or editorial continuity evidence; changed to `pending-review` for a material data conflict rather than merging or redirecting.
+- All seven verification outcomes are `needs-review`. No canonical contact details were guessed and no unsupported entity merge or closure claim was made.
+
+**Measured result**
+
+- Verification events: 31 to 38; publication events: 20 to 27.
+- Fresh editor-verified listings remain 7; unverified listings remain 3,179.
+- Publication states: 3,166 published / 18 pending / 2 excluded to 3,159 published / 25 pending / 2 excluded.
+- Ordinary queue remains 3,178; queued operational-gap records remain 602.
+- Retained-data gaps remain 27 missing contact actions, 127 missing hours, 491 missing categories and 67 missing rating/review pairs.
+- Published-data gaps: missing contact actions 7 to 0; missing hours 107 to 106; missing categories 487 to 486; missing rating/review pairs 49 to 43.
+- Published contact-action coverage is now 100%. The 27 retained missing-contact records consist only of 25 pending-review records and two excluded historical records.
+
+**Verification and failure record**
+
+- All seven verification proposals and seven publication proposals passed dry-run validation before guarded writes.
+- The first full regression run exposed a stale Southall dining-hub count after publication filtering changed it from 83 to 82; the expected fixture was corrected.
+- The second full regression run exposed the corresponding stale Tooting count change from 37 to 36; the expected fixture was corrected.
+- Final regression suite: 156/156 passed; ESLint, TypeScript and `git diff --check` passed.
+- Publication audit: `ready`; operational audit contains no published missing-contact finding.
+- Verification audit remains intentionally `not_ready`: 3,179 listings are unverified and 26 evidence conflicts remain open, including the retained excluded invalid-import record.
+- SEO and indexation audits passed with 3,519 sitemap URLs, 3,069 indexable restaurant URLs and zero crawl warnings.
+- Standard production build and full 3,656-page static export passed; payload budgets passed.
+- Cloudflare export check passed for 7,403 files with no asset over 25 MiB.
+- Direct export inspection confirmed all seven new pending pages are present with `noindex` and no LocalBusiness structured data.
+
+**Git checkpoint**
+
+- Evidence/data commit: `24183c3` (`Complete published missing-contact review`).
 - No push or deployment occurred.
 
 ## Exact next checkpoint
 
 Follow `docs/restaurant-data-verification-program.md` as the controlling reference for the remaining operational-gap verification work.
 
-1. Finish the published missing-contact cohort with the remaining seven records: `chakra-indian-cuisine`, `dancing-elephant`, `bazaar-london-s-indian-takeaway-aldgate`, `bazaar-london-s-indian-takeaway-hackney`, `faizan-ahmad`, `ghani-food-and-spices`, and `real-taste-of-india`.
-2. Keep all 18 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
-3. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
-4. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
-5. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
-6. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
+1. Begin the first published missing-hours batch with `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
+2. Treat restaurant-directory scope and the identity of the restaurant operation as first-class checks because several records describe hotels, clubs, cinemas or community venues rather than a clearly named restaurant.
+3. Keep all 25 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
+4. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
+5. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
+6. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
+7. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
 
 ## Template for future entries
 
