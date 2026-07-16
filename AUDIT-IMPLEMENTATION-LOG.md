@@ -81,6 +81,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `deb66f2` | Phase 5H public-surface and SEO enforcement |
 | `40f8135` | Phase 5H safe imports, data writers and entity retirement |
 | `e14b300` | Phase 5H publication-aware readiness audits and queue |
+| `6b8e720` | Phase 5H publication operating documentation |
+| `5ee1f38` | Static-export generation timeout reliability guard |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -987,13 +989,58 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** The operating guide is complete. Phase 5H implementation has not started; its first step is Plan-mode design and approval of publication/scope behaviour.
 
+### 2026-07-16 — Phase 5H: publication eligibility and scope control
+
+**Confirmed architecture and decisions**
+
+- Kept historical provenance, verification state/event outcome, business operating status, publication eligibility, and entity resolution as separate concepts.
+- Added one materialized publication state for every retained listing in `data/listing-publication-states.json` plus append-only decisions in `data/listing-publication-events.json`.
+- Controlled states are `published`, `pending-review`, and `excluded`; reasons, successor requirements, recheck dates and transitions are validated centrally.
+- Migrated all 3,186 existing records without claiming they were reviewed: 3,182 retain the legacy-public baseline, while the four current evidence conflicts have explicit evidence-backed `pending-review` decisions.
+- Pending records retain a minimal noindex URL but are withheld from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data.
+- Excluded records remain in canonical/history data. A validated published successor produces a redirect; otherwise the public route returns 404.
+
+**Implementation**
+
+- Added guarded dry-run-first publication migration and decision commands, strict proposal/evidence allowlists, deterministic event IDs, expected-count write guards, atomic writes and idempotency checks.
+- Added a publication audit covering registry/listing identity, event chains, evidence references, successor cycles, published verification conflicts and exact public-derivative integrity.
+- Centralized publication-aware rendering for every canonical-data writer so verification, provenance, media, import, entity-resolution and publication changes cannot repopulate public files with held records.
+- Changed imports to dry-run by default. Existing records are preserved even when absent from a source; genuinely new records begin as `pending-review`; writes require expected new/matched/source-absent counts.
+- Changed entity resolution to retain aliases, record reviewed resolution evidence, assign `excluded/superseded-by-canonical`, and require a published successor rather than deleting historical rows.
+- Integrated publication state into operational, verification, priority, template-readiness and client-payload audits. Pending records are always first in the queue; excluded records are retained but omitted from ordinary work.
+- Added a static-export-only 180-second page-generation timeout after the first full export exposed default 60-second worker-contention failures across eight concurrent area pages. Normal builds and development keep their existing behavior.
+
+**Measured result**
+
+- Retained listings/states: 3,186 / 3,186.
+- Published: 3,182; pending review: 4; excluded: 0; publication decision events: 4.
+- Public search and shortlist derivatives: 3,182 records with zero pending-slug leakage.
+- Verification queue: 3,184 tasks, including 608 with operational gaps; the four pending records rank 1–4.
+- Published operational cohort remains `conditional`: 27 missing contact actions, 124 missing opening-hours records, 487 missing-category records, and 63 missing rating/review pairs.
+- Verification remains intentionally `not_ready`: 3,184 unverified listings and four open evidence conflicts. The publication audit confirms zero published records with an open conflict.
+- Template readiness has zero blockers and two existing import-report warnings: 75 missing-image warnings and three missing-category warnings.
+- Google/Outscraper media remained on hold, and the 31 missing-contact cohort was not processed.
+
+**Verification and failure record**
+
+- Final regression suite: 156/156 passed; ESLint, TypeScript and `git diff --check` passed.
+- Publication audit: ready with no integrity or public-leakage findings.
+- SEO and indexation audits passed: 3,520 expected sitemap URLs and 3,069 indexable restaurant URLs.
+- Normal production build passed all route/chunk budgets; client chunks contain no reviewer identity, publication event IDs, baseline reason or pending reasons.
+- First static export attempt failed after 447.8s because eight area pages hit Next's default 60-second worker timeout and `/areas/hackney` exhausted three retries. Focused route-generation performance tests passed, confirming worker contention rather than a deterministic route defect.
+- After the static-only timeout guard, the full export passed: 3,659 pages in 668.8s, payload budgets passed, Cloudflare checks passed for 7,409 files, and no asset exceeded 25 MiB.
+- Direct inspection of all four pending exports confirmed noindex metadata, the review message, no LocalBusiness schema, no operational-field leakage, and no presence in sitemap/search/shortlist/filter data.
+- No push, deployment, media restoration or unrelated restaurant-data processing occurred.
+
+**Status:** Phase 5H is locally complete. Publication eligibility is enforceable and reusable; Phase 5 remains in progress for evidence review, the 608-record operational-gap program, rights-cleared media, and authorized live verification.
+
 ## Exact next checkpoint
 
 Follow `docs/restaurant-data-verification-program.md` as the controlling reference for the remaining operational-gap verification work.
 
-1. Resolve or explicitly hold the four open identity/status conflicts using direct business, owner, registry, or premises evidence; do not infer closure from FSA absence.
-2. Define an explicit publication/scope decision for non-restaurant or unverifiable imports before processing the next queue items, which currently include hotels and a cinema.
-3. Continue the guarded priority queue with attributable restaurant evidence, beginning with records missing contact actions or opening hours.
+1. Review the four `pending-review` identity/status conflicts using direct business, owner, registry, or premises evidence; do not infer closure from FSA absence.
+2. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
+3. After this checkpoint is accepted, continue the guarded priority queue with the 31 missing-contact records in batches of 10–20.
 4. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
 5. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
 6. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
