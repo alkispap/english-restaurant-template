@@ -3190,11 +3190,12 @@
     {
       "listingSlug": "bombay-kitchen-brixton",
       "listingSourceId": "ChIJM8r9pGgEdkgRZU5-EOOFvGQ",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "confirmed-permanently-closed",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-bombay-kitchen-brixton-10b0e75de436"
     },
     {
       "listingSlug": "bombay-kitchen-lambeth",
@@ -3370,11 +3371,12 @@
     {
       "listingSlug": "borough-market",
       "listingSourceId": "ChIJcQ-6AAAFdkgRbDuFu5GdTEg",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "invalid-import",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:01.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-borough-market-80dde27cd81e"
     },
     {
       "listingSlug": "boulevard",
@@ -3766,11 +3768,12 @@
     {
       "listingSlug": "calm-indiana-cow",
       "listingSourceId": "ChIJXfZLIg8FdkgRro83UWTXJGg",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:02.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-calm-indiana-cow-17f56c5fd7fd"
     },
     {
       "listingSlug": "camberwell-tandoori",
@@ -4873,11 +4876,12 @@
     {
       "listingSlug": "chef-tazzy",
       "listingSourceId": "ChIJMUbUPAAddkgRCRLGpEqZURg",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:03.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-chef-tazzy-28f60e4ef0ab"
     },
     {
       "listingSlug": "chef-yogis",
@@ -5756,11 +5760,12 @@
     {
       "listingSlug": "contemporary-indian-cuisine",
       "listingSourceId": "ChIJWYJjFXEQdkgRftY39xKtKwM",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:04.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-contemporary-indian-cuisine-0bf0372e266e"
     },
     {
       "listingSlug": "cooking-pot",
@@ -6737,11 +6742,12 @@
     {
       "listingSlug": "delhiacacies-deliveroo",
       "listingSourceId": "ChIJk_lBVAAbdkgR_C5VfT36C54",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "material-data-conflict",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:05.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-delhiacacies-deliveroo-081d2345e568"
     },
     {
       "listingSlug": "delhiwala",
@@ -10059,11 +10065,12 @@
     {
       "listingSlug": "home-kitchen",
       "listingSourceId": "ChIJT3V-Zsep2EcRLWpwaHiyyVY",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:06.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-home-kitchen-69ed1ed48020"
     },
     {
       "listingSlug": "home-style-foodies",
@@ -10869,11 +10876,12 @@
     {
       "listingSlug": "indian-food-camden",
       "listingSourceId": "ChIJC_VNdwAbdkgRoJLHm6kn1Z4",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "material-data-conflict",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:07.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-indian-food-camden-9edf474c1415"
     },
     {
       "listingSlug": "indian-food-truck",
@@ -19788,11 +19796,12 @@
     {
       "listingSlug": "republic-restaurant-verney-road",
       "listingSourceId": "ChIJHQo6vpgDdkgRcfoH2r3FwXc",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "identity-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:08.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-republic-restaurant-verney-road-ba980e3cc700"
     },
     {
       "listingSlug": "restaurant-gordon-ramsay",
@@ -26098,11 +26107,12 @@
     {
       "listingSlug": "the-palm-indian-restaurant-limited",
       "listingSourceId": "ChIJJxrEHNQcdkgRr0udpyx-ejw",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "operating-status-uncertain",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T08:48:09.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-the-palm-indian-restaurant-limited-9bebfbdfb3fb"
     },
     {
       "listingSlug": "the-parakeet-pub",

@@ -1,0 +1,29 @@
+{
+  "listingSlug": "calm-indiana-cow",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact-name and postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Calm%20Indiana%20Cow&address=SE1%201TD",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "FSA FHRS current SE1 1TD premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE1%201TD&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "No current authoritative result corroborates Calm Indiana Cow. Current postcode results identify other businesses around 66-68 Union Street, but they do not establish whether this was a delivery brand, transcription error, moved business, or historical operator. Do not copy another occupant's contact details or infer closure. Hold pending direct evidence."
+}

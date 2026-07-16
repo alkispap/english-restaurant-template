@@ -92,6 +92,236 @@
         }
       ],
       "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-bombay-kitchen-brixton-10b0e75de436",
+      "listingSlug": "bombay-kitchen-brixton",
+      "listingSourceId": "ChIJM8r9pGgEdkgRZU5-EOOFvGQ",
+      "recordedAt": "2026-07-16T08:51:07.414Z",
+      "reviewedAt": "2026-07-16T08:48:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "confirmed-permanently-closed"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bombay-kitchen-brixton-a8a7bd0c326d"
+        }
+      ],
+      "notes": "Contemporaneous premises reporting and a current closure record confirm that Bombay Kitchen ceased trading at 384 Coldharbour Lane and was replaced by a different business. Retain the historical row and evidence, but remove it from ordinary public restaurant discovery without redirecting to the unrelated replacement."
+    },
+    {
+      "id": "publication-2026-07-16-borough-market-80dde27cd81e",
+      "listingSlug": "borough-market",
+      "listingSourceId": "ChIJcQ-6AAAFdkgRbDuFu5GdTEg",
+      "recordedAt": "2026-07-16T08:51:11.330Z",
+      "reviewedAt": "2026-07-16T08:48:01.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "invalid-import"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-borough-market-81483adbd7f8"
+        }
+      ],
+      "notes": "Authoritative property and planning evidence identifies the imported address as Park Lane Hotel ancillary space, not a restaurant called Borough MARKET. Preserve the imported history but exclude the invalid restaurant record. Do not redirect it to the unrelated Borough Market in Southwark."
+    },
+    {
+      "id": "publication-2026-07-16-calm-indiana-cow-17f56c5fd7fd",
+      "listingSlug": "calm-indiana-cow",
+      "listingSourceId": "ChIJXfZLIg8FdkgRro83UWTXJGg",
+      "recordedAt": "2026-07-16T08:51:16.022Z",
+      "reviewedAt": "2026-07-16T08:48:02.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-calm-indiana-cow-562fbdf95502"
+        }
+      ],
+      "notes": "No current source corroborates the imported identity and the premises evidence points to other businesses. Withhold it from discovery without inferring closure or substituting another occupant."
+    },
+    {
+      "id": "publication-2026-07-16-chef-tazzy-28f60e4ef0ab",
+      "listingSlug": "chef-tazzy",
+      "listingSourceId": "ChIJMUbUPAAddkgRCRLGpEqZURg",
+      "recordedAt": "2026-07-16T08:51:20.259Z",
+      "reviewedAt": "2026-07-16T08:48:03.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-chef-tazzy-e9ca9cb5f803"
+        }
+      ],
+      "notes": "No current operator, restaurant, or contact evidence corroborates Chef Tazzy at the imported address. Retain the record but withhold it until direct entity evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-contemporary-indian-cuisine-0bf0372e266e",
+      "listingSlug": "contemporary-indian-cuisine",
+      "listingSourceId": "ChIJWYJjFXEQdkgRftY39xKtKwM",
+      "recordedAt": "2026-07-16T08:51:23.794Z",
+      "reviewedAt": "2026-07-16T08:48:04.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-contemporary-indian-cuisine-ec7be3761323"
+        }
+      ],
+      "notes": "The generic imported identity cannot be corroborated at the residential-style address and no safe contact action exists. Hold it without making a closure or invalid-import claim."
+    },
+    {
+      "id": "publication-2026-07-16-delhiacacies-deliveroo-081d2345e568",
+      "listingSlug": "delhiacacies-deliveroo",
+      "listingSourceId": "ChIJk_lBVAAbdkgR_C5VfT36C54",
+      "recordedAt": "2026-07-16T08:51:27.570Z",
+      "reviewedAt": "2026-07-16T08:48:05.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-delhiacacies-deliveroo-8802153adb87"
+        }
+      ],
+      "notes": "The imported unit/address is malformed and current shared-kitchen evidence lists different delivery brands. Hold the listing rather than assign another brand's contact details or infer a successor."
+    },
+    {
+      "id": "publication-2026-07-16-home-kitchen-69ed1ed48020",
+      "listingSlug": "home-kitchen",
+      "listingSourceId": "ChIJT3V-Zsep2EcRLWpwaHiyyVY",
+      "recordedAt": "2026-07-16T08:51:31.239Z",
+      "reviewedAt": "2026-07-16T08:48:06.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-home-kitchen-9760b1e3a6b1"
+        }
+      ],
+      "notes": "No source corroborates Home Kitchen at 13A Spray Street and nearby businesses cannot be treated as successors. Retain the historical record and withhold it pending direct evidence."
+    },
+    {
+      "id": "publication-2026-07-16-indian-food-camden-9edf474c1415",
+      "listingSlug": "indian-food-camden",
+      "listingSourceId": "ChIJC_VNdwAbdkgRoJLHm6kn1Z4",
+      "recordedAt": "2026-07-16T08:51:35.458Z",
+      "reviewedAt": "2026-07-16T08:48:07.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-indian-food-camden-da3aece425b1"
+        }
+      ],
+      "notes": "Indian Food Camden existed, but the imported Unit 312-313 conflicts with evidence placing it at 6F Paddock Alley and with current Magic Falafel occupancy of Units 311-313. Hold until the trader's current identity and unit are resolved."
+    },
+    {
+      "id": "publication-2026-07-16-republic-restaurant-verney-road-ba980e3cc700",
+      "listingSlug": "republic-restaurant-verney-road",
+      "listingSourceId": "ChIJHQo6vpgDdkgRcfoH2r3FwXc",
+      "recordedAt": "2026-07-16T08:51:38.923Z",
+      "reviewedAt": "2026-07-16T08:48:08.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-republic-restaurant-verney-road-76dc7386371a"
+        }
+      ],
+      "notes": "The multi-brand Allard House site has many current operators but no corroborated Republic Restaurant contact or unit identity. Hold it rather than copy a shared-kitchen contact."
+    },
+    {
+      "id": "publication-2026-07-16-the-palm-indian-restaurant-limited-9bebfbdfb3fb",
+      "listingSlug": "the-palm-indian-restaurant-limited",
+      "listingSourceId": "ChIJJxrEHNQcdkgRr0udpyx-ejw",
+      "recordedAt": "2026-07-16T08:51:42.899Z",
+      "reviewedAt": "2026-07-16T08:48:09.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "operating-status-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-the-palm-indian-restaurant-limited-3ffd38f7e677"
+        }
+      ],
+      "notes": "The company and premises evidence do not establish that the Mile End restaurant still operates or identify a current successor/contact. Hold it without inferring permanent closure from the registered-office change or source absence."
     }
   ]
 }

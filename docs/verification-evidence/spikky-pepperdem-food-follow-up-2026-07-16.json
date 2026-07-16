@@ -1,0 +1,34 @@
+{
+  "listingSlug": "spikky-pepperdem-food",
+  "checkedAt": "2026-07-16T08:42:39.665Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AN",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    },
+    {
+      "sourceName": "Royal Borough of Greenwich Parry Place occupancy schedule",
+      "sourceUrl": "https://www.royalgreenwich.gov.uk/download/downloads/id/5703/sealed_cpo_and_schedule.pdf",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    },
+    {
+      "sourceName": "Current Parry Place business-directory page",
+      "sourceUrl": "https://www.192.com/places/se/se18-6/se18-6an/",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The address is a multi-unit premises with several historical and current businesses. Current FSA and premises sources do not corroborate Spikky Pepperdem Food and do not identify a reliable successor. Source absence and other occupants do not prove closure, invalid import, or a rename. No canonical change, merge, successor, or exclusion is supported. Keep the listing pending review."
+}

@@ -1,0 +1,29 @@
+{
+  "listingSlug": "the-palm-indian-restaurant-limited",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Companies House filing history",
+      "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/05194842/filing-history",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "FSA FHRS current E1 4UN premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E1%204UN&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The company moved its registered office away from 88 Mile End Road in 2022 and current FSA data shows a multi-brand ghost-kitchen/food-production site without The Palm. A registered-office move and source absence do not prove the restaurant closed or identify a successor. No current location-specific phone, website, or hours could be validated. Hold for direct operator, licensing, rates, or premises evidence."
+}

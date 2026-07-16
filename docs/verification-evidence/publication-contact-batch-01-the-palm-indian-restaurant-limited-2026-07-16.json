@@ -1,0 +1,21 @@
+{
+  "listingSlug": "the-palm-indian-restaurant-limited",
+  "expectedSourceId": "ChIJJxrEHNQcdkgRr0udpyx-ejw",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:09.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "operating-status-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-the-palm-indian-restaurant-limited-3ffd38f7e677"
+    }
+  ],
+  "notes": "The company and premises evidence do not establish that the Mile End restaurant still operates or identify a current successor/contact. Hold it without inferring permanent closure from the registered-office change or source absence."
+}

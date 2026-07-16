@@ -1,0 +1,21 @@
+{
+  "listingSlug": "indian-food-camden",
+  "expectedSourceId": "ChIJC_VNdwAbdkgRoJLHm6kn1Z4",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:07.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "material-data-conflict"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-indian-food-camden-da3aece425b1"
+    }
+  ],
+  "notes": "Indian Food Camden existed, but the imported Unit 312-313 conflicts with evidence placing it at 6F Paddock Alley and with current Magic Falafel occupancy of Units 311-313. Hold until the trader's current identity and unit are resolved."
+}

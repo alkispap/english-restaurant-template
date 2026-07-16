@@ -1,0 +1,41 @@
+{
+  "listingSlug": "bombay-kitchen-brixton",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Brixton Buzz contemporaneous replacement report",
+      "sourceUrl": "https://www.brixtonbuzz.com/2014/05/popular-market-row-cocktail-bar-seven-at-brixton-gets-set-to-open-a-second-brixton-cocktail-bar-at-384-coldharbour-lane/",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "Brixton Buzz premises history",
+      "sourceUrl": "https://www.brixtonbuzz.com/2014/06/from-horsemeat-to-fish-to-curry-to-cocktails-the-story-of-384-coldharbour-lane-brixton/",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "Current London directory closure record",
+      "sourceUrl": "https://www.allinlondon.co.uk/restaurants/indian/18260-bombay-kitchen",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Permanently closed",
+      "reason": "Contemporaneous local reporting states that Bombay Kitchen was the previous occupant of 384 Coldharbour Lane and was replaced by a new bar in 2014; a current directory also records Bombay Kitchen as closed."
+    }
+  ],
+  "notes": "This verifies permanent closure of the historical Bombay Kitchen location. The replacement venue is a different business and must not be merged into this restaurant record. Historical phone numbers and website details were not copied because they are not current contact actions."
+}

@@ -331,6 +331,487 @@
         }
       ],
       "notes": "This event supersedes only the category normalization in verification-2026-07-16-arena-lounge-uk-d22bd6571f86. It preserves the earlier event and repeats the core verification scope so current provenance remains fully auditable."
+    },
+    {
+      "id": "verification-2026-07-16-biriyani-junction-f8b78c7041fd",
+      "listingSlug": "biriyani-junction",
+      "listingSourceId": "ChIJAQAMzygHdkgR0OIzlZNS2CU",
+      "recordedAt": "2026-07-16T08:44:07.206Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Magic Tastes official contact page",
+          "sourceUrl": "https://www.magictastes.com/contact",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "FSA FHRS exact name and address query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Biriyani%20Junction&address=118%20Windmill%20Road",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Follow-up research found a current first-party food-manufacturing business, Magic Tastes, using 118 Windmill Road and publishing its own identity, phone, email and weekday hours. The FSA query still does not corroborate Biriyani Junction. This does not prove that the imported restaurant closed, moved, or was the same entity, so no canonical fact, closure claim, merge, or exclusion is supported. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-chotiwala-64b3cb86c158",
+      "listingSlug": "chotiwala",
+      "listingSourceId": "ChIJRyq4CesPdkgRy1hZio7BcLs",
+      "recordedAt": "2026-07-16T08:44:11.172Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS Tadka Holland Park business record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1687834/tadka-holland-park-london",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Deliveroo Tadka Holland Park current menu",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/notting-hill/tadka-holland-park-109-clarendon-road",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Uber Eats historical Chotiwala page",
+          "sourceUrl": "https://www.ubereats.com/gb/store/chotiwala-indian-vegetarian-food/5KOaaSidSlyK7LMjQ7RwYw",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Tadka Holland Park currently trades at the same address, and its current menu materially overlaps the historical Chotiwala menu. The Chotiwala delivery page is closed on Uber Eats. Same premises and menu continuity are strong replacement signals but do not establish that Chotiwala renamed, moved, merged, or retained the same entity/operator. No canonical rename, successor redirect, closure claim, or exclusion is supported without direct owner or entity evidence. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-golis-south-norwood-476e2e8db7e5",
+      "listingSlug": "golis-south-norwood",
+      "listingSourceId": "ChIJ8-_5yzwBdkgRGs7oVdz_rCE",
+      "recordedAt": "2026-07-16T08:44:15.365Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE25%206EE",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Yell Kismat Tandoori premises listing",
+          "sourceUrl": "https://www.yell.com/biz/kismat-tandoori-indian-takeaway-london-2842826/",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "FSA-derived D And D Grocery Shop premises record",
+          "sourceUrl": "https://www.eatible.co.uk/london/croydon/d-and-d-grocery-shop",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current premises evidence identifies other businesses at 1 Commercial Buildings, including D And D Grocery Shop and a directory listing for Kismat Tandoori, but no reliable source connects either business to Golis South Norwood. The imported entity may be historical, a delivery brand, moved, or erroneous; the available evidence cannot distinguish those outcomes. No closure, merge, successor, or exclusion decision is supported. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-spikky-pepperdem-food-a4fe152085ae",
+      "listingSlug": "spikky-pepperdem-food",
+      "listingSourceId": "ChIJE258j9up2EcR1Gj1X4sm6M4",
+      "recordedAt": "2026-07-16T08:44:20.913Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AN",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Royal Borough of Greenwich Parry Place occupancy schedule",
+          "sourceUrl": "https://www.royalgreenwich.gov.uk/download/downloads/id/5703/sealed_cpo_and_schedule.pdf",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Current Parry Place business-directory page",
+          "sourceUrl": "https://www.192.com/places/se/se18-6/se18-6an/",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The address is a multi-unit premises with several historical and current businesses. Current FSA and premises sources do not corroborate Spikky Pepperdem Food and do not identify a reliable successor. Source absence and other occupants do not prove closure, invalid import, or a rename. No canonical change, merge, successor, or exclusion is supported. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-bombay-kitchen-brixton-a8a7bd0c326d",
+      "listingSlug": "bombay-kitchen-brixton",
+      "listingSourceId": "ChIJM8r9pGgEdkgRZU5-EOOFvGQ",
+      "recordedAt": "2026-07-16T08:49:49.891Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Brixton Buzz contemporaneous replacement report",
+          "sourceUrl": "https://www.brixtonbuzz.com/2014/05/popular-market-row-cocktail-bar-seven-at-brixton-gets-set-to-open-a-second-brixton-cocktail-bar-at-384-coldharbour-lane/",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Brixton Buzz premises history",
+          "sourceUrl": "https://www.brixtonbuzz.com/2014/06/from-horsemeat-to-fish-to-curry-to-cocktails-the-story-of-384-coldharbour-lane-brixton/",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Current London directory closure record",
+          "sourceUrl": "https://www.allinlondon.co.uk/restaurants/indian/18260-bombay-kitchen",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Permanently closed",
+          "reason": "Contemporaneous local reporting states that Bombay Kitchen was the previous occupant of 384 Coldharbour Lane and was replaced by a new bar in 2014; a current directory also records Bombay Kitchen as closed.",
+          "applied": true
+        }
+      ],
+      "notes": "This verifies permanent closure of the historical Bombay Kitchen location. The replacement venue is a different business and must not be merged into this restaurant record. Historical phone numbers and website details were not copied because they are not current contact actions."
+    },
+    {
+      "id": "verification-2026-07-16-borough-market-81483adbd7f8",
+      "listingSlug": "borough-market",
+      "listingSourceId": "ChIJcQ-6AAAFdkgRbDuFu5GdTEg",
+      "recordedAt": "2026-07-16T08:49:53.401Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "City of Westminster current planning report",
+          "sourceUrl": "https://westminster.moderngov.co.uk/documents/s25549/ITEM%2003%20-%2031-35%20BRICK%20STREET%20LONDON%20W1J%207HQ.pdf",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Companies House property charge",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/OC368907/charges/9Vzon0vY-hqb4hupNvqDvVAp-qw",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Authoritative property and planning records identify 37-49 Brick Street as ancillary Park Lane Hotel space containing parking, plant, and upper-floor hotel uses. They do not identify a restaurant named Borough MARKET, and the imported postcode also conflicts with current planning records. This supports an invalid-import publication decision, not a closure claim or substitution with the unrelated Borough Market in Southwark."
+    },
+    {
+      "id": "verification-2026-07-16-calm-indiana-cow-562fbdf95502",
+      "listingSlug": "calm-indiana-cow",
+      "listingSourceId": "ChIJXfZLIg8FdkgRro83UWTXJGg",
+      "recordedAt": "2026-07-16T08:49:57.831Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Calm%20Indiana%20Cow&address=SE1%201TD",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current SE1 1TD premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE1%201TD&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current authoritative result corroborates Calm Indiana Cow. Current postcode results identify other businesses around 66-68 Union Street, but they do not establish whether this was a delivery brand, transcription error, moved business, or historical operator. Do not copy another occupant's contact details or infer closure. Hold pending direct evidence."
+    },
+    {
+      "id": "verification-2026-07-16-chef-tazzy-e9ca9cb5f803",
+      "listingSlug": "chef-tazzy",
+      "listingSourceId": "ChIJMUbUPAAddkgRCRLGpEqZURg",
+      "recordedAt": "2026-07-16T08:50:01.748Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Chef%20Tazzy&address=E3%202PA",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current E3 2PA premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E3%202PA&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current authoritative or first-party source corroborates Chef Tazzy at 4A Roach Road. The current postcode result identifies a different restaurant at number 7 and cannot be used as successor or contact evidence. The imported entity may be a home chef, delivery brand, historical operator, or incorrect record. Hold pending direct evidence."
+    },
+    {
+      "id": "verification-2026-07-16-contemporary-indian-cuisine-ec7be3761323",
+      "listingSlug": "contemporary-indian-cuisine",
+      "listingSourceId": "ChIJWYJjFXEQdkgRftY39xKtKwM",
+      "recordedAt": "2026-07-16T08:50:05.198Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and address query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Contemporary%20Indian%20Cuisine&address=50C%20Gascony%20Avenue",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current NW6 4NE premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW6%204NE&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current authoritative, first-party, or transactional source corroborates this generic imported identity at 50C Gascony Avenue, and no safe contact action can be assigned. Absence does not prove closure or invalid import. Hold pending direct owner, premises, licensing, or registry evidence."
+    },
+    {
+      "id": "verification-2026-07-16-delhiacacies-deliveroo-8802153adb87",
+      "listingSlug": "delhiacacies-deliveroo",
+      "listingSourceId": "ChIJk_lBVAAbdkgR_C5VfT36C54",
+      "recordedAt": "2026-07-16T08:50:08.931Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Delhiacacies&address=N7%209NH",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current N7 9NH premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=N7%209NH&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported address appears malformed ('Floor 60, 40 Brewery Road') and current FSA data identifies numerous different delivery brands at ground/first-floor kitchens at numbers 40 and 60. No source corroborates Delhiacacies or connects it to a current brand. Do not copy a shared-kitchen or other brand's contact details. Hold pending entity and unit evidence."
+    },
+    {
+      "id": "verification-2026-07-16-home-kitchen-9760b1e3a6b1",
+      "listingSlug": "home-kitchen",
+      "listingSourceId": "ChIJT3V-Zsep2EcRLWpwaHiyyVY",
+      "recordedAt": "2026-07-16T08:50:11.859Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Home%20Kitchen&address=SE18%206AP",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current SE18 6AP premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AP&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current source corroborates Home Kitchen at 13A Spray Street. Current postcode evidence identifies other businesses at 7-11 and 33-37 Spray Street but provides no successor or same-entity link. The generic name and missing contact data require direct operator or premises evidence. Hold pending review."
+    },
+    {
+      "id": "verification-2026-07-16-indian-food-camden-da3aece425b1",
+      "listingSlug": "indian-food-camden",
+      "listingSourceId": "ChIJC_VNdwAbdkgRoJLHm6kn1Z4",
+      "recordedAt": "2026-07-16T08:50:15.967Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Camden Market historical Munch Club page",
+          "sourceUrl": "https://camdenmarket.com/journal/camden-market-munch-club",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current NW1 8AH premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW1%208AH&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Current Google Maps Camden Market search result",
+          "sourceUrl": "https://www.google.com/maps/search/Lunch%2Bat%2BCamden%2BMarket%2C%2BLondon%2C%2BUnited%2BKingdom",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Camden Market confirms Indian Food Camden existed historically, but independent contemporaneous location evidence places it at 6F Paddock Alley. The imported Unit 312-313 location is currently associated with Magic Falafel in FSA and map evidence. This is a material location/entity conflict, not proof of closure. Hold the imported record pending direct trader or Camden Market evidence that resolves its current status and canonical unit."
+    },
+    {
+      "id": "verification-2026-07-16-republic-restaurant-verney-road-76dc7386371a",
+      "listingSlug": "republic-restaurant-verney-road",
+      "listingSourceId": "ChIJHQo6vpgDdkgRcfoH2r3FwXc",
+      "recordedAt": "2026-07-16T08:50:21.292Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current SE16 3DH premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE16%203DH&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Republic Restaurant Verney Road public directory profile",
+          "sourceUrl": "https://hampsteadvillagelondon.com/republic-restaurant-verney-road-8661/",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Allard House is a current multi-brand production/ghost-kitchen site. The FSA query lists many current businesses at 18 Verney Road but no Republic Restaurant or Unit 36 match, and the only exact-name profile publishes no phone, website, or hours. Source absence does not establish closure or invalid import, and contact details from another kitchen must not be copied. Hold for direct operator or premises evidence."
+    },
+    {
+      "id": "verification-2026-07-16-the-palm-indian-restaurant-limited-3ffd38f7e677",
+      "listingSlug": "the-palm-indian-restaurant-limited",
+      "listingSourceId": "ChIJJxrEHNQcdkgRr0udpyx-ejw",
+      "recordedAt": "2026-07-16T08:50:25.114Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Companies House filing history",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/05194842/filing-history",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current E1 4UN premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E1%204UN&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The company moved its registered office away from 88 Mile End Road in 2022 and current FSA data shows a multi-brand ghost-kitchen/food-production site without The Palm. A registered-office move and source absence do not prove the restaurant closed or identify a successor. No current location-specific phone, website, or hours could be validated. Hold for direct operator, licensing, rates, or premises evidence."
     }
   ]
 }

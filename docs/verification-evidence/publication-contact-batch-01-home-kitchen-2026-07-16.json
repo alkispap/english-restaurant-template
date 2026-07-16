@@ -1,0 +1,21 @@
+{
+  "listingSlug": "home-kitchen",
+  "expectedSourceId": "ChIJT3V-Zsep2EcRLWpwaHiyyVY",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:06.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-home-kitchen-9760b1e3a6b1"
+    }
+  ],
+  "notes": "No source corroborates Home Kitchen at 13A Spray Street and nearby businesses cannot be treated as successors. Retain the historical record and withhold it pending direct evidence."
+}

@@ -13,22 +13,38 @@ import {
 } from "../src/data/listing-publication";
 import { generateMetadata, generateStaticParams } from "../src/app/restaurants/[slug]/page";
 
-const pendingSlugs = ["biriyani-junction", "chotiwala", "golis-south-norwood", "spikky-pepperdem-food"];
+const pendingSlugs = [
+  "biriyani-junction",
+  "calm-indiana-cow",
+  "chef-tazzy",
+  "chotiwala",
+  "contemporary-indian-cuisine",
+  "delhiacacies-deliveroo",
+  "golis-south-norwood",
+  "home-kitchen",
+  "indian-food-camden",
+  "republic-restaurant-verney-road",
+  "spikky-pepperdem-food",
+  "the-palm-indian-restaurant-limited"
+];
+const excludedSlugs = ["bombay-kitchen-brixton", "borough-market"];
 
 main();
 
 async function main() {
-  assert.equal(publishedListings.length, 3182);
-  assert.equal(pendingReviewListings.length, 4);
+  assert.equal(publishedListings.length, 3172);
+  assert.equal(pendingReviewListings.length, 12);
   assert.deepEqual(pendingReviewListings.map((listing) => listing.slug).sort(), [...pendingSlugs].sort());
-  assert.equal(publiclyRoutableListings.length, 3186, "pending review pages should retain their exact URL");
+  assert.equal(publiclyRoutableListings.length, 3184, "pending review pages should retain their exact URL while excluded routes are omitted");
   assert.ok(pendingSlugs.every((slug) => getListingPublicationState(slug).status === "pending-review"));
+  assert.ok(excludedSlugs.every((slug) => getListingPublicationState(slug).status === "excluded"));
 
   const publicResults = new Set(filterListings({}).map((listing) => listing.slug));
-  for (const slug of pendingSlugs) assert.ok(!publicResults.has(slug), `public filters should omit ${slug}`);
+  for (const slug of [...pendingSlugs, ...excludedSlugs]) assert.ok(!publicResults.has(slug), `public filters should omit ${slug}`);
 
   const staticSlugs = new Set(generateStaticParams().map((item) => item.slug));
   for (const slug of pendingSlugs) assert.ok(staticSlugs.has(slug), `pending review route should remain generated: ${slug}`);
+  for (const slug of excludedSlugs) assert.ok(!staticSlugs.has(slug), `excluded route should not be generated: ${slug}`);
 
   const metadata = await generateMetadata({ params: Promise.resolve({ slug: "biriyani-junction" }) });
   assert.equal(metadata.robots && typeof metadata.robots === "object" ? metadata.robots.index : undefined, false);

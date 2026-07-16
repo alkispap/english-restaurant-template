@@ -1,0 +1,21 @@
+{
+  "listingSlug": "republic-restaurant-verney-road",
+  "expectedSourceId": "ChIJHQo6vpgDdkgRcfoH2r3FwXc",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:08.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-republic-restaurant-verney-road-76dc7386371a"
+    }
+  ],
+  "notes": "The multi-brand Allard House site has many current operators but no corroborated Republic Restaurant contact or unit identity. Hold it rather than copy a shared-kitchen contact."
+}

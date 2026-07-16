@@ -1,0 +1,34 @@
+{
+  "listingSlug": "golis-south-norwood",
+  "checkedAt": "2026-07-16T08:42:39.665Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE25%206EE",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    },
+    {
+      "sourceName": "Yell Kismat Tandoori premises listing",
+      "sourceUrl": "https://www.yell.com/biz/kismat-tandoori-indian-takeaway-london-2842826/",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    },
+    {
+      "sourceName": "FSA-derived D And D Grocery Shop premises record",
+      "sourceUrl": "https://www.eatible.co.uk/london/croydon/d-and-d-grocery-shop",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Current premises evidence identifies other businesses at 1 Commercial Buildings, including D And D Grocery Shop and a directory listing for Kismat Tandoori, but no reliable source connects either business to Golis South Norwood. The imported entity may be historical, a delivery brand, moved, or erroneous; the available evidence cannot distinguish those outcomes. No closure, merge, successor, or exclusion decision is supported. Keep the listing pending review."
+}

@@ -1,0 +1,21 @@
+{
+  "listingSlug": "delhiacacies-deliveroo",
+  "expectedSourceId": "ChIJk_lBVAAbdkgR_C5VfT36C54",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:05.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "material-data-conflict"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-delhiacacies-deliveroo-8802153adb87"
+    }
+  ],
+  "notes": "The imported unit/address is malformed and current shared-kitchen evidence lists different delivery brands. Hold the listing rather than assign another brand's contact details or infer a successor."
+}
