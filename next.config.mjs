@@ -12,6 +12,7 @@ const nextConfig = (phase) => {
 
   return {
     output: isStaticExport && !isDevServer ? "export" : undefined,
+    staticPageGenerationTimeout: isStaticExport && !isDevServer ? 180 : undefined,
     trailingSlash: true,
     outputFileTracingRoot: projectRoot,
     images: {
