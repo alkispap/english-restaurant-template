@@ -15,23 +15,25 @@ The goal is **100% evidence-checked coverage of the operational-gap cohort**, no
 
 ## 2. Current baseline
 
-Baseline after Phase 5G:
+Checkpoint after missing-contact batch 01:
 
 | Measure | Count | Meaning |
 | --- | ---: | --- |
 | Canonical location records | 3,186 | Total dataset grain |
-| Fresh editor-verified records | 2 | Complete current core-field checks with retained evidence |
-| Unverified records | 3,184 | Historically traceable but not fully checked for current facts |
-| Verification tasks with operational gaps | 608 | Unique records missing at least one important data group |
-| Open evidence conflicts | 4 | Reviewed records with insufficient or contradictory current evidence |
+| Fresh editor-verified records | 3 | Complete current core-field checks with retained evidence |
+| Unverified records | 3,183 | Historically traceable but not fully checked for current facts |
+| Retained records with operational gaps | 608 | Unique canonical records missing at least one important data group |
+| Ordinary queued records with operational gaps | 606 | Excludes two retained historical records now excluded from publication |
+| Open evidence conflicts | 13 | Reviewed records with insufficient or contradictory current evidence |
 | Missing contact action | 31 | No validated contact, transaction or map action |
 | Missing opening hours | 128 | No structured current hours |
 | Missing categories | 491 | No supported cuisine/category value |
 | Missing rating/review pair | 67 | Rating and review count are not both present and valid |
+| Published missing contact action | 17 | Remaining public records without a contact, transaction or map action |
 
 The gap counts overlap. One restaurant can appear in several categories, so they must not be added to estimate unique records.
 
-These figures do not mean that 3,184 restaurants are wrong. They mean the directory lacks a dated, complete, evidence-backed current check for them.
+These figures do not mean that 3,183 restaurants are wrong. They mean the directory lacks a dated, complete, evidence-backed current check for them.
 
 ## 3. Existing controls
 
@@ -102,7 +104,7 @@ The public-eligibility control uses:
 
 Moved, renamed, or duplicate records can require a published canonical successor and permanent redirect. Do not treat them as ordinary exclusions when an active replacement exists.
 
-Current baseline: 3,182 `published`, four `pending-review`, and zero `excluded`. Pending records retain a minimal, non-indexable route at their existing URL but are omitted from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data. Excluded records are retained in canonical/history data and either redirect to a validated published successor or return 404. Publication state is deliberately separate from provenance, verification outcome and business operating status.
+Current baseline: 3,172 `published`, 12 `pending-review`, and two `excluded`. Pending records retain a minimal, non-indexable route at their existing URL but are omitted from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data. Excluded records are retained in canonical/history data and either redirect to a validated published successor or return 404. Publication state is deliberately separate from provenance, verification outcome and business operating status.
 
 Every publication decision records the previous and next state, controlled reason, reviewer, reviewed timestamp, evidence references and notes. Direct manual edits to the materialized registry or ledger are prohibited.
 
@@ -438,9 +440,9 @@ Official references:
 
 ## 16. Exact next sequence
 
-1. Review the four current `pending-review` records using direct business, owner, registry or premises evidence; do not infer closure from source absence.
-2. Record verification and publication decisions separately through their guarded commands.
-3. Re-run the queue and process the 31 missing-contact records in batches of 10–20 only after this Phase 5H checkpoint is accepted.
+1. Process the next 10 published missing-contact records: `ishaak`, `kothu`, `kundar-tandoori`, `modern-indian`, `spice-garden`, `staffordshire`, `sucess-worker`, `taj`, `thanjavur-food-lounge-ltd`, and `the-layered-biryani-by-mom`.
+2. Keep the 12 current `pending-review` records in the explicit conflict queue and revisit them only when stronger evidence is available.
+3. Record verification and publication decisions separately through their guarded commands.
 4. Continue missing hours, categories and ratings in order, refreshing counts after every batch.
 5. Use import dry runs and expected-count guards; every genuinely new import begins as `pending-review`.
 6. Keep Google/Outscraper media restoration separate and on hold.

@@ -84,6 +84,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `6b8e720` | Phase 5H publication operating documentation |
 | `5ee1f38` | Static-export generation timeout reliability guard |
 | `381c7a5` | Phase 5H final verification and failure evidence |
+| `a470c1a` | Phase 5H finalized checkpoint |
+| `e3a90e7` | Phase 5 contact batch 01 evidence, decisions and synchronized public data |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -95,7 +97,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | In progress | Publication control is enforced; 3,182 published, four pending review, and the 608-record operational-gap program remains |
+| 5. Listing quality/operations | In progress | First missing-contact batch complete; 3,172 published, 12 pending review, 2 excluded, and 17 published records still lack a contact action |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log
@@ -1035,13 +1037,58 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5H is locally complete. Publication eligibility is enforceable and reusable; Phase 5 remains in progress for evidence review, the 608-record operational-gap program, rights-cleared media, and authorized live verification.
 
+### 2026-07-16 — Phase 5 contact batch 01: identity and contact-action research
+
+**Cohort and scope**
+
+- Rechecked the four existing `pending-review` records, then processed the first 10 records from the missing-contact cohort.
+- Fixed batch slugs: `republic-restaurant-verney-road`, `the-palm-indian-restaurant-limited`, `bombay-kitchen-brixton`, `borough-market`, `calm-indiana-cow`, `chef-tazzy`, `contemporary-indian-cuisine`, `delhiacacies-deliveroo`, `home-kitchen`, and `indian-food-camden`.
+- Preserved all historical source rows, source IDs and prior verification/publication events.
+- Kept Google/Outscraper media restoration out of scope.
+
+**Evidence outcomes**
+
+- The four original conflicts remain `pending-review`. Current premises evidence identifies possible replacements or other occupants, but does not establish continuity, closure, a successor, or a safe merge.
+- `bombay-kitchen-brixton` was verified as permanently closed at its historical premises and changed to `excluded/confirmed-permanently-closed`.
+- `borough-market` was identified as an invalid restaurant import at hotel ancillary premises and changed to `excluded/invalid-import`; it was not redirected to the unrelated Borough Market in Southwark.
+- Eight records lacked sufficient current evidence to safely assign a phone, website, hours, operating status, or successor. They changed from the legacy public baseline to `pending-review`.
+- No contact detail was guessed, copied from a replacement tenant, or assigned solely from a postcode, shared kitchen, delivery platform, company registration, or FSA absence.
+
+**Measured result**
+
+- Verification events: 7 to 21; publication events: 4 to 14.
+- Fresh editor-verified listings: 2 to 3; unverified listings: 3,184 to 3,183.
+- Publication states: 3,182 published / 4 pending / 0 excluded to 3,172 published / 12 pending / 2 excluded.
+- Ordinary verification queue: 3,184 to 3,182 because excluded historical records are omitted.
+- Queued records with operational gaps: 608 to 606 for the same exclusion reason; the retained canonical dataset still contains 608 gap records.
+- Retained-data gaps remain 31 missing contact actions, 128 missing hours, 491 missing categories, and 67 missing rating/review pairs because this batch did not manufacture replacement values.
+- Published-data gaps are now 17 missing contact actions, 114 missing hours, 487 missing categories, and 55 missing rating/review pairs.
+- Public search, filter and shortlist derivatives contain exactly 3,172 published listings. All 12 pending records are withheld from normal discovery and both excluded routes are absent.
+
+**Verification**
+
+- All verification and publication proposals passed dry-run checks before their guarded writes.
+- Regression suite: 156/156 passed; ESLint, TypeScript and `git diff --check` passed.
+- Publication audit: `ready`; no registry, ledger, successor or public-leakage issue.
+- SEO and indexation audits passed with 3,520 sitemap URLs, 3,069 indexable restaurant URLs and zero crawl warnings.
+- Standard production build passed.
+- Full static export passed: 3,657 pages; payload budgets passed.
+- Cloudflare export check passed for 7,405 files with no asset over 25 MiB.
+- Direct export inspection confirmed all 12 pending pages are present with `noindex` and no LocalBusiness schema; both excluded restaurant routes are absent.
+- Verification audit remains intentionally `not_ready`: 3,183 listings are unverified and 13 evidence conflicts remain open, including the retained excluded invalid-import record.
+
+**Git checkpoint**
+
+- Evidence/data commit: `e3a90e7` (`Verify first missing-contact listing batch`).
+- No push or deployment occurred.
+
 ## Exact next checkpoint
 
 Follow `docs/restaurant-data-verification-program.md` as the controlling reference for the remaining operational-gap verification work.
 
-1. Review the four `pending-review` identity/status conflicts using direct business, owner, registry, or premises evidence; do not infer closure from FSA absence.
-2. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
-3. After this checkpoint is accepted, continue the guarded priority queue with the 31 missing-contact records in batches of 10–20.
+1. Process the next 10 published missing-contact records: `ishaak`, `kothu`, `kundar-tandoori`, `modern-indian`, `spice-garden`, `staffordshire`, `sucess-worker`, `taj`, `thanjavur-food-lounge-ltd`, and `the-layered-biryani-by-mom`.
+2. Keep all 12 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
+3. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
 4. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
 5. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
 6. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
