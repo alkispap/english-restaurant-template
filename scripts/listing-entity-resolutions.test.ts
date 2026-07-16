@@ -17,6 +17,11 @@ const shortlistSummaries = JSON.parse(
 ) as Array<{ slug: string }>;
 
 for (const resolution of confirmedListingEntityResolutions) {
+  assert.ok(resolution.id);
+  assert.ok(resolution.reviewedAt);
+  assert.equal(resolution.reviewedBy, "directory-editor");
+  assert.ok(resolution.reason.length > 20);
+  assert.ok(resolution.evidence.length > 0, `entity resolution should retain evidence metadata: ${resolution.id}`);
   const canonical = listings.find((listing) => listing.slug === resolution.canonicalSlug);
   assert.ok(canonical, `canonical listing should exist: ${resolution.canonicalSlug}`);
   assert.equal(canonical.details?.placeId, resolution.canonicalSourceId);

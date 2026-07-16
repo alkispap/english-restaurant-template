@@ -3,8 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import type { Listing } from "../src/data/listings";
-import type { ListingSearchRecord } from "../src/data/listing-search-records";
-import { packListingSearchRecords } from "../src/lib/listing-search-index";
+import type { ImportedListing } from "../src/lib/directory-import";
 import {
   listingMediaUsages,
   validateListingMediaRightsDeclaration,
@@ -20,14 +19,14 @@ import {
   type OutscraperMediaEnrichmentReport,
   type OutscraperPhotoRow
 } from "../src/lib/outscraper-media-enrichment";
+import { absoluteDataOutputs, buildListingDataOutputs, readListingPublicationRegistry } from "./listing-data-output-utils";
+import { jsonFile, writeTextFilesAtomically } from "./publication-script-utils";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
 const write = args.includes("--write");
 const sourceListingsArg = optionValue("--source-listings");
 const listingsPath = path.join(root, "data/listings.json");
-const listingSearchRecordsPath = path.join(root, "data/listing-search-records.json");
-const listingSearchIndexPath = path.join(root, "data/listing-search-index.json");
 const mediaRegistryPath = path.join(root, "data/listing-media-provenance.json");
 const sourceListingsPath = sourceListingsArg ? path.resolve(root, sourceListingsArg) : listingsPath;
 const inputPaths = args.filter((arg) => !arg.startsWith("--")).map((csvPath) => path.resolve(root, csvPath));
@@ -45,7 +44,6 @@ async function main() {
     if (!fs.existsSync(inputPath)) throw new Error(`CSV file not found: ${inputPath}`);
   }
   if (!fs.existsSync(sourceListingsPath)) throw new Error(`Listings file not found: ${sourceListingsPath}`);
-  if (!fs.existsSync(listingSearchRecordsPath)) throw new Error(`Listing search records file not found: ${listingSearchRecordsPath}`);
   if (write && !fs.existsSync(mediaRegistryPath)) throw new Error("Media provenance registry is required before a write.");
 
   const rights = write ? rightsDeclaration() : undefined;
@@ -63,12 +61,13 @@ async function main() {
     return;
   }
 
-  fs.writeFileSync(listingsPath, `${JSON.stringify(cleaned.listings, null, 2)}\n`, "utf8");
-  syncListingSearchIndexes(cleaned.listings);
-  updateMediaRegistry(cleaned.listings, enrichmentUrls, rights!);
+  const mediaRegistry = updateMediaRegistry(cleaned.listings, enrichmentUrls, rights!);
+  const publicationRegistry = readListingPublicationRegistry(path.join(root, "data"));
+  const outputs = absoluteDataOutputs(path.join(root, "data"), buildListingDataOutputs(cleaned.listings as ImportedListing[], publicationRegistry));
+  outputs.set(mediaRegistryPath, jsonFile(mediaRegistry));
+  writeTextFilesAtomically(outputs);
   console.log(`Updated ${path.relative(root, listingsPath)}`);
-  console.log(`Updated ${path.relative(root, listingSearchRecordsPath)}`);
-  console.log(`Updated ${path.relative(root, listingSearchIndexPath)}`);
+  console.log("Regenerated publication-filtered search, filter, and shortlist data.");
   console.log(`Updated ${path.relative(root, mediaRegistryPath)}`);
 }
 
@@ -93,14 +92,6 @@ function rightsDeclaration(): ListingMediaRightsDeclaration {
   const errors = validateListingMediaRightsDeclaration(declaration);
   if (errors.length) throw new Error(`Media write refused:\n- ${errors.join("\n- ")}`);
   return declaration as ListingMediaRightsDeclaration;
-}
-
-function syncListingSearchIndexes(listings: Listing[]) {
-  const imagesBySlug = new Map(listings.map((listing) => [listing.slug, listing.images.slice(0, 3)]));
-  const searchRecords = JSON.parse(fs.readFileSync(listingSearchRecordsPath, "utf8").replace(/^\uFEFF/, "")) as ListingSearchRecord[];
-  const syncedRecords = searchRecords.map((record) => ({ ...record, images: imagesBySlug.get(record.slug) ?? record.images ?? [] }));
-  fs.writeFileSync(listingSearchRecordsPath, `${JSON.stringify(syncedRecords)}\n`, "utf8");
-  fs.writeFileSync(listingSearchIndexPath, `${JSON.stringify(packListingSearchRecords(syncedRecords))}\n`, "utf8");
 }
 
 function updateMediaRegistry(listings: Listing[], enrichmentUrls: Set<string>, declaration: ListingMediaRightsDeclaration) {
@@ -142,7 +133,7 @@ function updateMediaRegistry(listings: Listing[], enrichmentUrls: Set<string>, d
     }
   }
   registry.assets = [...assetByUrl.values()].sort((a, b) => a.url.localeCompare(b.url));
-  fs.writeFileSync(mediaRegistryPath, `${JSON.stringify(registry, null, 2)}\n`, "utf8");
+  return registry;
 }
 
 function optionValue(name: string) {

@@ -108,6 +108,9 @@ export type ApplyListingVerificationResult = {
 };
 
 const allowedFieldSet = new Set<string>(listingVerificationFields);
+const proposalKeySet = new Set(["listingSlug", "checkedAt", "reviewedBy", "outcome", "verificationStatus", "evidence", "fieldsChecked", "changes", "notes"]);
+const evidenceKeySet = new Set(["sourceName", "sourceUrl", "accessedAt"]);
+const changeKeySet = new Set(["field", "value", "reason"]);
 const stringArrayFields = new Set<ListingVerificationField>([
   "categories",
   "listingTypes",
@@ -159,6 +162,7 @@ export function validateListingVerificationProposal(
   now = new Date()
 ) {
   const errors: string[] = [];
+  if (isRecord(proposal)) rejectUnknownKeys(proposal, proposalKeySet, "proposal", errors);
   if (!listing) errors.push(`Unknown listing slug: ${clean(proposal.listingSlug) || "(blank)"}`);
   if (!clean(proposal.reviewedBy)) errors.push("reviewedBy is required");
   validateTimestamp("checkedAt", proposal.checkedAt, now, errors);
@@ -178,6 +182,7 @@ export function validateListingVerificationProposal(
     errors.push("at least one evidence source is required");
   } else {
     proposal.evidence.forEach((evidence, index) => {
+      if (isRecord(evidence)) rejectUnknownKeys(evidence, evidenceKeySet, `evidence[${index}]`, errors);
       if (!clean(evidence.sourceName)) errors.push(`evidence[${index}].sourceName is required`);
       if (!isHttpUrl(evidence.sourceUrl)) errors.push(`evidence[${index}].sourceUrl must be an absolute HTTP(S) URL`);
       validateTimestamp(`evidence[${index}].accessedAt`, evidence.accessedAt, now, errors);
@@ -192,6 +197,7 @@ export function validateListingVerificationProposal(
   const changes = proposal.changes ?? [];
   validateUniqueFields(changes.map((change) => change.field), "changes", errors);
   for (const [index, change] of changes.entries()) {
+    if (isRecord(change)) rejectUnknownKeys(change, changeKeySet, `changes[${index}]`, errors);
     if (!proposal.fieldsChecked?.includes(change.field)) {
       errors.push(`changes[${index}].field must also appear in fieldsChecked`);
     }
@@ -426,6 +432,14 @@ function isHttpUrl(value: unknown) {
   } catch {
     return false;
   }
+}
+
+function rejectUnknownKeys(value: Record<string, unknown>, allowed: Set<string>, label: string, errors: string[]) {
+  for (const key of Object.keys(value)) if (!allowed.has(key)) errors.push(`${label}.${key} is not allowed`);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 function normalizeTimestamp(value: string) {

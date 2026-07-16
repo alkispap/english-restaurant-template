@@ -4,21 +4,22 @@ import process from "node:process";
 import {
   analyzeDirectoryFile,
   renderListingsFile,
-  renderListingsJsonFile,
-  renderListingSearchIndexJsonFile,
-  renderListingSearchRecordsJsonFile,
-  renderListingFilterCountsJsonFile,
-  renderShortlistIndexJsonFile,
-  renderShortlistSummariesJsonFile,
   renderMissingCategoryReview,
   renderReport,
   renderReportForListings,
-  selectCuratedRestaurantSample
+  selectCuratedRestaurantSample,
+  type ImportedListing
 } from "../src/lib/directory-import";
+import type { ListingPublicationRegistry } from "../src/lib/listing-publication";
+import { reconcileListingImport } from "../src/lib/listing-import-publication";
+import { listingSlugRedirects } from "../src/data/listing-slug-redirects";
+import { absoluteDataOutputs, buildListingDataOutputs } from "./listing-data-output-utils";
+import { jsonFile, writeTextFilesAtomically } from "./publication-script-utils";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
-const dryRun = args.includes("--dry-run");
+const write = args.includes("--write");
+const dryRun = !write;
 const sampleArg = args.find((arg) => arg.startsWith("--sample"));
 const sampleSize = sampleArg ? parseSampleSize(sampleArg) : undefined;
 const inputArg = args.find((arg) => !arg.startsWith("--"));
@@ -30,11 +31,7 @@ const provenanceOptions = {
 const inputPath = path.resolve(root, inputArg ?? "data/directory.csv");
 const listingsSourcePath = path.resolve(root, "src/data/listings.ts");
 const listingsJsonPath = path.resolve(root, "data/listings.json");
-const listingSearchRecordsJsonPath = path.resolve(root, "data/listing-search-records.json");
-const listingSearchIndexJsonPath = path.resolve(root, "data/listing-search-index.json");
-const listingFilterCountsJsonPath = path.resolve(root, "data/listing-filter-counts.json");
-const shortlistSummariesJsonPath = path.resolve(root, "data/shortlist-summaries.json");
-const shortlistIndexJsonPath = path.resolve(root, "data/shortlist-index.json");
+const publicationRegistryPath = path.resolve(root, "data/listing-publication-states.json");
 const reportPath = path.resolve(root, "data/import-report.md");
 const categoryReviewPath = path.resolve(root, "data/category-inference-review.md");
 
@@ -50,57 +47,49 @@ const reportData = sampleSize ? renderReportForListings(result.reportData, impor
 const report = sampleSize
   ? `${renderReport(reportData)}\n## Curated Sample\n\n- Requested sample size: ${sampleSize}\n- Sample listings selected: ${importedListings.length}\n- Selection strategy: broad coverage across areas, cuisines, types, prices, dietary options, services, images, ratings, and review counts.\n`
   : result.report;
+const existingListings = readJson<ImportedListing[]>(listingsJsonPath);
+const publicationRegistry = readJson<ListingPublicationRegistry>(publicationRegistryPath);
+const reconciliation = reconcileListingImport(
+  existingListings,
+  importedListings,
+  publicationRegistry,
+  provenanceOptions.importedAt ?? new Date().toISOString()
+);
+for (const slug of reconciliation.newSlugs) {
+  if (slug in listingSlugRedirects) throw new Error(`New import reuses a retired redirect slug: ${slug}`);
+}
+const reconciliationReport = [
+  "",
+  "## Publication-safe reconciliation",
+  "",
+  `- Retained canonical records: ${existingListings.length.toLocaleString()}`,
+  `- Matched incoming records retained without overwriting verified facts: ${reconciliation.matchedCount.toLocaleString()}`,
+  `- New records initialized as pending review: ${reconciliation.newCount.toLocaleString()}`,
+  `- Existing records absent from this source but preserved unchanged: ${reconciliation.sourceAbsentCount.toLocaleString()}`,
+  "- Source absence did not infer closure, exclusion, or deletion.",
+  ""
+].join("\n");
+const finalReport = `${report.trimEnd()}\n${reconciliationReport}`;
+
+console.log(finalReport);
+console.log(`Reconciled retained listings: ${reconciliation.listings.length.toLocaleString()}`);
+console.log(`Published after reconciliation: ${reconciliation.registry.entries.filter((state) => state.status === "published").length.toLocaleString()}`);
+console.log(`Pending after reconciliation: ${reconciliation.registry.entries.filter((state) => state.status === "pending-review").length.toLocaleString()}`);
 
 if (dryRun) {
-  console.log(report);
-  console.log("Dry run complete. No files were changed.");
+  console.log("Dry run complete. No files were changed. Pass --write with the expected reconciliation counts to persist.");
 } else {
-  fs.mkdirSync(path.dirname(listingsSourcePath), { recursive: true });
-  fs.writeFileSync(listingsSourcePath, sampleSize ? renderListingsFile() : result.listingsFile, "utf8");
-  fs.mkdirSync(path.dirname(listingsJsonPath), { recursive: true });
-  fs.writeFileSync(
-    listingsJsonPath,
-    sampleSize ? renderListingsJsonFile(importedListings) : result.listingsJsonFile,
-    "utf8"
-  );
-  fs.writeFileSync(
-    listingSearchRecordsJsonPath,
-    sampleSize ? renderListingSearchRecordsJsonFile(importedListings) : result.listingSearchRecordsJsonFile,
-    "utf8"
-  );
-  fs.writeFileSync(
-    listingSearchIndexJsonPath,
-    sampleSize ? renderListingSearchIndexJsonFile(importedListings) : result.listingSearchIndexJsonFile,
-    "utf8"
-  );
-  fs.writeFileSync(
-    listingFilterCountsJsonPath,
-    sampleSize ? renderListingFilterCountsJsonFile(importedListings) : result.listingFilterCountsJsonFile,
-    "utf8"
-  );
-  fs.writeFileSync(
-    shortlistSummariesJsonPath,
-    sampleSize ? renderShortlistSummariesJsonFile(importedListings) : result.shortlistSummariesJsonFile,
-    "utf8"
-  );
-  fs.writeFileSync(
-    shortlistIndexJsonPath,
-    sampleSize ? renderShortlistIndexJsonFile(importedListings) : result.shortlistIndexJsonFile,
-    "utf8"
-  );
-  fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-  fs.writeFileSync(reportPath, report, "utf8");
-  fs.writeFileSync(categoryReviewPath, renderMissingCategoryReview(result.categoryReview), "utf8");
-  console.log(`Imported ${importedListings.length} listings from ${path.relative(root, inputPath)}`);
-  console.log(`Updated ${path.relative(root, listingsSourcePath)}`);
-  console.log(`Updated ${path.relative(root, listingsJsonPath)}`);
-  console.log(`Updated ${path.relative(root, listingSearchRecordsJsonPath)}`);
-  console.log(`Updated ${path.relative(root, listingSearchIndexJsonPath)}`);
-  console.log(`Updated ${path.relative(root, listingFilterCountsJsonPath)}`);
-  console.log(`Updated ${path.relative(root, shortlistSummariesJsonPath)}`);
-  console.log(`Updated ${path.relative(root, shortlistIndexJsonPath)}`);
-  console.log(`Wrote ${path.relative(root, reportPath)}`);
-  console.log(`Wrote ${path.relative(root, categoryReviewPath)}`);
+  requireExpectedCount("--expected-new", reconciliation.newCount);
+  requireExpectedCount("--expected-matched", reconciliation.matchedCount);
+  requireExpectedCount("--expected-source-absent", reconciliation.sourceAbsentCount);
+  const outputs = absoluteDataOutputs(path.dirname(listingsJsonPath), buildListingDataOutputs(reconciliation.listings, reconciliation.registry));
+  outputs.set(listingsSourcePath, renderListingsFile());
+  outputs.set(publicationRegistryPath, jsonFile(reconciliation.registry));
+  outputs.set(reportPath, finalReport);
+  outputs.set(categoryReviewPath, renderMissingCategoryReview(result.categoryReview));
+  writeTextFilesAtomically(outputs);
+  console.log(`Imported ${reconciliation.newCount} new pending-review listings from ${path.relative(root, inputPath)}; retained ${existingListings.length} existing records.`);
+  console.log(`Updated ${outputs.size} canonical, editorial, report, and publication-filtered derived files.`);
 }
 
 function parseSampleSize(value: string) {
@@ -112,4 +101,12 @@ function parseSampleSize(value: string) {
 function optionValue(name: string) {
   const argument = args.find((value) => value.startsWith(`${name}=`));
   return argument?.slice(name.length + 1).trim() || undefined;
+}
+
+function requireExpectedCount(name: string, expected: number) {
+  if (Number(optionValue(name)) !== expected) throw new Error(`${name} must equal ${expected}`);
+}
+
+function readJson<T>(filePath: string) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8")) as T;
 }

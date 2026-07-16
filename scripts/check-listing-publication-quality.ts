@@ -7,6 +7,7 @@ import type { ListingVerificationLedger } from "../src/lib/listing-verification"
 import { renderPublishedDirectoryDataFiles, type ImportedListing } from "../src/lib/directory-import";
 import { unpackListingSearchRecords, type PackedListingSearchIndex } from "../src/lib/listing-search-index";
 import { unpackShortlistSummaries, type PackedShortlistIndex } from "../src/lib/shortlist-index";
+import { confirmedListingEntityResolutions } from "../src/data/listing-entity-resolutions";
 
 const dataDirectory = path.join(process.cwd(), "data");
 const registry = readJson<ListingPublicationRegistry>(path.join(dataDirectory, "listing-publication-states.json"));
@@ -28,6 +29,7 @@ const expectedFiles = new Map([
 const derivativeIntegrityIssues = [...expectedFiles].filter(([filename, contents]) => fs.readFileSync(path.join(dataDirectory, filename), "utf8") !== contents).map(([filename]) => filename);
 const report = auditListingPublicationQuality(listings, registry, ledger, {
   verificationLedger,
+  entityResolutionIds: new Set(confirmedListingEntityResolutions.map((resolution) => resolution.id)),
   publicDerivativeSlugs: {
     verbose_search: verboseSearch.map((item) => item.slug),
     packed_search: packedSearch.map((item) => item.slug),

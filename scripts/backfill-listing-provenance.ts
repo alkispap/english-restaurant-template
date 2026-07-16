@@ -3,14 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   analyzeDirectoryFile,
-  renderListingFilterCountsJsonFile,
-  renderListingSearchIndexJsonFile,
-  renderListingSearchRecordsJsonFile,
-  renderListingsJsonFile,
-  renderShortlistIndexJsonFile,
-  renderShortlistSummariesJsonFile,
   type ImportedListing
 } from "../src/lib/directory-import";
+import { absoluteDataOutputs, buildListingDataOutputs, readListingPublicationRegistry } from "./listing-data-output-utils";
+import { writeTextFilesAtomically } from "./publication-script-utils";
 
 const SOURCE_FILENAME = "Indian Restaurants - Outscraper - Test.csv";
 const SOURCE_SHA256 = "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d";
@@ -28,6 +24,7 @@ if (sourceHash !== SOURCE_SHA256) {
 
 const sourceListings = analyzeDirectoryFile(sourcePath, "dry run").listings;
 const listings = JSON.parse(fs.readFileSync(listingsPath, "utf8")) as ImportedListing[];
+const publicationRegistry = readListingPublicationRegistry(dataDirectory);
 const sourceByPlaceId = new Map<string, ImportedListing>();
 const sourceBySlug = new Map<string, ImportedListing>();
 
@@ -73,17 +70,7 @@ if (!write) {
   process.exit(0);
 }
 
-const outputs = new Map<string, string>([
-  ["listings.json", renderListingsJsonFile(listings)],
-  ["listing-search-records.json", renderListingSearchRecordsJsonFile(listings)],
-  ["listing-search-index.json", renderListingSearchIndexJsonFile(listings)],
-  ["listing-filter-counts.json", renderListingFilterCountsJsonFile(listings)],
-  ["shortlist-summaries.json", renderShortlistSummariesJsonFile(listings)],
-  ["shortlist-index.json", renderShortlistIndexJsonFile(listings)]
-]);
-
-for (const [filename, contents] of outputs) {
-  fs.writeFileSync(path.join(dataDirectory, filename), contents, "utf8");
-}
+const outputs = absoluteDataOutputs(dataDirectory, buildListingDataOutputs(listings, publicationRegistry));
+writeTextFilesAtomically(outputs);
 
 console.log(`Updated ${outputs.size} canonical and derived data files.`);

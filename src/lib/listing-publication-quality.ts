@@ -77,11 +77,6 @@ export function auditListingPublicationQuality(
     "Malformed states can leak records or produce inconsistent public behavior.",
     "Repair status/reason-specific fields through the guarded publication workflow.");
 
-  if (registry.baseline.listingCount !== listings.length) {
-    addIssue(issues, [`baseline=${registry.baseline.listingCount}; listings=${listings.length}`], "baseline_listing_count_mismatch", "critical",
-      "The migration baseline no longer describes the retained canonical dataset.",
-      "Use import reconciliation for later records and never rewrite the approved baseline silently.");
-  }
   if (options.sourceSha256 && registry.baseline.sourceSha256.toLowerCase() !== options.sourceSha256.toLowerCase()) {
     addIssue(issues, [registry.baseline.sourceSha256], "baseline_source_hash_mismatch", "critical",
       "The recorded migration source differs from the canonical file being audited.",

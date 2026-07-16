@@ -96,4 +96,10 @@ const badField = structuredClone(verifiedProposal) as unknown as { fieldsChecked
 badField.fieldsChecked = ["slug"];
 assert.ok(validateListingVerificationProposal(listing, badField as never).some((error) => /not a supported/.test(error)));
 
+const publicationField = { ...verifiedProposal, publicationStatus: "excluded" };
+assert.ok(
+  validateListingVerificationProposal(listing, publicationField as never).some((error) => /publicationStatus is not allowed/.test(error)),
+  "verification proposals must not carry publication decisions"
+);
+
 console.log("listing verification tests passed");

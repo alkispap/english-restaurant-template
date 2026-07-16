@@ -1,22 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Listing } from "../src/data/listings";
-import {
-  renderListingFilterCountsJsonFile,
-  renderListingSearchIndexJsonFile,
-  renderListingSearchRecordsJsonFile,
-  renderListingsJsonFile,
-  renderShortlistIndexJsonFile,
-  renderShortlistSummariesJsonFile,
-  type ImportedListing
-} from "../src/lib/directory-import";
+import type { ImportedListing } from "../src/lib/directory-import";
 import { isApprovedListingMediaAsset, type ListingMediaRegistry } from "../src/lib/listing-media-provenance";
+import { absoluteDataOutputs, buildListingDataOutputs, readListingPublicationRegistry } from "./listing-data-output-utils";
+import { jsonFile, writeTextFilesAtomically } from "./publication-script-utils";
 
 const write = process.argv.includes("--write");
 const dataDirectory = path.join(process.cwd(), "data");
 const registryPath = path.join(dataDirectory, "listing-media-provenance.json");
 const listings = JSON.parse(fs.readFileSync(path.join(dataDirectory, "listings.json"), "utf8")) as Listing[];
 const registry = JSON.parse(fs.readFileSync(registryPath, "utf8")) as ListingMediaRegistry;
+const publicationRegistry = readListingPublicationRegistry(dataDirectory);
 const assetByUrl = new Map(registry.assets.map((asset) => [asset.url, asset]));
 let removedGalleryUrls = 0;
 let removedMenuUrls = 0;
@@ -57,14 +52,7 @@ if (!write) {
 }
 
 const imported = cleaned as ImportedListing[];
-const outputs = new Map<string, string>([
-  ["listings.json", renderListingsJsonFile(imported)],
-  ["listing-search-records.json", renderListingSearchRecordsJsonFile(imported)],
-  ["listing-search-index.json", renderListingSearchIndexJsonFile(imported)],
-  ["listing-filter-counts.json", renderListingFilterCountsJsonFile(imported)],
-  ["shortlist-summaries.json", renderShortlistSummariesJsonFile(imported)],
-  ["shortlist-index.json", renderShortlistIndexJsonFile(imported)]
-]);
-for (const [filename, contents] of outputs) fs.writeFileSync(path.join(dataDirectory, filename), contents, "utf8");
-fs.writeFileSync(registryPath, `${JSON.stringify(registry, null, 2)}\n`, "utf8");
+const outputs = absoluteDataOutputs(dataDirectory, buildListingDataOutputs(imported, publicationRegistry));
+outputs.set(registryPath, jsonFile(registry));
+writeTextFilesAtomically(outputs);
 console.log(`Updated ${outputs.size} canonical/derived data files plus the media registry.`);
