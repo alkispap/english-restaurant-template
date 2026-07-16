@@ -4518,11 +4518,12 @@
     {
       "listingSlug": "chaiwrap",
       "listingSourceId": "ChIJ8Tu2h_QCdkgR9Krj19ZQyNI",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "pending-review",
+      "reason": "material-data-conflict",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-chaiwrap-dd369a72c79f"
     },
     {
       "listingSlug": "chak-89",
@@ -7629,11 +7630,12 @@
     {
       "listingSlug": "east-india-club",
       "listingSourceId": "ChIJlQlo39YEdkgRsev5YsuZgZA",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-east-india-club-4078a329c0fe"
     },
     {
       "listingSlug": "east-india-restaurant-surbiton",
@@ -8016,11 +8018,12 @@
     {
       "listingSlug": "everyman-maida-vale",
       "listingSourceId": "ChIJrU2Z1KUadkgRqFMP9XqZlFU",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-everyman-maida-vale-cf010452a79e"
     },
     {
       "listingSlug": "exotic-takeaway",
@@ -18678,47 +18681,52 @@
     {
       "listingSlug": "premier-inn-london-blackfriars-fleet-street-hotel",
       "listingSourceId": "ChIJ24SRYq0EdkgRAksghbg1UM8",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-premier-inn-london-blackfriars-fleet-street-hotel-3ecb90bcf717"
     },
     {
       "listingSlug": "premier-inn-london-dagenham-hotel",
       "listingSourceId": "ChIJp1t__G6l2EcR0e3lX2oGko4",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-premier-inn-london-dagenham-hotel-a7475c2f6969"
     },
     {
       "listingSlug": "premier-inn-london-edgware-hotel",
       "listingSourceId": "ChIJO8aWP6kWdkgRpF4FIamiqvk",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-premier-inn-london-edgware-hotel-520142d991aa"
     },
     {
       "listingSlug": "premier-inn-london-harrow-hotel",
       "listingSourceId": "ChIJKeTqne0TdkgRXoPmHqy8yGg",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-premier-inn-london-harrow-hotel-9db00361cb3d"
     },
     {
       "listingSlug": "premier-inn-london-hendon-the-hyde-hotel",
       "listingSourceId": "ChIJ__8PMTsRdkgRo5alyJADRsg",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-premier-inn-london-hendon-the-hyde-hotel-f090e8e37fc2"
     },
     {
       "listingSlug": "prince-of-wales",
@@ -25544,11 +25552,12 @@
     {
       "listingSlug": "the-hornbeam-community-centre-cic",
       "listingSourceId": "ChIJ-_EoA5MddkgR9Ex1TEbJsOw",
-      "status": "published",
-      "reason": "legacy-public-baseline",
-      "origin": "migration-baseline",
-      "effectiveAt": "2026-07-16T07:00:00.000Z",
-      "changedBy": "system:migration"
+      "status": "excluded",
+      "reason": "out-of-directory-scope",
+      "origin": "editorial-decision",
+      "effectiveAt": "2026-07-16T18:16:00.000Z",
+      "changedBy": "directory-editor",
+      "lastDecisionEventId": "publication-2026-07-16-the-hornbeam-community-centre-cic-baee769268d9"
     },
     {
       "listingSlug": "the-hot-spot",

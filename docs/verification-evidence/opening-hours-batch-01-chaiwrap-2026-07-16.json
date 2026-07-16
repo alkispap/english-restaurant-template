@@ -1,0 +1,45 @@
+{
+  "listingSlug": "chaiwrap",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS Yak Yummy exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1872204",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "Hullabaloo current official website",
+      "sourceUrl": "https://hullabaloostreetfood.co.uk/",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "Current claimed Tripadvisor Chai Wrap profile",
+      "sourceUrl": "https://www.tripadvisor.co.uk/Restaurant_Review-g186338-d12416219-Reviews-Chai_Wrap-London_England.html",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "Current Hullabaloo Deptford closure report",
+      "sourceUrl": "https://thatsup.co.uk/london/restaurant/hullabaloo-deptford/",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "TUHITU trading-as Hullabaloo Companies House filing history",
+      "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/14867840/filing-history",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [],
+  "notes": "Current authoritative premises evidence identifies Yak Yummy at 111B Deptford High Street. Hullabaloo's first-party site now identifies 10 Greenwich Church Street, while a current venue directory explicitly reports Hullabaloo Deptford closed and Companies House records link TUHITU trading as Hullabaloo to the historical Chaiwrap address before dissolution. However, a claimed Tripadvisor Chai Wrap profile still presents the exact historical name, address, phone and current hours as open. Do not infer closure, transfer Chaiwrap history to Yak Yummy, merge with Hullabaloo Greenwich, redirect, or apply any hours until the conflict is resolved."
+}

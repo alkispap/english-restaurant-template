@@ -3,6 +3,8 @@ import type { Listing, ListingProvenance } from "@/data/listings";
 
 export const listingVerificationFields = [
   "name",
+  "description",
+  "metaDescription",
   "address",
   "fullAddress",
   "postcode",
@@ -333,7 +335,7 @@ function validateFieldValue(field: ListingVerificationField, value: unknown, err
     if (typeof value !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errors.push(`${label} must be a valid email address or null`);
     return;
   }
-  if (field === "name") {
+  if (field === "name" || field === "description" || field === "metaDescription") {
     if (typeof value !== "string" || !value.trim()) errors.push(`${label} must be a non-empty string`);
     return;
   }

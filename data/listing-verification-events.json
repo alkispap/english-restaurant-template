@@ -1748,6 +1748,679 @@
       ],
       "changes": [],
       "notes": "The exact Real Taste Google profile remains and displays hours, but official and FSA evidence identifies Kulcha Express at the same premises. A stale duplicate profile, rename or successor are all possible. Do not republish, merge or redirect until explicit continuity evidence exists."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-blackfriars-fleet-street-hotel-7aa4eb9763d1",
+      "listingSlug": "premier-inn-london-blackfriars-fleet-street-hotel",
+      "listingSourceId": "ChIJ24SRYq0EdkgRAksghbg1UM8",
+      "recordedAt": "2026-07-16T18:20:34.619Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Blackfriars hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-blackfriars-fleet-street.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/430568",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and exact-premises FSA record support an operating Premier Inn hotel.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 333 321 9269",
+          "reason": "The current official hotel page publishes this location-specific contact number.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-edgware-hotel-eda67a370e91",
+      "listingSlug": "premier-inn-london-edgware-hotel",
+      "listingSourceId": "ChIJO8aWP6kWdkgRpF4FIamiqvk",
+      "recordedAt": "2026-07-16T18:20:37.334Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Edgware hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-edgware.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS London Edgware Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/276598",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "435 Burnt Oak Broadway",
+          "reason": "The current FSA record supplies the exact street number for the Premier Inn premises.",
+          "previousValue": "Burnt Oak Broadway",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "435 Burnt Oak Broadway, Burnt Oak, HA8 5AQ, London",
+          "reason": "The full address is synchronized with the current exact-premises FSA address and existing locality.",
+          "previousValue": "Burnt Oak Broadway, London, HA8 5AQ",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and February 2026 exact-premises FSA inspection support an operating Premier Inn hotel.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 333 321 1259",
+          "reason": "The current official hotel page publishes this location-specific contact number.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill with a general hotel menu rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-harrow-hotel-549cdb113d7e",
+      "listingSlug": "premier-inn-london-harrow-hotel",
+      "listingSourceId": "ChIJKeTqne0TdkgRXoPmHqy8yGg",
+      "recordedAt": "2026-07-16T18:20:40.493Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Harrow hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-harrow.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Traveller's Rest exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/276943",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "Kenton Road",
+          "reason": "The current official hotel page and FSA partner-premises record identify the site on Kenton Road without supporting the imported 134A unit label.",
+          "previousValue": "134A Kenton Rd",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "Kenton Road, Kenton, HA3 8AT, London",
+          "reason": "The full address is synchronized with the official hotel location and the current FSA postcode for Traveller's Rest.",
+          "previousValue": "134A Kenton Rd, London, HA3 8AL",
+          "applied": true
+        },
+        {
+          "field": "postcode",
+          "value": "HA3 8AT",
+          "reason": "The current official hotel page and FSA record support HA3 8AT rather than the imported HA3 8AL.",
+          "previousValue": "HA3 8AL",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and current FSA partner-premises record support an operating hotel and Beefeater site.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel with the Traveller's Rest Beefeater, whose published menu is a general steak and pub menu rather than an Indian restaurant operation. No hotel or Beefeater hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-everyman-maida-vale-5b7fb289dc24",
+      "listingSlug": "everyman-maida-vale",
+      "listingSourceId": "ChIJrU2Z1KUadkgRqFMP9XqZlFU",
+      "recordedAt": "2026-07-16T18:20:43.509Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Everyman official Maida Vale venue page",
+          "sourceUrl": "https://www.everymancinema.com/venues-list/x0lwi-everyman-maida-vale/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Everyman official Maida Vale food and drink page",
+          "sourceUrl": "https://www.everymancinema.com/food-and-drink/x0lwi-everyman-maida-vale/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Everyman Cinema exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1099878",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official venue and food pages plus current exact-premises FSA record support an operating Everyman cinema.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact entity is a cinema with a bar, Spielburger kitchen and food delivered to cinema seats. Its daily opening time is a cinema venue time, not an Indian restaurant schedule. No hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-hendon-the-hyde-hotel-ecd6f20dca78",
+      "listingSlug": "premier-inn-london-hendon-the-hyde-hotel",
+      "listingSourceId": "ChIJ__8PMTsRdkgRo5alyJADRsg",
+      "recordedAt": "2026-07-16T18:20:47.020Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Hendon The Hyde hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-hendon-the-hyde.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/758451",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and November 2025 exact-premises FSA inspection support an operating Premier Inn hotel.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 333 321 9324",
+          "reason": "The current official hotel page publishes this location-specific contact number.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-dagenham-hotel-25c7a74d709a",
+      "listingSlug": "premier-inn-london-dagenham-hotel",
+      "listingSourceId": "ChIJp1t__G6l2EcR0e3lX2oGko4",
+      "recordedAt": "2026-07-16T18:20:50.209Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Dagenham hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-dagenham.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Brewers Fayre and Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/553061",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "fullAddress",
+          "value": "Chequers Corner, 2 New Rd, Dagenham, RM9 6YS, London",
+          "reason": "The full address is synchronized with the current official hotel and FSA postcode.",
+          "previousValue": "Chequers Corner, 2 New Rd, Dagenham, RM10 6YS, London",
+          "applied": true
+        },
+        {
+          "field": "postcode",
+          "value": "RM9 6YS",
+          "reason": "The current official hotel page and FSA record support RM9 6YS rather than the imported RM10 6YS.",
+          "previousValue": "RM10 6YS",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and October 2025 exact-premises FSA inspection support an operating Premier Inn and Brewers Fayre site.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel with an adjacent Brewers Fayre serving a general British/international menu rather than an Indian restaurant. No hotel or Brewers Fayre hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-chaiwrap-eb3cba91f617",
+      "listingSlug": "chaiwrap",
+      "listingSourceId": "ChIJ8Tu2h_QCdkgR9Krj19ZQyNI",
+      "recordedAt": "2026-07-16T18:20:53.169Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS Yak Yummy exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1872204",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Hullabaloo current official website",
+          "sourceUrl": "https://hullabaloostreetfood.co.uk/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Current claimed Tripadvisor Chai Wrap profile",
+          "sourceUrl": "https://www.tripadvisor.co.uk/Restaurant_Review-g186338-d12416219-Reviews-Chai_Wrap-London_England.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Current Hullabaloo Deptford closure report",
+          "sourceUrl": "https://thatsup.co.uk/london/restaurant/hullabaloo-deptford/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "TUHITU trading-as Hullabaloo Companies House filing history",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/14867840/filing-history",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [],
+      "notes": "Current authoritative premises evidence identifies Yak Yummy at 111B Deptford High Street. Hullabaloo's first-party site now identifies 10 Greenwich Church Street, while a current venue directory explicitly reports Hullabaloo Deptford closed and Companies House records link TUHITU trading as Hullabaloo to the historical Chaiwrap address before dissolution. However, a claimed Tripadvisor Chai Wrap profile still presents the exact historical name, address, phone and current hours as open. Do not infer closure, transfer Chaiwrap history to Yak Yummy, merge with Hullabaloo Greenwich, redirect, or apply any hours until the conflict is resolved."
+    },
+    {
+      "id": "verification-2026-07-16-east-india-club-07f1fea0fb56",
+      "listingSlug": "east-india-club",
+      "listingSourceId": "ChIJlQlo39YEdkgRsev5YsuZgZA",
+      "recordedAt": "2026-07-16T18:20:56.376Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "East India Club official bars and dining page",
+          "sourceUrl": "https://eastindiaclub.co.uk/bar-dining-times/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS East India Devonshire Sports and Public Schools Club record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/412568",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official club dining page and September 2025 FSA inspection support an operating members' club.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://eastindiaclub.co.uk/",
+          "reason": "The current official website is available over HTTPS.",
+          "previousValue": "http://www.eastindiaclub.co.uk/",
+          "applied": true
+        }
+      ],
+      "notes": "The exact entity is a private members' club. Its official dining page restricts dining to members and guests and describes the cuisine as British. Club dining-room and lounge hours were not added to an Indian restaurant listing. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-the-hornbeam-community-centre-cic-97114b4c347b",
+      "listingSlug": "the-hornbeam-community-centre-cic",
+      "listingSourceId": "ChIJ-_EoA5MddkgR9Ex1TEbJsOw",
+      "recordedAt": "2026-07-16T18:20:59.584Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Hornbeam Centre official current hub and cafe-space schedule",
+          "sourceUrl": "https://www.hornbeam.org.uk/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Hornbeam Centre exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/514378",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS The Gleaners Cafe at Hornbeam Centre record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1228290",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.email",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official site and current FSA records support an operating community hub and cafe-space activities.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://www.hornbeam.org.uk/",
+          "reason": "The current official website is available over HTTPS.",
+          "previousValue": "http://www.hornbeam.org.uk/",
+          "applied": true
+        },
+        {
+          "field": "contact.email",
+          "value": "admin@hornbeam.org.uk",
+          "reason": "The current official site publishes this general administrative contact instead of the imported personal-role address.",
+          "previousValue": "paul@hornbeam.org.uk",
+          "applied": true
+        }
+      ],
+      "notes": "The exact entity is a community hub. Its cafe space hosts changing community projects, a supermarket, community meals, an apothecary and a referral-only wellbeing cafe; office hours and event schedules are not permanent Indian restaurant hours. No hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-three-falcons-hotel-and-pub-fdc36da0fec8",
+      "listingSlug": "three-falcons-hotel-and-pub",
+      "listingSourceId": "ChIJ04AeTsMbdkgRBwyQ9iClxZs",
+      "recordedAt": "2026-07-16T18:21:02.648Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Three Falcons official about page",
+          "sourceUrl": "https://threefalcons.com/about",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons official Indian food page",
+          "sourceUrl": "https://threefalcons.com/food-menu",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons live OpenTable profile",
+          "sourceUrl": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Three Falcons Hotel and Bar exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/410989",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "categories",
+        "tags",
+        "contact.website",
+        "contact.phone",
+        "contact.email",
+        "contact.reserveUrl",
+        "contact.menuUrl",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The official site, live transactional booking profile and current FSA record support an operating restaurant at the exact address.",
+          "applied": true
+        },
+        {
+          "field": "categories",
+          "value": [
+            "Indian"
+          ],
+          "reason": "The official site describes the Old Delhi Times menu and authentic Indian cuisine, and OpenTable classifies the exact restaurant as Indian.",
+          "previousValue": [],
+          "applied": true
+        },
+        {
+          "field": "tags",
+          "value": [
+            "Casual Dining",
+            "Bar",
+            "Indian"
+          ],
+          "reason": "The supported Indian category is synchronized into the listing tags without removing the existing dining and bar types.",
+          "previousValue": [
+            "Casual Dining",
+            "Bar"
+          ],
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 20 7724 8928",
+          "reason": "The live OpenTable profile linked from the official site publishes this restaurant contact number, replacing the imported reserved-range placeholder.",
+          "previousValue": "+44 7700 012345",
+          "applied": true
+        },
+        {
+          "field": "contact.email",
+          "value": "reservations@threefalcons.com",
+          "reason": "The official site publishes this restaurant reservations address, replacing the imported website-template placeholder.",
+          "previousValue": "hello@envytheme.com",
+          "applied": true
+        },
+        {
+          "field": "contact.reserveUrl",
+          "value": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+          "reason": "The official site links to the current OpenTable restaurant booking profile.",
+          "applied": true
+        },
+        {
+          "field": "contact.menuUrl",
+          "value": "https://threefalcons.com/food-menu",
+          "reason": "The official site publishes the current Indian food page.",
+          "applied": true
+        },
+        {
+          "field": "details.workingHours",
+          "value": [
+            {
+              "day": "Monday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Tuesday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Wednesday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Thursday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Friday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Saturday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Sunday",
+              "hours": "12-10pm"
+            }
+          ],
+          "reason": "The current live OpenTable restaurant profile publishes daily hours of 12:00-22:00 for the exact Indian gastropub.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact operation combines a pub, hotel and in-scope Indian restaurant. Restaurant hours, cuisine and restaurant contacts are recorded; hotel room or generic venue hours are not substituted. The FSA rating is retained only as identity and premises evidence and is not copied into the customer rating fields."
+    },
+    {
+      "id": "verification-2026-07-16-three-falcons-hotel-and-pub-7c671a89f93c",
+      "listingSlug": "three-falcons-hotel-and-pub",
+      "listingSourceId": "ChIJ04AeTsMbdkgRBwyQ9iClxZs",
+      "recordedAt": "2026-07-16T18:25:59.742Z",
+      "checkedAt": "2026-07-16T18:22:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Three Falcons official about page",
+          "sourceUrl": "https://threefalcons.com/about",
+          "accessedAt": "2026-07-16T18:22:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons official Indian food page",
+          "sourceUrl": "https://threefalcons.com/food-menu",
+          "accessedAt": "2026-07-16T18:22:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons live OpenTable profile",
+          "sourceUrl": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+          "accessedAt": "2026-07-16T18:22:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "description",
+        "metaDescription",
+        "address",
+        "postcode",
+        "businessStatus",
+        "categories",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "description",
+          "value": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. The venue combines its Old Delhi Times menu with a pub and hotel at 1 Orchardson Street.",
+          "reason": "The first sentence is synchronized with the verified Indian restaurant category and exact Marylebone location.",
+          "previousValue": "Three Falcons Hotel & Pub is a restaurant in Marylebone, Westminster. Details include nearby landmarks such as Hadson Mall.",
+          "applied": true
+        },
+        {
+          "field": "metaDescription",
+          "value": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. Check daily hours, menu, bookings and contact details.",
+          "reason": "The metadata is synchronized with the verified cuisine, location and newly recorded restaurant actions.",
+          "previousValue": "Three Falcons Hotel & Pub is a restaurant in Marylebone, Westminster. Details include nearby landmarks such as Hadson Mall.",
+          "applied": true
+        }
+      ],
+      "notes": "This append-only follow-up corrects inherited descriptive copy after the supported Indian category was added. It does not change identity, publication state, hours or entity resolution."
     }
   ]
 }

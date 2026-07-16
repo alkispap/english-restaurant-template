@@ -137070,7 +137070,8 @@
         "tiktok": "https://www.tiktok.com/@premierinn.uk",
         "x": "https://twitter.com/premierinn",
         "linkedin": "https://www.linkedin.com/company/premier-inn"
-      }
+      },
+      "phone": "+44 333 321 9324"
     },
     "location": {
       "latitude": 51.5846762,
@@ -137103,8 +137104,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-premier-inn-london-hendon-the-hyde-hotel-ecd6f20dca78"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Lahore Tikka Masala",
@@ -137916,8 +137920,8 @@
     "name": "Three Falcons Hotel & Pub",
     "slug": "three-falcons-hotel-and-pub",
     "metaTitle": "Three Falcons Hotel & Pub | Lisson Grove, Marylebone - London",
-    "metaDescription": "Three Falcons Hotel & Pub is a restaurant in Marylebone, Westminster. Details include nearby landmarks such as Hadson Mall.",
-    "description": "Three Falcons Hotel & Pub is a restaurant in Marylebone, Westminster. Details include nearby landmarks such as Hadson Mall.",
+    "metaDescription": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. Check daily hours, menu, bookings and contact details.",
+    "description": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. The venue combines its Old Delhi Times menu with a pub and hotel at 1 Orchardson Street.",
     "images": [],
     "imageFallbackLabel": "Casual Dining",
     "area": "Westminster",
@@ -137927,7 +137931,9 @@
     "address": "1 Orchardson St",
     "fullAddress": "1 Orchardson St, Marylebone, NW8 8NG, London",
     "city": "London",
-    "categories": [],
+    "categories": [
+      "Indian"
+    ],
     "listingTypes": [
       "Casual Dining",
       "Bar"
@@ -137935,16 +137941,19 @@
     "dietaryOptions": [],
     "tags": [
       "Casual Dining",
-      "Bar"
+      "Bar",
+      "Indian"
     ],
     "rating": 4,
     "reviewCount": 562,
     "featured": false,
     "contact": {
       "website": "https://threefalcons.com/",
-      "phone": "+44 7700 012345",
-      "email": "hello@envytheme.com",
-      "googleReviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJ04AeTsMbdkgRBwyQ9iClxZs&q=*&authuser=0&hl=en&gl=GB"
+      "phone": "+44 20 7724 8928",
+      "email": "reservations@threefalcons.com",
+      "googleReviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJ04AeTsMbdkgRBwyQ9iClxZs&q=*&authuser=0&hl=en&gl=GB",
+      "reserveUrl": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+      "menuUrl": "https://threefalcons.com/food-menu"
     },
     "location": {
       "latitude": 51.5241391,
@@ -137989,7 +137998,37 @@
         "LGBTQ+ friendly"
       ],
       "googleVerified": true,
-      "placeId": "ChIJ04AeTsMbdkgRBwyQ9iClxZs"
+      "placeId": "ChIJ04AeTsMbdkgRBwyQ9iClxZs",
+      "workingHours": [
+        {
+          "day": "Monday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Tuesday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Wednesday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Thursday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Friday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Saturday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Sunday",
+          "hours": "12-10pm"
+        }
+      ]
     },
     "provenance": {
       "sourceName": "Indian Restaurants - Outscraper - Test.csv",
@@ -137998,8 +138037,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:22:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-three-falcons-hotel-and-pub-7c671a89f93c"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Bombay Spice Marylebone",
@@ -160753,9 +160795,9 @@
     "area": "Barking & Dagenham",
     "neighborhood": "Dagenham",
     "borough": "Barking & Dagenham",
-    "postcode": "RM10 6YS",
+    "postcode": "RM9 6YS",
     "address": "Chequers Corner, 2 New Rd",
-    "fullAddress": "Chequers Corner, 2 New Rd, Dagenham, RM10 6YS, London",
+    "fullAddress": "Chequers Corner, 2 New Rd, Dagenham, RM9 6YS, London",
     "city": "London",
     "categories": [],
     "listingTypes": [
@@ -160811,8 +160853,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-premier-inn-london-dagenham-hotel-25c7a74d709a"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Ghani Food & Spices",
@@ -192794,7 +192839,7 @@
     "reviewCount": 454,
     "featured": false,
     "contact": {
-      "website": "http://www.eastindiaclub.co.uk/",
+      "website": "https://eastindiaclub.co.uk/",
       "phone": "+44 20 7930 1000",
       "phoneAlt": "2079301000",
       "email": "secretary@eastindiaclub.com",
@@ -192869,8 +192914,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-east-india-club-07f1fea0fb56"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Soho Wala",
@@ -407839,10 +407887,10 @@
     "reviewCount": 353,
     "featured": false,
     "contact": {
-      "website": "http://www.hornbeam.org.uk/",
+      "website": "https://www.hornbeam.org.uk/",
       "phone": "+44 20 8558 6880",
       "phoneAlt": "20",
-      "email": "paul@hornbeam.org.uk",
+      "email": "admin@hornbeam.org.uk",
       "googleReviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJ-_EoA5MddkgR9Ex1TEbJsOw&q=*&authuser=0&hl=en&gl=GB",
       "socials": {
         "facebook": "https://www.facebook.com/HornbeamCafe/",
@@ -407956,8 +408004,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-the-hornbeam-community-centre-cic-97114b4c347b"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Kolkati",
@@ -468111,7 +468162,8 @@
         "tiktok": "https://www.tiktok.com/@premierinn.uk",
         "x": "https://twitter.com/premierinn",
         "linkedin": "https://www.linkedin.com/company/premier-inn"
-      }
+      },
+      "phone": "+44 333 321 9269"
     },
     "location": {
       "latitude": 51.512977,
@@ -468161,8 +468213,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-premier-inn-london-blackfriars-fleet-street-hotel-7aa4eb9763d1"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Pali Kitchen",
@@ -502001,9 +502056,9 @@
     "area": "Harrow",
     "neighborhood": "Kenton",
     "borough": "Harrow",
-    "postcode": "HA3 8AL",
-    "address": "134A Kenton Rd",
-    "fullAddress": "134A Kenton Rd, London, HA3 8AL",
+    "postcode": "HA3 8AT",
+    "address": "Kenton Road",
+    "fullAddress": "Kenton Road, Kenton, HA3 8AT, London",
     "city": "London",
     "categories": [],
     "listingTypes": [
@@ -502081,8 +502136,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-premier-inn-london-harrow-hotel-549cdb113d7e"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Kebabish",
@@ -511374,8 +511432,8 @@
     "neighborhood": "Burnt Oak",
     "borough": "Barnet",
     "postcode": "HA8 5AQ",
-    "address": "Burnt Oak Broadway",
-    "fullAddress": "Burnt Oak Broadway, London, HA8 5AQ",
+    "address": "435 Burnt Oak Broadway",
+    "fullAddress": "435 Burnt Oak Broadway, Burnt Oak, HA8 5AQ, London",
     "city": "London",
     "categories": [],
     "listingTypes": [
@@ -511399,7 +511457,8 @@
         "tiktok": "https://www.tiktok.com/@premierinn.uk",
         "x": "https://twitter.com/premierinn",
         "linkedin": "https://www.linkedin.com/company/premier-inn"
-      }
+      },
+      "phone": "+44 333 321 1259"
     },
     "location": {
       "latitude": 51.6081397,
@@ -511444,8 +511503,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-premier-inn-london-edgware-hotel-eda67a370e91"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Zen Buddha",
@@ -540238,8 +540300,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T18:15:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-everyman-maida-vale-5b7fb289dc24"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Karma",

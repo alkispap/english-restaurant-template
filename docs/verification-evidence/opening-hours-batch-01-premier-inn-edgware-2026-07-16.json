@@ -1,0 +1,53 @@
+{
+  "listingSlug": "premier-inn-london-edgware-hotel",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Premier Inn official London Edgware hotel page",
+      "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-edgware.html",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS London Edgware Premier Inn exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/276598",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [
+    {
+      "field": "address",
+      "value": "435 Burnt Oak Broadway",
+      "reason": "The current FSA record supplies the exact street number for the Premier Inn premises."
+    },
+    {
+      "field": "fullAddress",
+      "value": "435 Burnt Oak Broadway, Burnt Oak, HA8 5AQ, London",
+      "reason": "The full address is synchronized with the current exact-premises FSA address and existing locality."
+    },
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current official hotel page and February 2026 exact-premises FSA inspection support an operating Premier Inn hotel."
+    },
+    {
+      "field": "contact.phone",
+      "value": "+44 333 321 1259",
+      "reason": "The current official hotel page publishes this location-specific contact number."
+    }
+  ],
+  "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill with a general hotel menu rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+}

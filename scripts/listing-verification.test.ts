@@ -9,6 +9,8 @@ import {
 const listing: Listing = {
   name: "Example Restaurant",
   slug: "example-restaurant",
+  description: "Example Restaurant is an Indian restaurant in Westminster, London serving Indian food.",
+  metaDescription: "Example Restaurant in Westminster serves Indian food with current contact and opening information.",
   images: [],
   categories: ["Indian"],
   listingTypes: ["Restaurant"],
@@ -41,21 +43,39 @@ const verifiedProposal: ListingVerificationProposal = {
     sourceUrl: "https://example.com/contact",
     accessedAt: "2026-07-10T09:55:00.000Z"
   }],
-  fieldsChecked: ["name", "address", "postcode", "businessStatus", "contact.website", "contact.phone", "details.workingHours"],
-  changes: [{
-    field: "contact.website",
-    value: "https://example.com",
-    reason: "The official contact page uses the canonical domain."
-  }]
+  fieldsChecked: [
+    "name",
+    "description",
+    "metaDescription",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  changes: [
+    {
+      field: "description",
+      value: "Example Restaurant is an Indian restaurant in Westminster, London serving regional Indian food.",
+      reason: "The current cuisine evidence supports a more specific first sentence."
+    },
+    {
+      field: "contact.website",
+      value: "https://example.com",
+      reason: "The official contact page uses the canonical domain."
+    }
+  ]
 };
 
 assert.deepEqual(validateListingVerificationProposal(listing, verifiedProposal, new Date("2026-07-10T11:00:00.000Z")), []);
 const verified = applyListingVerification(listing, verifiedProposal, "2026-07-10T11:00:00.000Z");
 assert.equal(verified.listing.contact?.website, "https://example.com");
+assert.match(verified.listing.description ?? "", /regional Indian food/);
 assert.equal(verified.listing.provenance?.verificationStatus, "editor-verified");
 assert.equal(verified.listing.provenance?.lastVerifiedAt, "2026-07-10T10:00:00.000Z");
 assert.equal(verified.listing.provenance?.lastVerificationEventId, verified.event.id);
-assert.equal(verified.event.changes[0].previousValue, "https://old.example.com");
+assert.match(String(verified.event.changes[0].previousValue), /serving Indian food/);
 assert.equal(verified.event.changes[0].applied, true);
 assert.equal(listing.contact?.website, "https://old.example.com", "the original listing must remain unchanged");
 const repeated = applyListingVerification(verified.listing, verifiedProposal, "2026-07-10T12:00:00.000Z");

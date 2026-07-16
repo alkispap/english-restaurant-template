@@ -1,0 +1,121 @@
+{
+  "listingSlug": "three-falcons-hotel-and-pub",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Three Falcons official about page",
+      "sourceUrl": "https://threefalcons.com/about",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "Three Falcons official Indian food page",
+      "sourceUrl": "https://threefalcons.com/food-menu",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "Three Falcons live OpenTable profile",
+      "sourceUrl": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Three Falcons Hotel and Bar exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/410989",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "categories",
+    "tags",
+    "contact.website",
+    "contact.phone",
+    "contact.email",
+    "contact.reserveUrl",
+    "contact.menuUrl",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The official site, live transactional booking profile and current FSA record support an operating restaurant at the exact address."
+    },
+    {
+      "field": "categories",
+      "value": [
+        "Indian"
+      ],
+      "reason": "The official site describes the Old Delhi Times menu and authentic Indian cuisine, and OpenTable classifies the exact restaurant as Indian."
+    },
+    {
+      "field": "tags",
+      "value": [
+        "Casual Dining",
+        "Bar",
+        "Indian"
+      ],
+      "reason": "The supported Indian category is synchronized into the listing tags without removing the existing dining and bar types."
+    },
+    {
+      "field": "contact.phone",
+      "value": "+44 20 7724 8928",
+      "reason": "The live OpenTable profile linked from the official site publishes this restaurant contact number, replacing the imported reserved-range placeholder."
+    },
+    {
+      "field": "contact.email",
+      "value": "reservations@threefalcons.com",
+      "reason": "The official site publishes this restaurant reservations address, replacing the imported website-template placeholder."
+    },
+    {
+      "field": "contact.reserveUrl",
+      "value": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+      "reason": "The official site links to the current OpenTable restaurant booking profile."
+    },
+    {
+      "field": "contact.menuUrl",
+      "value": "https://threefalcons.com/food-menu",
+      "reason": "The official site publishes the current Indian food page."
+    },
+    {
+      "field": "details.workingHours",
+      "value": [
+        {
+          "day": "Monday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Tuesday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Wednesday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Thursday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Friday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Saturday",
+          "hours": "12-10pm"
+        },
+        {
+          "day": "Sunday",
+          "hours": "12-10pm"
+        }
+      ],
+      "reason": "The current live OpenTable restaurant profile publishes daily hours of 12:00-22:00 for the exact Indian gastropub."
+    }
+  ],
+  "notes": "The exact operation combines a pub, hotel and in-scope Indian restaurant. Restaurant hours, cuisine and restaurant contacts are recorded; hotel room or generic venue hours are not substituted. The FSA rating is retained only as identity and premises evidence and is not copied into the customer rating fields."
+}

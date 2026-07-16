@@ -59,7 +59,7 @@ async function dynamicDescriptionsUseSnippetFocusedCopy() {
 
   assert.equal(
     area.description,
-    "Compare 117 Indian restaurants in Barnet, London by rating, reviews, cuisine, takeaway, delivery, price data, and nearby transport."
+    "Compare 115 Indian restaurants in Barnet, London by rating, reviews, cuisine, takeaway, delivery, price data, and nearby transport."
   );
   assert.equal(
     category.description,

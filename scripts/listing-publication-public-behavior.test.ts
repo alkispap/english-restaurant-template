@@ -17,6 +17,7 @@ const pendingSlugs = [
   "biriyani-junction",
   "bazaar-london-s-indian-takeaway-hackney",
   "calm-indiana-cow",
+  "chaiwrap",
   "chakra-indian-cuisine",
   "chef-tazzy",
   "chotiwala",
@@ -39,15 +40,27 @@ const pendingSlugs = [
   "thanjavur-food-lounge-ltd",
   "the-palm-indian-restaurant-limited"
 ];
-const excludedSlugs = ["bazaar-london-s-indian-takeaway-aldgate", "bombay-kitchen-brixton", "borough-market"];
+const excludedSlugs = [
+  "bazaar-london-s-indian-takeaway-aldgate",
+  "bombay-kitchen-brixton",
+  "borough-market",
+  "east-india-club",
+  "everyman-maida-vale",
+  "premier-inn-london-blackfriars-fleet-street-hotel",
+  "premier-inn-london-dagenham-hotel",
+  "premier-inn-london-edgware-hotel",
+  "premier-inn-london-harrow-hotel",
+  "premier-inn-london-hendon-the-hyde-hotel",
+  "the-hornbeam-community-centre-cic"
+];
 
 main();
 
 async function main() {
-  assert.equal(publishedListings.length, 3159);
-  assert.equal(pendingReviewListings.length, 24);
+  assert.equal(publishedListings.length, 3150);
+  assert.equal(pendingReviewListings.length, 25);
   assert.deepEqual(pendingReviewListings.map((listing) => listing.slug).sort(), [...pendingSlugs].sort());
-  assert.equal(publiclyRoutableListings.length, 3183, "pending review pages should retain their exact URL while excluded routes are omitted");
+  assert.equal(publiclyRoutableListings.length, 3175, "pending review pages should retain their exact URL while excluded routes are omitted");
   assert.ok(pendingSlugs.every((slug) => getListingPublicationState(slug).status === "pending-review"));
   assert.ok(excludedSlugs.every((slug) => getListingPublicationState(slug).status === "excluded"));
 

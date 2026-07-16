@@ -1,0 +1,21 @@
+{
+  "listingSlug": "premier-inn-london-dagenham-hotel",
+  "expectedSourceId": "ChIJp1t__G6l2EcR0e3lX2oGko4",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T18:16:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "excluded",
+    "reason": "out-of-directory-scope"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-premier-inn-london-dagenham-hotel-25c7a74d709a"
+    }
+  ],
+  "notes": "The exact entity is a Premier Inn hotel with an adjacent Brewers Fayre and a general British/international menu, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+}
