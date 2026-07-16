@@ -206,6 +206,12 @@ export function snapshotFromState(state: ListingPublicationState): PublicationSt
   return normalizedSnapshot(state);
 }
 
+export function validatePublicationStateSnapshot(value: unknown, label = "state", now = new Date()) {
+  const errors: string[] = [];
+  validateSnapshot(value, label, now, errors);
+  return [...new Set(errors)];
+}
+
 export function isPublishedState(state: ListingPublicationState | undefined) {
   return state?.status === "published";
 }
