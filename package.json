@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "tsx scripts/run-tests.ts",
+    "benchmark:filters": "tsx scripts/mobile-filter-reaction-benchmark.ts",
     "typecheck": "tsc --noEmit",
     "audit:seo": "tsx scripts/check-seo-policy.ts",
     "audit:indexation": "tsx scripts/check-indexation-crawl.ts",

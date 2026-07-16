@@ -10,11 +10,13 @@ type Viewport = {
 };
 
 type Scenario = {
-  id: "desktop-sidebar-area" | "mobile-panel-area" | "mobile-modal-area";
+  id: "desktop-sidebar-area" | "mobile-fullscreen-area" | "mobile-nested-area-modal";
   label: string;
   viewport: Viewport;
   prepareScript: string;
   targetScript: string;
+  validationScript: string;
+  cleanupScript: string;
 };
 
 type RunResult = {
@@ -26,6 +28,8 @@ type RunResult = {
   longTaskMs: number;
   finalUrl: string;
   resultHeading: string;
+  viewportWidth: number;
+  documentWidth: number;
 };
 
 type CdpResponseResult = Record<string, unknown>;
@@ -66,45 +70,62 @@ const scenarios: Scenario[] = [
     `,
     targetScript: `
       findLabelByText("aside label", "Barking & Dagenham")
-    `
+    `,
+    validationScript: "true",
+    cleanupScript: "true"
   },
   {
-    id: "mobile-panel-area",
-    label: "Mobile visible filter checkbox",
+    id: "mobile-fullscreen-area",
+    label: "Mobile full-screen filter checkbox",
     viewport: { width: 393, height: 852, mobile: true },
     prepareScript: `
-      await waitFor(() => Boolean(document.querySelector("aside details")), 3000);
-      const details = document.querySelector("aside details");
-      if (details) details.open = true;
-      const label = findLabelByText("aside details label", "Barking & Dagenham");
+      await openMobileFilters();
+      const label = findLabelByText("#mobile-filter-screen label", "Barking & Dagenham");
       if (label) label.scrollIntoView({ block: "center" });
       await new Promise((resolve) => setTimeout(resolve, 350));
     `,
     targetScript: `
-      findLabelByText("aside details label", "Barking & Dagenham")
+      findLabelByText("#mobile-filter-screen label", "Barking & Dagenham")
+    `,
+    validationScript: `
+      document.activeElement?.getAttribute("aria-label") === "Close filters"
+    `,
+    cleanupScript: `
+      !document.getElementById("mobile-filter-screen") &&
+        document.activeElement?.textContent?.trim().includes("Filters")
     `
   },
   {
-    id: "mobile-modal-area",
-    label: "Mobile Show more modal checkbox",
+    id: "mobile-nested-area-modal",
+    label: "Mobile nested Show more modal checkbox",
     viewport: { width: 393, height: 852, mobile: true },
     prepareScript: `
-      await waitFor(() => Boolean(document.querySelector("aside details")), 3000);
-      const details = document.querySelector("aside details");
-      if (details) details.open = true;
-      const areaGroupButton = findVisibleButtonByText("aside details button", "Area");
+      await openMobileFilters();
+      const areaGroup = findFilterGroup("#mobile-filter-screen", "Area");
+      const areaGroupButton = areaGroup?.querySelector("legend button");
       if (areaGroupButton) areaGroupButton.scrollIntoView({ block: "center" });
       await new Promise((resolve) => setTimeout(resolve, 250));
-      const showMore = findVisibleButtonByText("aside details button", "Show more");
+      const showMore = findVisibleButtonByTextWithin(areaGroup, "button", "Show more");
       if (!showMore) throw new Error("Mobile area Show more button not found");
       showMore.click();
-      await waitFor(() => Boolean(document.querySelector('[role="dialog"]')), 2000);
-      const label = findFirstCheckboxLabel('[role="dialog"] label');
+      await waitFor(() => document.querySelectorAll('[role="dialog"][aria-modal="true"]').length === 2, 2000);
+      const label = findFirstCheckboxLabelInLastDialog();
       if (label) label.scrollIntoView({ block: "center" });
       await new Promise((resolve) => setTimeout(resolve, 350));
     `,
     targetScript: `
-      findFirstCheckboxLabel('[role="dialog"] label')
+      findFirstCheckboxLabelInLastDialog()
+    `,
+    validationScript: `
+      document.activeElement?.getAttribute("type") === "search" &&
+        document.querySelectorAll('[role="dialog"][aria-modal="true"]').length === 2
+    `,
+    cleanupScript: `
+      document.querySelectorAll('[role="dialog"][aria-modal="true"]').length === 1 &&
+        (
+          document.activeElement?.textContent?.trim().includes("Show more") ||
+          document.activeElement?.getAttribute("aria-label") === "Close filters"
+        )
     `
   }
 ];
@@ -139,6 +160,8 @@ async function main() {
   } finally {
     client?.close();
     chrome.kill();
+    await waitForProcessExit(chrome);
+    fs.rmSync(userDataDir, { recursive: true, force: true });
   }
 }
 
@@ -162,6 +185,13 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
     awaitPromise: true,
     returnByValue: true
   });
+  const validationResult = await client.send("Runtime.evaluate", {
+    expression: `Boolean(${scenario.validationScript})`,
+    returnByValue: true
+  });
+  if (cdpReturnValue(validationResult) !== true) {
+    throw new Error(`${scenario.id}: prepared dialog state or initial focus was incorrect`);
+  }
 
   const targetResult = await client.send("Runtime.evaluate", {
     expression: setupBenchmarkExpression(scenario.targetScript),
@@ -182,6 +212,34 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
   });
 
   const measurement = cdpReturnValue(measurementResult) as RunResult;
+  if (measurement.documentWidth > measurement.viewportWidth + 1) {
+    throw new Error(
+      `${scenario.id}: page-level horizontal overflow (${measurement.documentWidth}px document at ${measurement.viewportWidth}px viewport)`
+    );
+  }
+
+  if (scenario.cleanupScript !== "true") {
+    await pressEscape(client);
+    await sleep(150);
+    const cleanupResult = await client.send("Runtime.evaluate", {
+      expression: `Boolean(${scenario.cleanupScript})`,
+      returnByValue: true
+    });
+    if (cdpReturnValue(cleanupResult) !== true) {
+      const cleanupDiagnostics = await client.send("Runtime.evaluate", {
+        expression: `({
+          dialogs: document.querySelectorAll('[role="dialog"][aria-modal="true"]').length,
+          activeText: document.activeElement?.textContent?.trim() ?? "",
+          activeLabel: document.activeElement?.getAttribute("aria-label") ?? ""
+        })`,
+        returnByValue: true
+      });
+      throw new Error(
+        `${scenario.id}: Escape did not close the topmost dialog and restore focus: ${JSON.stringify(cdpReturnValue(cleanupDiagnostics))}`
+      );
+    }
+  }
+
   return {
     ...measurement,
     scenario: scenario.id,
@@ -273,8 +331,23 @@ function pageHelpers() {
       };
       window.findVisibleButtonByText = (selector, text) => Array.from(document.querySelectorAll(selector))
         .find((button) => button.textContent?.trim() === text && window.isVisibleElement(button));
-      window.findFirstCheckboxLabel = (selector) => Array.from(document.querySelectorAll(selector))
-        .find((label) => label.querySelector('input[type="checkbox"]'));
+      window.findVisibleButtonByTextWithin = (root, selector, text) => root
+        ? Array.from(root.querySelectorAll(selector))
+          .find((button) => button.textContent?.trim() === text && window.isVisibleElement(button))
+        : undefined;
+      window.findFilterGroup = (rootSelector, legendText) => Array.from(document.querySelectorAll(rootSelector + " fieldset"))
+        .find((fieldset) => fieldset.querySelector("legend button")?.textContent?.trim().includes(legendText));
+      window.findFirstCheckboxLabelInLastDialog = () => {
+        const dialogs = Array.from(document.querySelectorAll('[role="dialog"][aria-modal="true"]'));
+        return Array.from(dialogs.at(-1)?.querySelectorAll("label") ?? [])
+          .find((label) => label.querySelector('input[type="checkbox"]'));
+      };
+      window.openMobileFilters = async () => {
+        const filtersButton = findVisibleButtonByText("aside button", "Filters");
+        if (!filtersButton) throw new Error("Mobile Filters button not found");
+        filtersButton.click();
+        await waitFor(() => Boolean(document.getElementById("mobile-filter-screen")), 2000);
+      };
       window.currentResultsHeading = () => {
         const headings = Array.from(document.querySelectorAll("h2"));
         const visibleHeading = headings.find((heading) => {
@@ -310,7 +383,9 @@ function pageHelpers() {
           resultsMs: sinceStart(state.resultsAt),
           longTaskMs: Math.round(state.longTasks.reduce((sum, duration) => sum + duration, 0)),
           finalUrl: window.location.href,
-          resultHeading: currentResultsHeading()
+          resultHeading: currentResultsHeading(),
+          viewportWidth: window.innerWidth,
+          documentWidth: document.documentElement.scrollWidth
         };
       };
     })()
@@ -463,6 +538,35 @@ function connectCdp(wsUrl: string): Promise<CdpClient> {
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function pressEscape(client: CdpClient) {
+  await client.send("Input.dispatchKeyEvent", {
+    type: "keyDown",
+    key: "Escape",
+    code: "Escape",
+    windowsVirtualKeyCode: 27,
+    nativeVirtualKeyCode: 27
+  });
+  await client.send("Input.dispatchKeyEvent", {
+    type: "keyUp",
+    key: "Escape",
+    code: "Escape",
+    windowsVirtualKeyCode: 27,
+    nativeVirtualKeyCode: 27
+  });
+}
+
+function waitForProcessExit(process: ChildProcessWithoutNullStreams) {
+  if (process.exitCode !== null) return Promise.resolve();
+
+  return new Promise<void>((resolve) => {
+    const timeout = setTimeout(resolve, 2_000);
+    process.once("exit", () => {
+      clearTimeout(timeout);
+      resolve();
+    });
+  });
 }
 
 main().catch((error) => {
