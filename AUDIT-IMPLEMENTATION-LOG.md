@@ -83,6 +83,7 @@ These changes existed before remediation began and were reviewed and committed s
 | `e14b300` | Phase 5H publication-aware readiness audits and queue |
 | `6b8e720` | Phase 5H publication operating documentation |
 | `5ee1f38` | Static-export generation timeout reliability guard |
+| `381c7a5` | Phase 5H final verification and failure evidence |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
