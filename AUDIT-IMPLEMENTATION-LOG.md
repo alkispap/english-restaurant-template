@@ -75,6 +75,12 @@ These changes existed before remediation began and were reviewed and committed s
 | `92c1e5a` | Phase 5F verification workflow evidence record |
 | `d36bad4` | Phase 5G deterministic verification priority queue |
 | `093f7a3` | Phase 5G first evidence-backed priority batch |
+| `b37aa49` | Phase 5H publication decision contract and tests |
+| `0bf5162` | Phase 5H guarded publication workflow and audit |
+| `eaf8a9d` | Phase 5H publication baseline and four held decisions |
+| `deb66f2` | Phase 5H public-surface and SEO enforcement |
+| `40f8135` | Phase 5H safe imports, data writers and entity retirement |
+| `e14b300` | Phase 5H publication-aware readiness audits and queue |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -86,7 +92,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | In progress | Launch gate and future-import provenance complete; current-data backfill, duplicate review, images, and completeness remediation remain |
+| 5. Listing quality/operations | In progress | Publication control is enforced; 3,182 published, four pending review, and the 608-record operational-gap program remains |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log

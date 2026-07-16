@@ -69,6 +69,26 @@ npm run report:verification-priority -- 50
 
 The command writes nothing. It schedules one task per restaurant location, puts current `needs-review` conflicts first, then prioritizes missing contact actions, opening hours, categories, and rating/review pairs. A capped featured/review/rating/completeness proxy orders records within those operational groups. The score is an editorial scheduling heuristic, not measured traffic or a restaurant rating; exact weights and tie-breaking are printed in every report and covered by tests.
 
+Publication state is now part of scheduling. `pending-review` records are always placed first, while `excluded` records remain retained in history but are omitted from the ordinary verification queue. The report prints publication counts separately.
+
+## Publication eligibility workflow
+
+Publication eligibility is separate from verification status and business operating status. Current state is stored in `data/listing-publication-states.json`; append-only decisions are stored in `data/listing-publication-events.json`.
+
+Prepare a proposal from `docs/listing-publication-proposal-template.json`, then dry-run it:
+
+```powershell
+npm run decide:listing-publication -- docs\verification-evidence\publication-proposal.json
+```
+
+Apply only after reviewing the predicted transition, evidence references and published count:
+
+```powershell
+npm run decide:listing-publication -- docs\verification-evidence\publication-proposal.json --write --expected-published-count=<count>
+```
+
+Run `npm run audit:publication` after every publication decision or data-writer/import change. Do not edit the registry or ledger manually.
+
 ## Visitor correction requests
 
 Every restaurant page links to a prefilled `/suggest-update` workflow. The form generates structured correction text in the browser and requires a public evidence URL. It does not automatically transmit, store, or publish form contents.
@@ -91,6 +111,9 @@ Evidence is retained in `docs/verification-evidence/wimbledon-tandoori-merton-20
 | Unverified listings | 3,184 |
 | Open evidence conflicts | 4 |
 | Priority records with data gaps | 608 |
+| Published listings | 3,182 |
+| Pending publication review | 4 |
+| Excluded listings | 0 |
 | Ledger integrity issues | 0 |
 | Operational duplicate-name/postcode high issues | 0 |
 
@@ -98,8 +121,8 @@ The verification audit remains `not_ready` because 99.94% of listings have not r
 
 ## Next verification priority
 
-1. Resolve or explicitly hold the four current `needs-review` conflicts from direct business, owner, registry, or premises evidence.
-2. Add an explicit publication/scope decision before handling non-restaurant or unverifiable imports surfaced by the queue.
-3. Continue records missing contact actions or opening hours through dated, attributable proposals.
+1. Resolve or explicitly hold the four current `needs-review` conflicts from direct business, owner, registry, or premises evidence; all four are already `pending-review` and withheld from normal discovery.
+2. Continue records missing contact actions or opening hours through dated, attributable proposals after the Phase 5H checkpoint is accepted.
+3. Record verification and publication decisions separately when evidence changes both current facts and public eligibility.
 4. Configure a monitored corrections mailbox and retention policy before enabling email handoff.
 5. Keep the deferred Google media decision separate from restaurant-data verification.

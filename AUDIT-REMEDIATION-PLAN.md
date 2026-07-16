@@ -130,13 +130,14 @@
 4. Add per-listing source, source ID/URL, imported date, last verified date, status, and editorial history.
 5. Add correction/dispute and refresh workflows.
 6. Rank verification work deterministically and retain evidence for every accepted or unresolved review.
-7. Add an explicit publication/scope decision for closed, moved, unverifiable, or non-directory businesses.
+7. Maintain the implemented publication/scope decision system for closed, moved, unverifiable, or non-directory businesses.
 
 **Acceptance criteria**
 
 - Priority listings meet the launch image-quality threshold.
 - High-risk external links are reviewed and every link category has an owner/rule.
 - Every listing can be traced to its source and verification state.
+- Every retained listing has one explicit publication state, and public surfaces contain only eligible records.
 
 ## Phase 6 — Reusable directory productization
 
@@ -170,4 +171,4 @@
 
 ## Current implementation checkpoint
 
-Phase 1 passed its verification gate. Phase 2 local payload remediation passed and remains open only for deployed mobile lab measurement. Phase 3 corrected confirmed accessibility defects and remains open for formal preview testing. Phase 4 local hardening is complete and awaits an authorized publish/live verification. Phase 5A defines listing-quality launch gates, Phase 5B makes future imports traceable, Phase 5C consolidated the confirmed Yummy Dosa duplicate, Phase 5D backfilled historical lineage, Phase 5E quarantined unknown-rights media, Phase 5F adds an append-only dated verification/correction workflow, and Phase 5G adds a deterministic verification queue plus the first five-record evidence batch. Two listings are freshly editor-verified, 3,184 remain explicitly unverified, and four evidence conflicts are held without speculative canonical edits. The dataset remains not ready until priority verification, scope/publication decisions, and rights-cleared media cohorts meet launch thresholds; long-tail work can continue after launch.
+Phase 1 passed its verification gate. Phase 2 local payload remediation passed and remains open only for deployed mobile lab measurement. Phase 3 corrected confirmed accessibility defects and remains open for formal preview testing. Phase 4 local hardening is complete and awaits an authorized publish/live verification. Phase 5A defines listing-quality launch gates, Phase 5B makes future imports traceable, Phase 5C established reviewed entity-resolution controls, Phase 5D backfilled historical lineage, Phase 5E quarantined unknown-rights media, Phase 5F adds an append-only dated verification/correction workflow, Phase 5G adds a deterministic verification queue plus the first evidence batch, and Phase 5H implements publication/scope eligibility across data, commands, imports, routes, SEO, public derivatives and audits. Two listings are freshly editor-verified, 3,184 remain explicitly unverified, 3,182 listings are published, and four evidence conflicts are safely held as `pending-review`. The dataset remains not ready until priority verification and rights-cleared media cohorts meet launch thresholds; long-tail work can continue after launch.

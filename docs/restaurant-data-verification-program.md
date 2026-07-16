@@ -1,7 +1,7 @@
 # Restaurant Data Verification Program
 
 **Created:** 2026-07-16  
-**Status:** Operating reference; publication/scope controls below are the next proposed implementation  
+**Status:** Operating reference; publication/scope controls implemented locally in Phase 5H
 **Dataset grain:** One canonical record per restaurant location  
 **Objective:** Make the public directory trustworthy without guessing, deleting history, or presenting historical source data as current verification
 
@@ -43,6 +43,10 @@ These already exist and must not be bypassed:
 - Append-only ledger: `data/listing-verification-events.json`.
 - Guarded dry-run writer: `npm run verify:listing -- <proposal.json>`.
 - Verification audit: `npm run audit:verification`.
+- Materialized publication registry: `data/listing-publication-states.json`.
+- Append-only publication decisions: `data/listing-publication-events.json`.
+- Guarded publication writer: `npm run decide:listing-publication -- <proposal.json>`.
+- Publication integrity/public-leakage audit: `npm run audit:publication`.
 - Deterministic read-only queue: `npm run report:verification-priority -- 50`.
 - Operational audit: `npm run audit:listings`.
 - Evidence proposals retained under `docs/verification-evidence/`.
@@ -86,19 +90,21 @@ Recommended controlled meanings:
 
 An active company registration does not prove that a specific restaurant location is operational.
 
-### Publication/scope state — next implementation
+### Publication/scope state — implemented
 
-Before processing the full cohort, implement an explicit public-eligibility control:
+The public-eligibility control uses:
 
-| Proposed state | Public behaviour | Use |
+| State | Public behaviour | Use |
 | --- | --- | --- |
 | `published` | Eligible for routes, search, filters, sitemap and structured data | In-scope listing with sufficient publication evidence |
 | `pending-review` | Retained internally but withheld from normal public discovery | Identity, scope, status or important facts remain materially uncertain |
 | `excluded` | Retained historically but not published | Confirmed out-of-scope, permanently closed without replacement, invalid import, or documented exclusion |
 
-Moved, renamed, or duplicate records can require a canonical successor and permanent redirect. Do not treat them as ordinary exclusions when an active replacement exists.
+Moved, renamed, or duplicate records can require a published canonical successor and permanent redirect. Do not treat them as ordinary exclusions when an active replacement exists.
 
-This control is **not implemented yet**. Its schema, route/search/sitemap behaviour, audit rules, migration, tests, and guarded update path must be implemented before use.
+Current baseline: 3,182 `published`, four `pending-review`, and zero `excluded`. Pending records retain a minimal, non-indexable route at their existing URL but are omitted from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data. Excluded records are retained in canonical/history data and either redirect to a validated published successor or return 404. Publication state is deliberately separate from provenance, verification outcome and business operating status.
+
+Every publication decision records the previous and next state, controlled reason, reviewer, reviewed timestamp, evidence references and notes. Direct manual edits to the materialized registry or ledger are prohibited.
 
 ## 6. Evidence hierarchy
 
@@ -160,9 +166,9 @@ npm run report:verification-priority -- 50
 
 It puts unresolved conflicts first, ensures operational-gap records outrank complete records, weights contact and hours heavily, caps the value proxy, and resolves ties by slug.
 
-### V0 — publication and scope control
+### V0 — publication and scope control — complete
 
-Implement `published`, `pending-review`, and `excluded`, including public behaviour, audits, guarded writes, migration and tests.
+`published`, `pending-review`, and `excluded` are implemented with guarded decisions, append-only history, safe import defaults, retained excluded records, successor validation, publication-aware derived files, public-surface enforcement, audits and tests.
 
 ### V1 — four current conflicts
 
@@ -218,6 +224,20 @@ For every listing:
 10. Dry-run the proposal and review event ID, previous values, changes and notes.
 11. Apply only when evidence supports every change.
 12. Confirm canonical and derived search/filter/shortlist data remain synchronized.
+
+When verification evidence changes public eligibility, prepare a separate publication proposal from `docs/listing-publication-proposal-template.json`.
+
+Publication dry run:
+
+```powershell
+npm run decide:listing-publication -- docs\verification-evidence\publication-proposal.json
+```
+
+Publication apply, after confirming the predicted count:
+
+```powershell
+npm run decide:listing-publication -- docs\verification-evidence\publication-proposal.json --write --expected-published-count=<count>
+```
 
 Dry run:
 
@@ -318,6 +338,7 @@ Do not push or deploy without explicit authorization.
 npm run report:verification-priority -- 50
 npm run audit:listings
 npm run audit:verification
+npm run audit:publication
 npm test
 npm run lint
 npm run typecheck
@@ -327,7 +348,7 @@ git diff --check
 - Priority reporting is read-only and must succeed.
 - The operational audit may stay `conditional` while medium long-tail gaps exist.
 - The verification audit remains `not_ready` until high backlog/conflict thresholds are met. Record the expected non-zero result; never hide it.
-- Ledger integrity, invalid canonical data, orphan events, duplicate slugs/place IDs, or mismatched derived data are never acceptable.
+- Ledger integrity, publication integrity, invalid canonical data, orphan events, duplicate slugs/place IDs, public leakage, or mismatched derived data are never acceptable.
 
 When public/static output changes:
 
@@ -417,14 +438,13 @@ Official references:
 
 ## 16. Exact next sequence
 
-1. Enter Plan mode with GPT-5.6 Sol High.
-2. Design and approve publication/scope schema and public behaviour.
-3. Implement it with migration, guarded writes, audits and tests.
-4. Apply `pending-review` to the four unresolved conflicts only through the approved workflow.
-5. Re-run the queue and process the 31 missing-contact records in batches of 10–20.
-6. Continue missing hours, categories and ratings in order, refreshing counts after every batch.
-7. Keep Google/Outscraper media restoration separate and on hold.
-8. Do not deploy without explicit authorization.
+1. Review the four current `pending-review` records using direct business, owner, registry or premises evidence; do not infer closure from source absence.
+2. Record verification and publication decisions separately through their guarded commands.
+3. Re-run the queue and process the 31 missing-contact records in batches of 10–20 only after this Phase 5H checkpoint is accepted.
+4. Continue missing hours, categories and ratings in order, refreshing counts after every batch.
+5. Use import dry runs and expected-count guards; every genuinely new import begins as `pending-review`.
+6. Keep Google/Outscraper media restoration separate and on hold.
+7. Do not deploy without explicit authorization.
 
 ## Related references
 
