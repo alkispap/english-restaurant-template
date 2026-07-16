@@ -1,4 +1,5 @@
 import type { Listing } from "@/data/listings";
+import type { ListingPublicationState, PublicationStatus } from "@/lib/listing-publication";
 import type { ListingVerificationEvent, ListingVerificationLedger } from "@/lib/listing-verification";
 
 export type ListingVerificationPriorityGap =
@@ -8,6 +9,7 @@ export type ListingVerificationPriorityGap =
   | "missing_rating_or_reviews";
 
 export type ListingVerificationPriorityState =
+  | "publication-review"
   | "open-needs-review"
   | "unverified"
   | "stale-180-days"
@@ -18,6 +20,7 @@ export type ListingVerificationPriorityItem = {
   name: string;
   area?: string;
   state: ListingVerificationPriorityState;
+  publicationStatus: PublicationStatus;
   gaps: ListingVerificationPriorityGap[];
   score: number;
   stateScore: number;
@@ -31,6 +34,9 @@ export type ListingVerificationPriorityReport = {
   grain: "one verification task per restaurant location";
   totals: {
     listings: number;
+    published: number;
+    pendingReview: number;
+    excluded: number;
     queued: number;
     openNeedsReview: number;
     unverified: number;
@@ -43,6 +49,7 @@ export type ListingVerificationPriorityReport = {
 };
 
 const stateScores: Record<ListingVerificationPriorityState, number> = {
+  "publication-review": 2_000,
   "open-needs-review": 1_000,
   unverified: 100,
   "stale-180-days": 80,
@@ -61,11 +68,16 @@ const anyGapScore = 300;
 export function prioritizeListingVerification(
   listings: Listing[],
   ledger: ListingVerificationLedger,
-  now = new Date()
+  now = new Date(),
+  publicationStates?: ReadonlyMap<string, ListingPublicationState>
 ): ListingVerificationPriorityReport {
   const latestEventBySlug = latestEvents(ledger.events ?? []);
   const priorities = listings.flatMap((listing) => {
-    const state = verificationState(listing, latestEventBySlug.get(listing.slug), now);
+    const publicationStatus = publicationStates?.get(listing.slug)?.status ?? "published";
+    if (publicationStatus === "excluded") return [];
+    const state = publicationStatus === "pending-review"
+      ? "publication-review"
+      : verificationState(listing, latestEventBySlug.get(listing.slug), now);
     if (!state) return [];
     const gaps = listingGaps(listing);
     const stateScore = stateScores[state];
@@ -76,6 +88,7 @@ export function prioritizeListingVerification(
       name: listing.name,
       area: listing.area,
       state,
+      publicationStatus,
       gaps,
       score: stateScore + gapScore + valueScore,
       stateScore,
@@ -91,13 +104,22 @@ export function prioritizeListingVerification(
   );
 
   const byState = (state: ListingVerificationPriorityState) => priorities.filter((item) => item.state === state).length;
+  const openNeedsReview = [...latestEventBySlug.values()].filter((event) =>
+    event.outcome === "needs-review" && (publicationStates?.get(event.listingSlug)?.status ?? "published") !== "excluded"
+  ).length;
+  const publicationCount = (status: PublicationStatus) => listings.filter((listing) =>
+    (publicationStates?.get(listing.slug)?.status ?? "published") === status
+  ).length;
   return {
     generatedAt: now.toISOString(),
     grain: "one verification task per restaurant location",
     totals: {
       listings: listings.length,
+      published: publicationCount("published"),
+      pendingReview: publicationCount("pending-review"),
+      excluded: publicationCount("excluded"),
       queued: priorities.length,
-      openNeedsReview: byState("open-needs-review"),
+      openNeedsReview,
       unverified: byState("unverified"),
       stale180Days: byState("stale-180-days"),
       stale90Days: byState("stale-90-days"),
@@ -115,7 +137,7 @@ export function prioritizeListingVerification(
 
 export function renderListingVerificationPriorityReport(report: ListingVerificationPriorityReport, limit = 50) {
   const rows = report.priorities.slice(0, Math.max(0, limit)).map((item, index) =>
-    `| ${index + 1} | ${item.slug} | ${item.area ?? ""} | ${item.state} | ${item.gaps.join(", ") || "none"} | ${item.score} |`
+    `| ${index + 1} | ${item.slug} | ${item.area ?? ""} | ${item.publicationStatus} | ${item.state} | ${item.gaps.join(", ") || "none"} | ${item.score} |`
   );
   return [
     "# Listing Verification Priority Queue",
@@ -123,13 +145,16 @@ export function renderListingVerificationPriorityReport(report: ListingVerificat
     `- Generated: ${report.generatedAt}`,
     `- Grain: ${report.grain}`,
     `- Listings: ${report.totals.listings.toLocaleString("en-GB")}`,
+    `- Published: ${report.totals.published.toLocaleString("en-GB")}`,
+    `- Pending publication review: ${report.totals.pendingReview.toLocaleString("en-GB")}`,
+    `- Excluded from the ordinary queue: ${report.totals.excluded.toLocaleString("en-GB")}`,
     `- Queued: ${report.totals.queued.toLocaleString("en-GB")}`,
     `- Queued with data gaps: ${report.totals.queuedWithDataGaps.toLocaleString("en-GB")}`,
     `- Open needs-review cases: ${report.totals.openNeedsReview.toLocaleString("en-GB")}`,
     "",
     "## Method",
     "",
-    "The score schedules editorial work; it is not a restaurant rating or measured traffic. An open needs-review event receives 1,000 points. Unverified, 180-day stale, and 90-day stale states receive 100, 80, and 40 points. Any operational data gap receives 300 points, plus 80 for no contact action, 50 for no opening hours, 30 for no categories, and 20 for no rating/review pair. The capped value proxy adds at most 210 points from featured status, review volume, rating, categories, and contact/map completeness. Ties resolve by slug.",
+    "The score schedules editorial work; it is not a restaurant rating or measured traffic. Pending publication review receives 2,000 points and is always queued. An open needs-review event receives 1,000 points. Unverified, 180-day stale, and 90-day stale states receive 100, 80, and 40 points. Any operational data gap receives 300 points, plus 80 for no contact action, 50 for no opening hours, 30 for no categories, and 20 for no rating/review pair. The capped value proxy adds at most 210 points from featured status, review volume, rating, categories, and contact/map completeness. Excluded records are retained but omitted from this ordinary verification queue. Ties resolve by slug.",
     "",
     "## Gap coverage",
     "",
@@ -139,8 +164,8 @@ export function renderListingVerificationPriorityReport(report: ListingVerificat
     "",
     `## Top ${Math.min(Math.max(0, limit), report.priorities.length)} tasks`,
     "",
-    "| Rank | Listing | Area | State | Data gaps | Score |",
-    "| ---: | --- | --- | --- | --- | ---: |",
+    "| Rank | Listing | Area | Publication | State | Data gaps | Score |",
+    "| ---: | --- | --- | --- | --- | --- | ---: |",
     ...rows,
     ""
   ].join("\n");

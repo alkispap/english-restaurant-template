@@ -1,4 +1,5 @@
 import type { Listing } from "@/data/listings";
+import type { ListingPublicationState } from "@/lib/listing-publication";
 import {
   isListingVerificationField,
   type ListingVerificationEvent,
@@ -52,7 +53,8 @@ const coreVerificationFields = [
 export function auditListingVerificationQuality(
   listings: Listing[],
   ledger: ListingVerificationLedger,
-  now = new Date()
+  now = new Date(),
+  publicationStates?: ReadonlyMap<string, ListingPublicationState>
 ): ListingVerificationQualityReport {
   const issues: ListingVerificationIssue[] = [];
   const listingBySlug = new Map(listings.map((listing) => [listing.slug, listing]));
@@ -152,6 +154,12 @@ export function auditListingVerificationQuality(
   addEventIssue(issues, openNeedsReview, listings.length, "open_evidence_conflicts", "high",
     "Conflicting evidence leaves the restaurant identity or an important visitor-facing fact unresolved.",
     "Keep the current record unverified and resolve the conflict from authoritative owner, registry, or premises evidence.");
+  if (publicationStates) {
+    const publishedConflicts = openNeedsReview.filter((event) => publicationStates.get(event.listingSlug)?.status === "published");
+    addEventIssue(issues, publishedConflicts, listings.length, "published_open_evidence_conflicts", "high",
+      "A restaurant with unresolved verification evidence remains published on public discovery surfaces.",
+      "Record a guarded pending-review publication decision until the evidence conflict is resolved.");
+  }
 
   const totals = severityTotals(issues);
   return {

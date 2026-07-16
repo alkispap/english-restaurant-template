@@ -143,7 +143,10 @@ export function auditListingOperationalQuality(listings: Listing[]): ListingOper
   };
 }
 
-export function renderListingOperationalQualityReport(report: ListingOperationalQualityReport) {
+export function renderListingOperationalQualityReport(
+  report: ListingOperationalQualityReport,
+  title = "Listing Operational Quality Audit"
+) {
   const coverageRows = Object.entries(report.coverage)
     .map(([field, value]) => `| ${field} | ${value.count.toLocaleString()} | ${value.rate.toFixed(2)}% |`)
     .join("\n");
@@ -152,7 +155,7 @@ export function renderListingOperationalQualityReport(report: ListingOperational
     .join("\n");
 
   return [
-    "# Listing Operational Quality Audit",
+    `# ${title}`,
     "",
     `- Generated: ${report.generatedAt}`,
     `- Grain: ${report.grain}`,

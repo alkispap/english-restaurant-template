@@ -87,6 +87,20 @@ console.log(
   `Largest initial or async client chunk: ${largestClientChunk.asset} at ${formatBytes(largestClientChunk.bytes)}`
 );
 
+const clientSource = clientChunks.map((file) => fs.readFileSync(file, "utf8")).join("\n");
+for (const forbiddenEditorialValue of [
+  "directory-editor",
+  "legacy-public-baseline",
+  "identity-uncertain",
+  "material-data-conflict",
+  "publication-2026-"
+]) {
+  assert.ok(
+    !clientSource.includes(forbiddenEditorialValue),
+    `Editorial publication history leaked into a client JavaScript chunk: ${forbiddenEditorialValue}`
+  );
+}
+
 console.log("Client payload budgets passed.");
 
 function collectFiles(directory: string): string[] {

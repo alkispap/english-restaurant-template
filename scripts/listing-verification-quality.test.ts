@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import type { Listing } from "../src/data/listings";
 import { applyListingVerification, type ListingVerificationLedger, type ListingVerificationProposal } from "../src/lib/listing-verification";
 import { auditListingVerificationQuality, renderListingVerificationQualityReport } from "../src/lib/listing-verification-quality";
+import type { ListingPublicationState } from "../src/lib/listing-publication";
 
 const base: Listing = {
   name: "Example Restaurant",
@@ -28,6 +29,28 @@ let report = auditListingVerificationQuality([base], emptyLedger, new Date("2026
 assert.equal(report.coverage.unverified, 1);
 assert.equal(report.verdict, "not_ready");
 assert.equal(report.issues.find((issue) => issue.code === "unverified_listings")?.severity, "high");
+
+const publishedState = new Map<string, ListingPublicationState>([[base.slug, {
+  listingSlug: base.slug,
+  status: "published",
+  reason: "legacy-public-baseline",
+  origin: "migration-baseline",
+  effectiveAt: "2026-07-01T00:00:00.000Z",
+  changedBy: "system:migration"
+}]]);
+report = auditListingVerificationQuality([base], { version: 1, events: [{
+  id: "open-review",
+  listingSlug: base.slug,
+  recordedAt: "2026-07-15T12:05:00.000Z",
+  checkedAt: "2026-07-15T12:00:00.000Z",
+  reviewedBy: "directory-editor",
+  outcome: "needs-review",
+  evidence: [{ sourceName: "Official site", sourceUrl: "https://example.com", accessedAt: "2026-07-15T11:55:00.000Z" }],
+  fieldsChecked: ["name"],
+  changes: [],
+  notes: "Conflicting evidence."
+}] }, new Date("2026-07-16T00:00:00.000Z"), publishedState);
+assert.equal(report.issues.find((issue) => issue.code === "published_open_evidence_conflicts")?.count, 1);
 
 const proposal: ListingVerificationProposal = {
   listingSlug: base.slug,

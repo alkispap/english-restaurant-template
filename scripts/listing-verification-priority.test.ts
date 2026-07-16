@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import type { Listing } from "../src/data/listings";
 import type { ListingVerificationEvent, ListingVerificationLedger } from "../src/lib/listing-verification";
+import type { ListingPublicationState } from "../src/lib/listing-publication";
 import {
   prioritizeListingVerification,
   renderListingVerificationPriorityReport
@@ -80,6 +81,7 @@ assert.equal(report.priorities.find((item) => item.slug === "popular-complete")?
 report = prioritizeListingVerification([clean, incomplete], { version: 1, events: [openReviewEvent] }, now);
 assert.equal(report.priorities[0].slug, clean.slug);
 assert.equal(report.priorities[0].state, "open-needs-review");
+assert.equal(report.totals.openNeedsReview, 1);
 
 const resolvedEvent: ListingVerificationEvent = {
   ...openReviewEvent,
@@ -93,9 +95,34 @@ const resolvedEvent: ListingVerificationEvent = {
 report = prioritizeListingVerification([clean], { version: 1, events: [openReviewEvent, resolvedEvent] }, now);
 assert.equal(report.priorities[0].state, "unverified");
 
+const publicationStates = new Map<string, ListingPublicationState>([
+  [clean.slug, {
+    listingSlug: clean.slug,
+    status: "pending-review",
+    reason: "identity-uncertain",
+    origin: "editorial-decision",
+    effectiveAt: "2026-07-15T12:00:00.000Z",
+    changedBy: "directory-editor"
+  }],
+  [incomplete.slug, {
+    listingSlug: incomplete.slug,
+    status: "excluded",
+    reason: "out-of-directory-scope",
+    origin: "editorial-decision",
+    effectiveAt: "2026-07-15T12:00:00.000Z",
+    changedBy: "directory-editor"
+  }]
+]);
+report = prioritizeListingVerification([clean, incomplete], ledger, now, publicationStates);
+assert.deepEqual(report.priorities.map((item) => item.slug), [clean.slug]);
+assert.equal(report.priorities[0].state, "publication-review");
+assert.equal(report.priorities[0].publicationStatus, "pending-review");
+assert.equal(report.totals.pendingReview, 1);
+assert.equal(report.totals.excluded, 1);
+
 const markdown = renderListingVerificationPriorityReport(report, 1);
 assert.match(markdown, /Listing Verification Priority Queue/);
 assert.match(markdown, /capped value proxy/);
-assert.match(markdown, /popular-complete/);
+assert.match(markdown, /pending-review/);
 
 console.log("listing verification priority tests passed");
