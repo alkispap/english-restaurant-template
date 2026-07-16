@@ -1,5 +1,7 @@
 # Listing Verification and Correction Workflow — 2026-07-16
 
+For the complete multi-batch program, evidence hierarchy, proposed publication/scope states, field rules, gates, tracking template, and definition of done, follow `docs/restaurant-data-verification-program.md`.
+
 ## Purpose and grain
 
 The canonical dataset has one row per restaurant location. Historical provenance establishes where a row came from; it does not establish that the restaurant's current identity, status, hours, contact details, or address are still correct.

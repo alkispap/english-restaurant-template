@@ -964,7 +964,26 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5G is locally complete. The queue and first evidence batch are reviewable in separate commits; Phase 5 remains in progress because current verification coverage is 0.06%, four identity/status conflicts are open, and the rights-approved top-100 media cohort remains 0/100.
 
+### 2026-07-16 - Phase 5H preparation: restaurant data verification operating guide
+
+**Outcome**
+
+- Added `docs/restaurant-data-verification-program.md` as the controlling reference for the 608-record operational-gap program.
+- Documented current counts, implemented controls, proposed publication/scope states, evidence hierarchy, V0-V5 cohort order, per-listing and per-batch procedures, outcome matrix, field-specific rules, required gates, tracking template, definition of done, and model/mode recommendation.
+- Clearly separated implemented verification controls from the proposed `published`, `pending-review`, and `excluded` states so the guide does not imply that public suppression already exists.
+- Kept Google/Outscraper media restoration separate and on hold.
+
+**Verification**
+
+- Cross-linked the guide from the remediation plan and existing verification workflow.
+- `git diff --check` passed.
+- No application code, canonical restaurant data, verification events, dependencies, build output, deployment configuration, or production state changed.
+
+**Status:** The operating guide is complete. Phase 5H implementation has not started; its first step is Plan-mode design and approval of publication/scope behaviour.
+
 ## Exact next checkpoint
+
+Follow `docs/restaurant-data-verification-program.md` as the controlling reference for the remaining operational-gap verification work.
 
 1. Resolve or explicitly hold the four open identity/status conflicts using direct business, owner, registry, or premises evidence; do not infer closure from FSA absence.
 2. Define an explicit publication/scope decision for non-restaurant or unverifiable imports before processing the next queue items, which currently include hotels and a cinema.

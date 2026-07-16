@@ -120,6 +120,8 @@
 **Priority:** Before launch for minimum quality; continuing after launch
 **Status:** In progress
 
+**Operating reference:** `docs/restaurant-data-verification-program.md`
+
 ### Work packages
 
 1. Define image licensing, provenance, validation, deduplication, and fallback rules.
