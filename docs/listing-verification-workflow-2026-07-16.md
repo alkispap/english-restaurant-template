@@ -106,26 +106,26 @@ Evidence is retained in `docs/verification-evidence/wimbledon-tandoori-merton-20
 | Measure | Result |
 | --- | ---: |
 | Canonical listings | 3,186 |
-| Verification ledger events | 21 |
-| Publication decision events | 14 |
-| Fresh editor-verified listings | 3 |
-| Unverified listings | 3,183 |
-| Open evidence conflicts | 13 |
+| Verification ledger events | 31 |
+| Publication decision events | 20 |
+| Fresh editor-verified listings | 7 |
+| Unverified listings | 3,179 |
+| Open evidence conflicts | 19 |
 | Retained records with data gaps | 608 |
-| Ordinary queued records with data gaps | 606 |
-| Published listings | 3,172 |
-| Pending publication review | 12 |
+| Ordinary queued records with data gaps | 602 |
+| Published listings | 3,166 |
+| Pending publication review | 18 |
 | Excluded listings | 2 |
-| Published records missing contact actions | 17 |
+| Published records missing contact actions | 7 |
 | Ledger integrity issues | 0 |
 | Operational duplicate-name/postcode high issues | 0 |
 
-The verification audit remains `not_ready` because 99.91% of listings have not received a current scoped check and 13 evidence conflicts remain open. This is an explicit queue, not evidence that all 3,183 records are incorrect. One open verification conflict belongs to an excluded invalid import and remains retained for audit history.
+The verification audit remains `not_ready` because 99.78% of listings have not received a current scoped check and 19 evidence conflicts remain open. This is an explicit queue, not evidence that all 3,179 records are incorrect. One open verification conflict belongs to an excluded invalid import and remains retained for audit history.
 
 ## Next verification priority
 
-1. Process the next 10 published missing-contact records: `ishaak`, `kothu`, `kundar-tandoori`, `modern-indian`, `spice-garden`, `staffordshire`, `sucess-worker`, `taj`, `thanjavur-food-lounge-ltd`, and `the-layered-biryani-by-mom`.
-2. Keep the 12 `pending-review` records withheld from normal discovery until stronger evidence supports publication, exclusion, correction, or entity resolution.
+1. Finish the published missing-contact cohort with `chakra-indian-cuisine`, `dancing-elephant`, `bazaar-london-s-indian-takeaway-aldgate`, `bazaar-london-s-indian-takeaway-hackney`, `faizan-ahmad`, `ghani-food-and-spices`, and `real-taste-of-india`.
+2. Keep the 18 `pending-review` records withheld from normal discovery until stronger evidence supports publication, exclusion, correction, or entity resolution.
 3. Record verification and publication decisions separately when evidence changes both current facts and public eligibility.
 4. Configure a monitored corrections mailbox and retention policy before enabling email handoff.
 5. Keep the deferred Google media decision separate from restaurant-data verification.

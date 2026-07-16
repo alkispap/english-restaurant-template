@@ -86,6 +86,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `381c7a5` | Phase 5H final verification and failure evidence |
 | `a470c1a` | Phase 5H finalized checkpoint |
 | `e3a90e7` | Phase 5 contact batch 01 evidence, decisions and synchronized public data |
+| `ca6d9ae` | Phase 5 contact batch 01 measured checkpoint |
+| `a272717` | Phase 5 contact batch 02 evidence, corrections and publication decisions |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -97,7 +99,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | In progress | First missing-contact batch complete; 3,172 published, 12 pending review, 2 excluded, and 17 published records still lack a contact action |
+| 5. Listing quality/operations | In progress | Two missing-contact batches complete; 3,166 published, 18 pending review, 2 excluded, and 7 published records still lack a contact action |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log
@@ -1082,12 +1084,54 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 - Evidence/data commit: `e3a90e7` (`Verify first missing-contact listing batch`).
 - No push or deployment occurred.
 
+### 2026-07-16 — Phase 5 contact batch 02: verified actions and identity holds
+
+**Cohort and scope**
+
+- Processed the next 10 published missing-contact records: `ishaak`, `kothu`, `kundar-tandoori`, `modern-indian`, `spice-garden`, `staffordshire`, `sucess-worker`, `taj`, `thanjavur-food-lounge-ltd`, and `the-layered-biryani-by-mom`.
+- Checked exact identity, premises, operating state, website/phone/order actions and hours from first-party, FSA, local-authority, Companies House and current transactional evidence.
+- Kept separate brands at shared premises separate unless explicit entity evidence supported a merge.
+
+**Evidence outcomes**
+
+- `ishaak`: verified operational; corrected the street form and added the official website and phone.
+- `kothu`: verified operational; corrected the premises from `50C` to `48-50 South End`, corrected cuisine to Sri Lankan/South Indian, and added the official website, phone, email and complete weekly hours.
+- `kundar-tandoori`: verified as a current delivery brand and added its exact Deliveroo order action. The separate Taste of Punjab record at the same premises was not merged or used as a source of contact details.
+- `the-layered-biryani-by-mom`: verified against exact FSA kitchen evidence and a current delivery menu; normalized the address and added the exact order action.
+- `modern-indian`, `spice-garden`, `staffordshire`, `sucess-worker`, `taj`, and `thanjavur-food-lounge-ltd`: retained without speculative canonical edits and changed to `pending-review` because current identity, scope, unit or operating evidence was materially insufficient.
+- No FSA hygiene score was used as a customer rating.
+
+**Measured result**
+
+- Verification events: 21 to 31; publication events: 14 to 20.
+- Fresh editor-verified listings: 3 to 7; unverified listings: 3,183 to 3,179.
+- Publication states: 3,172 published / 12 pending / 2 excluded to 3,166 published / 18 pending / 2 excluded.
+- Ordinary queue: 3,182 to 3,178; queued operational-gap records: 606 to 602 because four newly verified records leave the ordinary unverified queue.
+- Retained-data gaps: missing contact actions 31 to 27; missing hours 128 to 127; missing categories remain 491; missing rating/review pairs remain 67.
+- Published-data gaps: missing contact actions 17 to 7; missing hours 114 to 107; missing categories remain 487; missing rating/review pairs 55 to 49.
+
+**Verification and failure record**
+
+- All 10 verification proposals and six publication proposals passed dry-run validation before writes.
+- The first write attempt for `spice-garden` hit a transient Windows `EPERM` while atomically renaming `shortlist-summaries.json.publication-tmp`. The guarded writer restored every original file and removed temporary files. Inspection confirmed the event was not appended; the identical proposal then succeeded on retry.
+- Regression suite: 156/156 passed; ESLint, TypeScript and `git diff --check` passed.
+- Publication audit: `ready`; SEO and indexation audits passed with zero crawl warnings.
+- Verification audit remains intentionally `not_ready`: 3,179 unverified listings and 19 open evidence conflicts.
+- Standard production build and full 3,657-page static export passed; payload budgets passed.
+- Cloudflare export check passed for 7,405 files with no asset over 25 MiB.
+- Direct export inspection confirmed the six new pending pages are present with `noindex` and no LocalBusiness schema.
+
+**Git checkpoint**
+
+- Evidence/data commit: `a272717` (`Verify second missing-contact listing batch`).
+- No push or deployment occurred.
+
 ## Exact next checkpoint
 
 Follow `docs/restaurant-data-verification-program.md` as the controlling reference for the remaining operational-gap verification work.
 
-1. Process the next 10 published missing-contact records: `ishaak`, `kothu`, `kundar-tandoori`, `modern-indian`, `spice-garden`, `staffordshire`, `sucess-worker`, `taj`, `thanjavur-food-lounge-ltd`, and `the-layered-biryani-by-mom`.
-2. Keep all 12 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
+1. Finish the published missing-contact cohort with the remaining seven records: `chakra-indian-cuisine`, `dancing-elephant`, `bazaar-london-s-indian-takeaway-aldgate`, `bazaar-london-s-indian-takeaway-hackney`, `faizan-ahmad`, `ghani-food-and-spices`, and `real-taste-of-india`.
+2. Keep all 18 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
 3. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
 4. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
 5. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
