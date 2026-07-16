@@ -354,7 +354,7 @@ const sharedFooterGroups = [
       { label: "Best rated {listingPluralLabelLower}", href: "/best/best-rated" },
       { label: "Most reviewed {listingPluralLabelLower}", href: "/best/most-reviewed" },
       { label: "Budget friendly {listingPluralLabelLower}", href: "/best/budget-friendly" },
-      { label: "Takeaway {listingPluralLabelLower}", href: "/best/takeaway" }
+      { label: "Best takeaway {listingPluralLabelLower}", href: "/best/takeaway" }
     ]
   },
   {

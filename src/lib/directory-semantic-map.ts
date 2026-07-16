@@ -181,7 +181,7 @@ export const directorySemanticMap = {
       networkRole: "core" as const,
       searchIntent: "compare Indian restaurants in one local area of London",
       requiredEavGroups: ["location", "category", "reviews", "services"] as EavGroup[],
-      allowedLinkTargets: ["category_hub", "area_category_hub", "listing_detail", "facet_hub"] as DirectoryPageTypeBrief[],
+      allowedLinkTargets: ["area_hub", "category_hub", "area_category_hub", "listing_detail", "best_hub", "facet_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
     },
     {
@@ -191,7 +191,7 @@ export const directorySemanticMap = {
       networkRole: "core" as const,
       searchIntent: "compare all restaurants in one cuisine category across London",
       requiredEavGroups: ["category", "location", "reviews", "services"] as EavGroup[],
-      allowedLinkTargets: ["area_hub", "area_category_hub", "listing_detail", "facet_hub"] as DirectoryPageTypeBrief[],
+      allowedLinkTargets: ["area_hub", "category_hub", "area_category_hub", "listing_detail", "best_hub", "facet_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
     },
     {
@@ -221,7 +221,7 @@ export const directorySemanticMap = {
       networkRole: "supporting" as const,
       searchIntent: "find the top-rated or most-reviewed Indian restaurants in London",
       requiredEavGroups: ["reviews", "category", "location"] as EavGroup[],
-      allowedLinkTargets: ["listing_detail", "area_hub", "category_hub"] as DirectoryPageTypeBrief[],
+      allowedLinkTargets: ["listing_detail", "area_hub", "category_hub", "area_category_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
     },
     {
@@ -231,7 +231,7 @@ export const directorySemanticMap = {
       networkRole: "supporting" as const,
       searchIntent: "find restaurants matching a specific service, dietary option, or feature",
       requiredEavGroups: ["services", "dietary", "category", "location"] as EavGroup[],
-      allowedLinkTargets: ["listing_detail", "area_hub", "category_hub"] as DirectoryPageTypeBrief[],
+      allowedLinkTargets: ["listing_detail", "area_hub", "category_hub", "best_hub"] as DirectoryPageTypeBrief[],
       indexationRole: "supporting_noindex_when_weak" as const
     },
     {

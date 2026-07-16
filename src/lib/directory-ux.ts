@@ -368,7 +368,7 @@ function areaCategoryLinks(limit: number): DirectoryShortcutLink[] {
     .sort((a, b) => b.count - a.count || a.areaLabel.localeCompare(b.areaLabel))
     .slice(0, limit)
     .map((item) => ({
-      label: `${item.categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${item.areaLabel}`,
+      label: `Browse ${item.categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${item.areaLabel}`,
       href: areaCategoryPath(item.areaSlug, item.categorySlug),
       count: item.count
     }));

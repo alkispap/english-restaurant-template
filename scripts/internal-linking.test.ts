@@ -28,6 +28,11 @@ function homepageFeatureGroupsExposeCleanSeoUrls() {
     links.every((link) => typeof link.count === "number" && link.count > 0),
     "homepage SEO feature links should show listing counts"
   );
+  assert.equal(
+    new Set(links.map((link) => link.label.toLowerCase())).size,
+    links.length,
+    "homepage SEO feature groups should use distinct anchor labels"
+  );
 }
 
 function sidebarIncludesCleanSeoFeatureUrls() {
@@ -46,11 +51,17 @@ function sidebarIncludesCleanSeoFeatureUrls() {
 }
 
 function footerIncludesCleanSeoFeatureUrls() {
-  const hrefs = new Set(getFooterGroups().flatMap((group) => group.links.map((link) => link.href)));
+  const links = getFooterGroups().flatMap((group) => group.links);
+  const hrefs = new Set(links.map((link) => link.href));
 
   ["/services/takeaway", "/dietary/vegetarian", "/types/casual-dining"].forEach((href) => {
     assert.ok(hrefs.has(href), `footer should include ${href}`);
   });
+  assert.equal(
+    new Set(links.map((link) => link.label.toLowerCase())).size,
+    links.length,
+    "footer groups should use distinct anchor labels"
+  );
 }
 
 function userNeedShortcutsPreferCleanUrls() {

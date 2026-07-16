@@ -1077,7 +1077,7 @@ function categoryAnchorLabel(categoryLabel: string) {
 }
 
 function areaCategoryAnchorLabel(categoryLabel: string, areaLabel: string) {
-  return `${categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${areaLabel}`;
+  return `Browse ${categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${areaLabel}`;
 }
 
 function isIndexableAreaCategoryCombination(item: { count: number }) {

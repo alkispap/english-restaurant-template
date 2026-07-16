@@ -99,6 +99,8 @@ const areaHubBrief = getPageBrief("area_hub");
 assert(areaHubBrief.macroContext === "local area comparison", "area_hub macroContext should be 'local area comparison'");
 assert(areaHubBrief.allowedLinkTargets.includes("listing_detail"), "area_hub should link down to listing detail pages");
 assert(areaHubBrief.allowedLinkTargets.includes("area_category_hub"), "area_hub should link to area+category combo pages");
+assert(areaHubBrief.allowedLinkTargets.includes("area_hub"), "area_hub should link to other useful area hubs");
+assert(areaHubBrief.allowedLinkTargets.includes("best_hub"), "area_hub should link to useful best-of searches");
 assert(areaHubBrief.indexationRole === "supporting_noindex_when_weak", "area_hub should be noindexed when it has too few listings");
 
 // Category hub: must link to area+category combos and listings
@@ -106,6 +108,14 @@ const categoryHubBrief = getPageBrief("category_hub");
 assert(categoryHubBrief.macroContext === "category comparison across the city", "category_hub macroContext should be 'category comparison across the city'");
 assert(categoryHubBrief.allowedLinkTargets.includes("area_category_hub"), "category_hub should link to area+category combos");
 assert(categoryHubBrief.allowedLinkTargets.includes("listing_detail"), "category_hub should link to listing detail pages");
+assert(categoryHubBrief.allowedLinkTargets.includes("category_hub"), "category_hub should link to related category hubs");
+assert(categoryHubBrief.allowedLinkTargets.includes("best_hub"), "category_hub should link to useful best-of searches");
+
+const bestHubBrief = getPageBrief("best_hub");
+assert(bestHubBrief.allowedLinkTargets.includes("area_category_hub"), "best_hub should link to useful area/category combinations");
+
+const facetHubBrief = getPageBrief("facet_hub");
+assert(facetHubBrief.allowedLinkTargets.includes("best_hub"), "facet_hub should link to useful best-of searches");
 
 // getPageBrief must throw for unknown page types
 let threwForUnknown = false;
