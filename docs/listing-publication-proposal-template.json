@@ -1,0 +1,21 @@
+{
+  "listingSlug": "example-restaurant",
+  "expectedSourceId": "source-record-id",
+  "expectedCurrent": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "reviewedAt": "2026-07-16T12:00:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "published",
+    "reason": "review-resolved"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-YYYY-MM-DD-listing-slug-id"
+    }
+  ],
+  "notes": "Explain why the prior publication state is changing and what evidence supports the decision."
+}
