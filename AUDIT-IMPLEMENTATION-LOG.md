@@ -92,6 +92,7 @@ These changes existed before remediation began and were reviewed and committed s
 | `24183c3` | Phase 5 published missing-contact cohort completion |
 | `7552211` | Phase 5 published contact cohort measured checkpoint |
 | `086aca8` | Phase 5 pending-listing Google Place ID evidence review |
+| `d0b5d5a` | Phase 5 first published missing-hours batch evidence, scope decisions and synchronized data |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -103,7 +104,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | In progress | Google follow-up complete for the 21 contact-batch holds; 3,159 published, 24 pending review, 3 excluded, and every published record has a contact action |
+| 5. Listing quality/operations | In progress | First published missing-hours batch complete; 3,150 published, 25 pending review, 11 excluded, 17 freshly editor-verified, and 96 published records still lack structured hours |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log
@@ -1228,13 +1229,59 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 - Evidence/data commit: `086aca8` (`Record pending listing Google profile review`).
 - No push or deployment occurred.
 
+### 2026-07-16 — Phase 5 opening-hours batch 01: scope-first restaurant hours review
+
+**Cohort and scope**
+
+- Processed the first 10 published missing-opening-hours records: `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
+- Checked exact entity, address, operating status, directory scope, cuisine, restaurant-specific hours and current core contacts before treating any venue schedule as restaurant hours.
+- Retained the dated evidence summary and per-listing proposals under `docs/verification-evidence/opening-hours-batch-01-*`.
+
+**Evidence outcomes**
+
+- The five Premier Inn records are current hotels. Their attached operations are Thyme Bar & Grill, Traveller's Rest Beefeater or Brewers Fayre rather than Indian restaurant locations. All five were verified operational, supported address/phone corrections were applied, no hotel or venue hours were copied, and publication changed to `excluded/out-of-directory-scope`.
+- `everyman-maida-vale` is a cinema with bar, Spielburger and cinema-seat food service. Cinema opening times were not used as restaurant hours; the record was verified operational and excluded as out of scope.
+- `east-india-club` is a private members' club whose official dining page describes British cuisine for members and guests. Club dining hours were not used; the record was verified operational and excluded as out of scope.
+- `the-hornbeam-community-centre-cic` is a community hub whose cafe space hosts changing projects, community meals and referral-only sessions. Office and event schedules were not used as restaurant hours; the current general email and HTTPS website were corrected, and the record was excluded as out of scope.
+- `chaiwrap` remains unresolved. Current FSA premises evidence identifies Yak Yummy, Hullabaloo's first-party site now points to Greenwich, and another current directory reports Hullabaloo Deptford closed, while a claimed Tripadvisor Chai Wrap profile still presents the exact historical record as open. No closure, merge, redirect or hours were inferred; verification recorded `needs-review` and publication changed to `pending-review/material-data-conflict`.
+- `three-falcons-hotel-and-pub` has a current in-scope Indian gastropub and restaurant operation. The official Old Delhi Times/Indian food pages and live OpenTable profile support Indian cuisine, daily restaurant hours of `12-10pm`, the current reservation email, restaurant phone, menu and booking action. A follow-up append-only event synchronized its visible and metadata descriptions with the verified category.
+- Google/Outscraper media restoration remained separate and on hold.
+
+**Measured result**
+
+- Verification events: 43 to 54; publication events: 28 to 37.
+- Fresh editor-verified listings: 8 to 17; unverified listings: 3,178 to 3,169.
+- Open evidence conflicts: 25 to 26 because Chaiwrap moved into the explicit conflict queue.
+- Publication states: 3,159 published / 24 pending / 3 excluded to 3,150 published / 25 pending / 11 excluded.
+- Ordinary queue: 3,177 to 3,168; queued operational-gap records: 601 to 592.
+- Unique retained records with operational gaps: 608 to 607.
+- Retained-data gaps: missing contact actions remain 27; missing hours 127 to 126; missing categories 491 to 490; missing rating/review pairs remain 67.
+- Published-data gaps: missing contact actions remain 0; missing hours 106 to 96; missing categories 486 to 476; missing rating/review pairs remain 43.
+
+**Verification and failure record**
+
+- All 10 verification proposals passed guarded dry runs before writes. All nine publication proposals then passed guarded dry runs against the appended verification events before expected-count writes.
+- The first full regression run passed 152/156. Three failures were stale publication/indexation/count expectations after the nine eligibility changes. The fourth exposed inherited Three Falcons descriptive copy that no longer matched its newly verified Indian category.
+- The verification field contract was extended to support attributable `description` and `metaDescription` corrections. The Three Falcons correction was recorded as a separate append-only, fully scoped follow-up event rather than rewriting the accepted event.
+- Final regression suite: 156/156 passed; ESLint, TypeScript and `git diff --check` passed.
+- Publication audit: `ready`; operational audit: `conditional` with no high or critical findings; verification audit remains intentionally `not_ready` with 3,169 unverified listings and 26 open conflicts.
+- SEO and indexation audits passed with 3,514 sitemap URLs, 3,065 indexable restaurant URLs and zero crawl warnings.
+- Full static export passed with 3,646 pages; payload budgets passed.
+- Cloudflare export check passed for 7,383 files with no asset over 25 MiB.
+- Direct export inspection confirmed the eight excluded routes are absent, Chaiwrap remains present with `noindex` and no LocalBusiness schema, and Three Falcons contains the verified Indian description and daily hours.
+
+**Git checkpoint**
+
+- Evidence/data commit: `d0b5d5a` (`Verify first published missing-hours batch`).
+- No push or deployment occurred.
+
 ## Exact next checkpoint
 
 Follow `docs/restaurant-data-verification-program.md` as the controlling reference for the remaining operational-gap verification work.
 
-1. Begin the first published missing-hours batch with `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
-2. Treat restaurant-directory scope and the identity of the restaurant operation as first-class checks because several records describe hotels, clubs, cinemas or community venues rather than a clearly named restaurant.
-3. Keep all 24 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
+1. Continue the published missing-hours cohort with `rara-caterers`, `lady-buddha`, `empress-market`, `let-s-eat-and-greet`, `casuarina-tree-restaurant-and-bar`, `the-arch-wembley`, `clay-kitchen`, `amma-ma-foods-limited`, `the-events-place`, and `ramad-somali-restaurant`.
+2. Treat exact restaurant operation, cuisine scope and restaurant-specific hours as first-class checks before using venue, event-space, hotel, pub, caterer or market schedules.
+3. Keep all 25 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available. Chaiwrap now belongs to this queue.
 4. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
 5. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
 6. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.

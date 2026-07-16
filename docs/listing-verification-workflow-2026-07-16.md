@@ -106,28 +106,28 @@ Evidence is retained in `docs/verification-evidence/wimbledon-tandoori-merton-20
 | Measure | Result |
 | --- | ---: |
 | Canonical listings | 3,186 |
-| Verification ledger events | 43 |
-| Publication decision events | 28 |
-| Fresh editor-verified listings | 8 |
-| Unverified listings | 3,178 |
-| Open evidence conflicts | 25 |
-| Retained records with data gaps | 608 |
-| Ordinary queued records with data gaps | 601 |
-| Published listings | 3,159 |
-| Pending publication review | 24 |
-| Excluded listings | 3 |
+| Verification ledger events | 54 |
+| Publication decision events | 37 |
+| Fresh editor-verified listings | 17 |
+| Unverified listings | 3,169 |
+| Open evidence conflicts | 26 |
+| Retained records with data gaps | 607 |
+| Ordinary queued records with data gaps | 592 |
+| Published listings | 3,150 |
+| Pending publication review | 25 |
+| Excluded listings | 11 |
 | Published records missing contact actions | 0 |
-| Published records missing opening hours | 106 |
+| Published records missing opening hours | 96 |
 | Ledger integrity issues | 0 |
 | Operational duplicate-name/postcode high issues | 0 |
 
-The verification audit remains `not_ready` because 99.75% of listings have not received a current scoped check and 25 evidence conflicts remain open. This is an explicit queue, not evidence that all 3,178 records are incorrect. One open verification conflict belongs to an excluded invalid import and remains retained for audit history.
+The verification audit remains `not_ready` because 99.47% of listings have not received a current scoped check and 26 evidence conflicts remain open. This is an explicit queue, not evidence that all 3,169 records are incorrect. One open verification conflict belongs to an excluded invalid import and remains retained for audit history.
 
 ## Next verification priority
 
-1. Start the published missing-hours cohort with `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
-2. Confirm restaurant-directory scope and the exact restaurant identity before adding venue-level hours for hotels, clubs, cinemas or community buildings.
-3. Keep the 24 `pending-review` records withheld from normal discovery until stronger evidence supports publication, exclusion, correction, or entity resolution.
+1. Continue the published missing-hours cohort with `rara-caterers`, `lady-buddha`, `empress-market`, `let-s-eat-and-greet`, `casuarina-tree-restaurant-and-bar`, `the-arch-wembley`, `clay-kitchen`, `amma-ma-foods-limited`, `the-events-place`, and `ramad-somali-restaurant`.
+2. Confirm exact restaurant operation, cuisine scope and restaurant-specific hours before applying venue, event-space, hotel, pub, caterer or market hours.
+3. Keep the 25 `pending-review` records withheld from normal discovery until stronger evidence supports publication, exclusion, correction, or entity resolution; `chaiwrap` is now held because current exact-premises and claimed-profile evidence conflict.
 4. Record verification and publication decisions separately when evidence changes both current facts and public eligibility.
 5. Configure a monitored corrections mailbox and retention policy before enabling email handoff.
 6. Keep the deferred Google media decision separate from restaurant-data verification.
