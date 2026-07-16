@@ -1,0 +1,83 @@
+{
+  "listingSlug": "arena-lounge-uk",
+  "checkedAt": "2026-07-16T04:47:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Arena Lounge official website",
+      "sourceUrl": "https://www.arenalounge.co.uk/",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Arena Lounge query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Arena%20Lounge&address=HA0%202HA",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "categories",
+      "value": [
+        "Indian / Asian"
+      ],
+      "reason": "The official restaurant describes its food as Kenyan and Indo-Chinese infused; Indian / Asian is the closest existing directory taxonomy value without overstating a narrower cuisine."
+    },
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The live official site publishes current restaurant hours, contact actions, menus, and booking links, and the FSA identifies the premises as a restaurant/cafe/canteen."
+    },
+    {
+      "field": "contact.website",
+      "value": "https://www.arenalounge.co.uk/",
+      "reason": "The recorded HTTP URL resolves to the live canonical HTTPS official site."
+    },
+    {
+      "field": "details.workingHours",
+      "value": [
+        {
+          "day": "Monday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Tuesday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Wednesday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Thursday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Friday",
+          "hours": "12:00-23:00"
+        },
+        {
+          "day": "Saturday",
+          "hours": "12:00-23:00"
+        },
+        {
+          "day": "Sunday",
+          "hours": "12:00-22:00"
+        }
+      ],
+      "reason": "The official site publishes a complete seven-day Restaurant Opening Hours schedule."
+    }
+  ],
+  "notes": "The official site supports the existing Arena Lounge UK identity, 652 Harrow Road address, HA0 2HA postcode, and 020 8248 1280 phone. The FSA result corroborates the entity and restaurant use. The FSA hygiene score was not copied into customer rating fields."
+}

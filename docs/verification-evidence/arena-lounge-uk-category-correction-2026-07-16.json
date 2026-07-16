@@ -1,0 +1,40 @@
+{
+  "listingSlug": "arena-lounge-uk",
+  "checkedAt": "2026-07-16T04:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Arena Lounge official website",
+      "sourceUrl": "https://www.arenalounge.co.uk/",
+      "accessedAt": "2026-07-16T04:55:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Arena Lounge query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Arena%20Lounge&address=HA0%202HA",
+      "accessedAt": "2026-07-16T04:55:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "categories",
+      "value": [
+        "East African",
+        "Chinese"
+      ],
+      "reason": "The official wording is Kenyan and Indo-Chinese infused. Existing East African and Chinese taxonomy values preserve both supported cuisine signals without introducing an unsupported general Indian claim."
+    }
+  ],
+  "notes": "This event supersedes only the category normalization in verification-2026-07-16-arena-lounge-uk-d22bd6571f86. It preserves the earlier event and repeats the core verification scope so current provenance remains fully auditable."
+}

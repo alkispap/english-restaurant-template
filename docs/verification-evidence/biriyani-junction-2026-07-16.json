@@ -1,0 +1,29 @@
+{
+  "listingSlug": "biriyani-junction",
+  "checkedAt": "2026-07-16T04:47:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact name and address query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Biriyani%20Junction&address=118%20Windmill%20Road",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS coordinate-area query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.3864681&longitude=-0.0973369&maxDistanceLimit=1",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The current FSA exact query returned no match and nearby results did not corroborate the imported entity. Absence from FHRS is not proof of closure, so identity, current trading status, contact details, and hours remain unresolved. Obtain direct business evidence or make an explicit exclusion decision before changing the canonical record. The captured result summary is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+}

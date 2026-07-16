@@ -1,0 +1,29 @@
+{
+  "listingSlug": "chotiwala",
+  "checkedAt": "2026-07-16T04:47:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=W11%204JG",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    },
+    {
+      "sourceName": "Uber Eats historical Chotiwala page",
+      "sourceUrl": "https://www.ubereats.com/gb/store/chotiwala-indian-vegetarian-food/5KOaaSidSlyK7LMjQ7RwYw",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The FSA currently identifies Premier Convenience Store at Ground Floor, 109 Clarendon Road; Uber Eats marks Chotiwala Indian Vegetarian Food at that address as closed on its platform since 29 May 2024. These sources indicate a conflict but do not prove whether Chotiwala closed, renamed, or moved. Obtain direct business evidence or make an explicit exclusion decision before changing status, contact details, or hours. The captured FSA result is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+}

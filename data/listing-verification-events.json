@@ -64,6 +64,273 @@
         }
       ],
       "notes": "This is a correction of the 28 Ridgway entity, not a merge with the separate 26 Ridgway Wimbledon Tandoori record. Rating and review totals were not verified by this event."
+    },
+    {
+      "id": "verification-2026-07-16-biriyani-junction-238d8307d4f5",
+      "listingSlug": "biriyani-junction",
+      "listingSourceId": "ChIJAQAMzygHdkgR0OIzlZNS2CU",
+      "recordedAt": "2026-07-16T04:51:51.594Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact name and address query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Biriyani%20Junction&address=118%20Windmill%20Road",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS coordinate-area query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.3864681&longitude=-0.0973369&maxDistanceLimit=1",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The current FSA exact query returned no match and nearby results did not corroborate the imported entity. Absence from FHRS is not proof of closure, so identity, current trading status, contact details, and hours remain unresolved. Obtain direct business evidence or make an explicit exclusion decision before changing the canonical record. The captured result summary is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-chotiwala-233f1ca317f1",
+      "listingSlug": "chotiwala",
+      "listingSourceId": "ChIJRyq4CesPdkgRy1hZio7BcLs",
+      "recordedAt": "2026-07-16T04:51:54.548Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=W11%204JG",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "Uber Eats historical Chotiwala page",
+          "sourceUrl": "https://www.ubereats.com/gb/store/chotiwala-indian-vegetarian-food/5KOaaSidSlyK7LMjQ7RwYw",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The FSA currently identifies Premier Convenience Store at Ground Floor, 109 Clarendon Road; Uber Eats marks Chotiwala Indian Vegetarian Food at that address as closed on its platform since 29 May 2024. These sources indicate a conflict but do not prove whether Chotiwala closed, renamed, or moved. Obtain direct business evidence or make an explicit exclusion decision before changing status, contact details, or hours. The captured FSA result is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-golis-south-norwood-def1041be243",
+      "listingSlug": "golis-south-norwood",
+      "listingSourceId": "ChIJ8-_5yzwBdkgRGs7oVdz_rCE",
+      "recordedAt": "2026-07-16T04:52:00.125Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE25%206EE",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS coordinate-area query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.3997282&longitude=-0.0741702&maxDistanceLimit=1",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current FSA results identify D And D Grocery Shop at 1 Commercial Buildings, High Street, SE25 6EE and no Golis South Norwood match. This conflicts with the imported entity but does not establish whether it closed, renamed, or moved. Obtain direct business evidence or make an explicit exclusion decision before changing the canonical record. The captured result is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-spikky-pepperdem-food-035d3e0d282d",
+      "listingSlug": "spikky-pepperdem-food",
+      "listingSourceId": "ChIJE258j9up2EcR1Gj1X4sm6M4",
+      "recordedAt": "2026-07-16T04:52:05.237Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AN",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS coordinate-area query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.4905196&longitude=0.0718448&maxDistanceLimit=1",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current FSA results list several Parry Place food businesses but no Spikky Pepperdem Food or exact 8-12 entity. The evidence is insufficient to infer closure or substitute a nearby business. Obtain direct business evidence or make an explicit exclusion decision before changing identity, status, contact details, or hours. The captured result summary is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-arena-lounge-uk-d22bd6571f86",
+      "listingSlug": "arena-lounge-uk",
+      "listingSourceId": "ChIJ9VBVBLsTdkgRrJGmgnLrdgo",
+      "recordedAt": "2026-07-16T04:52:11.406Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Arena Lounge official website",
+          "sourceUrl": "https://www.arenalounge.co.uk/",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Arena Lounge query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Arena%20Lounge&address=HA0%202HA",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "categories",
+          "value": [
+            "Indian / Asian"
+          ],
+          "reason": "The official restaurant describes its food as Kenyan and Indo-Chinese infused; Indian / Asian is the closest existing directory taxonomy value without overstating a narrower cuisine.",
+          "previousValue": [],
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The live official site publishes current restaurant hours, contact actions, menus, and booking links, and the FSA identifies the premises as a restaurant/cafe/canteen.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://www.arenalounge.co.uk/",
+          "reason": "The recorded HTTP URL resolves to the live canonical HTTPS official site.",
+          "previousValue": "http://www.arenalounge.co.uk/",
+          "applied": true
+        },
+        {
+          "field": "details.workingHours",
+          "value": [
+            {
+              "day": "Monday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Tuesday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Wednesday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Thursday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Friday",
+              "hours": "12:00-23:00"
+            },
+            {
+              "day": "Saturday",
+              "hours": "12:00-23:00"
+            },
+            {
+              "day": "Sunday",
+              "hours": "12:00-22:00"
+            }
+          ],
+          "reason": "The official site publishes a complete seven-day Restaurant Opening Hours schedule.",
+          "applied": true
+        }
+      ],
+      "notes": "The official site supports the existing Arena Lounge UK identity, 652 Harrow Road address, HA0 2HA postcode, and 020 8248 1280 phone. The FSA result corroborates the entity and restaurant use. The FSA hygiene score was not copied into customer rating fields."
+    },
+    {
+      "id": "verification-2026-07-16-arena-lounge-uk-ea98a427cae6",
+      "listingSlug": "arena-lounge-uk",
+      "listingSourceId": "ChIJ9VBVBLsTdkgRrJGmgnLrdgo",
+      "recordedAt": "2026-07-16T04:55:38.496Z",
+      "checkedAt": "2026-07-16T04:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Arena Lounge official website",
+          "sourceUrl": "https://www.arenalounge.co.uk/",
+          "accessedAt": "2026-07-16T04:55:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Arena Lounge query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Arena%20Lounge&address=HA0%202HA",
+          "accessedAt": "2026-07-16T04:55:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "categories",
+          "value": [
+            "East African",
+            "Chinese"
+          ],
+          "reason": "The official wording is Kenyan and Indo-Chinese infused. Existing East African and Chinese taxonomy values preserve both supported cuisine signals without introducing an unsupported general Indian claim.",
+          "previousValue": [
+            "Indian / Asian"
+          ],
+          "applied": true
+        }
+      ],
+      "notes": "This event supersedes only the category normalization in verification-2026-07-16-arena-lounge-uk-d22bd6571f86. It preserves the earlier event and repeats the core verification scope so current provenance remains fully auditable."
     }
   ]
 }

@@ -1,0 +1,29 @@
+{
+  "listingSlug": "spikky-pepperdem-food",
+  "checkedAt": "2026-07-16T04:47:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AN",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS coordinate-area query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.4905196&longitude=0.0718448&maxDistanceLimit=1",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Current FSA results list several Parry Place food businesses but no Spikky Pepperdem Food or exact 8-12 entity. The evidence is insufficient to infer closure or substitute a nearby business. Obtain direct business evidence or make an explicit exclusion decision before changing identity, status, contact details, or hours. The captured result summary is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+}

@@ -302003,7 +302003,10 @@
     "address": "652 Harrow Rd",
     "fullAddress": "652 Harrow Rd, London, HA0 2HA",
     "city": "London",
-    "categories": [],
+    "categories": [
+      "East African",
+      "Chinese"
+    ],
     "listingTypes": [
       "Casual Dining",
       "Bar"
@@ -302036,7 +302039,7 @@
     "reviewCount": 1517,
     "featured": false,
     "contact": {
-      "website": "http://www.arenalounge.co.uk/",
+      "website": "https://www.arenalounge.co.uk/",
       "phone": "+44 20 8248 1280",
       "phoneAlt": "2082481280",
       "email": "info@arenalounge.co.uk",
@@ -302160,7 +302163,37 @@
         "Parking"
       ],
       "googleVerified": true,
-      "placeId": "ChIJ9VBVBLsTdkgRrJGmgnLrdgo"
+      "placeId": "ChIJ9VBVBLsTdkgRrJGmgnLrdgo",
+      "workingHours": [
+        {
+          "day": "Monday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Tuesday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Wednesday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Thursday",
+          "hours": "12:00-22:00"
+        },
+        {
+          "day": "Friday",
+          "hours": "12:00-23:00"
+        },
+        {
+          "day": "Saturday",
+          "hours": "12:00-23:00"
+        },
+        {
+          "day": "Sunday",
+          "hours": "12:00-22:00"
+        }
+      ]
     },
     "provenance": {
       "sourceName": "Indian Restaurants - Outscraper - Test.csv",
@@ -302169,8 +302202,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T04:55:00.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-arena-lounge-uk-ea98a427cae6"
+    },
+    "businessStatus": "Operational"
   },
   {
     "name": "Hello Mumbai",
