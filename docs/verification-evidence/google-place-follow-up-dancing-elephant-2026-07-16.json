@@ -1,0 +1,35 @@
+{
+  "listingSlug": "dancing-elephant",
+  "checkedAt": "2026-07-16T10:50:03.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Current Google profile by stored Place ID",
+      "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Dancing%20Elephant&query_place_id=ChIJbfH2mFYPdkgRwca1DGLpXuo",
+      "accessedAt": "2026-07-16T10:50:03.000Z"
+    },
+    {
+      "sourceName": "Shahi Caterers official operator site",
+      "sourceUrl": "https://shahicaterers.co.uk/",
+      "accessedAt": "2026-07-16T10:50:03.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Shahi Catering at Unit 23",
+      "sourceUrl": "https://ratings.food.gov.uk/business/200075",
+      "accessedAt": "2026-07-16T10:50:03.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The exact Google profile resolves as an Indian takeaway and displays hours, strengthening the historical identity. However, Shahi Caterers identifies Unit 23 under Biryani House London Limited and current FSA evidence names Shahi Catering. No source explicitly connects Dancing Elephant to either operator, so publication remains unsafe."
+}

@@ -621,6 +621,35 @@
         }
       ],
       "notes": "Kulcha Express currently operates at the exact address and uses the same phone historically associated with Real Taste of India, but no explicit evidence proves a rename, successor or merge. Withhold until entity continuity is established."
+    },
+    {
+      "id": "publication-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-161e9bc6d995",
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "recordedAt": "2026-07-16T13:37:27.485Z",
+      "reviewedAt": "2026-07-16T10:51:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "confirmed-permanently-closed"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-78f847496a5c"
+        },
+        {
+          "type": "external-source",
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Aldgate&query_place_id=ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        }
+      ],
+      "notes": "The exact historical Google profile is explicitly marked closed, its exact delivery route is retired, the brand website no longer presents restaurant operations, and current premises evidence identifies unrelated operators. Retain the historical record and evidence, exclude it from public discovery, and do not redirect it to a current tenant."
     }
   ]
 }

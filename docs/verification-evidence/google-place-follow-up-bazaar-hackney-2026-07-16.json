@@ -1,0 +1,35 @@
+{
+  "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+  "checkedAt": "2026-07-16T10:50:02.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Current Google profile by stored Place ID",
+      "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Hackney&query_place_id=ChIJdygVHJgddkgRWVZ_R49Ff14",
+      "accessedAt": "2026-07-16T10:50:02.000Z"
+    },
+    {
+      "sourceName": "Retired exact Deliveroo Hackney route",
+      "sourceUrl": "https://deliveroo.co.uk/menu/london/upper-clapton/bazaar-londons-indian-takeaway-hackney",
+      "accessedAt": "2026-07-16T10:50:02.000Z"
+    },
+    {
+      "sourceName": "Current Rays Curry Base Pizza Deliveroo route",
+      "sourceUrl": "https://deliveroo.co.uk/menu/london/upper-clapton/pizza-palace-express",
+      "accessedAt": "2026-07-16T10:50:02.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "contact.orderOnlineUrl",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The stored Google Place ID still resolves to the exact Bazaar name and address and displays hours, but the exact Bazaar Deliveroo route now redirects away while Rays Curry Base Pizza is actively orderable at the premises. Google hours are insufficient to resolve whether Bazaar remains a delivery brand or is a stale profile. Keep pending and do not copy Rays details."
+}

@@ -1550,6 +1550,204 @@
       ],
       "changes": [],
       "notes": "Current official and FSA evidence identifies Kulcha Express at 108 The Green. Historical/current directories associate Real Taste of India with the same address and phone, and one records it as closed. This strongly suggests replacement or rename, but it does not establish legal/entity continuity or authorize merging the existing Real Taste and Kulcha canonical records. Do not copy Kulcha details, redirect, or claim a successor without explicit entity evidence; hold pending resolution."
+    },
+    {
+      "id": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-78f847496a5c",
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "recordedAt": "2026-07-16T13:37:00.066Z",
+      "checkedAt": "2026-07-16T10:50:01.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Aldgate&query_place_id=ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        },
+        {
+          "sourceName": "Retired exact Deliveroo Aldgate route",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/whitechapel/bazaar-londons-indian-takeaway-aldgate",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        },
+        {
+          "sourceName": "Current FSA FHRS E1 8EY premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E1%208EY&pageSize=100",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Permanently closed",
+          "reason": "The exact stored Google Place ID explicitly marks the Aldgate profile closed and provides a reopen action; its exact Deliveroo route is retired and current premises evidence identifies different operators.",
+          "applied": true
+        }
+      ],
+      "notes": "This follow-up resolves operating status for the historical Aldgate listing without identifying a successor. The unrelated current premises operators must not receive a redirect or inherited listing history."
+    },
+    {
+      "id": "verification-2026-07-16-bazaar-london-s-indian-takeaway-hackney-7510917f6faa",
+      "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+      "listingSourceId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
+      "recordedAt": "2026-07-16T13:37:03.772Z",
+      "checkedAt": "2026-07-16T10:50:02.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Hackney&query_place_id=ChIJdygVHJgddkgRWVZ_R49Ff14",
+          "accessedAt": "2026-07-16T10:50:02.000Z"
+        },
+        {
+          "sourceName": "Retired exact Deliveroo Hackney route",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/upper-clapton/bazaar-londons-indian-takeaway-hackney",
+          "accessedAt": "2026-07-16T10:50:02.000Z"
+        },
+        {
+          "sourceName": "Current Rays Curry Base Pizza Deliveroo route",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/upper-clapton/pizza-palace-express",
+          "accessedAt": "2026-07-16T10:50:02.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The stored Google Place ID still resolves to the exact Bazaar name and address and displays hours, but the exact Bazaar Deliveroo route now redirects away while Rays Curry Base Pizza is actively orderable at the premises. Google hours are insufficient to resolve whether Bazaar remains a delivery brand or is a stale profile. Keep pending and do not copy Rays details."
+    },
+    {
+      "id": "verification-2026-07-16-dancing-elephant-51f30f4f0494",
+      "listingSlug": "dancing-elephant",
+      "listingSourceId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
+      "recordedAt": "2026-07-16T13:37:07.414Z",
+      "checkedAt": "2026-07-16T10:50:03.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Dancing%20Elephant&query_place_id=ChIJbfH2mFYPdkgRwca1DGLpXuo",
+          "accessedAt": "2026-07-16T10:50:03.000Z"
+        },
+        {
+          "sourceName": "Shahi Caterers official operator site",
+          "sourceUrl": "https://shahicaterers.co.uk/",
+          "accessedAt": "2026-07-16T10:50:03.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Shahi Catering at Unit 23",
+          "sourceUrl": "https://ratings.food.gov.uk/business/200075",
+          "accessedAt": "2026-07-16T10:50:03.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The exact Google profile resolves as an Indian takeaway and displays hours, strengthening the historical identity. However, Shahi Caterers identifies Unit 23 under Biryani House London Limited and current FSA evidence names Shahi Catering. No source explicitly connects Dancing Elephant to either operator, so publication remains unsafe."
+    },
+    {
+      "id": "verification-2026-07-16-ghani-food-and-spices-01556e744b9b",
+      "listingSlug": "ghani-food-and-spices",
+      "listingSourceId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
+      "recordedAt": "2026-07-16T13:37:12.625Z",
+      "checkedAt": "2026-07-16T10:50:04.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Ghani%20Food%20%26%20Spices&query_place_id=ChIJISKOKZCl2EcRcl6n8zBeAYY",
+          "accessedAt": "2026-07-16T10:50:04.000Z"
+        },
+        {
+          "sourceName": "Restaurantji Ghani Food and Spices listing",
+          "sourceUrl": "https://www.restaurantji.co.uk/greater-london/rainham/ghani-food-and-spices-/",
+          "accessedAt": "2026-07-16T10:50:04.000Z"
+        },
+        {
+          "sourceName": "Current Rainham company-category directory",
+          "sourceUrl": "https://www.192.com/atoz/business/rainham/e-commerce/",
+          "accessedAt": "2026-07-16T10:50:04.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Google currently categorises the exact profile as an Indian restaurant and displays hours, and Restaurantji describes delivery. This strengthens restaurant scope, but no current official or transactional menu was found and company directories still classify the entity as e-commerce at an industrial unit. Keep pending until a current order/menu source or direct operator evidence resolves scope."
+    },
+    {
+      "id": "verification-2026-07-16-real-taste-of-india-f89c22192a86",
+      "listingSlug": "real-taste-of-india",
+      "listingSourceId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
+      "recordedAt": "2026-07-16T13:37:17.325Z",
+      "checkedAt": "2026-07-16T10:50:05.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Real%20Taste%20Of%20India&query_place_id=ChIJq6p2PbJydkgRcPzXHlGQpP0",
+          "accessedAt": "2026-07-16T10:50:05.000Z"
+        },
+        {
+          "sourceName": "Kulcha Express official locations",
+          "sourceUrl": "https://kulchaexpress.co.uk/",
+          "accessedAt": "2026-07-16T10:50:05.000Z"
+        },
+        {
+          "sourceName": "Current FSA FHRS UB2 4BQ premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=UB2%204BQ&pageSize=100",
+          "accessedAt": "2026-07-16T10:50:05.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The exact Real Taste Google profile remains and displays hours, but official and FSA evidence identifies Kulcha Express at the same premises. A stale duplicate profile, rename or successor are all possible. Do not republish, merge or redirect until explicit continuity evidence exists."
     }
   ]
 }

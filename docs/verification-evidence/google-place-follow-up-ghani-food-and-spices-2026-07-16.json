@@ -1,0 +1,37 @@
+{
+  "listingSlug": "ghani-food-and-spices",
+  "checkedAt": "2026-07-16T10:50:04.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Current Google profile by stored Place ID",
+      "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Ghani%20Food%20%26%20Spices&query_place_id=ChIJISKOKZCl2EcRcl6n8zBeAYY",
+      "accessedAt": "2026-07-16T10:50:04.000Z"
+    },
+    {
+      "sourceName": "Restaurantji Ghani Food and Spices listing",
+      "sourceUrl": "https://www.restaurantji.co.uk/greater-london/rainham/ghani-food-and-spices-/",
+      "accessedAt": "2026-07-16T10:50:04.000Z"
+    },
+    {
+      "sourceName": "Current Rainham company-category directory",
+      "sourceUrl": "https://www.192.com/atoz/business/rainham/e-commerce/",
+      "accessedAt": "2026-07-16T10:50:04.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "contact.orderOnlineUrl",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Google currently categorises the exact profile as an Indian restaurant and displays hours, and Restaurantji describes delivery. This strengthens restaurant scope, but no current official or transactional menu was found and company directories still classify the entity as e-commerce at an industrial unit. Keep pending until a current order/menu source or direct operator evidence resolves scope."
+}

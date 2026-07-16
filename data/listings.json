@@ -372744,8 +372744,11 @@
       "recordDateBasis": "first-committed",
       "sourceCommit": "80eb6b4f2ac8db490423757cc1eb3edafc5f66e3",
       "sourceSnapshotSha256": "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d",
-      "verificationStatus": "unverified"
-    }
+      "verificationStatus": "editor-verified",
+      "lastVerifiedAt": "2026-07-16T10:50:01.000Z",
+      "lastVerificationEventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-78f847496a5c"
+    },
+    "businessStatus": "Permanently closed"
   },
   {
     "name": "Diwana",

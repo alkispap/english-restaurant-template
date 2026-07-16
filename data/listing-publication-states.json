@@ -2046,12 +2046,12 @@
     {
       "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
       "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
-      "status": "pending-review",
-      "reason": "identity-uncertain",
+      "status": "excluded",
+      "reason": "confirmed-permanently-closed",
       "origin": "editorial-decision",
-      "effectiveAt": "2026-07-16T09:55:00.000Z",
+      "effectiveAt": "2026-07-16T10:51:00.000Z",
       "changedBy": "directory-editor",
-      "lastDecisionEventId": "publication-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-660dd58fde93"
+      "lastDecisionEventId": "publication-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-161e9bc6d995"
     },
     {
       "listingSlug": "bazaar-london-s-indian-takeaway-hackney",

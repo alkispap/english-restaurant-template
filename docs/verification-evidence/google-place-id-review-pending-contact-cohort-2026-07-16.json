@@ -1,0 +1,198 @@
+{
+  "reviewedAt": "2026-07-16T10:50:00.000Z",
+  "reviewedBy": "directory-editor",
+  "grain": "one current Google Place ID resolution check per listing moved from published to pending-review during the missing-contact program",
+  "method": "Each stored Google Place ID was opened through the current Google Maps Place ID route and checked for an exact name/address resolution, displayed category, explicit permanent-closure state, live-hours signal, phone and website. Google evidence was then reconciled with the independent evidence already retained for the listing.",
+  "summary": {
+    "listingsChecked": 21,
+    "exactProfilesResolved": 21,
+    "explicitlyPermanentlyClosed": 1,
+    "profilesDisplayingLiveHours": 5,
+    "profilesWithoutCurrentOperationalSignals": 15,
+    "republicationDecisions": 0,
+    "exclusionCandidates": 1
+  },
+  "limitations": [
+    "A resolving Google profile proves that the named profile still exists, not that the business currently trades.",
+    "Displayed hours can remain on stale or duplicate profiles.",
+    "No listing was republished from Google evidence alone.",
+    "Independent premises, operator, ordering, official-site and FSA conflicts remain controlling where unresolved."
+  ],
+  "results": [
+    {
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "placeId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian takeaway",
+      "googleSignal": "explicitly-permanently-closed",
+      "decision": "exclude-confirmed-permanently-closed",
+      "notes": "Google explicitly marks the exact profile closed and offers a reopen action. The exact Deliveroo route is retired, the former brand domain no longer presents a restaurant, and current premises evidence identifies different businesses."
+    },
+    {
+      "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+      "placeId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian takeaway",
+      "googleSignal": "hours-displayed",
+      "decision": "remain-pending-review",
+      "notes": "The profile displays hours, but its exact Deliveroo route now redirects to the Upper Clapton directory while Rays Curry Base Pizza is currently orderable at the premises. No current independent source confirms Bazaar still trades."
+    },
+    {
+      "listingSlug": "chakra-indian-cuisine",
+      "placeId": "ChIJBWFjnlUPdkgRMAy1_il_Ag8",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review",
+      "notes": "The exact profile remains, but it adds no current operational action and conflicts with Chakra's official current location list."
+    },
+    {
+      "listingSlug": "dancing-elephant",
+      "placeId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian takeaway",
+      "googleSignal": "hours-displayed",
+      "decision": "remain-pending-review",
+      "notes": "The exact profile and hours make the historical listing plausible, but Shahi Caterers identifies Unit 23 under Biryani House London Limited and no source connects that operator to Dancing Elephant."
+    },
+    {
+      "listingSlug": "real-taste-of-india",
+      "placeId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "hours-displayed",
+      "decision": "remain-pending-review",
+      "notes": "The exact profile displays hours, but Kulcha Express currently identifies the same premises and no evidence proves a rename, successor or merge."
+    },
+    {
+      "listingSlug": "faizan-ahmad",
+      "placeId": "ChIJyQzhQqEbdkgRmExK_r8zbu0",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": null,
+      "googleSignal": "hours-displayed-without-phone-website-or-category",
+      "decision": "remain-pending-review",
+      "notes": "Hours alone do not establish a customer-facing restaurant identity for a personal-name profile with no category, phone or website."
+    },
+    {
+      "listingSlug": "ghani-food-and-spices",
+      "placeId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "hours-displayed",
+      "decision": "remain-pending-review",
+      "notes": "Google and Restaurantji support a possible delivery-food operation, but current restaurant scope, a transactional menu and the relationship to the e-commerce company remain unresolved."
+    },
+    {
+      "listingSlug": "calm-indiana-cow",
+      "placeId": "ChIJXfZLIg8FdkgRro83UWTXJGg",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "chef-tazzy",
+      "placeId": "ChIJMUbUPAAddkgRCRLGpEqZURg",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "contemporary-indian-cuisine",
+      "placeId": "ChIJWYJjFXEQdkgRftY39xKtKwM",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "delhiacacies-deliveroo",
+      "placeId": "ChIJk_lBVAAbdkgR_C5VfT36C54",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "home-kitchen",
+      "placeId": "ChIJT3V-Zsep2EcRLWpwaHiyyVY",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "indian-food-camden",
+      "placeId": "ChIJC_VNdwAbdkgRoJLHm6kn1Z4",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "modern-indian",
+      "placeId": "ChIJcconfAAFdkgRD1hcO4PoaA8",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "republic-restaurant-verney-road",
+      "placeId": "ChIJHQo6vpgDdkgRcfoH2r3FwXc",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "spice-garden",
+      "placeId": "ChIJ5RHe8JCp2EcRzEJIX5GXwXY",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian takeaway",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "staffordshire",
+      "placeId": "ChIJS7-SQAAbdkgRwJcA_qnpt8k",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "sucess-worker",
+      "placeId": "ChIJBQt1YxkPdkgREqTLaIkJL6k",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "taj",
+      "placeId": "ChIJ41FeQgCr2EcR6Nx-Xt9TAAk",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Indian restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "thanjavur-food-lounge-ltd",
+      "placeId": "ChIJf4whtp4HdkgRZ1Q2X7e-zr0",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": null,
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    },
+    {
+      "listingSlug": "the-palm-indian-restaurant-limited",
+      "placeId": "ChIJJxrEHNQcdkgRr0udpyx-ejw",
+      "resolvedExpectedIdentity": true,
+      "googleCategory": "Restaurant",
+      "googleSignal": "no-phone-website-or-live-hours",
+      "decision": "remain-pending-review"
+    }
+  ]
+}
