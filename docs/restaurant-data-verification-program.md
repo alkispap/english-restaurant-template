@@ -15,16 +15,16 @@ The goal is **100% evidence-checked coverage of the operational-gap cohort**, no
 
 ## 2. Current baseline
 
-Checkpoint after completing the published missing-contact cohort:
+Checkpoint after completing the published missing-contact cohort and its 21-record Google Place ID follow-up:
 
 | Measure | Count | Meaning |
 | --- | ---: | --- |
 | Canonical location records | 3,186 | Total dataset grain |
-| Fresh editor-verified records | 7 | Complete current core-field checks with retained evidence |
-| Unverified records | 3,179 | Historically traceable but not fully checked for current facts |
+| Fresh editor-verified records | 8 | Complete current core-field checks with retained evidence |
+| Unverified records | 3,178 | Historically traceable but not fully checked for current facts |
 | Retained records with operational gaps | 608 | Unique canonical records missing at least one important data group |
-| Ordinary queued records with operational gaps | 602 | Excludes excluded records and fresh verified records from the ordinary unverified queue |
-| Open evidence conflicts | 26 | Reviewed records with insufficient or contradictory current evidence |
+| Ordinary queued records with operational gaps | 601 | Excludes excluded records and fresh verified records from the ordinary unverified queue |
+| Open evidence conflicts | 25 | Reviewed records with insufficient or contradictory current evidence |
 | Missing contact action | 27 | No validated contact, transaction or map action |
 | Missing opening hours | 127 | No structured current hours |
 | Missing categories | 491 | No supported cuisine/category value |
@@ -34,7 +34,7 @@ Checkpoint after completing the published missing-contact cohort:
 
 The gap counts overlap. One restaurant can appear in several categories, so they must not be added to estimate unique records.
 
-These figures do not mean that 3,179 restaurants are wrong. They mean the directory lacks a dated, complete, evidence-backed current check for them.
+These figures do not mean that 3,178 restaurants are wrong. They mean the directory lacks a dated, complete, evidence-backed current check for them.
 
 ## 3. Existing controls
 
@@ -105,7 +105,7 @@ The public-eligibility control uses:
 
 Moved, renamed, or duplicate records can require a published canonical successor and permanent redirect. Do not treat them as ordinary exclusions when an active replacement exists.
 
-Current baseline: 3,159 `published`, 25 `pending-review`, and two `excluded`. Pending records retain a minimal, non-indexable route at their existing URL but are omitted from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data. Excluded records are retained in canonical/history data and either redirect to a validated published successor or return 404. Publication state is deliberately separate from provenance, verification outcome and business operating status.
+Current baseline: 3,159 `published`, 24 `pending-review`, and three `excluded`. Pending records retain a minimal, non-indexable route at their existing URL but are omitted from search, filters, maps, comparisons, shortlists, sitemaps, canonical metadata and LocalBusiness structured data. Excluded records are retained in canonical/history data and either redirect to a validated published successor or return 404. Publication state is deliberately separate from provenance, verification outcome and business operating status.
 
 Every publication decision records the previous and next state, controlled reason, reviewer, reviewed timestamp, evidence references and notes. Direct manual edits to the materialized registry or ledger are prohibited.
 
@@ -443,7 +443,7 @@ Official references:
 
 1. Start the published missing-hours cohort with `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
 2. Confirm restaurant-directory scope and exact restaurant identity before applying venue-level opening hours to hotel, cinema, club or community-centre records.
-3. Keep the 25 current `pending-review` records in the explicit conflict queue and revisit them only when stronger evidence is available.
+3. Keep the 24 current `pending-review` records in the explicit conflict queue and revisit them only when stronger evidence is available.
 4. Record verification and publication decisions separately through their guarded commands.
 5. Continue missing hours, categories and ratings in order, refreshing counts after every batch.
 6. Use import dry runs and expected-count guards; every genuinely new import begins as `pending-review`.

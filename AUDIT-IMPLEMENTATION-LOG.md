@@ -90,6 +90,8 @@ These changes existed before remediation began and were reviewed and committed s
 | `a272717` | Phase 5 contact batch 02 evidence, corrections and publication decisions |
 | `807cb11` | Phase 5 contact batch 02 measured checkpoint |
 | `24183c3` | Phase 5 published missing-contact cohort completion |
+| `7552211` | Phase 5 published contact cohort measured checkpoint |
+| `086aca8` | Phase 5 pending-listing Google Place ID evidence review |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -101,7 +103,7 @@ The audit documents are kept in their own checkpoint commit. Generated deploymen
 | 2. Performance/export size | In progress | Local payload remediation complete; deployed-preview mobile performance remains an acceptance gate |
 | 3. WCAG 2.2 AA accessibility | In progress | Confirmed code defects fixed; formal automated scan and assisted screen-reader pass remain preview gates |
 | 4. Security/privacy/deployment | In progress | Local hardening and release preflight complete; user-approved publish and live verification remain |
-| 5. Listing quality/operations | In progress | Published missing-contact cohort complete; 3,159 published, 25 pending review, 2 excluded, and every published record has a contact action |
+| 5. Listing quality/operations | In progress | Google follow-up complete for the 21 contact-batch holds; 3,159 published, 24 pending review, 3 excluded, and every published record has a contact action |
 | 6. Reusable directory packs | Pending | Not started |
 
 ## Change log
@@ -1173,6 +1175,57 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 **Git checkpoint**
 
 - Evidence/data commit: `24183c3` (`Complete published missing-contact review`).
+- Documentation commit: `7552211` (`Document published contact cohort completion`).
+- No push or deployment occurred.
+
+### 2026-07-16 — Phase 5 Google Place ID follow-up for contact-batch holds
+
+**Cohort and method**
+
+- Rechecked all 21 listings moved from `published` to `pending-review` during the three missing-contact batches using their stored Google Place IDs.
+- Confirmed whether each current Place ID route resolved to the expected historical name and address, and inspected category, explicit closure state, displayed hours, phone and website.
+- Reconciled Google signals against the existing official-site, FSA, premises, company and ordering-platform evidence. A resolving profile was treated as historical identity support, not automatic proof of current operation.
+- Recorded all 21 outcomes in `docs/verification-evidence/google-place-id-review-pending-contact-cohort-2026-07-16.json`.
+
+**Evidence outcomes**
+
+- All 21 stored Place IDs still resolve to the expected historical business name and imported address.
+- `bazaar-london-s-indian-takeaway-aldgate`: the exact profile is explicitly marked closed and provides a reopen action; its exact Deliveroo route is retired and current premises evidence identifies unrelated operators. Verified `businessStatus` as permanently closed and changed publication from `pending-review` to `excluded/confirmed-permanently-closed`.
+- `dancing-elephant`: the exact Google profile resolves as an Indian takeaway and displays hours, but Shahi Caterers identifies the unit under Biryani House London Limited and current FSA evidence names Shahi Catering. It remains pending because no explicit operator relationship was found.
+- `bazaar-london-s-indian-takeaway-hackney`: the profile displays hours, but its exact Deliveroo route now redirects away while Rays Curry Base Pizza is currently orderable at the premises. It remains pending.
+- `real-taste-of-india`: the exact profile displays hours, but Kulcha Express currently identifies the same premises. It remains pending without a merge, redirect or successor claim.
+- `ghani-food-and-spices`: Google categorises the exact profile as an Indian restaurant and displays hours, while Restaurantji describes delivery. It remains pending because no current official or transactional menu was found and company evidence still classifies the operation as e-commerce.
+- `faizan-ahmad`: the profile displays hours but provides no category, phone, website or corroborated customer-facing restaurant identity. It remains pending.
+- The other 15 profiles resolve but add no phone, website or live-hours evidence; their existing conflicts remain controlling.
+- No listing was republished from Google evidence alone.
+
+**Measured result**
+
+- Verification events: 38 to 43; publication events: 27 to 28.
+- Fresh editor-verified listings: 7 to 8; unverified listings: 3,179 to 3,178.
+- Publication states: 3,159 published / 25 pending / 2 excluded to 3,159 published / 24 pending / 3 excluded.
+- Ordinary queue: 3,178 to 3,177; queued operational-gap records: 602 to 601.
+- Ordinary queued missing-contact records: 25 to 24.
+- Retained and published operational field counts are otherwise unchanged; every published listing still has a contact action.
+
+**Verification and failure record**
+
+- All five append-only verification proposals passed dry-run validation before guarded writes.
+- The Bazaar Aldgate publication proposal passed dry-run validation and its expected published-count guard remained 3,159.
+- The first regression run passed 155/156 and exposed one stale fixture expecting 25 pending and two excluded records. The fixture was corrected to 24 pending, three excluded and 3,183 routable records.
+- Final regression suite: 156/156 passed; ESLint, TypeScript and `git diff --check` passed.
+- Publication audit: `ready`; 3,159 published, 24 pending and three excluded.
+- Verification audit remains intentionally `not_ready`: 3,178 listings remain unverified and 25 evidence conflicts remain open, including the retained excluded Borough Market conflict.
+- SEO and indexation audits passed with 3,519 sitemap URLs, 3,069 indexable restaurant URLs and zero crawl warnings.
+- Standard production build passed.
+- Full static export passed with 3,655 pages; payload budgets passed.
+- Cloudflare export check passed for 7,401 files with no asset over 25 MiB.
+- Direct export inspection confirmed Bazaar Aldgate is absent, while the four retained follow-up pages remain `noindex` and contain no LocalBusiness structured data.
+- The first standalone Cloudflare check omitted the required `NEXT_PUBLIC_SITE_URL` environment value and correctly refused to run; the check passed after supplying the production HTTPS domain.
+
+**Git checkpoint**
+
+- Evidence/data commit: `086aca8` (`Record pending listing Google profile review`).
 - No push or deployment occurred.
 
 ## Exact next checkpoint
@@ -1181,7 +1234,7 @@ Follow `docs/restaurant-data-verification-program.md` as the controlling referen
 
 1. Begin the first published missing-hours batch with `premier-inn-london-blackfriars-fleet-street-hotel`, `premier-inn-london-edgware-hotel`, `premier-inn-london-harrow-hotel`, `everyman-maida-vale`, `premier-inn-london-hendon-the-hyde-hotel`, `premier-inn-london-dagenham-hotel`, `chaiwrap`, `east-india-club`, `the-hornbeam-community-centre-cic`, and `three-falcons-hotel-and-pub`.
 2. Treat restaurant-directory scope and the identity of the restaurant operation as first-class checks because several records describe hotels, clubs, cinemas or community venues rather than a clearly named restaurant.
-3. Keep all 25 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
+3. Keep all 24 `pending-review` records in the explicit conflict queue and revisit them only when stronger direct identity, premises, owner or successor evidence is available.
 4. Record verification and publication decisions separately if new evidence resolves or changes their eligibility.
 5. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
 6. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
