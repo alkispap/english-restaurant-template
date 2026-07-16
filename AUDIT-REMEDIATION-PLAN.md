@@ -118,7 +118,7 @@
 ## Phase 5 — Listing quality and operational readiness
 
 **Priority:** Before launch for minimum quality; continuing after launch
-**Status:** Pending
+**Status:** In progress
 
 ### Work packages
 
@@ -127,6 +127,8 @@
 3. Classify and resolve link-governance warnings; add recurring health checks.
 4. Add per-listing source, source ID/URL, imported date, last verified date, status, and editorial history.
 5. Add correction/dispute and refresh workflows.
+6. Rank verification work deterministically and retain evidence for every accepted or unresolved review.
+7. Add an explicit publication/scope decision for closed, moved, unverifiable, or non-directory businesses.
 
 **Acceptance criteria**
 
@@ -166,4 +168,4 @@
 
 ## Current implementation checkpoint
 
-Phase 1 passed its verification gate. Phase 2 local payload remediation passed and remains open only for deployed mobile lab measurement. Phase 3 corrected confirmed accessibility defects and remains open for formal preview testing. Phase 4 local hardening is complete and awaits an authorized publish/live verification. Phase 5A defines listing-quality launch gates, Phase 5B makes future imports traceable, Phase 5C consolidated the confirmed Yummy Dosa duplicate, Phase 5D backfilled historical lineage, Phase 5E quarantined unknown-rights media, and Phase 5F adds an append-only dated verification/correction workflow. Current evidence distinguishes The Village Tandoori at 28 Ridgway from Wimbledon Tandoori at 26 Ridgway, clearing the remaining duplicate-identity high finding without a merge. One listing is freshly editor-verified and 3,185 remain explicitly unverified. The dataset remains not ready until the priority verification and rights-cleared media cohorts meet launch thresholds; long-tail work can continue after launch.
+Phase 1 passed its verification gate. Phase 2 local payload remediation passed and remains open only for deployed mobile lab measurement. Phase 3 corrected confirmed accessibility defects and remains open for formal preview testing. Phase 4 local hardening is complete and awaits an authorized publish/live verification. Phase 5A defines listing-quality launch gates, Phase 5B makes future imports traceable, Phase 5C consolidated the confirmed Yummy Dosa duplicate, Phase 5D backfilled historical lineage, Phase 5E quarantined unknown-rights media, Phase 5F adds an append-only dated verification/correction workflow, and Phase 5G adds a deterministic verification queue plus the first five-record evidence batch. Two listings are freshly editor-verified, 3,184 remain explicitly unverified, and four evidence conflicts are held without speculative canonical edits. The dataset remains not ready until priority verification, scope/publication decisions, and rights-cleared media cohorts meet launch thresholds; long-tail work can continue after launch.

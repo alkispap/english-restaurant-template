@@ -57,6 +57,16 @@ The gate checks:
 
 The freshness thresholds are operational controls, not claims that every field changes on a fixed schedule. Ninety days creates a medium review queue; 180 days is a high-priority recheck.
 
+## Deterministic priority queue
+
+Run:
+
+```powershell
+npm run report:verification-priority -- 50
+```
+
+The command writes nothing. It schedules one task per restaurant location, puts current `needs-review` conflicts first, then prioritizes missing contact actions, opening hours, categories, and rating/review pairs. A capped featured/review/rating/completeness proxy orders records within those operational groups. The score is an editorial scheduling heuristic, not measured traffic or a restaurant rating; exact weights and tie-breaking are printed in every report and covered by tests.
+
 ## Visitor correction requests
 
 Every restaurant page links to a prefilled `/suggest-update` workflow. The form generates structured correction text in the browser and requires a public evidence URL. It does not automatically transmit, store, or publish form contents.
@@ -74,18 +84,20 @@ Evidence is retained in `docs/verification-evidence/wimbledon-tandoori-merton-20
 | Measure | Result |
 | --- | ---: |
 | Canonical listings | 3,186 |
-| Ledger events | 1 |
-| Fresh editor-verified listings | 1 |
-| Unverified listings | 3,185 |
+| Ledger events | 7 |
+| Fresh editor-verified listings | 2 |
+| Unverified listings | 3,184 |
+| Open evidence conflicts | 4 |
+| Priority records with data gaps | 608 |
 | Ledger integrity issues | 0 |
 | Operational duplicate-name/postcode high issues | 0 |
 
-The verification audit remains `not_ready` because 99.97% of listings have not received a current scoped check. This is an explicit queue, not evidence that all 3,185 records are incorrect.
+The verification audit remains `not_ready` because 99.94% of listings have not received a current scoped check and four reviewed records have unresolved current-identity evidence. This is an explicit queue, not evidence that all 3,184 records are incorrect.
 
 ## Next verification priority
 
-1. Verify the highest-value launch listings using the existing top-100 media/value ranking as a deterministic starting cohort.
-2. Prioritize records missing opening hours, contact actions, categories, or rating/review pairs.
-3. Record conflicts as `needs-review` rather than choosing a convenient source.
+1. Resolve or explicitly hold the four current `needs-review` conflicts from direct business, owner, registry, or premises evidence.
+2. Add an explicit publication/scope decision before handling non-restaurant or unverifiable imports surfaced by the queue.
+3. Continue records missing contact actions or opening hours through dated, attributable proposals.
 4. Configure a monitored corrections mailbox and retention policy before enabling email handoff.
 5. Keep the deferred Google media decision separate from restaurant-data verification.

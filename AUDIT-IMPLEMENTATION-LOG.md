@@ -64,6 +64,17 @@ These changes existed before remediation began and were reviewed and committed s
 | `de980fc` | Phase 5A listing operational-quality model and launch gate |
 | `7fc514d` | Phase 5A measured baseline and verification record |
 | `e27e4c6` | Phase 5B provenance-aware directory import pipeline |
+| `39afe8c` | Phase 5B provenance workflow documentation |
+| `0403451` | Phase 5C confirmed listing entity resolution |
+| `b2f7a65` | Phase 5C duplicate-review evidence record |
+| `c2d2119` | Phase 5D historical listing-provenance backfill |
+| `d7da94b` | Phase 5D provenance evidence record |
+| `9010aa6` | Phase 5E listing-media rights controls |
+| `244918e` | Phase 5E media-policy evidence record |
+| `b77d4ab` | Phase 5F listing verification/correction workflow |
+| `92c1e5a` | Phase 5F verification workflow evidence record |
+| `d36bad4` | Phase 5G deterministic verification priority queue |
+| `093f7a3` | Phase 5G first evidence-backed priority batch |
 
 The audit documents are kept in their own checkpoint commit. Generated deployment folders such as `out/` and `.next/` are deliberately excluded from Git.
 
@@ -915,13 +926,52 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 
 **Status:** Phase 5F is locally implemented and verified. The former Wimbledon identity blocker is resolved; the next data gate is systematic priority-cohort verification.
 
+### 2026-07-16 - Phase 5G: deterministic verification queue and first priority batch
+
+**Confirmed findings**
+
+- Of 3,185 unverified listings, 609 had at least one operational data gap: 31 lacked a contact action, 129 lacked opening hours, 492 lacked categories, and 67 lacked a complete rating/review pair.
+- The four records missing all four data groups were Biriyani Junction, Chotiwala, Golis South Norwood, and Spikky Pepperdem Food.
+- Current FSA evidence did not corroborate those four imported identities. Chotiwala and Golis also conflicted with current same-premises/postcode records. Absence or a premises conflict was not treated as proof of closure.
+- Arena Lounge had a live official site matching its identity, address, postcode, phone, operating restaurant, and full seven-day hours; the FSA also returned a matching restaurant entity.
+
+**Implementation**
+
+- Added `npm run report:verification-priority -- <limit>` and a deterministic one-task-per-location queue.
+- The scheduling score puts unresolved evidence conflicts first, guarantees incomplete records outrank data-complete records, weights missing contact and hours most heavily, caps the popularity/value proxy, and resolves ties by slug.
+- Retained a dated FSA response summary, the first five-listing batch, and the later Arena correction proposal under `docs/verification-evidence/`.
+- Appended four `needs-review` events without changing canonical listing facts for evidence-blocked records.
+- Verified Arena Lounge, normalized its official site to HTTPS, recorded current operational status, added seven-day hours, and applied supported East African/Chinese taxonomy values.
+- Preserved the first Arena category event and appended a later corrective event after regression testing showed the initial broad `Indian / Asian` normalization conflicted with existing description semantics.
+
+**Measured result**
+
+- Ledger events: 1 -> 7; integrity issues remain 0.
+- Fresh editor-verified listings: 1 -> 2; explicitly unverified: 3,185 -> 3,184.
+- Priority queue: 3,184 records, including 608 with one or more operational gaps and four open evidence conflicts.
+- Missing categories: 492 -> 491; missing opening hours: 129 -> 128. Missing contact actions and rating/review pairs remain 31 and 67.
+- Operational listing audit remains `conditional` with 0 critical, 0 high, and 5 medium issue classes.
+- Verification audit remains `not_ready` with two high issue classes: the 3,184-record verification backlog and four unresolved evidence conflicts.
+- Google/Outscraper media remained quarantined and untouched.
+
+**Verification**
+
+- Queue-focused tests, full ESLint, TypeScript, and `git diff --check`: passed.
+- The first complete regression run passed 149/150 tests and exposed the Arena category/description mismatch. The append-only corrective event resolved it; the final complete run passed 150/150 tests in 1m 52.53s.
+- Production static build compiled successfully, generated all 3,659 static pages, and passed every route/chunk payload budget.
+- The first standalone Cloudflare check correctly refused to run without `NEXT_PUBLIC_SITE_URL` in that process. Repeating it with `https://indianrestaurantlondon.co.uk` passed: 7,409 exported files and no asset over 25 MiB.
+- `/suggest-update/index.html` remains present in the export; no deployment or push occurred.
+
+**Status:** Phase 5G is locally complete. The queue and first evidence batch are reviewable in separate commits; Phase 5 remains in progress because current verification coverage is 0.06%, four identity/status conflicts are open, and the rights-approved top-100 media cohort remains 0/100.
+
 ## Exact next checkpoint
 
-1. Verify the highest-value launch listings using the guarded event workflow, beginning with records that also lack hours, categories, ratings/reviews, or contact actions.
-2. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
-3. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
-4. Continue category, hours, rating/review, contact-action, and external-link remediation through attributable verification events.
-5. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
+1. Resolve or explicitly hold the four open identity/status conflicts using direct business, owner, registry, or premises evidence; do not infer closure from FSA absence.
+2. Define an explicit publication/scope decision for non-restaurant or unverifiable imports before processing the next queue items, which currently include hotels and a cinema.
+3. Continue the guarded priority queue with attributable restaurant evidence, beginning with records missing contact actions or opening hours.
+4. Configure `CORRECTIONS_EMAIL` only after a monitored mailbox, privacy owner, and retention process exist.
+5. Keep Google/Outscraper media restoration on hold; acquire and document rights-cleared media for the priority cohort through a separate authorized phase.
+6. When production deployment is explicitly authorized, use the guarded Phase 4E workflow and complete the outstanding live performance/accessibility/security verification gates.
 
 ## Template for future entries
 
