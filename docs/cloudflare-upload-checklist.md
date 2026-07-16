@@ -17,10 +17,12 @@ The publish command refuses tracked or untracked changes. Ignored build output s
 Run:
 
 ```powershell
-npm run prepare:cloudflare
+npm run check:release
 ```
 
-This stops this project's local development server, rebuilds `out/` with `https://indianrestaurantlondon.co.uk`, runs the client-payload audit, and validates the Cloudflare artifact. It does not upload anything.
+This uses the pinned project-local Wrangler installation, runs type-checking and the complete test suite, stops this project's local development server, rebuilds `out/` with `https://indianrestaurantlondon.co.uk`, runs the client-payload audit, validates the Cloudflare artifact, and checks that generation left the Git worktree clean. It does not upload anything.
+
+Use `npm run prepare:cloudflare` only when you need to rebuild and inspect `out/` without repeating the full type-check and test gate.
 
 Confirm the final output reports:
 
@@ -33,7 +35,7 @@ If source files change after preparation, treat the output as stale and prepare 
 
 ## 3. Publish The Exact Committed Source
 
-Wrangler must already be available locally or in the npm cache and authenticated with the intended Cloudflare account. The workflow uses `npx --no-install`, so it will fail instead of downloading a package during a production release.
+Run `npm ci` before release checks so the exact Wrangler version pinned in `package-lock.json` is available under this project. The publisher refuses cached or global Wrangler installations. Wrangler must also be authenticated with the intended Cloudflare account.
 
 In PowerShell, set the target for the current terminal and run the guarded publisher:
 
@@ -96,6 +98,26 @@ Expected results:
 - The sitemap and robots file reference the production domain.
 
 Record the deployment time, Git commit, Cloudflare deployment URL or identifier, and verification result in the release log or pull request.
+
+## 5. Roll Back A Bad Production Deployment
+
+Cloudflare Pages retains successful production deployments as rollback targets. Preview deployments cannot be selected as rollback targets.
+
+1. Stop further production publishing and record the failing deployment URL or identifier.
+2. In the Cloudflare dashboard, open **Workers & Pages**, select the Pages project, and open **Deployments**.
+3. In **All deployments**, locate the last known-good successful production deployment.
+4. Open its actions menu, choose **Rollback to this deployment**, and confirm the exact target.
+5. Repeat the live verification checks above against the production domain.
+6. Record the restored deployment identifier, the incident time, the affected Git commit, and the verification outcome.
+7. Fix the source on a new commit. Do not treat the dashboard rollback as a replacement for reverting or correcting the repository state.
+
+Cloudflare documents the current dashboard process at:
+
+- https://developers.cloudflare.com/pages/configuration/rollbacks/
+
+For automation, Cloudflare also exposes a Pages deployment rollback API. Do not add API rollback automation until account identifiers, token storage, confirmation controls, and an incident owner are explicitly approved:
+
+- https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/rollback/
 
 ## Why The Guardrails Matter
 

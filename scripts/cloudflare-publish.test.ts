@@ -18,7 +18,14 @@ assert.equal(
   packageJson.scripts?.["prepare:cloudflare"],
   "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-cloudflare-upload.ps1"
 );
+assert.equal(packageJson.scripts?.["check:release"], "tsx scripts/publish-cloudflare.ts --checks-only");
 assert.equal(packageJson.scripts?.["publish:cloudflare"], "tsx scripts/publish-cloudflare.ts");
+assert.equal(
+  (JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8")) as { devDependencies?: Record<string, string> })
+    .devDependencies?.wrangler,
+  "4.111.0",
+  "Wrangler should be pinned as a project development dependency"
+);
 
 const prepareScriptPath = path.join(process.cwd(), "scripts", "prepare-cloudflare-upload.ps1");
 assert.ok(fs.existsSync(prepareScriptPath), "prepare:cloudflare should have a PowerShell workflow script");
@@ -47,12 +54,17 @@ assert.ok(
   "publish script should reject uncommitted changes before checks and after export"
 );
 assert.ok(
-  publishScript.includes('"--no-install"') && publishScript.includes('"wrangler"'),
-  "publish script should use an existing Wrangler installation without installing packages"
+  publishScript.includes('"node_modules", "wrangler", "bin", "wrangler.js"') &&
+    publishScript.includes("fs.existsSync(wranglerCli)"),
+  "publish script should require the pinned project-local Wrangler installation"
 );
 assert.ok(
   publishScript.includes('"pages",') && publishScript.includes('"deploy",'),
   "publish script should deploy with Wrangler Direct Upload"
+);
+assert.ok(
+  publishScript.includes('"--checks-only"') && publishScript.includes("No files were uploaded"),
+  "publish script should support a non-deploying release-check mode"
 );
 assert.ok(
   publishScript.includes('"npm", ["run", "prepare:cloudflare"]'),

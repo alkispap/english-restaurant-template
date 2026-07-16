@@ -27,6 +27,7 @@
     "diagnose:static": "tsx scripts/static-export-diagnostics.ts",
     "generate:redirects": "tsx scripts/generate-cloudflare-redirects.ts",
     "prepare:cloudflare": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-cloudflare-upload.ps1",
+    "check:release": "tsx scripts/publish-cloudflare.ts --checks-only",
     "publish:cloudflare": "tsx scripts/publish-cloudflare.ts",
     "import:directory": "tsx scripts/import-directory.ts",
     "resolve:listing-entities": "tsx scripts/resolve-listing-entities.ts",
@@ -67,6 +68,7 @@
     "postcss": "^8.5.14",
     "tailwindcss": "^3.4.16",
     "tsx": "^4.23.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "wrangler": "4.111.0"
   }
 }

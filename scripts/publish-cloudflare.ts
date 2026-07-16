@@ -1,27 +1,38 @@
 import { spawnSync } from "node:child_process";
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 
+const checksOnly = process.argv.includes("--checks-only");
 const projectName = process.env.CLOUDFLARE_PROJECT_NAME?.trim();
 const productionBranch = process.env.CLOUDFLARE_PRODUCTION_BRANCH?.trim() || "main";
 const confirmation = readOption("--confirm-project");
+const wranglerCli = path.join(process.cwd(), "node_modules", "wrangler", "bin", "wrangler.js");
 
-assert.ok(projectName, "Set CLOUDFLARE_PROJECT_NAME before publishing to Cloudflare Pages.");
-assert.match(projectName, /^[a-z0-9][a-z0-9-]*$/, "CLOUDFLARE_PROJECT_NAME contains unsupported characters.");
 assert.match(productionBranch, /^[A-Za-z0-9._/-]+$/, "CLOUDFLARE_PRODUCTION_BRANCH contains unsupported characters.");
-assert.equal(
-  confirmation,
-  projectName,
-  `Production publish refused. Re-run with --confirm-project=${projectName} to confirm the exact Cloudflare target.`
+assert.ok(
+  fs.existsSync(wranglerCli),
+  "Project-local Wrangler is missing. Run npm ci before release checks; cached or global installations are not accepted."
 );
+
+if (!checksOnly) {
+  assert.ok(projectName, "Set CLOUDFLARE_PROJECT_NAME before publishing to Cloudflare Pages.");
+  assert.match(projectName, /^[a-z0-9][a-z0-9-]*$/, "CLOUDFLARE_PROJECT_NAME contains unsupported characters.");
+  assert.equal(
+    confirmation,
+    projectName,
+    `Production publish refused. Re-run with --confirm-project=${projectName} to confirm the exact Cloudflare target.`
+  );
+}
 
 assertCleanWorktree("before release checks");
 
 const branch = capture("git", ["branch", "--show-current"]);
 const commit = capture("git", ["rev-parse", "--short", "HEAD"]);
-const wranglerVersion = capture("npx", ["--no-install", "wrangler", "--version"]);
+const wranglerVersion = capture(process.execPath, [wranglerCli, "--version"]);
 
-console.log("\nCloudflare production release");
-console.log(`Project: ${projectName}`);
+console.log(checksOnly ? "\nCloudflare release checks" : "\nCloudflare production release");
+console.log(`Project: ${projectName || "not required for checks-only mode"}`);
 console.log(`Production branch: ${productionBranch}`);
 console.log(`Source: ${branch || "detached HEAD"} @ ${commit}`);
 console.log(`Wrangler: ${wranglerVersion}`);
@@ -30,17 +41,21 @@ run("npm", ["run", "typecheck"]);
 run("npm", ["run", "test"]);
 run("npm", ["run", "prepare:cloudflare"]);
 assertCleanWorktree("after release checks and static export");
-run("npx", [
-  "--no-install",
-  "wrangler",
-  "pages",
-  "deploy",
-  "out",
-  "--project-name",
-  projectName,
-  "--branch",
-  productionBranch
-]);
+
+if (checksOnly) {
+  console.log("\nRelease checks passed. No files were uploaded.");
+} else {
+  run(process.execPath, [
+    wranglerCli,
+    "pages",
+    "deploy",
+    "out",
+    "--project-name",
+    projectName as string,
+    "--branch",
+    productionBranch
+  ]);
+}
 
 function readOption(name: string) {
   const equalsPrefix = `${name}=`;
