@@ -50,13 +50,19 @@ import { FactAnswer } from "@/components/FactAnswer";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
 import { JsonLd } from "@/components/JsonLd";
+import { ListingUnderReview } from "@/components/ListingUnderReview";
 import { TrackedActionLink } from "@/components/TrackedActionLink";
 import { buildListingEavSummary } from "@/lib/listing-eav-summary";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
-import { listings } from "@/data/listings";
+import type { Listing } from "@/data/listings";
+import {
+  getListingPublicationState,
+  getRetainedListingBySlug,
+  publiclyRoutableListings
+} from "@/data/listing-publication";
 import { resolveListingSlugRedirect } from "@/data/listing-slug-redirects";
-import { getListingBySlug, getRelatedListings, isCategoryTag, slugify } from "@/lib/directory";
+import { getRelatedListings, isCategoryTag, slugify } from "@/lib/directory";
 import {
   buildListingDetailTabs,
   hasContact,
@@ -93,15 +99,25 @@ export function generateStaticParams() {
   if (!shouldGenerateFullStaticParams()) return [];
 
   return [
-    ...listings.map((listing) => ({ slug: listing.slug }))
+    ...publiclyRoutableListings.map((listing) => ({ slug: listing.slug }))
   ];
 }
 
 export async function generateMetadata({ params }: ListingPageProps): Promise<Metadata> {
   const { slug } = await params;
   const redirectTarget = resolveListingSlugRedirect(slug);
-  const listing = getListingBySlug(redirectTarget ?? slug);
+  const canonicalSlug = redirectTarget ?? slug;
+  const listing = getRetainedListingBySlug(canonicalSlug);
   if (!listing) return {};
+  const publication = getListingPublicationState(listing.slug);
+  if (publication.status === "excluded") return {};
+  if (publication.status === "pending-review") {
+    return {
+      title: `${listing.name} under editorial review`,
+      description: "This restaurant listing is temporarily withheld while its identity or current information is checked.",
+      robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false, noarchive: true } }
+    };
+  }
 
   const title = buildListingDetailSeoTitle(listing);
   const description = buildListingDetailMetaDescription(listing);
@@ -135,8 +151,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const redirectTarget = resolveListingSlugRedirect(slug);
   if (redirectTarget) redirect(listingDetailPath(redirectTarget));
 
-  const listing = getListingBySlug(slug);
+  const listing = getRetainedListingBySlug(slug);
   if (!listing) notFound();
+  const publication = getListingPublicationState(slug);
+  if (publication.status === "excluded") {
+    if (publication.successorSlug) redirect(listingDetailPath(publication.successorSlug));
+    notFound();
+  }
+  if (publication.status === "pending-review") return <ListingUnderReview name={listing.name} slug={listing.slug} />;
 
   const related = getRelatedListings(listing, 8).map(relatedListingCardFromListing);
   const gallery = listing.images.slice(0, 3);
@@ -555,7 +577,7 @@ function InfoCard({ icon, label, value, href }: { icon: React.ReactNode; label: 
   return <div className={className}>{content}</div>;
 }
 
-function getListingTagHref(listing: NonNullable<ReturnType<typeof getListingBySlug>>, tag: string) {
+function getListingTagHref(listing: Listing, tag: string) {
   const tagSlug = slugify(tag);
 
   if (isCategoryTag(tag)) return directoryRouteLink("category", tagSlug);
@@ -565,7 +587,7 @@ function getListingTagHref(listing: NonNullable<ReturnType<typeof getListingBySl
   return directorySearchPath(`?q=${encodeURIComponent(tag)}`);
 }
 
-function relatedListingCardFromListing(listing: typeof listings[number]): RelatedListingCard {
+function relatedListingCardFromListing(listing: Listing): RelatedListingCard {
   return {
     slug: listing.slug,
     name: listing.name,
@@ -578,7 +600,7 @@ function relatedListingCardFromListing(listing: typeof listings[number]): Relate
   };
 }
 
-function mobileChromeListingFromListing(listing: typeof listings[number]): MobileChromeListing {
+function mobileChromeListingFromListing(listing: Listing): MobileChromeListing {
   return {
     slug: listing.slug,
     name: listing.name,
@@ -660,7 +682,7 @@ function PillGroup({
   );
 }
 
-function TransportSection({ listing, heading }: { listing: typeof listings[number]; heading: string }) {
+function TransportSection({ listing, heading }: { listing: Listing; heading: string }) {
   const tube = listing.location?.tubeStation;
   const bus = listing.location?.busStop;
   if (!tube && !bus) return null;
@@ -702,7 +724,7 @@ function TransportSection({ listing, heading }: { listing: typeof listings[numbe
   );
 }
 
-function NearbySection({ listing, heading }: { listing: typeof listings[number]; heading: string }) {
+function NearbySection({ listing, heading }: { listing: Listing; heading: string }) {
   const nearby = listing.location?.nearbyPlaces;
   if (!nearby?.length) return null;
 

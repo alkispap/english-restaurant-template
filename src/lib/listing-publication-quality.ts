@@ -37,6 +37,7 @@ export type ListingPublicationAuditOptions = {
   verificationLedger?: ListingVerificationLedger;
   entityResolutionIds?: ReadonlySet<string>;
   publicDerivativeSlugs?: Record<string, readonly string[]>;
+  derivativeIntegrityIssues?: string[];
   now?: Date;
 };
 
@@ -159,6 +160,9 @@ export function auditListingPublicationQuality(
         "Regenerate the derivative from the same published listing selection.");
     }
   }
+  addIssue(issues, options.derivativeIntegrityIssues ?? [], "publication_derivative_mismatch", "critical",
+    "One or more generated public files do not exactly match publication-aware rendering.",
+    "Regenerate every public derivative through the shared publication-aware renderer.");
 
   const counts = {
     published: registry.entries.filter((state) => state.status === "published").length,

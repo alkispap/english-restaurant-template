@@ -7,6 +7,7 @@ import {
 } from "../src/data/listing-entity-resolutions";
 import { listingSlugRedirects } from "../src/data/listing-slug-redirects";
 import { listings } from "../src/data/listings";
+import { publishedListings } from "../src/data/listing-publication";
 
 const searchRecords = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "data", "listing-search-records.json"), "utf8")
@@ -32,7 +33,7 @@ for (const resolution of confirmedListingEntityResolutions) {
   }
 }
 
-assert.equal(listings.length, searchRecords.length);
-assert.equal(listings.length, shortlistSummaries.length);
+assert.equal(publishedListings.length, searchRecords.length);
+assert.equal(publishedListings.length, shortlistSummaries.length);
 
 console.log("listing entity resolution tests passed");

@@ -36,6 +36,7 @@
     "verify:listing": "tsx scripts/record-listing-verification.ts",
     "decide:listing-publication": "tsx scripts/record-listing-publication-decision.ts",
     "migrate:listing-publication": "tsx scripts/migrate-listing-publication-state.ts",
+    "generate:listing-public-data": "tsx scripts/regenerate-listing-public-data.ts",
     "enrich:outscraper-media": "tsx scripts/enrich-outscraper-media.ts",
     "article:duplicates": "tsx scripts/article-duplicate-report.ts",
     "article:next-planned": "tsx scripts/article-next-planned.ts",

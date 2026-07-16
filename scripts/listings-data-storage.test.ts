@@ -11,6 +11,7 @@ const listingSearchRecordsJsonPath = path.join(root, "data", "listing-search-rec
 const listingSearchIndexJsonPath = path.join(root, "data", "listing-search-index.json");
 const shortlistSummariesJsonPath = path.join(root, "data", "shortlist-summaries.json");
 const shortlistIndexJsonPath = path.join(root, "data", "shortlist-index.json");
+const publicationStatesJsonPath = path.join(root, "data", "listing-publication-states.json");
 
 assert.ok(fs.existsSync(listingsJsonPath), "listing records should be stored in data/listings.json");
 assert.ok(
@@ -40,13 +41,15 @@ assert.ok(
 const listings = JSON.parse(fs.readFileSync(listingsJsonPath, "utf8"));
 assert.ok(Array.isArray(listings), "data/listings.json should contain a listing array");
 assert.ok(listings.length > 0, "data/listings.json should include imported listings");
+const publicationRegistry = JSON.parse(fs.readFileSync(publicationStatesJsonPath, "utf8"));
+const publishedCount = publicationRegistry.entries.filter((state: { status: string }) => state.status === "published").length;
 
 const searchRecords = JSON.parse(fs.readFileSync(listingSearchRecordsJsonPath, "utf8"));
 assert.ok(Array.isArray(searchRecords), "data/listing-search-records.json should contain a listing array");
 assert.equal(
   searchRecords.length,
-  listings.length,
-  "compact client search records should stay in sync with full listing records"
+  publishedCount,
+  "compact client search records should stay in sync with published listing records"
 );
 assert.ok(
   fs.statSync(listingSearchRecordsJsonPath).size < fs.statSync(listingsJsonPath).size,
@@ -69,8 +72,8 @@ const shortlistSummaries = JSON.parse(fs.readFileSync(shortlistSummariesJsonPath
 assert.ok(Array.isArray(shortlistSummaries), "data/shortlist-summaries.json should contain a listing array");
 assert.equal(
   shortlistSummaries.length,
-  listings.length,
-  "compact compare shortlist summaries should stay in sync with full listing records"
+  publishedCount,
+  "compact compare shortlist summaries should stay in sync with published listing records"
 );
 assert.ok(
   fs.statSync(shortlistSummariesJsonPath).size < fs.statSync(listingSearchRecordsJsonPath).size,

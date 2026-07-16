@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import Module from "node:module";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { listings } from "../src/data/listings";
+import { publishedListings as listings } from "../src/data/listing-publication";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 

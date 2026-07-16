@@ -1,7 +1,8 @@
 import { directoryConfig } from "@/config/directory";
 import { featuredDiningHubs } from "@/config/featured-dining-hubs";
 import { siteConfig } from "@/config/site";
-import { listings, type Listing } from "@/data/listings";
+import type { Listing } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import {
   getBestRatedListings,
   filterListings,

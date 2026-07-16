@@ -8,6 +8,7 @@ import { packShortlistSummaries } from "@/lib/shortlist-index";
 import { getAllShortlistListingSummaries } from "@/lib/shortlist";
 import type { ListingSearchRecord } from "@/data/listing-search-records";
 import { resolveListingEntitySourceId } from "@/data/listing-entity-resolutions";
+import type { ListingPublicationRegistry } from "@/lib/listing-publication";
 
 export type ImportMode = "dry run" | "normal import" | "preview";
 
@@ -185,6 +186,15 @@ export type ImportResult = {
 
 export type SampleOptions = {
   size?: number;
+};
+
+export type PublishedDirectoryDataFiles = {
+  listingSearchRecordsJsonFile: string;
+  listingSearchIndexJsonFile: string;
+  listingFilterCountsJsonFile: string;
+  shortlistSummariesJsonFile: string;
+  shortlistIndexJsonFile: string;
+  publishedListings: ImportedListing[];
 };
 
 const fieldAliases: Record<string, string[]> = {
@@ -1574,6 +1584,28 @@ export function renderShortlistSummariesJsonFile(items: ImportedListing[]) {
 
 export function renderShortlistIndexJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(packShortlistSummaries(getAllShortlistListingSummaries(items)))}\n`;
+}
+
+export function selectPublishedImportedListings(items: ImportedListing[], registry: ListingPublicationRegistry) {
+  const stateBySlug = new Map(registry.entries.map((state) => [state.listingSlug, state]));
+  return items.filter((listing) => {
+    const state = stateBySlug.get(listing.slug);
+    if (!state) throw new Error(`Missing publication state while rendering: ${listing.slug}`);
+    if (state.listingSourceId !== listing.provenance?.sourceId) throw new Error(`Publication source ID mismatch while rendering: ${listing.slug}`);
+    return state.status === "published";
+  });
+}
+
+export function renderPublishedDirectoryDataFiles(items: ImportedListing[], registry: ListingPublicationRegistry): PublishedDirectoryDataFiles {
+  const publishedListings = selectPublishedImportedListings(items, registry);
+  return {
+    listingSearchRecordsJsonFile: renderListingSearchRecordsJsonFile(publishedListings),
+    listingSearchIndexJsonFile: renderListingSearchIndexJsonFile(publishedListings),
+    listingFilterCountsJsonFile: renderListingFilterCountsJsonFile(publishedListings),
+    shortlistSummariesJsonFile: renderShortlistSummariesJsonFile(publishedListings),
+    shortlistIndexJsonFile: renderShortlistIndexJsonFile(publishedListings),
+    publishedListings
+  };
 }
 
 function toListingSearchRecord(listing: ImportedListing) {

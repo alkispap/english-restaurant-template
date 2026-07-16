@@ -1,6 +1,6 @@
 import { directoryConfig } from "@/config/directory";
-import { listings } from "@/data/listings";
 import type { Listing } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import { directorySemanticMap } from "@/lib/directory-semantic-map";
 import { homepageHeadings } from "@/lib/homepage-headings";
 import {

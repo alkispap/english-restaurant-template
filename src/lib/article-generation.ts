@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site";
-import { listings } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import type { ArticleContent, ArticleDataItem, ArticlePlanItem, ArticleResearchNotes } from "@/lib/article-types";
 
 export type SearchResult = {

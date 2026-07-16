@@ -1,6 +1,6 @@
 import { directoryConfig } from "@/config/directory";
-import { listings } from "@/data/listings";
 import type { Listing } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import { compareByReviewStrength } from "@/lib/review-strength";
 import { searchableTextMatches } from "@/lib/search-quality";
 import { slugify } from "@/lib/slug";

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { directoryConfig } from "@/config/directory";
 import { featuredDiningHubs, getFeaturedDiningHub } from "@/config/featured-dining-hubs";
 import { siteConfig } from "@/config/site";
-import { listings, type Listing } from "@/data/listings";
+import type { Listing } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import { getAreaGuideModel, type AreaGuideModel } from "@/lib/area-guide";
 import {
   filterListings,

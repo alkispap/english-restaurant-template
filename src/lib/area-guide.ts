@@ -1,5 +1,5 @@
 import { directoryConfig } from "@/config/directory";
-import { listings } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import { getFeaturedAreas, slugify } from "@/lib/directory";
 import { areaCategoryPath, areaPath, neighborhoodPath } from "@/lib/routes";
 import type { SearchableDirectoryCard } from "@/lib/searchable-card-filter";
