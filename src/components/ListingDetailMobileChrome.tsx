@@ -155,7 +155,7 @@ function RatingDots({ rating }: { rating: number }) {
   const filled = Math.round(rating);
 
   return (
-    <span className="inline-flex items-center gap-1" aria-label={`${rating.toFixed(1)} out of 5`}>
+    <span className="inline-flex items-center gap-1" role="img" aria-label={`${rating.toFixed(1)} out of 5`}>
       {[1, 2, 3, 4, 5].map((dot) => (
         <span
           key={dot}

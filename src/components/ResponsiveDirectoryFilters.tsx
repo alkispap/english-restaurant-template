@@ -77,7 +77,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
   const activeCountLabel = `${selectedFilters.length.toLocaleString()} active`;
 
   return (
-    <aside aria-label="Directory filters" className="lg:hidden">
+    <aside aria-label="Directory filters" className="min-w-0 max-w-full lg:hidden">
       <button
         ref={mobileTriggerRef}
         type="button"
@@ -102,7 +102,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
             filters={selectedFilters}
             className="mt-3 rounded-lg border border-line bg-white p-4 shadow-soft"
           />
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 flex min-w-0 w-full max-w-full justify-center">
             <AdsterraAd placement="320x50" />
           </div>
         </>

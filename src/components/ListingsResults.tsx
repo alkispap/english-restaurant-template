@@ -146,7 +146,7 @@ function Pagination({
 function PageLink({ disabled, href, children }: { disabled: boolean; href: string; children: React.ReactNode }) {
   if (disabled) {
     return (
-      <span className="rounded-lg border border-line bg-slate-100 px-6 py-3 text-sm font-bold text-muted">
+      <span className="rounded-lg border border-line bg-slate-100 px-6 py-3 text-sm font-bold text-muted-strong">
         {children}
       </span>
     );

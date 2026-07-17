@@ -7,6 +7,7 @@ const config: Config = {
       colors: {
         ink: "var(--color-ink)",
         muted: "var(--color-muted)",
+        "muted-strong": "var(--color-muted-strong)",
         line: "var(--color-line)",
         primary: "var(--color-primary)",
         secondary: "var(--color-secondary)",

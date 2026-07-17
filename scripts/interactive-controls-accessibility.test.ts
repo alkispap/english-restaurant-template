@@ -44,6 +44,16 @@ assert.match(mobileChrome, /aria-hidden=\{showStickyAreaBar\}/, "scrolled-off or
 assert.match(mobileChrome, /inert=\{showStickyAreaBar\}/, "scrolled-off original actions should not duplicate sticky keyboard stops");
 assert.match(mobileChrome, /pointer-events-none/, "hidden sticky actions should not accept pointer input");
 assert.match(mobileChrome, /aria-label="Restaurant sections"/, "mobile detail navigation should have a programmatic name");
+assert.match(
+  mobileChrome,
+  /role="img" aria-label=\{`\$\{rating\.toFixed\(1\)\} out of 5`\}/,
+  "mobile rating dots should expose their accessible name through a permitted image role"
+);
+assert.match(
+  mobileChrome,
+  /\[1, 2, 3, 4, 5\][\s\S]*aria-hidden/,
+  "decorative rating dots should remain hidden from assistive technology"
+);
 assert.match(listingNav, /aria-label="Restaurant sections"/, "desktop detail navigation should have a programmatic name");
 assert.match(listingNav, /aria-current=\{activeTab === tab\.href \? "location"/, "desktop detail navigation should expose the current section");
 assert.match(listingMap, /role="region"/, "interactive listing map should expose region semantics");

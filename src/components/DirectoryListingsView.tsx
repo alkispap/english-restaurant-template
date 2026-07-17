@@ -103,7 +103,7 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
           <DirectoryListingRows rows={homepageStartRows(model.relatedRows)} className="mt-6" />
         </>
       ) : (
-      <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
         <ResponsiveDirectoryFilters model={model} />
         <div className="min-w-0">
           <ListingsResults

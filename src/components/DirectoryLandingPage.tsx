@@ -291,7 +291,7 @@ function SectionIntro({
         <h2 id={id} className="text-2xl font-bold text-ink">
           {title}
         </h2>
-        <p className="mt-2 text-sm leading-6 text-muted">{description}</p>
+        <p className="mt-2 text-sm leading-6 text-muted-strong">{description}</p>
       </div>
       {href && label ? (
         <Link href={href} className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-accent">

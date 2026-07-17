@@ -698,7 +698,7 @@ function TransportSection({ listing, heading }: { listing: Listing; heading: str
           >
             <Train className="mb-3 h-5 w-5 text-primary" aria-hidden />
             <h3 className="font-bold text-ink">{tube}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
+            <p className="mt-2 text-sm leading-6 text-muted-strong">
               {[listing.location?.tubeLines?.join(", "), distanceText(listing.location?.tubeDistanceMeters), walkText(listing.location?.tubeWalkMinutes)]
                 .filter(Boolean)
                 .join(" · ")}
@@ -712,7 +712,7 @@ function TransportSection({ listing, heading }: { listing: Listing; heading: str
           >
             <MapPin className="mb-3 h-5 w-5 text-primary" aria-hidden />
             <h3 className="font-bold text-ink">{bus}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
+            <p className="mt-2 text-sm leading-6 text-muted-strong">
               {[listing.location?.busRoutes?.slice(0, 8).join(", "), distanceText(listing.location?.busDistanceMeters), walkText(listing.location?.busWalkMinutes)]
                 .filter(Boolean)
                 .join(" · ")}
