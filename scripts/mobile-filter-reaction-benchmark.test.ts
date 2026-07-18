@@ -3,10 +3,12 @@ import fs from "node:fs";
 import path from "node:path";
 
 const benchmarkPath = path.join(process.cwd(), "scripts", "mobile-filter-reaction-benchmark.ts");
+const cleanupPath = path.join(process.cwd(), "scripts", "browser-profile-cleanup.ts");
 
 assert.ok(fs.existsSync(benchmarkPath), "mobile filter reaction benchmark script should exist");
 
 const source = fs.readFileSync(benchmarkPath, "utf8");
+const cleanupSource = fs.readFileSync(cleanupPath, "utf8");
 
 assert.match(source, /desktop-sidebar-area/, "benchmark should include a desktop sidebar checkbox scenario");
 assert.match(source, /mobile-fullscreen-area/, "benchmark should include the current mobile full-screen filter scenario");
@@ -16,7 +18,11 @@ assert.doesNotMatch(source, /aside details/, "benchmark should not target the re
 assert.match(source, /prepared dialog state or initial focus was incorrect/, "benchmark should validate initial dialog focus");
 assert.match(source, /Escape did not close the topmost dialog and restore focus/, "benchmark should validate dialog focus restoration");
 assert.match(source, /page-level horizontal overflow/, "benchmark should fail on mobile page overflow");
-assert.match(source, /fs\.rmSync\(userDataDir/, "benchmark should remove its temporary browser profile");
+assert.match(source, /assertSafeBrowserProfilePath\(userDataDir\)/, "benchmark should validate its temporary profile before browser launch");
+assert.match(source, /stopBrowserProcessTree\(chrome\)/, "benchmark should stop the browser process tree before cleanup");
+assert.match(source, /cleanupBrowserProfile\(userDataDir\)/, "benchmark should use the bounded profile cleanup helper");
+assert.match(cleanupSource, /taskkill\.exe[\s\S]*"\/T"[\s\S]*"\/F"/, "Windows cleanup should terminate browser descendants");
+assert.match(cleanupSource, /PROFILE_CLEANUP_MAX_ATTEMPTS = 6/, "profile cleanup retries should remain bounded");
 assert.match(source, /checkedMs/, "benchmark should report time to checkbox checked state");
 assert.match(source, /urlMs/, "benchmark should report time to URL query update");
 assert.match(source, /resultsMs/, "benchmark should report time to results update");

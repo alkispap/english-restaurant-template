@@ -2,6 +2,11 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import {
+  assertSafeBrowserProfilePath,
+  cleanupBrowserProfile,
+  stopBrowserProcessTree
+} from "./browser-profile-cleanup";
 
 type Viewport = {
   width: number;
@@ -195,6 +200,7 @@ async function main() {
 
   const chromePath = resolveChromePath();
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "mobile-filter-benchmark-"));
+  assertSafeBrowserProfilePath(userDataDir);
   const port = 12400 + Math.floor(Math.random() * 1000);
   const chrome = spawnChrome(chromePath, userDataDir, port);
   let client: CdpClient | undefined;
@@ -255,15 +261,9 @@ async function main() {
       // Fall back to terminating the launcher below if the browser already disconnected.
     }
     client?.close();
-    if (!chrome.killed) chrome.kill();
-    await waitForProcessExit(chrome);
-    try {
-      fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
-    } catch (error) {
-      const code = (error as NodeJS.ErrnoException).code;
-      if (code !== "EPERM" && code !== "EBUSY") throw error;
-      console.warn(`Browser profile cleanup deferred because Windows still has files open: ${userDataDir}`);
-    }
+    await stopBrowserProcessTree(chrome);
+    const cleanup = await cleanupBrowserProfile(userDataDir);
+    if (!cleanup.removed) console.warn(cleanup.warning);
   }
 }
 
@@ -1046,18 +1046,6 @@ async function pressEscape(client: CdpClient) {
     code: "Escape",
     windowsVirtualKeyCode: 27,
     nativeVirtualKeyCode: 27
-  });
-}
-
-function waitForProcessExit(process: ChildProcessWithoutNullStreams) {
-  if (process.exitCode !== null) return Promise.resolve();
-
-  return new Promise<void>((resolve) => {
-    const timeout = setTimeout(resolve, 2_000);
-    process.once("exit", () => {
-      clearTimeout(timeout);
-      resolve();
-    });
   });
 }
 

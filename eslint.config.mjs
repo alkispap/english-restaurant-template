@@ -14,6 +14,7 @@ const eslintConfig = [
   {
     ignores: [
       ".next/**",
+      ".codex-local/**",
       ".diagnostics/**",
       "coverage/**",
       "dist/**",
