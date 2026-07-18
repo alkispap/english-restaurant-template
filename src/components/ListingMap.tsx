@@ -7,6 +7,7 @@ import {
   getVisibleMapItems,
   type VisibleMapItem
 } from "@/lib/map-density";
+import { mapProviderConfig } from "@/config/map-provider";
 import type { MapPoint } from "@/lib/listings-page";
 import { listingDetailPath } from "@/lib/routes";
 
@@ -47,9 +48,9 @@ export function ListingMap({ listings }: ListingMapProps) {
 
         delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
         L.Icon.Default.mergeOptions({
-          iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-          iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-          shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
+          iconUrl: mapProviderConfig.markerIconUrl,
+          iconRetinaUrl: mapProviderConfig.markerIconRetinaUrl,
+          shadowUrl: mapProviderConfig.markerShadowUrl
         });
 
         const latitudes = listings.map((listing) => listing.latitude);
@@ -62,8 +63,8 @@ export function ListingMap({ listings }: ListingMapProps) {
         }).setView([centerLat, centerLng], 13);
         markerLayer = L.layerGroup().addTo(map);
 
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        L.tileLayer(mapProviderConfig.tileUrl, {
+          attribution: mapProviderConfig.attributionHtml,
           maxZoom: 19
         }).addTo(map);
 

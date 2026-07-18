@@ -1,10 +1,15 @@
 import { siteConfig } from "@/config/site";
+import { mapProviderConfig } from "@/config/map-provider";
 import type { Metadata } from "next";
 import { pageShareMetadata } from "@/lib/share-metadata";
 
 export type TrustPageSection = {
   heading: string;
   body: string;
+  links?: readonly {
+    label: string;
+    href: string;
+  }[];
 };
 
 export type TrustPage = {
@@ -93,6 +98,14 @@ export const trustPages = [
       {
         heading: "Contact and Update Requests",
         body: "The current contact page provides guidance only. The suggest-an-update form prepares correction text in the visitor's browser and does not automatically submit, publish, or retain it. If a corrections email address is configured, choosing to open an email app passes the generated text to the visitor's email provider and the directory mailbox; their retention policies then apply."
+      },
+      {
+        heading: "Embedded OpenStreetMap",
+        body: "The interactive directory map does not request map tiles in ordinary list view. When a visitor chooses Map view or opens a map-view URL, their browser requests tiles directly from the OpenStreetMap Foundation. Standard connection information, including the visitor's IP address, browser and device information, referring site origin, request time, and requested tiles, may be processed under the OpenStreetMap Foundation privacy policy. This directory does not use those tile requests for its own analytics.",
+        links: [
+          { label: "OpenStreetMap Foundation privacy policy", href: mapProviderConfig.privacyPolicyUrl },
+          { label: "OpenStreetMap tile usage policy", href: mapProviderConfig.tileUsagePolicyUrl }
+        ]
       },
       {
         heading: "Third-Party Restaurant Links",

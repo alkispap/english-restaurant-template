@@ -28,6 +28,11 @@ assert.match(updateFormSource, /does not automatically submit, store, or publish
   /Account synchronisation is currently disabled/,
   /suggest-an-update form prepares correction text in the visitor's browser/,
   /does not automatically submit, publish, or retain it/,
+  /does not request map tiles in ordinary list view/,
+  /chooses Map view or opens a map-view URL/,
+  /requests tiles directly from the OpenStreetMap Foundation/,
+  /IP address, browser and device information, referring site origin, request time, and requested tiles/,
+  /does not use those tile requests for its own analytics/,
   /advertising network loading is currently disabled/,
   /consent controls required for cookies/
 ].forEach((pattern) => assert.match(privacyText, pattern, `privacy policy should disclose ${pattern}`));

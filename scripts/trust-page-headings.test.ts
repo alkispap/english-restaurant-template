@@ -34,6 +34,7 @@ const expected = [
       "Location Permission",
       "Optional Account Synchronisation",
       "Contact and Update Requests",
+      "Embedded OpenStreetMap",
       "Third-Party Restaurant Links",
       "Advertising and Cookies"
     ]
