@@ -36,6 +36,7 @@ export function SearchBar({
       <form
         action={basePath}
         method="get"
+        data-directory-query-intent="true"
         className={`grid gap-3 ${gridClass}`}
       >
         <label className="flex items-center gap-3 rounded-md border border-line px-4 py-3">

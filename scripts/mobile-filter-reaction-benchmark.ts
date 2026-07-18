@@ -15,22 +15,59 @@ type Scenario = {
   viewport: Viewport;
   prepareScript: string;
   targetScript: string;
+  subsequentTargetScript: string;
   validationScript: string;
   cleanupScript: string;
 };
 
 type RunResult = {
   scenario: string;
+  cacheMode: CacheMode;
+  interactionPhase: InteractionPhase;
   run: number;
   checkedMs: number | null;
   urlMs: number | null;
   resultsMs: number | null;
-  longTaskMs: number;
+  longTaskMs: number | null;
+  moduleLoadMs: number | null;
+  modelBuildMs: number | null;
+  reactCommitMs: number | null;
+  scriptResourceMs: number | null;
+  moduleEvaluationMs: number | null;
+  dataFetchMs: number | null;
+  dataTextMs: number | null;
+  dataParseMs: number | null;
+  dataUnpackMs: number | null;
+  runtimeInitMs: number | null;
+  schedulingMs: number | null;
+  ttfbMs?: number | null;
+  responseEndMs?: number | null;
+  domInteractiveMs?: number | null;
+  domContentLoadedMs?: number | null;
+  loadEventMs?: number | null;
+  enhancerModuleAtMs?: number | null;
+  enhancerRenderAtMs?: number | null;
+  queryEffectAtMs?: number | null;
+  updateStartedAtMs?: number | null;
+  runtimeImportAtMs?: number | null;
+  runtimeModuleAtMs?: number | null;
+  clientImportsAtMs?: number | null;
+  browserModuleAtMs?: number | null;
+  shellModuleAtMs?: number | null;
+  stateScheduledAtMs?: number | null;
+  shellRenderAtMs?: number | null;
+  resultPaintAtMs?: number | null;
+  resultPaintDelayMs?: number | null;
+  startupLongTaskMs?: number | null;
+  startupLongestTaskMs?: number | null;
   finalUrl: string;
   resultHeading: string;
   viewportWidth: number;
   documentWidth: number;
 };
+
+type CacheMode = "cold" | "warm";
+type InteractionPhase = "first" | "subsequent" | "navigation";
 
 type CdpResponseResult = Record<string, unknown>;
 
@@ -55,8 +92,14 @@ type CdpClient = {
 
 const RUNS = Number(process.env.RUNS ?? "5");
 const CPU_THROTTLE = Number(process.env.CPU_THROTTLE ?? "1");
+const CACHE_MODE = process.env.CACHE_MODE ?? "both";
+const PRINT_RAW_RUNS = process.env.PRINT_RAW_RUNS !== "0";
+const QUERY_ONLY = process.env.QUERY_ONLY === "1";
+const SCENARIO_ID = process.env.SCENARIO_ID;
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3000";
+const HOMEPAGE_URL = `${BASE_URL.replace(/\/$/, "")}/`;
 const RESTAURANTS_URL = `${BASE_URL.replace(/\/$/, "")}/restaurants/`;
+const QUERY_ACTIVATION_URL = `${RESTAURANTS_URL}?q=Dishoom`;
 
 const scenarios: Scenario[] = [
   {
@@ -70,6 +113,9 @@ const scenarios: Scenario[] = [
     `,
     targetScript: `
       findLabelByText("aside label", "Barking & Dagenham")
+    `,
+    subsequentTargetScript: `
+      findLabelByText("aside label", "Barnet")
     `,
     validationScript: "true",
     cleanupScript: "true"
@@ -87,11 +133,14 @@ const scenarios: Scenario[] = [
     targetScript: `
       findLabelByText("#mobile-filter-screen label", "Barking & Dagenham")
     `,
+    subsequentTargetScript: `
+      findLabelByText("#mobile-filter-screen label", "Barnet")
+    `,
     validationScript: `
       document.activeElement?.getAttribute("aria-label") === "Close filters"
     `,
     cleanupScript: `
-      !document.getElementById("mobile-filter-screen") &&
+      !Array.from(document.querySelectorAll("#mobile-filter-screen")).some((element) => isVisibleElement(element)) &&
         document.activeElement?.textContent?.trim().includes("Filters")
     `
   },
@@ -116,6 +165,9 @@ const scenarios: Scenario[] = [
     targetScript: `
       findFirstCheckboxLabelInLastDialog()
     `,
+    subsequentTargetScript: `
+      findFirstUncheckedCheckboxLabelInLastDialog()
+    `,
     validationScript: `
       document.activeElement?.getAttribute("type") === "search" &&
         document.querySelectorAll('[role="dialog"][aria-modal="true"]').length === 2
@@ -129,6 +181,14 @@ const scenarios: Scenario[] = [
     `
   }
 ];
+
+const selectedScenarios = SCENARIO_ID
+  ? scenarios.filter((scenario) => scenario.id === SCENARIO_ID)
+  : scenarios;
+
+if (SCENARIO_ID && selectedScenarios.length === 0) {
+  throw new Error(`Unknown SCENARIO_ID: ${SCENARIO_ID}`);
+}
 
 async function main() {
   await assertServerReady();
@@ -144,28 +204,70 @@ async function main() {
     client = await connectCdp(target.webSocketDebuggerUrl);
     await client.send("Page.enable");
     await client.send("Runtime.enable");
+    await client.send("Network.enable");
+    await client.send("Page.addScriptToEvaluateOnNewDocument", {
+      source: `
+        window.__directoryStartupLongTasks = [];
+        try {
+          new PerformanceObserver((list) => {
+            list.getEntries().forEach((entry) => window.__directoryStartupLongTasks.push({
+              startTime: entry.startTime,
+              duration: entry.duration,
+              name: entry.name
+            }));
+          }).observe({ type: "longtask", buffered: true });
+        } catch {}
+      `
+    });
     await client.send("Input.setIgnoreInputEvents", { ignore: false });
     if (CPU_THROTTLE > 1) {
       await client.send("Emulation.setCPUThrottlingRate", { rate: CPU_THROTTLE });
     }
 
     const results: RunResult[] = [];
-    for (const scenario of scenarios) {
+    for (const cacheMode of selectedCacheModes()) {
+      if (cacheMode === "warm") await primeFilterModuleCache(client);
+      // Measure navigation startup immediately after the declared cache setup so unrelated
+      // interaction stress and garbage collection cannot contaminate the navigation result.
       for (let run = 1; run <= RUNS; run += 1) {
-        results.push(await runScenario(client, scenario, run));
+        if (cacheMode === "cold") await client.send("Network.clearBrowserCache");
+        results.push(await runQueryActivationScenario(client, run, cacheMode));
+      }
+      if (!QUERY_ONLY) {
+        for (let run = 1; run <= RUNS; run += 1) {
+          if (cacheMode === "cold") await client.send("Network.clearBrowserCache");
+          results.push(await runHomepageSearchSubmissionScenario(client, run, cacheMode));
+        }
+        for (const scenario of selectedScenarios) {
+          for (let run = 1; run <= RUNS; run += 1) {
+            if (cacheMode === "cold") await client.send("Network.clearBrowserCache");
+            results.push(...await runScenario(client, scenario, run, cacheMode));
+          }
+        }
       }
     }
 
     printResults(results);
   } finally {
+    try {
+      await client?.send("Browser.close");
+    } catch {
+      // Fall back to terminating the launcher below if the browser already disconnected.
+    }
     client?.close();
-    chrome.kill();
+    if (!chrome.killed) chrome.kill();
     await waitForProcessExit(chrome);
-    fs.rmSync(userDataDir, { recursive: true, force: true });
+    try {
+      fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code !== "EPERM" && code !== "EBUSY") throw error;
+      console.warn(`Browser profile cleanup deferred because Windows still has files open: ${userDataDir}`);
+    }
   }
 }
 
-async function runScenario(client: CdpClient, scenario: Scenario, run: number): Promise<RunResult> {
+async function runScenario(client: CdpClient, scenario: Scenario, run: number, cacheMode: CacheMode): Promise<RunResult[]> {
   await client.send("Emulation.setDeviceMetricsOverride", {
     width: scenario.viewport.width,
     height: scenario.viewport.height,
@@ -180,6 +282,19 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
     awaitPromise: true,
     returnByValue: true
   });
+  const first = await measureScenarioInteraction(client, scenario, run, cacheMode, "first");
+  await sleep(300);
+  const subsequent = await measureScenarioInteraction(client, scenario, run, cacheMode, "subsequent");
+  return [first, subsequent];
+}
+
+async function measureScenarioInteraction(
+  client: CdpClient,
+  scenario: Scenario,
+  run: number,
+  cacheMode: CacheMode,
+  interactionPhase: Exclude<InteractionPhase, "navigation">
+): Promise<RunResult> {
   await client.send("Runtime.evaluate", {
     expression: `(async () => { ${scenario.prepareScript} })()`,
     awaitPromise: true,
@@ -190,11 +305,27 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
     returnByValue: true
   });
   if (cdpReturnValue(validationResult) !== true) {
-    throw new Error(`${scenario.id}: prepared dialog state or initial focus was incorrect`);
+    const diagnostics = await client.send("Runtime.evaluate", {
+      expression: `({
+        activeLabel: document.activeElement?.getAttribute("aria-label") ?? "",
+        activeText: document.activeElement?.textContent?.trim() ?? "",
+        dialogs: Array.from(document.querySelectorAll('[role="dialog"][aria-modal="true"]')).map((dialog) => ({
+          visible: isVisibleElement(dialog),
+          label: dialog.getAttribute("aria-label")
+        })),
+        filterScreens: Array.from(document.querySelectorAll("#mobile-filter-screen")).map((screen) => isVisibleElement(screen))
+      })`,
+      returnByValue: true
+    });
+    throw new Error(
+      `${scenario.id} ${interactionPhase}: prepared dialog state or initial focus was incorrect: ${JSON.stringify(cdpReturnValue(diagnostics))}`
+    );
   }
 
   const targetResult = await client.send("Runtime.evaluate", {
-    expression: setupBenchmarkExpression(scenario.targetScript),
+    expression: setupBenchmarkExpression(
+      interactionPhase === "subsequent" ? scenario.subsequentTargetScript : scenario.targetScript
+    ),
     awaitPromise: true,
     returnByValue: true
   });
@@ -210,7 +341,6 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
     awaitPromise: true,
     returnByValue: true
   });
-
   const measurement = cdpReturnValue(measurementResult) as RunResult;
   if (measurement.documentWidth > measurement.viewportWidth + 1) {
     throw new Error(
@@ -218,33 +348,290 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number): 
     );
   }
 
-  if (scenario.cleanupScript !== "true") {
-    await pressEscape(client);
-    await sleep(150);
-    const cleanupResult = await client.send("Runtime.evaluate", {
-      expression: `Boolean(${scenario.cleanupScript})`,
-      returnByValue: true
-    });
-    if (cdpReturnValue(cleanupResult) !== true) {
-      const cleanupDiagnostics = await client.send("Runtime.evaluate", {
-        expression: `({
-          dialogs: document.querySelectorAll('[role="dialog"][aria-modal="true"]').length,
-          activeText: document.activeElement?.textContent?.trim() ?? "",
-          activeLabel: document.activeElement?.getAttribute("aria-label") ?? ""
-        })`,
-        returnByValue: true
-      });
-      throw new Error(
-        `${scenario.id}: Escape did not close the topmost dialog and restore focus: ${JSON.stringify(cdpReturnValue(cleanupDiagnostics))}`
-      );
-    }
-  }
+  if (scenario.cleanupScript !== "true") await cleanupScenario(client, scenario);
 
   return {
     ...measurement,
     scenario: scenario.id,
+    cacheMode,
+    interactionPhase,
     run
   };
+}
+
+async function cleanupScenario(client: CdpClient, scenario: Scenario) {
+  await pressEscape(client);
+  await sleep(150);
+  const cleanupResult = await client.send("Runtime.evaluate", {
+    expression: `Boolean(${scenario.cleanupScript})`,
+    returnByValue: true
+  });
+  if (cdpReturnValue(cleanupResult) === true) return;
+
+  const cleanupDiagnostics = await client.send("Runtime.evaluate", {
+    expression: `({
+      dialogs: document.querySelectorAll('[role="dialog"][aria-modal="true"]').length,
+      activeText: document.activeElement?.textContent?.trim() ?? "",
+      activeLabel: document.activeElement?.getAttribute("aria-label") ?? ""
+    })`,
+    returnByValue: true
+  });
+  throw new Error(
+    `${scenario.id}: Escape did not close the topmost dialog and restore focus: ${JSON.stringify(cdpReturnValue(cleanupDiagnostics))}`
+  );
+}
+
+async function runQueryActivationScenario(client: CdpClient, run: number, cacheMode: CacheMode): Promise<RunResult> {
+  await client.send("Emulation.setDeviceMetricsOverride", {
+    width: 393,
+    height: 852,
+    deviceScaleFactor: 3,
+    mobile: true
+  });
+  await client.send("Page.navigate", { url: QUERY_ACTIVATION_URL });
+  const state = await waitForQueryActivation(client);
+
+  if (state.documentWidth > state.viewportWidth + 1) {
+    throw new Error(
+      `query-string-activation: page-level horizontal overflow (${state.documentWidth}px document at ${state.viewportWidth}px viewport)`
+    );
+  }
+  if (!state.finalUrl.includes("q=Dishoom") || !state.resultHeading.toLowerCase().includes("found")) {
+    throw new Error(`query-string-activation: result or URL correctness failed: ${JSON.stringify(state)}`);
+  }
+
+  return {
+    scenario: "query-string-activation",
+    cacheMode,
+    interactionPhase: "navigation",
+    run,
+    checkedMs: null,
+    urlMs: null,
+    resultsMs: state.navigationElapsedMs,
+    longTaskMs: state.startupLongTaskMs,
+    ...state
+  };
+}
+
+async function runHomepageSearchSubmissionScenario(
+  client: CdpClient,
+  run: number,
+  cacheMode: CacheMode
+): Promise<RunResult> {
+  await client.send("Emulation.setDeviceMetricsOverride", {
+    width: 393,
+    height: 852,
+    deviceScaleFactor: 3,
+    mobile: true
+  });
+  await client.send("Page.navigate", { url: HOMEPAGE_URL });
+  const homepageWaitStarted = Date.now();
+  let homepageSearchReady = false;
+  while (Date.now() - homepageWaitStarted < 20_000) {
+    try {
+      const readyResult = await client.send("Runtime.evaluate", {
+        expression: `window.location.pathname === "/" && document.readyState === "complete" && Boolean(document.querySelector('form[data-directory-query-intent="true"] input[name="q"]'))`,
+        returnByValue: true
+      });
+      if (cdpReturnValue(readyResult) === true) {
+        homepageSearchReady = true;
+        break;
+      }
+    } catch {
+      // The directory document may still be unloading.
+    }
+    await sleep(25);
+  }
+  if (!homepageSearchReady) throw new Error("Homepage directory search form did not become ready.");
+  const startedAt = Date.now();
+  await client.send("Runtime.evaluate", {
+    expression: `(() => {
+      const input = document.querySelector('form[data-directory-query-intent="true"] input[name="q"]');
+      const form = input?.closest("form");
+      const submit = form?.querySelector('button[type="submit"]');
+      if (!(input instanceof HTMLInputElement) || !(form instanceof HTMLFormElement) || !(submit instanceof HTMLButtonElement)) {
+        throw new Error("Homepage directory search form was not available.");
+      }
+      input.focus();
+    })()`,
+    returnByValue: true
+  });
+  await client.send("Input.insertText", { text: "Dishoom" });
+  await client.send("Runtime.evaluate", {
+    expression: `(() => {
+      const form = document.querySelector('form[data-directory-query-intent="true"]');
+      const submit = form?.querySelector('button[type="submit"]');
+      if (!(form instanceof HTMLFormElement) || !(submit instanceof HTMLButtonElement)) {
+        throw new Error("Homepage directory search form was not ready for submission.");
+      }
+      form.requestSubmit(submit);
+    })()`
+  });
+  const state = await waitForQueryActivation(client);
+  const submissionElapsedMs = Date.now() - startedAt;
+
+  if (state.documentWidth > state.viewportWidth + 1) {
+    throw new Error(
+      `homepage-search-submission: page-level horizontal overflow (${state.documentWidth}px document at ${state.viewportWidth}px viewport)`
+    );
+  }
+  if (!state.finalUrl.includes("q=Dishoom") || !state.resultHeading.toLowerCase().includes("found")) {
+    throw new Error(`homepage-search-submission: result or URL correctness failed: ${JSON.stringify(state)}`);
+  }
+
+  return {
+    scenario: "homepage-search-submission",
+    cacheMode,
+    interactionPhase: "navigation",
+    run,
+    checkedMs: null,
+    urlMs: null,
+    resultsMs: submissionElapsedMs,
+    longTaskMs: state.startupLongTaskMs,
+    ...state
+  };
+}
+
+async function waitForQueryActivation(client: CdpClient) {
+  const started = Date.now();
+  let lastState: {
+    finalUrl: string;
+    resultHeading: string;
+    viewportWidth: number;
+    documentWidth: number;
+    clientReady?: boolean;
+    navigationElapsedMs: number;
+    moduleLoadMs: number | null;
+    modelBuildMs: number | null;
+    reactCommitMs: number | null;
+    scriptResourceMs: number | null;
+    moduleEvaluationMs: number | null;
+    dataFetchMs: number | null;
+    dataTextMs: number | null;
+    dataParseMs: number | null;
+    dataUnpackMs: number | null;
+    runtimeInitMs: number | null;
+    schedulingMs: number | null;
+    ttfbMs: number | null;
+    responseEndMs: number | null;
+    domInteractiveMs: number | null;
+    domContentLoadedMs: number | null;
+    loadEventMs: number | null;
+    enhancerModuleAtMs: number | null;
+    enhancerRenderAtMs: number | null;
+    queryEffectAtMs: number | null;
+    updateStartedAtMs: number | null;
+    runtimeImportAtMs: number | null;
+    runtimeModuleAtMs: number | null;
+    clientImportsAtMs: number | null;
+    browserModuleAtMs: number | null;
+    shellModuleAtMs: number | null;
+    stateScheduledAtMs: number | null;
+    shellRenderAtMs: number | null;
+    resultPaintAtMs: number | null;
+    resultPaintDelayMs: number | null;
+    startupLongTaskMs: number | null;
+    startupLongestTaskMs: number | null;
+  } | undefined;
+
+  while (Date.now() - started < 20_000) {
+    try {
+      const result = await client.send("Runtime.evaluate", {
+        expression: `({
+          finalUrl: window.location.href,
+          resultHeading: Array.from(document.querySelectorAll("#directory-listings-client-main h2"))
+            .find((heading) => heading.textContent?.toLowerCase().includes("found"))?.textContent?.trim() ?? "",
+          viewportWidth: window.innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          clientReady: Boolean(document.getElementById("directory-listings-client-main")),
+          ...(() => {
+            const latest = (name) => performance.getEntriesByName(name, "measure").at(-1);
+            const moduleMeasure = latest("directory-client-modules");
+            const modelMeasure = latest("directory-model-build");
+            const reactMeasure = latest("directory-react-commit");
+            const dataFetchMeasure = latest("directory-search-data-fetch");
+            const dataTextMeasure = latest("directory-search-data-text");
+            const dataParseMeasure = latest("directory-search-data-parse");
+            const dataUnpackMeasure = latest("directory-search-data-unpack");
+            const runtimeInitMeasure = latest("directory-search-runtime-init");
+            const schedulingMeasure = latest("directory-update-scheduling");
+            const resultPaintMeasure = latest("directory-result-paint");
+            const markAt = (name) => {
+              const value = performance.getEntriesByName(name, "mark").at(-1)?.startTime;
+              return typeof value === "number" ? Math.round(value) : null;
+            };
+            const navigation = performance.getEntriesByType("navigation")[0];
+            const startupLongTasks = window.__directoryStartupLongTasks ?? [];
+            const scripts = performance.getEntriesByType("resource").filter((entry) => entry.initiatorType === "script");
+            const scriptResourceMs = scripts.length ? Math.max(...scripts.map((entry) => entry.duration)) : null;
+            const latestScriptResponse = scripts.length ? Math.max(...scripts.map((entry) => entry.responseEnd)) : null;
+            const moduleReadyAt = moduleMeasure ? moduleMeasure.startTime + moduleMeasure.duration : null;
+            return {
+              navigationElapsedMs: Math.round(
+                reactMeasure ? reactMeasure.startTime + reactMeasure.duration : performance.now()
+              ),
+              moduleLoadMs: moduleMeasure ? Math.round(moduleMeasure.duration) : null,
+              modelBuildMs: modelMeasure ? Math.round(modelMeasure.duration) : null,
+              reactCommitMs: reactMeasure ? Math.round(reactMeasure.duration) : null,
+              scriptResourceMs: scriptResourceMs === null ? null : Math.round(scriptResourceMs),
+              moduleEvaluationMs: moduleReadyAt !== null && latestScriptResponse !== null
+                ? Math.round(Math.max(0, moduleReadyAt - latestScriptResponse))
+                : null,
+              dataFetchMs: dataFetchMeasure ? Math.round(dataFetchMeasure.duration) : null,
+              dataTextMs: dataTextMeasure ? Math.round(dataTextMeasure.duration) : null,
+              dataParseMs: dataParseMeasure ? Math.round(dataParseMeasure.duration) : null,
+              dataUnpackMs: dataUnpackMeasure ? Math.round(dataUnpackMeasure.duration) : null,
+              runtimeInitMs: runtimeInitMeasure ? Math.round(runtimeInitMeasure.duration) : null,
+              schedulingMs: schedulingMeasure ? Math.round(schedulingMeasure.duration) : null,
+              ttfbMs: navigation ? Math.round(navigation.responseStart) : null,
+              responseEndMs: navigation ? Math.round(navigation.responseEnd) : null,
+              domInteractiveMs: navigation ? Math.round(navigation.domInteractive) : null,
+              domContentLoadedMs: navigation ? Math.round(navigation.domContentLoadedEventEnd) : null,
+              loadEventMs: navigation ? Math.round(navigation.loadEventEnd) : null,
+              enhancerModuleAtMs: markAt("directory-query-enhancer-module-evaluated"),
+              enhancerRenderAtMs: markAt("directory-query-enhancer-first-render"),
+              queryEffectAtMs: markAt("directory-query-effect-started"),
+              updateStartedAtMs: markAt("directory-update-started"),
+              runtimeImportAtMs: markAt("directory-runtime-import-started"),
+              runtimeModuleAtMs: markAt("directory-search-runtime-module-evaluated"),
+              clientImportsAtMs: markAt("directory-client-imports-started"),
+              browserModuleAtMs: markAt("directory-browser-model-module-evaluated"),
+              shellModuleAtMs: markAt("directory-interactive-shell-module-evaluated"),
+              stateScheduledAtMs: markAt("directory-primary-state-scheduled"),
+              shellRenderAtMs: markAt("directory-interactive-shell-rendered"),
+              resultPaintAtMs: markAt("directory-primary-results-painted"),
+              resultPaintDelayMs: resultPaintMeasure ? Math.round(resultPaintMeasure.duration) : null,
+              startupLongTaskMs: Math.round(startupLongTasks.reduce((sum, entry) => sum + entry.duration, 0)),
+              startupLongestTaskMs: startupLongTasks.length
+                ? Math.round(Math.max(...startupLongTasks.map((entry) => entry.duration)))
+                : 0
+            };
+          })()
+        })`,
+        returnByValue: true
+      });
+      const value = cdpReturnValue(result) as typeof lastState;
+      if (value) {
+        lastState = value;
+        if (value.clientReady && value.resultHeading && value.resultPaintAtMs !== null) return value;
+      }
+    } catch {
+      // The previous document may still be unloading.
+    }
+    await sleep(25);
+  }
+
+  throw new Error(`query-string-activation: timed out waiting for client results: ${JSON.stringify(lastState)}`);
+}
+
+async function primeFilterModuleCache(client: CdpClient) {
+  await runScenario(client, scenarios[0], 0, "warm");
+}
+
+function selectedCacheModes(): CacheMode[] {
+  if (CACHE_MODE === "cold" || CACHE_MODE === "warm") return [CACHE_MODE];
+  if (CACHE_MODE === "both") return ["cold", "warm"];
+  throw new Error(`CACHE_MODE must be cold, warm, or both; received ${CACHE_MODE}`);
 }
 
 function cdpReturnValue(result: CdpResponseResult) {
@@ -321,7 +708,7 @@ function pageHelpers() {
   return `
     (() => {
       window.findLabelByText = (selector, text) => Array.from(document.querySelectorAll(selector))
-        .find((label) => label.textContent?.trim().includes(text));
+        .find((label) => label.textContent?.trim().includes(text) && window.isVisibleElement(label));
       window.findButtonByText = (selector, text) => Array.from(document.querySelectorAll(selector))
         .find((button) => button.textContent?.trim() === text);
       window.isVisibleElement = (element) => {
@@ -338,18 +725,47 @@ function pageHelpers() {
       window.findFilterGroup = (rootSelector, legendText) => Array.from(document.querySelectorAll(rootSelector + " fieldset"))
         .find((fieldset) => fieldset.querySelector("legend button")?.textContent?.trim().includes(legendText));
       window.findFirstCheckboxLabelInLastDialog = () => {
-        const dialogs = Array.from(document.querySelectorAll('[role="dialog"][aria-modal="true"]'));
+        const dialogs = Array.from(document.querySelectorAll('[role="dialog"][aria-modal="true"]'))
+          .filter((dialog) => window.isVisibleElement(dialog));
         return Array.from(dialogs.at(-1)?.querySelectorAll("label") ?? [])
-          .find((label) => label.querySelector('input[type="checkbox"]'));
+          .find((label) => label.querySelector('input[type="checkbox"]') && window.isVisibleElement(label));
+      };
+      performance.clearMeasures("directory-client-modules");
+      performance.clearMeasures("directory-model-build");
+      performance.clearMeasures("directory-react-commit");
+      performance.clearMeasures("directory-search-data-fetch");
+      performance.clearMeasures("directory-search-data-text");
+      performance.clearMeasures("directory-search-data-parse");
+      performance.clearMeasures("directory-search-data-unpack");
+      performance.clearMeasures("directory-search-runtime-init");
+      performance.clearMeasures("directory-update-scheduling");
+      window.findFirstUncheckedCheckboxLabelInLastDialog = () => {
+        const dialogs = Array.from(document.querySelectorAll('[role="dialog"][aria-modal="true"]'))
+          .filter((dialog) => window.isVisibleElement(dialog));
+        return Array.from(dialogs.at(-1)?.querySelectorAll("label") ?? [])
+          .find((label) => {
+            const input = label.querySelector('input[type="checkbox"]');
+            return input && !input.checked && window.isVisibleElement(label);
+          });
       };
       window.openMobileFilters = async () => {
-        const filtersButton = findVisibleButtonByText("aside button", "Filters");
+        const visibleFilterScreen = Array.from(document.querySelectorAll("#mobile-filter-screen"))
+          .some((element) => window.isVisibleElement(element));
+        if (visibleFilterScreen) return;
+        const filtersButton = Array.from(document.querySelectorAll("aside button"))
+          .find((button) => button.textContent?.trim().startsWith("Filters") && window.isVisibleElement(button));
         if (!filtersButton) throw new Error("Mobile Filters button not found");
         filtersButton.click();
-        await waitFor(() => Boolean(document.getElementById("mobile-filter-screen")), 2000);
+        await waitFor(() => Array.from(document.querySelectorAll("#mobile-filter-screen"))
+          .some((element) => window.isVisibleElement(element)), 2000);
       };
       window.currentResultsHeading = () => {
-        const headings = Array.from(document.querySelectorAll("h2"));
+        const clientMain = document.getElementById("directory-listings-client-main");
+        const headings = Array.from((clientMain ?? document).querySelectorAll("h2"));
+        if (clientMain) {
+          return headings.find((heading) => heading.textContent?.includes("Found") || heading.textContent?.includes("found"))
+            ?.textContent?.trim() ?? "";
+        }
         const visibleHeading = headings.find((heading) => {
           const rect = heading.getBoundingClientRect();
           const style = getComputedStyle(heading);
@@ -367,7 +783,17 @@ function pageHelpers() {
       };
       window.__readFilterBenchmarkResult = async () => {
         const state = window.__filterBenchmark;
-        await new Promise((resolve) => setTimeout(resolve, 4500));
+        const waitStarted = performance.now();
+        while (state.resultsAt === null && performance.now() - waitStarted < 5000) {
+          const heading = currentResultsHeading();
+          const clientMain = document.getElementById("directory-listings-client-main");
+          if ((heading && heading !== state.startingHeading) || (clientMain && !state.hadClientMain)) {
+            state.resultsAt = performance.now();
+            break;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 25));
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100));
         if (state.resultsAt === null) {
           const heading = currentResultsHeading();
           const clientMain = document.getElementById("directory-listings-client-main");
@@ -377,15 +803,53 @@ function pageHelpers() {
         }
         state.stop?.();
         const sinceStart = (time) => typeof time === "number" ? Math.round(time - state.start) : null;
+        const { reactCommitAtMs, ...phaseTimings } = directoryPerformanceTimings(state.start);
         return {
           checkedMs: sinceStart(state.checkedAt),
           urlMs: sinceStart(state.urlAt),
-          resultsMs: sinceStart(state.resultsAt),
+          resultsMs: reactCommitAtMs === null ? sinceStart(state.resultsAt) : sinceStart(reactCommitAtMs),
           longTaskMs: Math.round(state.longTasks.reduce((sum, duration) => sum + duration, 0)),
+          ...phaseTimings,
           finalUrl: window.location.href,
           resultHeading: currentResultsHeading(),
           viewportWidth: window.innerWidth,
           documentWidth: document.documentElement.scrollWidth
+        };
+      };
+      window.directoryPerformanceTimings = (startedAt) => {
+        const latestMeasure = (name) => performance.getEntriesByName(name, "measure")
+          .filter((entry) => entry.startTime >= startedAt)
+          .at(-1);
+        const moduleMeasure = latestMeasure("directory-client-modules");
+        const modelMeasure = latestMeasure("directory-model-build");
+        const reactMeasure = latestMeasure("directory-react-commit");
+        const dataFetchMeasure = latestMeasure("directory-search-data-fetch");
+        const dataTextMeasure = latestMeasure("directory-search-data-text");
+        const dataParseMeasure = latestMeasure("directory-search-data-parse");
+        const dataUnpackMeasure = latestMeasure("directory-search-data-unpack");
+        const runtimeInitMeasure = latestMeasure("directory-search-runtime-init");
+        const schedulingMeasure = latestMeasure("directory-update-scheduling");
+        const scripts = performance.getEntriesByType("resource")
+          .filter((entry) => entry.initiatorType === "script" && entry.startTime >= startedAt);
+        const scriptResourceMs = scripts.length ? Math.max(...scripts.map((entry) => entry.duration)) : null;
+        const latestScriptResponse = scripts.length ? Math.max(...scripts.map((entry) => entry.responseEnd)) : null;
+        const moduleReadyAt = moduleMeasure ? moduleMeasure.startTime + moduleMeasure.duration : null;
+        const moduleEvaluationMs = moduleReadyAt !== null && latestScriptResponse !== null
+          ? Math.max(0, moduleReadyAt - latestScriptResponse)
+          : null;
+        return {
+          reactCommitAtMs: reactMeasure ? reactMeasure.startTime + reactMeasure.duration : null,
+          moduleLoadMs: moduleMeasure ? Math.round(moduleMeasure.duration) : null,
+          modelBuildMs: modelMeasure ? Math.round(modelMeasure.duration) : null,
+          reactCommitMs: reactMeasure ? Math.round(reactMeasure.duration) : null,
+          scriptResourceMs: scriptResourceMs === null ? null : Math.round(scriptResourceMs),
+          moduleEvaluationMs: moduleEvaluationMs === null ? null : Math.round(moduleEvaluationMs),
+          dataFetchMs: dataFetchMeasure ? Math.round(dataFetchMeasure.duration) : null,
+          dataTextMs: dataTextMeasure ? Math.round(dataTextMeasure.duration) : null,
+          dataParseMs: dataParseMeasure ? Math.round(dataParseMeasure.duration) : null,
+          dataUnpackMs: dataUnpackMeasure ? Math.round(dataUnpackMeasure.duration) : null,
+          runtimeInitMs: runtimeInitMeasure ? Math.round(runtimeInitMeasure.duration) : null,
+          schedulingMs: schedulingMeasure ? Math.round(schedulingMeasure.duration) : null
         };
       };
     })()
@@ -393,10 +857,21 @@ function pageHelpers() {
 }
 
 function printResults(results: RunResult[]) {
-  const summary = scenarios.map((scenario) => {
-    const items = results.filter((result) => result.scenario === scenario.id);
+  const scenarioIds = [
+    ...selectedScenarios.map((scenario) => scenario.id),
+    "query-string-activation",
+    "homepage-search-submission"
+  ];
+  const phases: InteractionPhase[] = ["first", "subsequent", "navigation"];
+  const summary = selectedCacheModes().flatMap((cacheMode) => scenarioIds.flatMap((scenario) => phases.map((interactionPhase) => {
+    const items = results.filter((result) =>
+      result.scenario === scenario && result.cacheMode === cacheMode && result.interactionPhase === interactionPhase
+    );
+    if (!items.length) return null;
     return {
-      scenario: scenario.id,
+      cacheMode,
+      scenario,
+      interactionPhase,
       runs: items.length,
       checkedMedianMs: median(items.map((item) => item.checkedMs)),
       checkedSlowestMs: slowest(items.map((item) => item.checkedMs)),
@@ -405,16 +880,33 @@ function printResults(results: RunResult[]) {
       resultsMedianMs: median(items.map((item) => item.resultsMs)),
       resultsSlowestMs: slowest(items.map((item) => item.resultsMs)),
       longTaskMedianMs: median(items.map((item) => item.longTaskMs)),
-      longTaskSlowestMs: slowest(items.map((item) => item.longTaskMs))
+      longTaskSlowestMs: slowest(items.map((item) => item.longTaskMs)),
+      moduleMedianMs: median(items.map((item) => item.moduleLoadMs)),
+      modelMedianMs: median(items.map((item) => item.modelBuildMs)),
+      reactMedianMs: median(items.map((item) => item.reactCommitMs)),
+      resourceMedianMs: median(items.map((item) => item.scriptResourceMs)),
+      evaluationMedianMs: median(items.map((item) => item.moduleEvaluationMs)),
+      dataFetchMedianMs: median(items.map((item) => item.dataFetchMs)),
+      dataParseMedianMs: median(items.map((item) => item.dataParseMs)),
+      dataUnpackMedianMs: median(items.map((item) => item.dataUnpackMs)),
+      schedulingMedianMs: median(items.map((item) => item.schedulingMs)),
+      enhancerModuleMedianMs: median(items.map((item) => item.enhancerModuleAtMs ?? null)),
+      queryEffectMedianMs: median(items.map((item) => item.queryEffectAtMs ?? null)),
+      updateStartedMedianMs: median(items.map((item) => item.updateStartedAtMs ?? null)),
+      resultPaintMedianMs: median(items.map((item) => item.resultPaintAtMs ?? null)),
+      startupLongTaskMedianMs: median(items.map((item) => item.startupLongTaskMs ?? null)),
+      startupLongestTaskMs: slowest(items.map((item) => item.startupLongestTaskMs ?? null))
     };
-  });
+  }).filter((item): item is NonNullable<typeof item> => Boolean(item))));
 
   console.log(`Mobile filter reaction benchmark`);
   console.log(`URL: ${RESTAURANTS_URL}`);
-  console.log(`RUNS=${RUNS} CPU_THROTTLE=${CPU_THROTTLE}`);
+  console.log(`RUNS=${RUNS} CPU_THROTTLE=${CPU_THROTTLE} CACHE_MODE=${CACHE_MODE}`);
   console.table(summary);
-  console.log("Raw runs:");
-  console.table(results);
+  if (PRINT_RAW_RUNS) {
+    console.log("Raw runs:");
+    console.table(results);
+  }
 }
 
 function median(values: Array<number | null>) {

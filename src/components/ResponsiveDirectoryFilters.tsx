@@ -49,6 +49,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
     return (
       <aside
         aria-label="Directory filters"
+        data-directory-query-intent="true"
         className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:pr-2"
       />
     );
@@ -58,6 +59,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
     return (
       <aside
         aria-label="Directory filters"
+        data-directory-query-intent="true"
         className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:pr-2"
       >
         <FilterPanel
@@ -77,7 +79,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
   const activeCountLabel = `${selectedFilters.length.toLocaleString()} active`;
 
   return (
-    <aside aria-label="Directory filters" className="min-w-0 max-w-full lg:hidden">
+    <aside aria-label="Directory filters" className="min-w-0 max-w-full lg:hidden" data-directory-query-intent="true">
       <button
         ref={mobileTriggerRef}
         type="button"

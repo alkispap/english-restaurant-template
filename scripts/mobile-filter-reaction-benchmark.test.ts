@@ -25,6 +25,24 @@ assert.match(source, /median/, "benchmark should summarize median timing");
 assert.match(source, /slowest/, "benchmark should summarize slowest timing");
 assert.match(source, /RUNS/, "benchmark should allow overriding run count");
 assert.match(source, /CPU_THROTTLE/, "benchmark should allow optional CPU throttling");
+assert.match(source, /CACHE_MODE/, "benchmark should distinguish cold and warm module-cache behavior");
+assert.match(source, /Network\.clearBrowserCache/, "cold benchmark runs should clear the browser cache");
+assert.match(source, /primeFilterModuleCache/, "warm benchmark runs should prime the filter module cache");
+assert.match(source, /query-string-activation/, "benchmark should measure direct query-string activation");
+assert.match(source, /q=Dishoom/, "query activation should exercise the confirmed expensive text-search path");
+assert.match(source, /homepage-search-submission/, "benchmark should cover the homepage search journey");
+assert.match(source, /form\.requestSubmit\(submit\)/, "homepage search should exercise the rendered form submission path");
+assert.match(source, /interactionPhase/, "benchmark should separate first and true same-document interactions");
+assert.match(source, /"subsequent"/, "benchmark should measure a second filter change without navigation");
+assert.match(source, /moduleLoadMs/, "benchmark should attribute asynchronous module preparation time");
+assert.match(source, /modelBuildMs/, "benchmark should attribute browser model construction time");
+assert.match(source, /reactCommitMs/, "benchmark should attribute React commit time");
+assert.match(source, /QUERY_ONLY/, "benchmark should support focused direct-query profiling without weakening full matrices");
+assert.match(source, /SCENARIO_ID/, "benchmark should support isolated diagnosis without changing scenario definitions");
+assert.ok(
+  source.indexOf("runQueryActivationScenario(client") < source.indexOf("runScenario(client, scenario"),
+  "navigation startup should be measured before unrelated interaction stress"
+);
 assert.doesNotMatch(source, /\bany\b/, "benchmark should use bounded unknown-based CDP types instead of explicit any");
 
 console.log("mobile filter reaction benchmark tests passed");

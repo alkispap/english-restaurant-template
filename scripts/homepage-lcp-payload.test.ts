@@ -58,7 +58,7 @@ function searchBarUsesCompactAreaCentroids() {
 }
 
 function homepageRowsUseListingSummaries() {
-  const listingSearchSource = source("src", "lib", "listing-search.ts");
+  const listingSearchSource = source("src", "lib", "listing-search-runtime.ts");
 
   assert.match(
     listingSearchSource,

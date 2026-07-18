@@ -15,9 +15,10 @@ import { directorySearchPath } from "@/lib/routes";
 type DirectoryListingsViewProps = {
   model: DirectoryListingsModel;
   viewId?: string;
+  includeSecondaryContent?: boolean;
 };
 
-export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewProps) {
+export function DirectoryListingsView({ model, viewId, includeSecondaryContent = true }: DirectoryListingsViewProps) {
   const isHomepage = model.basePath === "/";
   const isCleanHomepage = isHomepage && !model.searchQuery;
   const searchBasePath = isCleanHomepage ? directorySearchPath() : model.basePath;
@@ -118,8 +119,12 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
             linkValues={model.linkValues}
             headingContext={model.headingContext}
           />
-          <SourceContextGuide guide={model.sourceContextGuide} />
-          <DirectoryListingRows rows={model.relatedRows} className="mt-12" />
+          {includeSecondaryContent ? (
+            <>
+              <SourceContextGuide guide={model.sourceContextGuide} />
+              <DirectoryListingRows rows={model.relatedRows} className="mt-12" />
+            </>
+          ) : null}
         </div>
       </div>
       )}

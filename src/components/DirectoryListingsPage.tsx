@@ -24,10 +24,10 @@ export function DirectoryListingsPage({
 
   return (
     <>
-      <DirectoryListingsView model={model} viewId="directory-listings-server-main" />
       <DirectoryListingsQueryEnhancer
         initialPage={{ basePath: model.basePath, title: model.title, description: model.description }}
       />
+      <DirectoryListingsView model={model} viewId="directory-listings-server-main" />
     </>
   );
 }

@@ -10,6 +10,7 @@ import type { SeoLandingResultsShell } from "@/components/SeoLandingResultsShell
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 import { getSeoLandingHiddenFilterGroups } from "@/lib/seo-landing-filter-context";
 import { directoryConfig } from "@/config/directory";
+import { prefetchDirectorySearchData } from "@/lib/directory-search-data-request";
 
 type SeoLandingResultsShellComponent = typeof SeoLandingResultsShell;
 type SeoLandingBrowserModule = typeof import("@/lib/seo-landing-listings-browser");
@@ -34,6 +35,13 @@ type SeoLandingQueryEnhancerProps = {
 
 let seoLandingClientModulesPromise: Promise<[SeoLandingBrowserModule, SeoLandingResultsShellModule]> | null = null;
 
+if (typeof window !== "undefined" && window.location.search.length > 1) {
+  void prefetchDirectorySearchData().catch(() => undefined);
+  void import("@/lib/directory-search-runtime-browser")
+    .then((runtime) => runtime.loadBrowserDirectorySearchRuntime())
+    .catch(() => undefined);
+}
+
 function loadSeoLandingClientModules() {
   seoLandingClientModulesPromise ??= Promise.all([
     import("@/lib/seo-landing-listings-browser"),
@@ -50,6 +58,29 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
   const [queryMessage, setQueryMessage] = useState("");
   const [queryError, setQueryError] = useState(false);
   const hiddenGroups = getSeoLandingHiddenFilterGroups(initialPage);
+
+  useEffect(() => {
+    let intentTimer: number | null = null;
+
+    function handleDirectoryIntent(event: Event) {
+      const target = event.target;
+      if (target instanceof Element && target.closest('[data-directory-query-intent="true"]')) {
+        if (intentTimer !== null) return;
+        intentTimer = window.setTimeout(() => {
+          intentTimer = null;
+          void prefetchDirectorySearchData().catch(() => undefined);
+        }, 75);
+      }
+    }
+
+    document.addEventListener("pointerover", handleDirectoryIntent, { passive: true, capture: true });
+    document.addEventListener("focusin", handleDirectoryIntent, { capture: true });
+    return () => {
+      if (intentTimer !== null) window.clearTimeout(intentTimer);
+      document.removeEventListener("pointerover", handleDirectoryIntent, { capture: true });
+      document.removeEventListener("focusin", handleDirectoryIntent, { capture: true });
+    };
+  }, []);
 
   useEffect(() => {
     const serverResults = document.getElementById("seo-landing-server-results");
@@ -109,7 +140,7 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
         const [{ buildBrowserSeoLandingListingsModel }, shellModule] = await loadSeoLandingClientModules();
         if (cancelled || version !== requestVersion) return;
 
-        const nextModel = buildBrowserSeoLandingListingsModel({
+        const nextModel = await buildBrowserSeoLandingListingsModel({
           pathname: window.location.pathname,
           searchParams: currentParams,
           basePath: initialPage.metadata.canonical,

@@ -12,14 +12,14 @@ type BuildBrowserSeoLandingListingsModelInput = {
   headingContext?: string;
 };
 
-export function buildBrowserSeoLandingListingsModel({
+export async function buildBrowserSeoLandingListingsModel({
   pathname,
   searchParams,
   basePath,
   title,
   description,
   headingContext
-}: BuildBrowserSeoLandingListingsModelInput): DirectoryListingsModel | undefined {
+}: BuildBrowserSeoLandingListingsModelInput): Promise<DirectoryListingsModel | undefined> {
   const baseFilters = baseFiltersFromSeoPath(pathname);
   if (!baseFilters) return undefined;
 

@@ -18,11 +18,30 @@ export function searchTokens(query?: string) {
 }
 
 export function searchableTextMatches(query: string | undefined, values: Array<string | undefined>) {
-  const tokens = searchTokens(query);
-  if (!tokens.length) return true;
+  return createSearchTextMatcher(query)(normalizeText(values.filter(Boolean).join(" ")));
+}
 
-  const haystack = normalizeText(values.filter(Boolean).join(" "));
-  return tokens.every((token) => expandedTokens(token).some((candidate) => haystack.includes(candidate)));
+export function createSearchTextMatcher(query?: string) {
+  const tokenCandidates = searchTokens(query).map(expandedTokens);
+  if (!tokenCandidates.length) return () => true;
+
+  return (normalizedHaystack: string) =>
+    tokenCandidates.every((candidates) => candidates.some((candidate) => normalizedHaystack.includes(candidate)));
+}
+
+export function createRawSearchTextMatcher(query?: string) {
+  const tokenCandidates = searchTokens(query).map(expandedTokens);
+  const normalizedMatcher = createSearchTextMatcher(query);
+  if (!tokenCandidates.length) return () => true;
+
+  return (lowercaseHaystack: string) => {
+    const rawMatch = tokenCandidates.every((candidates) =>
+      candidates.some((candidate) => /^[a-z0-9]+$/.test(candidate) && lowercaseHaystack.includes(candidate))
+    );
+    if (rawMatch) return true;
+    if (!/[\u00c0-\u024f]/.test(lowercaseHaystack)) return false;
+    return normalizedMatcher(normalizeText(lowercaseHaystack));
+  };
 }
 
 export function normalizeText(value?: string) {

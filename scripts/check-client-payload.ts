@@ -11,7 +11,8 @@ const nextDir = path.join(root, ".next");
 const manifestPath = path.join(nextDir, "app-build-manifest.json");
 const MAX_INITIAL_ROUTE_JS_BYTES = 650_000;
 const MAX_INITIAL_CHUNK_BYTES = 250_000;
-const MAX_ASYNC_CHUNK_BYTES = 3_000_000;
+const MAX_ASYNC_CHUNK_BYTES = 900_000;
+const MAX_SEARCH_EXECUTABLE_CHUNK_BYTES = 250_000;
 const routeBudgets = [
   "/restaurants/page",
   "/areas/[area]/page",
@@ -88,6 +89,25 @@ console.log(
 );
 
 const clientSource = clientChunks.map((file) => fs.readFileSync(file, "utf8")).join("\n");
+const searchExecutableChunks = clientChunks
+  .map((file) => ({ file, source: fs.readFileSync(file, "utf8") }))
+  .filter(({ source }) =>
+    source.includes("Unsupported listing search index") ||
+    source.includes("Directory search data request failed") ||
+    source.includes("directory-search-data-parse")
+  );
+assert.ok(searchExecutableChunks.length > 0, "Could not identify the asynchronous directory search executable chunk.");
+searchExecutableChunks.forEach(({ file }) => {
+  const bytes = fs.statSync(file).size;
+  assert.ok(
+    bytes <= MAX_SEARCH_EXECUTABLE_CHUNK_BYTES,
+    `${path.relative(nextDir, file)} is ${formatBytes(bytes)}; search executable budget is ${formatBytes(MAX_SEARCH_EXECUTABLE_CHUNK_BYTES)}.`
+  );
+});
+assert.ok(
+  !clientSource.includes("listing-search-index.json"),
+  "The canonical packed search index must not be imported into client JavaScript."
+);
 for (const forbiddenEditorialValue of [
   "directory-editor",
   "legacy-public-baseline",
