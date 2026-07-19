@@ -4,11 +4,13 @@ import path from "node:path";
 
 const benchmarkPath = path.join(process.cwd(), "scripts", "mobile-filter-reaction-benchmark.ts");
 const cleanupPath = path.join(process.cwd(), "scripts", "browser-profile-cleanup.ts");
+const eventQueuePath = path.join(process.cwd(), "scripts", "cdp-event-queue.ts");
 
 assert.ok(fs.existsSync(benchmarkPath), "mobile filter reaction benchmark script should exist");
 
 const source = fs.readFileSync(benchmarkPath, "utf8");
 const cleanupSource = fs.readFileSync(cleanupPath, "utf8");
+const eventQueueSource = fs.readFileSync(eventQueuePath, "utf8");
 
 assert.match(source, /desktop-sidebar-area/, "benchmark should include a desktop sidebar checkbox scenario");
 assert.match(source, /mobile-fullscreen-area/, "benchmark should include the current mobile full-screen filter scenario");
@@ -45,6 +47,20 @@ assert.match(source, /modelBuildMs/, "benchmark should attribute browser model c
 assert.match(source, /reactCommitMs/, "benchmark should attribute React commit time");
 assert.match(source, /QUERY_ONLY/, "benchmark should support focused direct-query profiling without weakening full matrices");
 assert.match(source, /SCENARIO_ID/, "benchmark should support isolated diagnosis without changing scenario definitions");
+assert.match(source, /const nextLoad = client\.waitForNext\("Page\.loadEventFired"/, "navigation should wait for a newly registered load event");
+assert.ok(
+  source.indexOf('client.waitForNext("Page.loadEventFired"') < source.indexOf('client.send("Page.navigate"'),
+  "the load-event waiter should be registered before navigation starts"
+);
+assert.doesNotMatch(source, /events\.find\(\(event\) => event\.method === method\)/, "benchmark must not reuse buffered load events");
+assert.match(eventQueueSource, /Timed out waiting for next CDP event/, "CDP event waits should identify timeout stages");
+assert.match(source, /CDP command \$\{method\} timed out/, "CDP commands should have bounded named timeouts");
+assert.match(source, /browser exited code=/, "early browser exits should include code and signal");
+assert.match(source, /stderr tail:/, "browser startup failures should include bounded stderr");
+assert.match(source, /BROWSER_STDERR_LIMIT = 4_000/, "browser stderr diagnostics should remain bounded");
+assert.match(source, /\.slice\(0, \$\{ACTIVE_TEXT_LIMIT\}\)/, "page diagnostics should truncate active element text");
+assert.match(source, /printBenchmarkHeader\(\)[\s\S]*await assertServerReady/, "benchmark identity should print before fallible startup work");
+assert.match(source, /primaryError[\s\S]*cleanupWarnings/, "cleanup diagnostics should not replace the original benchmark failure");
 assert.ok(
   source.indexOf("runQueryActivationScenario(client") < source.indexOf("runScenario(client, scenario"),
   "navigation startup should be measured before unrelated interaction stress"

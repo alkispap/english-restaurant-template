@@ -1,4 +1,4 @@
-import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { spawn, spawnSync, type ChildProcessWithoutNullStreams } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -7,6 +7,7 @@ import {
   cleanupBrowserProfile,
   stopBrowserProcessTree
 } from "./browser-profile-cleanup";
+import { createCdpEventQueue } from "./cdp-event-queue";
 
 type Viewport = {
   width: number;
@@ -90,8 +91,8 @@ type CdpMessage = {
 };
 
 type CdpClient = {
-  send: (method: string, params?: Record<string, unknown>) => Promise<CdpResponseResult>;
-  waitFor: (method: string, timeout?: number) => Promise<CdpEvent>;
+  send: (method: string, params?: Record<string, unknown>, timeout?: number) => Promise<CdpResponseResult>;
+  waitForNext: (method: string, timeout?: number) => Promise<CdpEvent>;
   close: () => void;
 };
 
@@ -105,6 +106,8 @@ const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3000";
 const HOMEPAGE_URL = `${BASE_URL.replace(/\/$/, "")}/`;
 const RESTAURANTS_URL = `${BASE_URL.replace(/\/$/, "")}/restaurants/`;
 const QUERY_ACTIVATION_URL = `${RESTAURANTS_URL}?q=Dishoom`;
+const BROWSER_STDERR_LIMIT = 4_000;
+const ACTIVE_TEXT_LIMIT = 200;
 
 const scenarios: Scenario[] = [
   {
@@ -196,17 +199,23 @@ if (SCENARIO_ID && selectedScenarios.length === 0) {
 }
 
 async function main() {
+  printBenchmarkHeader();
   await assertServerReady();
 
   const chromePath = resolveChromePath();
+  console.log(`[benchmark] browser: ${chromePath}`);
+  console.log(`[benchmark] version: ${readBrowserVersion(chromePath)}`);
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "mobile-filter-benchmark-"));
   assertSafeBrowserProfilePath(userDataDir);
   const port = 12400 + Math.floor(Math.random() * 1000);
   const chrome = spawnChrome(chromePath, userDataDir, port);
+  const browserState = observeBrowserProcess(chrome);
   let client: CdpClient | undefined;
+  let primaryError: unknown;
 
   try {
-    const target = await createPageTarget(port);
+    console.log("[benchmark] stage: browser-startup");
+    const target = await createPageTarget(port, browserState.describe);
     client = await connectCdp(target.webSocketDebuggerUrl);
     await client.send("Page.enable");
     await client.send("Runtime.enable");
@@ -254,16 +263,32 @@ async function main() {
     }
 
     printResults(results);
+  } catch (error) {
+    primaryError = error;
+    throw error;
   } finally {
+    const cleanupWarnings: string[] = [];
     try {
       await client?.send("Browser.close");
-    } catch {
-      // Fall back to terminating the launcher below if the browser already disconnected.
+    } catch (error) {
+      cleanupWarnings.push(`Browser.close failed: ${errorMessage(error)}`);
     }
     client?.close();
-    await stopBrowserProcessTree(chrome);
-    const cleanup = await cleanupBrowserProfile(userDataDir);
-    if (!cleanup.removed) console.warn(cleanup.warning);
+    try {
+      await stopBrowserProcessTree(chrome);
+    } catch (error) {
+      cleanupWarnings.push(`Browser process cleanup failed: ${errorMessage(error)}`);
+    }
+    try {
+      const cleanup = await cleanupBrowserProfile(userDataDir);
+      if (!cleanup.removed) cleanupWarnings.push(cleanup.warning);
+    } catch (error) {
+      cleanupWarnings.push(`Browser profile cleanup failed: ${errorMessage(error)}`);
+    }
+    cleanupWarnings.forEach((warning) => console.warn(`[benchmark] cleanup warning: ${warning}`));
+    if (!primaryError && cleanupWarnings.some((warning) => warning.startsWith("Browser process cleanup failed"))) {
+      throw new Error(cleanupWarnings.join(" "));
+    }
   }
 }
 
@@ -274,9 +299,13 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number, c
     deviceScaleFactor: scenario.viewport.mobile ? 3 : 1,
     mobile: scenario.viewport.mobile
   });
-  await client.send("Page.navigate", { url: RESTAURANTS_URL });
-  await client.waitFor("Page.loadEventFired", 20_000);
-  await sleep(1_500);
+  console.log(`[benchmark] scenario: ${scenario.id} cache=${cacheMode} run=${run} stage=navigate`);
+  const nextLoad = client.waitForNext("Page.loadEventFired", 20_000);
+  await Promise.all([
+    client.send("Page.navigate", { url: RESTAURANTS_URL }),
+    nextLoad
+  ]);
+  await waitForPageReadiness(client, scenario, run, cacheMode);
   await client.send("Runtime.evaluate", {
     expression: pageHelpers(),
     awaitPromise: true,
@@ -288,6 +317,64 @@ async function runScenario(client: CdpClient, scenario: Scenario, run: number, c
   return [first, subsequent];
 }
 
+async function waitForPageReadiness(
+  client: CdpClient,
+  scenario: Scenario,
+  run: number,
+  cacheMode: CacheMode
+) {
+  await evaluateRuntimeStage(
+    client,
+    `${scenario.id} ${cacheMode} run ${run} page readiness`,
+    {
+      expression: `(async () => {
+        const started = performance.now();
+        while (performance.now() - started < 10000) {
+          const enhancerRendered = performance.getEntriesByName("directory-query-enhancer-first-render", "mark").length > 0;
+          const filterControl = ${scenario.viewport.mobile
+            ? `Array.from(document.querySelectorAll('aside button[aria-controls="mobile-filter-screen"]')).some((button) => {
+                const rect = button.getBoundingClientRect();
+                const style = getComputedStyle(button);
+                return rect.width > 0 && rect.height > 0 && style.visibility !== "hidden";
+              })`
+            : `Boolean(document.querySelector('aside input[type="checkbox"]'))`};
+          if (document.readyState === "complete" && enhancerRendered && filterControl) {
+            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            return true;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 25));
+        }
+        throw new Error("Timed out waiting for the hydrated directory controls");
+      })()`,
+      awaitPromise: true,
+      returnByValue: true
+    },
+    12_000
+  );
+}
+
+async function runBenchmarkStage<T>(stage: string, operation: () => Promise<T>) {
+  try {
+    return await operation();
+  } catch (error) {
+    throw new Error(`[benchmark] failed stage: ${stage}: ${errorMessage(error)}`, { cause: error });
+  }
+}
+
+async function evaluateRuntimeStage(
+  client: CdpClient,
+  stage: string,
+  params: Record<string, unknown>,
+  timeoutMs = 20_000
+) {
+  const response = await runBenchmarkStage(stage, () => client.send("Runtime.evaluate", params, timeoutMs));
+  if (response.exceptionDetails) {
+    const details = JSON.stringify(response.exceptionDetails).slice(0, 1_000);
+    throw new Error(`[benchmark] failed stage: ${stage}: Runtime.evaluate exception: ${details}`);
+  }
+  return response;
+}
+
 async function measureScenarioInteraction(
   client: CdpClient,
   scenario: Scenario,
@@ -295,11 +382,16 @@ async function measureScenarioInteraction(
   cacheMode: CacheMode,
   interactionPhase: Exclude<InteractionPhase, "navigation">
 ): Promise<RunResult> {
-  await client.send("Runtime.evaluate", {
-    expression: `(async () => { ${scenario.prepareScript} })()`,
-    awaitPromise: true,
-    returnByValue: true
-  });
+  console.log(`[benchmark] scenario: ${scenario.id} cache=${cacheMode} run=${run} stage=${interactionPhase}-prepare`);
+  await evaluateRuntimeStage(
+    client,
+    `${scenario.id} ${cacheMode} run ${run} ${interactionPhase} preparation`,
+    {
+      expression: `(async () => { ${scenario.prepareScript} })()`,
+      awaitPromise: true,
+      returnByValue: true
+    }
+  );
   const validationResult = await client.send("Runtime.evaluate", {
     expression: `Boolean(${scenario.validationScript})`,
     returnByValue: true
@@ -307,8 +399,15 @@ async function measureScenarioInteraction(
   if (cdpReturnValue(validationResult) !== true) {
     const diagnostics = await client.send("Runtime.evaluate", {
       expression: `({
+        url: window.location.href,
+        readyState: document.readyState,
+        activeTag: document.activeElement?.tagName ?? "",
+        activeId: document.activeElement?.id ?? "",
+        activeRole: document.activeElement?.getAttribute("role") ?? "",
         activeLabel: document.activeElement?.getAttribute("aria-label") ?? "",
-        activeText: document.activeElement?.textContent?.trim() ?? "",
+        activeText: (document.activeElement?.textContent?.trim() ?? "").slice(0, ${ACTIVE_TEXT_LIMIT}),
+        filtersExpanded: Array.from(document.querySelectorAll('aside button[aria-controls="mobile-filter-screen"]'))
+          .find((button) => isVisibleElement(button))?.getAttribute("aria-expanded") ?? "missing",
         dialogs: Array.from(document.querySelectorAll('[role="dialog"][aria-modal="true"]')).map((dialog) => ({
           visible: isVisibleElement(dialog),
           label: dialog.getAttribute("aria-label")
@@ -899,14 +998,18 @@ function printResults(results: RunResult[]) {
     };
   }).filter((item): item is NonNullable<typeof item> => Boolean(item))));
 
-  console.log(`Mobile filter reaction benchmark`);
-  console.log(`URL: ${RESTAURANTS_URL}`);
-  console.log(`RUNS=${RUNS} CPU_THROTTLE=${CPU_THROTTLE} CACHE_MODE=${CACHE_MODE}`);
+  console.log("[benchmark] completed successfully");
   console.table(summary);
   if (PRINT_RAW_RUNS) {
     console.log("Raw runs:");
     console.table(results);
   }
+}
+
+function printBenchmarkHeader() {
+  console.log("Mobile filter reaction benchmark");
+  console.log(`URL: ${RESTAURANTS_URL}`);
+  console.log(`RUNS=${RUNS} CPU_THROTTLE=${CPU_THROTTLE} CACHE_MODE=${CACHE_MODE}`);
 }
 
 function median(values: Array<number | null>) {
@@ -940,6 +1043,31 @@ function resolveChromePath() {
   return found;
 }
 
+function readBrowserVersion(chromePath: string) {
+  const result = process.platform === "win32"
+    ? spawnSync("powershell.exe", [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "(Get-Item -LiteralPath $env:BENCHMARK_BROWSER_PATH).VersionInfo.ProductVersion"
+      ], {
+        encoding: "utf8",
+        windowsHide: true,
+        timeout: 5_000,
+        env: { ...process.env, BENCHMARK_BROWSER_PATH: chromePath }
+      })
+    : spawnSync(chromePath, ["--version"], {
+        encoding: "utf8",
+        windowsHide: true,
+        timeout: 5_000
+      });
+  const output = `${result.stdout}\n${result.stderr}`;
+  return output.split(/\r?\n/)
+    .map((line) => line.trim())
+    .find((line) => process.platform === "win32" ? /^\d+(?:\.\d+)+$/.test(line) : /(?:Google Chrome|Microsoft Edge|Chromium)\s+\d/i.test(line))
+    ?? "version unavailable";
+}
+
 function spawnChrome(chromePath: string, userDataDir: string, port: number): ChildProcessWithoutNullStreams {
   return spawn(chromePath, [
     "--headless=new",
@@ -953,9 +1081,42 @@ function spawnChrome(chromePath: string, userDataDir: string, port: number): Chi
   ]);
 }
 
-async function createPageTarget(port: number) {
-  await waitForJson(`http://127.0.0.1:${port}/json/version`);
-  return waitForJson(`http://127.0.0.1:${port}/json/new?about:blank`, { method: "PUT" });
+function observeBrowserProcess(browser: ChildProcessWithoutNullStreams) {
+  let processError = "";
+  let exitDescription = "";
+  let stderrTail = "";
+
+  browser.stderr.setEncoding("utf8");
+  browser.stderr.on("data", (chunk: string) => {
+    stderrTail = `${stderrTail}${chunk}`.slice(-BROWSER_STDERR_LIMIT);
+  });
+  browser.on("error", (error) => {
+    processError = error.message;
+  });
+  browser.on("exit", (code, signal) => {
+    exitDescription = `browser exited code=${code ?? "null"} signal=${signal ?? "null"}`;
+  });
+
+  return {
+    describe() {
+      return [processError, exitDescription, stderrTail.trim() ? `stderr tail: ${stderrTail.trim()}` : ""]
+        .filter(Boolean)
+        .join("; ");
+    }
+  };
+}
+
+async function createPageTarget(port: number, browserDescription: () => string) {
+  try {
+    await waitForJson(`http://127.0.0.1:${port}/json/version`);
+    return await waitForJson(`http://127.0.0.1:${port}/json/new?about:blank`, { method: "PUT" });
+  } catch (error) {
+    const details = browserDescription();
+    throw new Error(
+      `Browser did not expose its CDP endpoint on port ${port}: ${errorMessage(error)}${details ? `; ${details}` : ""}`,
+      { cause: error }
+    );
+  }
 }
 
 async function waitForJson(url: string, init?: RequestInit) {
@@ -976,8 +1137,21 @@ async function waitForJson(url: string, init?: RequestInit) {
 function connectCdp(wsUrl: string): Promise<CdpClient> {
   const ws = new WebSocket(wsUrl);
   let id = 0;
-  const pending = new Map<number, { resolve: (value: CdpResponseResult) => void; reject: (error: Error) => void }>();
-  const events: CdpEvent[] = [];
+  const pending = new Map<number, {
+    resolve: (value: CdpResponseResult) => void;
+    reject: (error: Error) => void;
+    timeout: ReturnType<typeof setTimeout>;
+  }>();
+  const eventQueue = createCdpEventQueue();
+
+  function rejectPending(error: Error) {
+    pending.forEach(({ reject, timeout }) => {
+      clearTimeout(timeout);
+      reject(error);
+    });
+    pending.clear();
+    eventQueue.close(error);
+  }
 
   ws.addEventListener("message", (event) => {
     const message = JSON.parse(String(event.data)) as CdpMessage;
@@ -985,47 +1159,49 @@ function connectCdp(wsUrl: string): Promise<CdpClient> {
       const callbacks = pending.get(message.id);
       pending.delete(message.id);
       if (!callbacks) return;
+      clearTimeout(callbacks.timeout);
       if (message.error) callbacks.reject(new Error(JSON.stringify(message.error)));
       else callbacks.resolve(message.result ?? {});
     } else if (message.method) {
-      events.push({ method: message.method, params: message.params });
+      eventQueue.push({ method: message.method, params: message.params });
     }
   });
 
   return new Promise((resolve, reject) => {
     ws.addEventListener("open", () => {
       resolve({
-        send(method, params = {}) {
+        send(method, params = {}, timeoutMs = 20_000) {
           const messageId = ++id;
-          ws.send(JSON.stringify({ id: messageId, method, params }));
           return new Promise((resolveSend, rejectSend) => {
-            pending.set(messageId, { resolve: resolveSend, reject: rejectSend });
+            const timeout = setTimeout(() => {
+              pending.delete(messageId);
+              rejectSend(new Error(`CDP command ${method} timed out after ${timeoutMs}ms.`));
+            }, timeoutMs);
+            pending.set(messageId, { resolve: resolveSend, reject: rejectSend, timeout });
+            ws.send(JSON.stringify({ id: messageId, method, params }));
           });
         },
-        waitFor(method, timeout = 10_000) {
-          const existing = events.find((event) => event.method === method);
-          if (existing) return Promise.resolve(existing);
-          return new Promise((resolveEvent, rejectEvent) => {
-            const started = Date.now();
-            const timer = setInterval(() => {
-              const found = events.find((event) => event.method === method);
-              if (found) {
-                clearInterval(timer);
-                resolveEvent(found);
-              } else if (Date.now() - started > timeout) {
-                clearInterval(timer);
-                rejectEvent(new Error(`Timed out waiting for ${method}`));
-              }
-            }, 50);
-          });
+        waitForNext(method, timeout = 10_000) {
+          return eventQueue.waitForNext(method, timeout);
         },
         close() {
           ws.close();
         }
       });
     });
-    ws.addEventListener("error", reject);
+    ws.addEventListener("error", () => {
+      const error = new Error("CDP WebSocket connection failed.");
+      rejectPending(error);
+      reject(error);
+    });
+    ws.addEventListener("close", () => {
+      rejectPending(new Error("CDP WebSocket closed before the benchmark completed."));
+    });
   });
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function sleep(ms: number) {
