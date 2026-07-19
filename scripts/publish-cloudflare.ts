@@ -399,9 +399,18 @@ function runQualityGates() {
     "build"
   ];
   for (const command of commands) {
-    run("npm", ["run", command]);
+    runNpm(["run", command]);
   }
-  run("npm", ["run", "prepare:cloudflare"]);
+  runNpm(["run", "prepare:cloudflare"]);
+}
+
+function runNpm(args: string[]) {
+  const npmCli = process.env.npm_execpath?.trim();
+  assert.ok(
+    npmCli && fs.existsSync(npmCli),
+    "Release checks must be launched through an npm script so npm_execpath identifies the locked npm CLI."
+  );
+  run(process.execPath, [npmCli, ...args]);
 }
 
 async function listProductionDeployments(accountId: string, apiToken: string, projectName: string) {
@@ -531,7 +540,7 @@ function runCaptured(command: string, args: string[]) {
 }
 
 function platformCommand(command: string) {
-  return process.platform === "win32" && (command === "npm" || command === "npx") ? `${command}.cmd` : command;
+  return command;
 }
 
 const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : "";

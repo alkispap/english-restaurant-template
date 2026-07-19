@@ -76,7 +76,7 @@ assert.ok(
   "publish script should support a non-deploying release-check mode"
 );
 assert.ok(
-  publishScript.includes('"npm", ["run", "prepare:cloudflare"]'),
+  publishScript.includes('runNpm(["run", "prepare:cloudflare"])'),
   "publish script should run the full Cloudflare preparation workflow before deployment"
 );
 assert.ok(publishScript.includes("shell: false"), "publish script should not pass deployment arguments through a shell");
@@ -121,6 +121,11 @@ assert.ok(
   publishScript.includes("CLOUDFLARE_ACCOUNT_ID") && publishScript.includes("CLOUDFLARE_API_TOKEN"),
   "production verification should require private Cloudflare REST credentials"
 );
+assert.ok(
+  publishScript.includes("process.env.npm_execpath") && publishScript.includes("run(process.execPath, [npmCli, ...args])"),
+  "Windows release checks should invoke npm through Node instead of spawning npm.cmd"
+);
+assert.ok(!publishScript.includes('run("npm",'), "release checks should not use the Windows-fragile npm.cmd spawn path");
 assert.ok(
   publishScript.includes("https://api.cloudflare.com/client/v4") &&
     publishScript.includes("?env=production&per_page=100"),
