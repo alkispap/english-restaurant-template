@@ -41,6 +41,11 @@ type CloudflareProject = {
   subdomain?: string;
 };
 
+type CloudflareApiResponse<T> = {
+  result?: T;
+  success?: boolean;
+};
+
 type ReleaseContext = {
   branch: string;
   confirmedBranch?: string;
@@ -196,6 +201,8 @@ async function main() {
   const productionBranch = process.env.CLOUDFLARE_PRODUCTION_BRANCH?.trim() || "main";
   const productionUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   const approvedProductionUrl = getDirectoryPack().productionUrl.replace(/\/$/, "");
+  const cloudflareAccountId = process.env.CLOUDFLARE_ACCOUNT_ID?.trim();
+  const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN?.trim();
   const confirmedProject = readOption("--confirm-project");
   const confirmedBranch = readOption("--confirm-branch");
   const confirmedCommit = readOption("--confirm-commit");
@@ -236,6 +243,15 @@ async function main() {
       approvedProductionUrl,
       `Production publish refused: NEXT_PUBLIC_SITE_URL must equal the active directory pack URL ${approvedProductionUrl}.`
     );
+    assert.match(
+      cloudflareAccountId || "",
+      /^[0-9a-f]{32}$/i,
+      "Production publish refused: set CLOUDFLARE_ACCOUNT_ID privately for exact Cloudflare API verification."
+    );
+    assert.ok(
+      cloudflareApiToken && cloudflareApiToken.length >= 20,
+      "Production publish refused: set CLOUDFLARE_API_TOKEN privately for exact Cloudflare API verification."
+    );
 
     run("git", ["fetch", "--quiet", "origin", "main"]);
     const localMain = capture("git", ["rev-parse", "refs/heads/main"]);
@@ -251,9 +267,16 @@ async function main() {
     githubChecks = checkResponse.check_runs || [];
     validateRequiredChecks(githubChecks, head);
 
-    const projects = captureJson<CloudflareProject[]>(process.execPath, [wranglerCli, "pages", "project", "list", "--json"]);
-    project = validateCloudflareProject(projects, projectName, productionBranch);
-    const productionDeployments = listProductionDeployments(wranglerCli, projectName);
+    const projectResponse = await cloudflareApi<CloudflareProject>(
+      `/accounts/${cloudflareAccountId}/pages/projects/${encodeURIComponent(projectName)}`,
+      cloudflareApiToken
+    );
+    project = validateCloudflareProject(projectResponse ? [projectResponse] : [], projectName, productionBranch);
+    const productionDeployments = await listProductionDeployments(
+      cloudflareAccountId as string,
+      cloudflareApiToken as string,
+      projectName
+    );
     rollbackDeployment = selectRollbackDeployment(
       productionDeployments,
       confirmedPreviousDeployment || "",
@@ -314,7 +337,11 @@ async function main() {
   const upload = runCaptured(process.execPath, [wranglerCli, ...deployArgs]);
   let reconciledDeployments: CloudflareDeployment[];
   try {
-    reconciledDeployments = listProductionDeployments(wranglerCli, projectName as string);
+    reconciledDeployments = await listProductionDeployments(
+      cloudflareAccountId as string,
+      cloudflareApiToken as string,
+      projectName as string
+    );
   } catch (error) {
     writeEvidence(path.join(evidenceDirectory, "deployment.json"), {
       status: "indeterminate-reconciliation-failed",
@@ -377,18 +404,33 @@ function runQualityGates() {
   run("npm", ["run", "prepare:cloudflare"]);
 }
 
-function listProductionDeployments(wranglerCli: string, projectName: string) {
-  return captureJson<CloudflareDeployment[]>(process.execPath, [
-    wranglerCli,
-    "pages",
-    "deployment",
-    "list",
-    "--project-name",
-    projectName,
-    "--environment",
-    "production",
-    "--json"
-  ]);
+async function listProductionDeployments(accountId: string, apiToken: string, projectName: string) {
+  return cloudflareApi<CloudflareDeployment[]>(
+    `/accounts/${accountId}/pages/projects/${encodeURIComponent(projectName)}/deployments?env=production&per_page=100`,
+    apiToken
+  );
+}
+
+async function cloudflareApi<T>(pathname: string, apiToken: string): Promise<T> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30_000);
+  try {
+    const response = await fetch(`https://api.cloudflare.com/client/v4${pathname}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json"
+      },
+      method: "GET",
+      signal: controller.signal
+    });
+    assert.ok(response.ok, `Cloudflare API verification failed with HTTP ${response.status}; no production upload was attempted.`);
+    const payload = (await response.json()) as CloudflareApiResponse<T>;
+    assert.equal(payload.success, true, "Cloudflare API verification failed; no production upload was attempted.");
+    assert.ok(payload.result, "Cloudflare API verification returned no result; no production upload was attempted.");
+    return payload.result;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function summarizeDeployment(deployment?: CloudflareDeployment) {
@@ -437,10 +479,6 @@ function assertCleanWorktree(stage: string) {
     "",
     `Production publish refused because the Git worktree is not clean ${stage}. Commit or intentionally remove the listed changes:\n${status}`
   );
-}
-
-function captureJson<T>(command: string, args: string[]) {
-  return parseJson<T>(capture(command, args));
 }
 
 function parseJson<T>(value: string): T {

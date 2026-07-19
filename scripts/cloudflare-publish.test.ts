@@ -118,6 +118,20 @@ assert.ok(
   "the production URL should exactly match the active reusable directory pack"
 );
 assert.ok(
+  publishScript.includes("CLOUDFLARE_ACCOUNT_ID") && publishScript.includes("CLOUDFLARE_API_TOKEN"),
+  "production verification should require private Cloudflare REST credentials"
+);
+assert.ok(
+  publishScript.includes("https://api.cloudflare.com/client/v4") &&
+    publishScript.includes("?env=production&per_page=100"),
+  "production verification should use full Cloudflare API deployment metadata"
+);
+assert.ok(
+  !publishScript.includes('"pages", "project", "list", "--json"') &&
+    !publishScript.includes('"pages", "deployment", "list"'),
+  "production verification should not trust Wrangler's abbreviated table-shaped JSON"
+);
+assert.ok(
   publishScript.includes("artifact-manifest.sha256") && publishScript.includes("aggregateSha256"),
   "release checks should create deterministic artifact evidence"
 );

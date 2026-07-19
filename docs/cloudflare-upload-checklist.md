@@ -41,6 +41,8 @@ If source files change after preparation, treat the output as stale and prepare 
 
 Run `npm ci` in the isolated checkout before release checks so the exact Wrangler version pinned in `package-lock.json` is available. The publisher refuses cached or global Wrangler installations. Wrangler must also be authenticated with the intended Cloudflare account.
 
+For production, privately provide `CLOUDFLARE_ACCOUNT_ID` and a least-privilege `CLOUDFLARE_API_TOKEN` with Pages Read and Pages Write. The publisher uses the REST API to verify the full project and deployment metadata because Wrangler 4.111's `pages ... list --json` output abbreviates commit hashes and is not sufficient for production provenance. Never print or save these environment-variable values.
+
 Before requesting upload approval, list the Cloudflare project and its production deployments using the pinned Wrangler executable:
 
 ```powershell
