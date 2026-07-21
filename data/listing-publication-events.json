@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "publication-2026-07-16-biriyani-junction-b7afb2158e09",
+      "listingSlug": "biriyani-junction",
+      "listingSourceId": "ChIJAQAMzygHdkgR0OIzlZNS2CU",
+      "recordedAt": "2026-07-16T07:00:01.000Z",
+      "reviewedAt": "2026-07-16T07:00:01.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-biriyani-junction-238d8307d4f5"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-spikky-pepperdem-food-502d7496f23a",
+      "listingSlug": "spikky-pepperdem-food",
+      "listingSourceId": "ChIJE258j9up2EcR1Gj1X4sm6M4",
+      "recordedAt": "2026-07-16T07:00:02.000Z",
+      "reviewedAt": "2026-07-16T07:00:02.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-spikky-pepperdem-food-035d3e0d282d"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-chotiwala-1baec8d633bd",
+      "listingSlug": "chotiwala",
+      "listingSourceId": "ChIJRyq4CesPdkgRy1hZio7BcLs",
+      "recordedAt": "2026-07-16T07:00:03.000Z",
+      "reviewedAt": "2026-07-16T07:00:03.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-chotiwala-233f1ca317f1"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-golis-south-norwood-f45f9ecc72b7",
+      "listingSlug": "golis-south-norwood",
+      "listingSourceId": "ChIJ8-_5yzwBdkgRGs7oVdz_rCE",
+      "recordedAt": "2026-07-16T07:00:04.000Z",
+      "reviewedAt": "2026-07-16T07:00:04.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-golis-south-norwood-def1041be243"
+        }
+      ],
+      "notes": "The existing verification event records unresolved current identity or premises evidence. Keep the historical listing, make no closure claim, and withhold operational details from public discovery until direct evidence resolves the conflict."
+    },
+    {
+      "id": "publication-2026-07-16-bombay-kitchen-brixton-10b0e75de436",
+      "listingSlug": "bombay-kitchen-brixton",
+      "listingSourceId": "ChIJM8r9pGgEdkgRZU5-EOOFvGQ",
+      "recordedAt": "2026-07-16T08:51:07.414Z",
+      "reviewedAt": "2026-07-16T08:48:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "confirmed-permanently-closed"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bombay-kitchen-brixton-a8a7bd0c326d"
+        }
+      ],
+      "notes": "Contemporaneous premises reporting and a current closure record confirm that Bombay Kitchen ceased trading at 384 Coldharbour Lane and was replaced by a different business. Retain the historical row and evidence, but remove it from ordinary public restaurant discovery without redirecting to the unrelated replacement."
+    },
+    {
+      "id": "publication-2026-07-16-borough-market-80dde27cd81e",
+      "listingSlug": "borough-market",
+      "listingSourceId": "ChIJcQ-6AAAFdkgRbDuFu5GdTEg",
+      "recordedAt": "2026-07-16T08:51:11.330Z",
+      "reviewedAt": "2026-07-16T08:48:01.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "invalid-import"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-borough-market-81483adbd7f8"
+        }
+      ],
+      "notes": "Authoritative property and planning evidence identifies the imported address as Park Lane Hotel ancillary space, not a restaurant called Borough MARKET. Preserve the imported history but exclude the invalid restaurant record. Do not redirect it to the unrelated Borough Market in Southwark."
+    },
+    {
+      "id": "publication-2026-07-16-calm-indiana-cow-17f56c5fd7fd",
+      "listingSlug": "calm-indiana-cow",
+      "listingSourceId": "ChIJXfZLIg8FdkgRro83UWTXJGg",
+      "recordedAt": "2026-07-16T08:51:16.022Z",
+      "reviewedAt": "2026-07-16T08:48:02.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-calm-indiana-cow-562fbdf95502"
+        }
+      ],
+      "notes": "No current source corroborates the imported identity and the premises evidence points to other businesses. Withhold it from discovery without inferring closure or substituting another occupant."
+    },
+    {
+      "id": "publication-2026-07-16-chef-tazzy-28f60e4ef0ab",
+      "listingSlug": "chef-tazzy",
+      "listingSourceId": "ChIJMUbUPAAddkgRCRLGpEqZURg",
+      "recordedAt": "2026-07-16T08:51:20.259Z",
+      "reviewedAt": "2026-07-16T08:48:03.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-chef-tazzy-e9ca9cb5f803"
+        }
+      ],
+      "notes": "No current operator, restaurant, or contact evidence corroborates Chef Tazzy at the imported address. Retain the record but withhold it until direct entity evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-contemporary-indian-cuisine-0bf0372e266e",
+      "listingSlug": "contemporary-indian-cuisine",
+      "listingSourceId": "ChIJWYJjFXEQdkgRftY39xKtKwM",
+      "recordedAt": "2026-07-16T08:51:23.794Z",
+      "reviewedAt": "2026-07-16T08:48:04.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-contemporary-indian-cuisine-ec7be3761323"
+        }
+      ],
+      "notes": "The generic imported identity cannot be corroborated at the residential-style address and no safe contact action exists. Hold it without making a closure or invalid-import claim."
+    },
+    {
+      "id": "publication-2026-07-16-delhiacacies-deliveroo-081d2345e568",
+      "listingSlug": "delhiacacies-deliveroo",
+      "listingSourceId": "ChIJk_lBVAAbdkgR_C5VfT36C54",
+      "recordedAt": "2026-07-16T08:51:27.570Z",
+      "reviewedAt": "2026-07-16T08:48:05.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-delhiacacies-deliveroo-8802153adb87"
+        }
+      ],
+      "notes": "The imported unit/address is malformed and current shared-kitchen evidence lists different delivery brands. Hold the listing rather than assign another brand's contact details or infer a successor."
+    },
+    {
+      "id": "publication-2026-07-16-home-kitchen-69ed1ed48020",
+      "listingSlug": "home-kitchen",
+      "listingSourceId": "ChIJT3V-Zsep2EcRLWpwaHiyyVY",
+      "recordedAt": "2026-07-16T08:51:31.239Z",
+      "reviewedAt": "2026-07-16T08:48:06.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-home-kitchen-9760b1e3a6b1"
+        }
+      ],
+      "notes": "No source corroborates Home Kitchen at 13A Spray Street and nearby businesses cannot be treated as successors. Retain the historical record and withhold it pending direct evidence."
+    },
+    {
+      "id": "publication-2026-07-16-indian-food-camden-9edf474c1415",
+      "listingSlug": "indian-food-camden",
+      "listingSourceId": "ChIJC_VNdwAbdkgRoJLHm6kn1Z4",
+      "recordedAt": "2026-07-16T08:51:35.458Z",
+      "reviewedAt": "2026-07-16T08:48:07.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-indian-food-camden-da3aece425b1"
+        }
+      ],
+      "notes": "Indian Food Camden existed, but the imported Unit 312-313 conflicts with evidence placing it at 6F Paddock Alley and with current Magic Falafel occupancy of Units 311-313. Hold until the trader's current identity and unit are resolved."
+    },
+    {
+      "id": "publication-2026-07-16-republic-restaurant-verney-road-ba980e3cc700",
+      "listingSlug": "republic-restaurant-verney-road",
+      "listingSourceId": "ChIJHQo6vpgDdkgRcfoH2r3FwXc",
+      "recordedAt": "2026-07-16T08:51:38.923Z",
+      "reviewedAt": "2026-07-16T08:48:08.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-republic-restaurant-verney-road-76dc7386371a"
+        }
+      ],
+      "notes": "The multi-brand Allard House site has many current operators but no corroborated Republic Restaurant contact or unit identity. Hold it rather than copy a shared-kitchen contact."
+    },
+    {
+      "id": "publication-2026-07-16-the-palm-indian-restaurant-limited-9bebfbdfb3fb",
+      "listingSlug": "the-palm-indian-restaurant-limited",
+      "listingSourceId": "ChIJJxrEHNQcdkgRr0udpyx-ejw",
+      "recordedAt": "2026-07-16T08:51:42.899Z",
+      "reviewedAt": "2026-07-16T08:48:09.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "operating-status-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-the-palm-indian-restaurant-limited-3ffd38f7e677"
+        }
+      ],
+      "notes": "The company and premises evidence do not establish that the Mile End restaurant still operates or identify a current successor/contact. Hold it without inferring permanent closure from the registered-office change or source absence."
+    },
+    {
+      "id": "publication-2026-07-16-modern-indian-cd39aec83b57",
+      "listingSlug": "modern-indian",
+      "listingSourceId": "ChIJcconfAAFdkgRD1hcO4PoaA8",
+      "recordedAt": "2026-07-16T09:24:50.327Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-modern-indian-75c0acddf997"
+        }
+      ],
+      "notes": "Farzi London currently and explicitly occupies 8 Haymarket and already has a separate canonical record. No source corroborates Modern Indian as a customer-facing business or proves it is a Farzi alias. Withhold this record from discovery until explicit entity evidence supports correction, merge, exclusion, or publication."
+    },
+    {
+      "id": "publication-2026-07-16-spice-garden-10441b2cd987",
+      "listingSlug": "spice-garden",
+      "listingSourceId": "ChIJ5RHe8JCp2EcRzEJIX5GXwXY",
+      "recordedAt": "2026-07-16T09:24:57.895Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-spice-garden-ed30d7abfcf9"
+        }
+      ],
+      "notes": "Current and historical official premises evidence identifies Beijing at 127/129 Chinbrook Road, while no source corroborates Spice Garden there. Do not infer closure or attach Beijing details; withhold pending identity evidence."
+    },
+    {
+      "id": "publication-2026-07-16-staffordshire-638cae5e87b4",
+      "listingSlug": "staffordshire",
+      "listingSourceId": "ChIJS7-SQAAbdkgRwJcA_qnpt8k",
+      "recordedAt": "2026-07-16T09:25:08.363Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "scope-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-staffordshire-0d2008cbac49"
+        }
+      ],
+      "notes": "The address is Just Eat's registered office and current FSA records identify workplace/corporate food operations, not a public restaurant named Staffordshire. Withhold until the imported identity and public-directory scope can be established."
+    },
+    {
+      "id": "publication-2026-07-16-sucess-worker-55e71d5a2795",
+      "listingSlug": "sucess-worker",
+      "listingSourceId": "ChIJBQt1YxkPdkgREqTLaIkJL6k",
+      "recordedAt": "2026-07-16T09:25:18.113Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-sucess-worker-6d0f0654f1f8"
+        }
+      ],
+      "notes": "The record has a misspelled generic name and no numbered address. No primary or authoritative source corroborates the entity among the many current businesses in W6 0RA. Withhold until exact premises and identity evidence exists."
+    },
+    {
+      "id": "publication-2026-07-16-taj-06e8943bfc25",
+      "listingSlug": "taj",
+      "listingSourceId": "ChIJ41FeQgCr2EcR6Nx-Xt9TAAk",
+      "recordedAt": "2026-07-16T09:25:29.649Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-taj-2e89d5d42847"
+        }
+      ],
+      "notes": "The imported record has no street number, current postcode evidence identifies caring premises, and a different Taj elsewhere in Bromley cannot be assumed to be a successor. Withhold pending exact premises and entity evidence."
+    },
+    {
+      "id": "publication-2026-07-16-thanjavur-food-lounge-ltd-0fdb80312403",
+      "listingSlug": "thanjavur-food-lounge-ltd",
+      "listingSourceId": "ChIJf4whtp4HdkgRZ1Q2X7e-zr0",
+      "recordedAt": "2026-07-16T09:25:39.020Z",
+      "reviewedAt": "2026-07-16T09:23:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "operating-status-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-thanjavur-food-lounge-ltd-d39734159bac"
+        }
+      ],
+      "notes": "An active company registration exists, but current customer-facing operation, unit occupancy, contact details and hours are not corroborated; the FSA identifies a supermarket at the exact address. Withhold until direct operating evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-660dd58fde93",
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "recordedAt": "2026-07-16T09:56:30.295Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-b5e10640cc58"
+        }
+      ],
+      "notes": "Current premises records identify The Empress and Burgers LDN at 141 Leman Street, while the Bazaar domain no longer identifies a restaurant location. Withhold until direct Bazaar identity, successor or closure evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-bazaar-london-s-indian-takeaway-hackney-917d169f1473",
+      "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+      "listingSourceId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
+      "recordedAt": "2026-07-16T09:56:34.580Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-hackney-4714cda58f2c"
+        }
+      ],
+      "notes": "Current premises evidence identifies Rays Curry Base Pizza at 92 Northwold Road, while the Bazaar domain no longer identifies a restaurant location. Withhold until direct Bazaar identity, successor or closure evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-chakra-indian-cuisine-f0f0a8947124",
+      "listingSlug": "chakra-indian-cuisine",
+      "listingSourceId": "ChIJBWFjnlUPdkgRMAy1_il_Ag8",
+      "recordedAt": "2026-07-16T09:56:38.511Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-chakra-indian-cuisine-d9ecafb86b27"
+        }
+      ],
+      "notes": "Chakra's official current location list does not include the imported Tooting industrial-unit address, and current FSA premises data does not identify Chakra. Withhold until exact branch or delivery-kitchen evidence supports publication, correction, exclusion, or entity resolution."
+    },
+    {
+      "id": "publication-2026-07-16-dancing-elephant-6050ad90a820",
+      "listingSlug": "dancing-elephant",
+      "listingSourceId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
+      "recordedAt": "2026-07-16T09:56:41.778Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-dancing-elephant-49e1ca5b692e"
+        }
+      ],
+      "notes": "Current FSA evidence identifies Shahi Catering at the imported Unit 23 address, while no evidence connects Dancing Elephant to that tenant or a current brand. Withhold until exact unit, identity and operating evidence is available."
+    },
+    {
+      "id": "publication-2026-07-16-faizan-ahmad-f1e0edcb0c56",
+      "listingSlug": "faizan-ahmad",
+      "listingSourceId": "ChIJyQzhQqEbdkgRmExK_r8zbu0",
+      "recordedAt": "2026-07-16T09:56:46.021Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-faizan-ahmad-4fb013298625"
+        }
+      ],
+      "notes": "No authoritative or first-party source establishes Faizan Ahmad as a customer-facing restaurant at 115 Finchley Road. The personal-name label and conflicting premises history require identity review before publication."
+    },
+    {
+      "id": "publication-2026-07-16-ghani-food-and-spices-cd75da613ec0",
+      "listingSlug": "ghani-food-and-spices",
+      "listingSourceId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
+      "recordedAt": "2026-07-16T09:56:49.987Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "scope-uncertain"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-ghani-food-and-spices-7769ce2cfeb8"
+        }
+      ],
+      "notes": "Current evidence supports a company at an industrial-estate unit but classifies it as e-commerce, while current FSA data does not identify a Ghani restaurant. Withhold until public restaurant scope, exact unit and current operation are established."
+    },
+    {
+      "id": "publication-2026-07-16-real-taste-of-india-ac4dcc538514",
+      "listingSlug": "real-taste-of-india",
+      "listingSourceId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
+      "recordedAt": "2026-07-16T09:56:53.705Z",
+      "reviewedAt": "2026-07-16T09:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-real-taste-of-india-50ac3a9c6711"
+        }
+      ],
+      "notes": "Kulcha Express currently operates at the exact address and uses the same phone historically associated with Real Taste of India, but no explicit evidence proves a rename, successor or merge. Withhold until entity continuity is established."
+    },
+    {
+      "id": "publication-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-161e9bc6d995",
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "recordedAt": "2026-07-16T13:37:27.485Z",
+      "reviewedAt": "2026-07-16T10:51:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "pending-review",
+        "reason": "identity-uncertain"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "confirmed-permanently-closed"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-78f847496a5c"
+        },
+        {
+          "type": "external-source",
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Aldgate&query_place_id=ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        }
+      ],
+      "notes": "The exact historical Google profile is explicitly marked closed, its exact delivery route is retired, the brand website no longer presents restaurant operations, and current premises evidence identifies unrelated operators. Retain the historical record and evidence, exclude it from public discovery, and do not redirect it to a current tenant."
+    },
+    {
+      "id": "publication-2026-07-16-chaiwrap-dd369a72c79f",
+      "listingSlug": "chaiwrap",
+      "listingSourceId": "ChIJ8Tu2h_QCdkgR9Krj19ZQyNI",
+      "recordedAt": "2026-07-16T18:21:52.055Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "pending-review",
+        "reason": "material-data-conflict"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-chaiwrap-eb3cba91f617"
+        }
+      ],
+      "notes": "Current exact-premises, first-party and directory evidence conflicts over whether Chaiwrap remains open, was succeeded by Hullabaloo, or has been replaced by Yak Yummy. Withhold it from normal discovery until explicit continuity and operating-status evidence supports publication, exclusion, correction or entity resolution."
+    },
+    {
+      "id": "publication-2026-07-16-east-india-club-4078a329c0fe",
+      "listingSlug": "east-india-club",
+      "listingSourceId": "ChIJlQlo39YEdkgRsev5YsuZgZA",
+      "recordedAt": "2026-07-16T18:21:55.377Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-east-india-club-07f1fea0fb56"
+        }
+      ],
+      "notes": "The exact entity is a private members' club whose official dining is for members and guests and is described as British cuisine, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    },
+    {
+      "id": "publication-2026-07-16-everyman-maida-vale-cf010452a79e",
+      "listingSlug": "everyman-maida-vale",
+      "listingSourceId": "ChIJrU2Z1KUadkgRqFMP9XqZlFU",
+      "recordedAt": "2026-07-16T18:21:42.612Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-everyman-maida-vale-5b7fb289dc24"
+        }
+      ],
+      "notes": "The exact entity is an Everyman cinema with bar and cinema-seat food service, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    },
+    {
+      "id": "publication-2026-07-16-premier-inn-london-blackfriars-fleet-street-hotel-3ecb90bcf717",
+      "listingSlug": "premier-inn-london-blackfriars-fleet-street-hotel",
+      "listingSourceId": "ChIJ24SRYq0EdkgRAksghbg1UM8",
+      "recordedAt": "2026-07-16T18:21:33.201Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-premier-inn-london-blackfriars-fleet-street-hotel-7aa4eb9763d1"
+        }
+      ],
+      "notes": "The exact entity is a Premier Inn hotel with a Thyme Bar & Grill, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    },
+    {
+      "id": "publication-2026-07-16-premier-inn-london-dagenham-hotel-a7475c2f6969",
+      "listingSlug": "premier-inn-london-dagenham-hotel",
+      "listingSourceId": "ChIJp1t__G6l2EcR0e3lX2oGko4",
+      "recordedAt": "2026-07-16T18:21:49.142Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-premier-inn-london-dagenham-hotel-25c7a74d709a"
+        }
+      ],
+      "notes": "The exact entity is a Premier Inn hotel with an adjacent Brewers Fayre and a general British/international menu, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    },
+    {
+      "id": "publication-2026-07-16-premier-inn-london-edgware-hotel-520142d991aa",
+      "listingSlug": "premier-inn-london-edgware-hotel",
+      "listingSourceId": "ChIJO8aWP6kWdkgRpF4FIamiqvk",
+      "recordedAt": "2026-07-16T18:21:36.043Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-premier-inn-london-edgware-hotel-eda67a370e91"
+        }
+      ],
+      "notes": "The exact entity is a Premier Inn hotel with a Thyme Bar & Grill and a general hotel menu, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    },
+    {
+      "id": "publication-2026-07-16-premier-inn-london-harrow-hotel-9db00361cb3d",
+      "listingSlug": "premier-inn-london-harrow-hotel",
+      "listingSourceId": "ChIJKeTqne0TdkgRXoPmHqy8yGg",
+      "recordedAt": "2026-07-16T18:21:39.303Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-premier-inn-london-harrow-hotel-549cdb113d7e"
+        }
+      ],
+      "notes": "The exact entity is a Premier Inn hotel with the Traveller's Rest Beefeater and a general steak/pub menu, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    },
+    {
+      "id": "publication-2026-07-16-premier-inn-london-hendon-the-hyde-hotel-f090e8e37fc2",
+      "listingSlug": "premier-inn-london-hendon-the-hyde-hotel",
+      "listingSourceId": "ChIJ__8PMTsRdkgRo5alyJADRsg",
+      "recordedAt": "2026-07-16T18:21:45.907Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-premier-inn-london-hendon-the-hyde-hotel-ecd6f20dca78"
+        }
+      ],
+      "notes": "The exact entity is a Premier Inn hotel with a Thyme Bar & Grill, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    },
+    {
+      "id": "publication-2026-07-16-the-hornbeam-community-centre-cic-baee769268d9",
+      "listingSlug": "the-hornbeam-community-centre-cic",
+      "listingSourceId": "ChIJ-_EoA5MddkgR9Ex1TEbJsOw",
+      "recordedAt": "2026-07-16T18:21:58.691Z",
+      "reviewedAt": "2026-07-16T18:16:00.000Z",
+      "reviewedBy": "directory-editor",
+      "previous": {
+        "status": "published",
+        "reason": "legacy-public-baseline"
+      },
+      "next": {
+        "status": "excluded",
+        "reason": "out-of-directory-scope"
+      },
+      "evidence": [
+        {
+          "type": "verification-event",
+          "eventId": "verification-2026-07-16-the-hornbeam-community-centre-cic-97114b4c347b"
+        }
+      ],
+      "notes": "The exact entity is a community hub with a changing shared cafe-space schedule and community food projects, not a stable Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+    }
+  ]
+}

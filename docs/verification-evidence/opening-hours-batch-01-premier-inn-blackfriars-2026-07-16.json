@@ -1,0 +1,42 @@
+{
+  "listingSlug": "premier-inn-london-blackfriars-fleet-street-hotel",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Premier Inn official London Blackfriars hotel page",
+      "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-blackfriars-fleet-street.html",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Premier Inn exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/430568",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current official hotel page and exact-premises FSA record support an operating Premier Inn hotel."
+    },
+    {
+      "field": "contact.phone",
+      "value": "+44 333 321 9269",
+      "reason": "The current official hotel page publishes this location-specific contact number."
+    }
+  ],
+  "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+}

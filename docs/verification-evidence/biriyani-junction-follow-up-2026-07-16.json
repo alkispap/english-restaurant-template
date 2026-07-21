@@ -1,0 +1,29 @@
+{
+  "listingSlug": "biriyani-junction",
+  "checkedAt": "2026-07-16T08:42:39.665Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Magic Tastes official contact page",
+      "sourceUrl": "https://www.magictastes.com/contact",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    },
+    {
+      "sourceName": "FSA FHRS exact name and address query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Biriyani%20Junction&address=118%20Windmill%20Road",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Follow-up research found a current first-party food-manufacturing business, Magic Tastes, using 118 Windmill Road and publishing its own identity, phone, email and weekday hours. The FSA query still does not corroborate Biriyani Junction. This does not prove that the imported restaurant closed, moved, or was the same entity, so no canonical fact, closure claim, merge, or exclusion is supported. Keep the listing pending review."
+}

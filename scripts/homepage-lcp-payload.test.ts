@@ -31,30 +31,34 @@ function homepageHeroImageIsLcpFriendly() {
 }
 
 function cleanHomepageDoesNotHydrateDirectoryModel() {
-  const pageSource = source("src", "components", "DirectoryListingsPage.tsx");
-  const enhancerStart = pageSource.indexOf("<DirectoryListingsQueryEnhancer");
-  assert.ok(enhancerStart >= 0, "directory listings page should still support query enhancement");
+  const homepageSource = source("src", "app", "page.tsx");
+  const listingsPageSource = source("src", "components", "DirectoryListingsPage.tsx");
 
-  const enhancerMarkup = pageSource.slice(Math.max(0, enhancerStart - 300), enhancerStart + 300);
-  assert.match(
-    enhancerMarkup,
-    /model\.searchQuery/,
-    "query enhancer should only mount when a query state exists, not on the clean homepage"
+  assert.match(homepageSource, /<DirectoryLandingPage \/>/, "homepage should use its static landing-page renderer");
+  assert.doesNotMatch(
+    homepageSource,
+    /DirectoryListingsPage|DirectoryListingsQueryEnhancer/,
+    "clean homepage should not mount or hydrate directory query results"
+  );
+  assert.doesNotMatch(
+    listingsPageSource,
+    /initialModel=\{model\}/,
+    "directory query enhancer should not serialize the full listings model across the client boundary"
   );
 }
 
 function searchBarUsesCompactAreaCentroids() {
   const searchBarSource = source("src", "components", "SearchBar.tsx");
-  const searchClientSource = source("src", "components", "SearchBarClient.tsx");
+  const locateAreaSource = source("src", "components", "LocateAreaButton.tsx");
 
   assert.doesNotMatch(searchBarSource, /mapPoints:/, "SearchBar should not require full map point props");
   assert.doesNotMatch(searchBarSource, /<SearchBarClient/, "first-paint SearchBar should render server HTML");
   assert.match(searchBarSource, /areaCentroids/, "SearchBar should pass compact area centroids to geolocation only");
-  assert.doesNotMatch(searchClientSource, /mapPoints:/, "SearchBarClient should not require full map point props");
+  assert.doesNotMatch(locateAreaSource, /mapPoints:/, "geolocation should not require full map point props");
 }
 
 function homepageRowsUseListingSummaries() {
-  const listingSearchSource = source("src", "lib", "listing-search.ts");
+  const listingSearchSource = source("src", "lib", "listing-search-runtime.ts");
 
   assert.match(
     listingSearchSource,

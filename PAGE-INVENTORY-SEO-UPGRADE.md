@@ -6,7 +6,7 @@ This is the living reminder for reusable SEO upgrades across the directory templ
 
 | Page family | URL patterns | Current source | Upgrade status | Priority |
 | --- | --- | --- | --- | --- |
-| Homepage search | `/` | `DirectoryListingsPage`, `HomepageSeoLinks`, `homepageHeadings` | **Upgraded** with reusable homepage SEO heading helper | Done |
+| Homepage search | `/` | `DirectoryLandingPage`, `DirectoryHomeSections`, `homepageHeadings` | **Upgraded** with reusable homepage SEO heading helper | Done |
 | Dynamic SEO landing pages | `/areas/[area]`, `/neighborhoods/[neighborhood]`, `/categories/[category]`, `/areas/[area]/categories/[category]`, `/best/[slug]`, `/services/[service]`, `/dietary/[dietary]`, `/offerings/[offering]`, `/types/[type]` | `SeoLandingPage`, `seo-pages`, `seoLandingHeadings` | **Upgraded** with reusable dynamic SEO landing page heading/copy helper | Done |
 | Listing detail pages | `/restaurants/[slug]` | Listing detail route with inline sections | **Not upgraded yet**; needs reusable detail-page headings around overview, reviews, location, services, contact, freshness, and related links | 1 - High |
 | Directory index pages | `/areas`, `/categories` | Inline index page headings and metadata | **Not upgraded yet**; useful structure exists, but generic wording should become config-driven | 2 - Medium |

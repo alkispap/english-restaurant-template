@@ -1,0 +1,34 @@
+{
+  "listingSlug": "real-taste-of-india",
+  "checkedAt": "2026-07-16T09:54:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Kulcha Express official locations",
+      "sourceUrl": "https://kulchaexpress.co.uk/",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS current UB2 4BQ premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=UB2%204BQ&pageSize=100",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    },
+    {
+      "sourceName": "Current directory closure record for Real Taste of India",
+      "sourceUrl": "https://www.allinlondon.co.uk/restaurants/vegetarian/22569-real-taste-of-india",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Current official and FSA evidence identifies Kulcha Express at 108 The Green. Historical/current directories associate Real Taste of India with the same address and phone, and one records it as closed. This strongly suggests replacement or rename, but it does not establish legal/entity continuity or authorize merging the existing Real Taste and Kulcha canonical records. Do not copy Kulcha details, redirect, or claim a successor without explicit entity evidence; hold pending resolution."
+}

@@ -36,6 +36,7 @@ export function SearchBar({
       <form
         action={basePath}
         method="get"
+        data-directory-query-intent="true"
         className={`grid gap-3 ${gridClass}`}
       >
         <label className="flex items-center gap-3 rounded-md border border-line px-4 py-3">
@@ -62,7 +63,7 @@ export function SearchBar({
             </select>
           </label>
         )}
-        <button type="submit" className="focus-ring rounded-md bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-orange-600">
+        <button type="submit" className="focus-ring rounded-md bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-orange-800">
           Search
         </button>
       </form>

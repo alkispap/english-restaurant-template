@@ -2,12 +2,28 @@ import assert from "node:assert/strict";
 import {
   analyzeDirectoryRows,
   analyzeDirectoryBuffer,
+  renderListingFilterCountsJsonFile,
+  renderListingSearchIndexJsonFile,
+  renderListingSearchRecordsJsonFile,
+  renderShortlistIndexJsonFile,
+  renderShortlistSummariesJsonFile,
   renderMissingCategoryReview,
   renderReportForListings,
   selectCuratedRestaurantSample,
   type Row
 } from "../src/lib/directory-import";
 import { getServiceOptions } from "../src/lib/directory";
+import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
+import { unpackShortlistSummaries } from "../src/lib/shortlist-index";
+import { reconcileListingImport } from "../src/lib/listing-import-publication";
+import type { ListingPublicationRegistry } from "../src/lib/listing-publication";
+
+const fixtureProvenance = {
+  sourceName: "test.csv",
+  sourceId: "fixture-source-id",
+  importedAt: "2026-07-15T12:00:00.000Z",
+  verificationStatus: "unverified" as const
+};
 
 function repeatedHeaderRowsAreSkipped() {
   const rows: Row[] = [
@@ -77,6 +93,9 @@ function restaurantFeatureColumnsMapToDetails() {
   assert.deepEqual(listing.details?.parking, ["Paid street parking"]);
   assert.equal(listing.details?.googleVerified, true);
   assert.equal(listing.details?.placeId, "sample-place");
+  assert.equal(listing.provenance.sourceName, "test.csv");
+  assert.equal(listing.provenance.sourceId, "sample-place");
+  assert.equal(listing.provenance.verificationStatus, "unverified");
   assert.equal(listing.contact?.orderOnlineUrl, "https://example.com/order");
   assert.equal(listing.contact?.reserveUrl, "https://example.com/reserve");
   assert.equal(listing.contact?.menuUrl, "https://example.com/menu");
@@ -168,6 +187,123 @@ function serviceFilterExcludesAdvancedOnlyValues() {
   assert.ok(!serviceOptions.includes("Good for kids"));
   assert.ok(!serviceOptions.includes("Paid street parking"));
   assert.ok(!serviceOptions.includes("Casual"));
+}
+
+function importGeneratesCompactNormalizedFilterCounts() {
+  const listings = [
+    {
+      name: "First Kitchen",
+      slug: "first-kitchen",
+      provenance: fixtureProvenance,
+      images: [],
+      categories: ["Indian", "South Indian"],
+      listingTypes: ["Casual Dining"],
+      dietaryOptions: ["Vegan"],
+      tags: [],
+      area: "Tower Hamlets",
+      neighborhood: "Brick Lane",
+      priceLevel: "££" as const,
+      details: { serviceOptions: ["Delivery", "Takeaway"], offerings: ["Coffee"] }
+    },
+    {
+      name: "Second Kitchen",
+      slug: "second-kitchen",
+      provenance: fixtureProvenance,
+      images: [],
+      categories: ["Indian"],
+      listingTypes: ["Fine Dining"],
+      dietaryOptions: ["Vegan"],
+      tags: [],
+      area: "Tower Hamlets",
+      neighborhood: "Whitechapel",
+      priceLevel: "££" as const,
+      details: { serviceOptions: ["Delivery"], offerings: ["Coffee"] }
+    }
+  ];
+
+  const counts = JSON.parse(renderListingFilterCountsJsonFile(listings));
+
+  assert.equal(counts.area["tower-hamlets"], 2);
+  assert.equal(counts.neighborhood["brick-lane"], 1);
+  assert.equal(counts.category.indian, 2);
+  assert.equal(counts.category["south-indian"], 1);
+  assert.equal(counts.type["casual-dining"], 1);
+  assert.equal(counts.dietary.vegan, 2);
+  assert.equal(counts.service.delivery, 2);
+  assert.equal(counts.service.takeaway, 1);
+  assert.equal(counts.offering.coffee, 2);
+  assert.equal(counts.price["££"], 2);
+}
+
+function importGeneratesLosslessPackedSearchIndex() {
+  const listings = [
+    {
+      name: "Packed Kitchen",
+      slug: "packed-kitchen",
+      provenance: fixtureProvenance,
+      description: "A complete record used to verify the browser search index.",
+      images: ["/images/packed-kitchen.webp"],
+      categories: ["Indian", "South Indian"],
+      listingTypes: ["Casual Dining"],
+      dietaryOptions: ["Vegan"],
+      tags: ["Family friendly"],
+      area: "Tower Hamlets",
+      neighborhood: "Brick Lane",
+      borough: "Tower Hamlets",
+      address: "1 Test Street",
+      fullAddress: "1 Test Street, London E1",
+      postcode: "E1",
+      priceLevel: "££" as const,
+      rating: 4.7,
+      reviewCount: 125,
+      featured: true,
+      contact: {
+        website: "https://example.com",
+        googleReviewsUrl: "https://example.com/reviews",
+        menuUrl: "https://example.com/menu"
+      },
+      location: {
+        googleMapsUrl: "https://maps.google.com/example",
+        latitude: 51.5,
+        longitude: -0.1,
+        tubeStation: "Aldgate East",
+        busStop: "Brick Lane",
+        nearbyPlaces: [{ name: "Spitalfields Market" }]
+      },
+      details: {
+        workingHours: [{ day: "Monday", hours: "10am-10pm" }],
+        serviceOptions: ["Delivery", "Takeaway"],
+        offerings: ["Coffee"],
+        highlights: ["Fast service"],
+        popularFor: ["Dinner"],
+        diningOptions: ["Dine-in"],
+        amenities: ["Wi-Fi"],
+        accessibility: ["Wheelchair accessible entrance"],
+        atmosphere: ["Casual"],
+        crowd: ["Groups"],
+        planning: ["Reservations required"],
+        payments: ["Credit cards"],
+        children: ["Good for kids"],
+        parking: ["Street parking"],
+        pets: ["Dogs allowed"],
+        googleVerified: true
+      }
+    }
+  ];
+
+  const verboseRecords = JSON.parse(renderListingSearchRecordsJsonFile(listings));
+  const packedIndex = JSON.parse(renderListingSearchIndexJsonFile(listings));
+  const unpackedRecords = JSON.parse(JSON.stringify(unpackListingSearchRecords(packedIndex)));
+
+  assert.equal(packedIndex.version, 1);
+  assert.deepEqual(unpackedRecords, verboseRecords);
+
+  const verboseShortlist = JSON.parse(renderShortlistSummariesJsonFile(listings));
+  const packedShortlist = JSON.parse(renderShortlistIndexJsonFile(listings));
+  const unpackedShortlist = JSON.parse(JSON.stringify(unpackShortlistSummaries(packedShortlist)));
+
+  assert.equal(packedShortlist.version, 1);
+  assert.deepEqual(unpackedShortlist, verboseShortlist);
 }
 
 function listingDescriptionsUseDataRichCopy() {
@@ -474,7 +610,7 @@ function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
       "Google Reviews": "255",
       "Reserve a Table": "",
       "Book Appointment": "",
-      place_id: "old-place-id"
+      place_id: "ChIJLY76B5ANdkgR2lrh_0eC_k8"
     },
     {
       "Restaurant Name": "MONTYS NEPALESE CUISINE",
@@ -491,7 +627,7 @@ function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
       longitude: "-0.3177137",
       "Reserve a Table": "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g",
       "Book Appointment": "https://www.google.com/maps/reserve/v/dine/c/riKu7jbTA8g",
-      place_id: "new-place-id"
+      place_id: "ChIJuUWujUYNdkgRO_H-QCUjQ0o"
     }
   ];
 
@@ -514,6 +650,160 @@ function duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping() {
   assert.equal(listing.reviewCount, 255);
 }
 
+function confirmedEntityAliasesMergeWithoutLosingSourceProvenance() {
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "South Indian",
+      Website: "https://yummydosarestaurant.co.uk/",
+      Phone: "+44 20 8637 3026",
+      Postcode: "IG1 4NH",
+      "Street Address": "68 Cranbrook Rd",
+      "Google Rating": "5",
+      "Google Reviews": "2160",
+      place_id: "ChIJHW95Q7an2EcRTtMQy-XzTBg"
+    },
+    {
+      "Restaurant Name": "Yummy Dosa Catering",
+      "Cuisine Type": "South Indian",
+      Website: "https://yummydosarestaurant.co.uk/",
+      Phone: "+44 7776 675146",
+      Postcode: "IG11 0NY",
+      "Street Address": "5 Farr Ave",
+      place_id: "ChIJocOA2Stm2qoRoXP2Vrhu6T4"
+    }
+  ];
+
+  const result = analyzeDirectoryRows(rows, "test.csv", "normal import", undefined, {
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const [listing] = result.listings;
+
+  assert.equal(result.listings.length, 1);
+  assert.equal(result.reportData.duplicateCount, 1);
+  assert.equal(listing.slug, "yummy-dosa");
+  assert.equal(listing.rating, 5);
+  assert.equal(listing.reviewCount, 2160);
+  assert.equal(listing.provenance.sourceId, "ChIJHW95Q7an2EcRTtMQy-XzTBg");
+  assert.match(
+    result.report,
+    /confirmed entity alias "ChIJocOA2Stm2qoRoXP2Vrhu6T4" -> "ChIJHW95Q7an2EcRTtMQy-XzTBg"/
+  );
+}
+
+function confirmedEntityAliasesPreserveCanonicalIdentityRegardlessOfRowOrder() {
+  const aliasSourceId = "ChIJocOA2Stm2qoRoXP2Vrhu6T4";
+  const canonicalSourceId = "ChIJHW95Q7an2EcRTtMQy-XzTBg";
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "Catering",
+      Website: "https://alias.example.test/",
+      place_id: aliasSourceId
+    },
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "South Indian",
+      "Service options": "Delivery",
+      place_id: aliasSourceId
+    },
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "Indian",
+      Website: "https://yummydosarestaurant.co.uk/",
+      "Google Rating": "5",
+      place_id: canonicalSourceId
+    }
+  ];
+
+  const aliasFirst = analyzeDirectoryRows(rows, "test.csv", "normal import", undefined, {
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const canonicalFirst = analyzeDirectoryRows([rows[2], rows[0], rows[1]], "test.csv", "normal import", undefined, {
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const [listing] = aliasFirst.listings;
+
+  assert.equal(aliasFirst.listings.length, 1);
+  assert.equal(aliasFirst.reportData.duplicateCount, 2);
+  assert.equal(listing.name, "Yummy Dosa");
+  assert.equal(listing.slug, "yummy-dosa");
+  assert.equal(listing.provenance.sourceId, canonicalSourceId);
+  assert.equal(listing.details?.placeId, canonicalSourceId);
+  assert.deepEqual(listing.categories, canonicalFirst.listings[0].categories);
+  assert.deepEqual(listing.listingTypes, canonicalFirst.listings[0].listingTypes);
+  assert.equal(listing.slug, canonicalFirst.listings[0].slug);
+  assert.equal(listing.provenance.sourceId, canonicalFirst.listings[0].provenance.sourceId);
+  assert.match(aliasFirst.report, new RegExp(`confirmed entity alias "${aliasSourceId}" -> "${canonicalSourceId}"`));
+
+  const registry: ListingPublicationRegistry = {
+    version: 1,
+    baseline: {
+      id: "alias-order-baseline",
+      createdAt: "2026-07-16T00:00:00.000Z",
+      sourceSha256: "fixture-hash",
+      listingCount: 1,
+      actor: "system:migration",
+      reason: "legacy-public-baseline"
+    },
+    entries: [{
+      listingSlug: "yummy-dosa",
+      listingSourceId: canonicalSourceId,
+      status: "published",
+      reason: "legacy-public-baseline",
+      origin: "migration-baseline",
+      effectiveAt: "2026-07-16T00:00:00.000Z",
+      changedBy: "system:migration"
+    }]
+  };
+  const reconciliation = reconcileListingImport([listing], aliasFirst.listings, registry);
+  assert.equal(reconciliation.matchedCount, 1);
+  assert.equal(reconciliation.newCount, 0);
+
+  const unresolved = analyzeDirectoryRows([
+    { "Restaurant Name": "Unresolved Kitchen", place_id: "unresolved-source-a" },
+    { "Restaurant Name": "Unresolved Kitchen", place_id: "unresolved-source-b" }
+  ], "test.csv", "normal import");
+  assert.equal(unresolved.listings.length, 2, "different source IDs must not merge without explicit entity evidence");
+}
+
+function importProvenanceIsExplicitAndCannotClaimVerification() {
+  const rows: Row[] = [{ "Restaurant Name": "Provenance Kitchen", place_id: "source-123" }];
+  const result = analyzeDirectoryRows(rows, "upload.csv", "normal import", undefined, {
+    sourceName: "Restaurant source export",
+    sourceUrl: "https://example.com/source",
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const provenance = result.listings[0].provenance;
+
+  assert.deepEqual(provenance, {
+    sourceName: "Restaurant source export",
+    sourceId: "source-123",
+    sourceUrl: "https://example.com/source",
+    importedAt: "2026-07-15T12:00:00.000Z",
+    verificationStatus: "unverified"
+  });
+  assert.equal(result.reportData.summary.provenanceSourceName, "Restaurant source export");
+  assert.match(result.report, /Initial verification status: unverified/);
+  assert.throws(
+    () => analyzeDirectoryRows(rows, "upload.csv", "normal import", undefined, { importedAt: "not-a-date" }),
+    /Invalid provenance import timestamp/
+  );
+  assert.throws(
+    () => analyzeDirectoryRows(rows, "upload.csv", "normal import", undefined, { sourceUrl: "file:\/\/private.csv" }),
+    /must use HTTP\(S\)/
+  );
+
+  const rowFallback = analyzeDirectoryRows(
+    [{ "Restaurant Name": "No Upstream ID" }],
+    "fallback.csv",
+    "normal import",
+    undefined,
+    { importedAt: "2026-07-15T12:00:00Z" }
+  ).listings[0].provenance;
+  assert.equal(rowFallback.sourceId, "fallback.csv#row=2");
+}
+
 repeatedHeaderRowsAreSkipped();
 restaurantFeatureColumnsMapToDetails();
 actionLinksAreCleanedForSafeDisplay();
@@ -522,6 +812,8 @@ nonCsvBuffersAreRejected();
 ignoredColumnsAreReported();
 sampledReportsUseSampledCounts();
 serviceFilterExcludesAdvancedOnlyValues();
+importGeneratesCompactNormalizedFilterCounts();
+importGeneratesLosslessPackedSearchIndex();
 listingDescriptionsUseDataRichCopy();
 listingDescriptionVariantsAreStableAndVaried();
 listingMetaDescriptionsAvoidBrokenTruncation();
@@ -530,5 +822,8 @@ duplicateListingSlugsPreferLocalAreaBeforeNumbers();
 missingCategoriesUseConservativeInferenceAndReview();
 sourceDataOverridesCorrectKnownLocalBusinessErrors();
 duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping();
+confirmedEntityAliasesMergeWithoutLosingSourceProvenance();
+confirmedEntityAliasesPreserveCanonicalIdentityRegardlessOfRowOrder();
+importProvenanceIsExplicitAndCannotClaimVerification();
 
 console.log("import-directory behavior tests passed");

@@ -93,7 +93,7 @@ export function DirectoryLandingPage() {
           </div>
           <Link
             href={model.finalCta.href}
-            className="focus-ring mt-5 inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600 sm:mt-0"
+            className="focus-ring mt-5 inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-800 sm:mt-0"
           >
             {model.finalCta.label}
             <ArrowRight className="h-4 w-4" aria-hidden />
@@ -291,7 +291,7 @@ function SectionIntro({
         <h2 id={id} className="text-2xl font-bold text-ink">
           {title}
         </h2>
-        <p className="mt-2 text-sm leading-6 text-muted">{description}</p>
+        <p className="mt-2 text-sm leading-6 text-muted-strong">{description}</p>
       </div>
       {href && label ? (
         <Link href={href} className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-accent">

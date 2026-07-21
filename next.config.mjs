@@ -1,6 +1,7 @@
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants.js";
+import { securityHeaders } from "./src/config/security-headers.mjs";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -11,6 +12,7 @@ const nextConfig = (phase) => {
 
   return {
     output: isStaticExport && !isDevServer ? "export" : undefined,
+    staticPageGenerationTimeout: isStaticExport && !isDevServer ? 180 : undefined,
     trailingSlash: true,
     outputFileTracingRoot: projectRoot,
     images: {
@@ -51,7 +53,14 @@ const nextConfig = (phase) => {
           hostname: "thecurryclub.uk"
         }
       ]
-    }
+    },
+    ...(!isDevServer && !isStaticExport
+      ? {
+          async headers() {
+            return [{ source: "/:path*", headers: securityHeaders }];
+          }
+        }
+      : {})
   };
 };
 

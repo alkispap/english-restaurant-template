@@ -1,0 +1,21 @@
+{
+  "listingSlug": "modern-indian",
+  "expectedSourceId": "ChIJcconfAAFdkgRD1hcO4PoaA8",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:23:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-modern-indian-75c0acddf997"
+    }
+  ],
+  "notes": "Farzi London currently and explicitly occupies 8 Haymarket and already has a separate canonical record. No source corroborates Modern Indian as a customer-facing business or proves it is a Farzi alias. Withhold this record from discovery until explicit entity evidence supports correction, merge, exclusion, or publication."
+}

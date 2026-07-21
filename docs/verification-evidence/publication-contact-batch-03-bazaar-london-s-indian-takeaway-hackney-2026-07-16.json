@@ -1,0 +1,21 @@
+{
+  "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+  "expectedSourceId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-hackney-4714cda58f2c"
+    }
+  ],
+  "notes": "Current premises evidence identifies Rays Curry Base Pizza at 92 Northwold Road, while the Bazaar domain no longer identifies a restaurant location. Withhold until direct Bazaar identity, successor or closure evidence is available."
+}

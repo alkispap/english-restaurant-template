@@ -3,7 +3,12 @@ import fs from "node:fs";
 import { importRoleLabels, importRoleOptions, type ImportFieldRole } from "@/lib/import-roles";
 import { cleanListingUrl } from "@/lib/listing-links";
 import { buildListingDescriptions } from "@/lib/listing-description";
+import { packListingSearchRecords } from "@/lib/listing-search-index";
+import { packShortlistSummaries } from "@/lib/shortlist-index";
 import { getAllShortlistListingSummaries } from "@/lib/shortlist";
+import type { ListingSearchRecord } from "@/data/listing-search-records";
+import { resolveListingEntitySourceId } from "@/data/listing-entity-resolutions";
+import type { ListingPublicationRegistry } from "@/lib/listing-publication";
 
 export type ImportMode = "dry run" | "normal import" | "preview";
 
@@ -70,14 +75,43 @@ export type ImportedListing = {
   rating?: number;
   reviewCount?: number;
   businessStatus?: string;
+  provenance: {
+    sourceName: string;
+    sourceId?: string;
+    sourceUrl?: string;
+    importedAt?: string;
+    firstRecordedAt?: string;
+    recordDateBasis?: "first-committed";
+    sourceCommit?: string;
+    sourceSnapshotSha256?: string;
+    lastVerifiedAt?: string;
+    lastVerificationEventId?: string;
+    verificationStatus: "unverified" | "source-verified" | "editor-verified";
+  };
   featured?: boolean;
   contact?: Record<string, unknown>;
   location?: Record<string, unknown>;
   details?: Record<string, unknown>;
 };
 
+export type ImportProvenanceOptions = {
+  sourceName?: string;
+  sourceUrl?: string;
+  importedAt?: string;
+};
+
+type NewImportProvenance = {
+  sourceName: string;
+  sourceUrl?: string;
+  importedAt: string;
+  verificationStatus: "unverified";
+};
+
 export type ImportSummary = {
   sourceFile: string;
+  provenanceSourceName: string;
+  importedAt: string;
+  verificationStatus: "unverified";
   sourceRows: number;
   importedListings: number;
   skippedRows: number;
@@ -142,13 +176,25 @@ export type ImportResult = {
   listingsFile: string;
   listingsJsonFile: string;
   listingSearchRecordsJsonFile: string;
+  listingSearchIndexJsonFile: string;
+  listingFilterCountsJsonFile: string;
   shortlistSummariesJsonFile: string;
+  shortlistIndexJsonFile: string;
   sourceFile: string;
   rows: Row[];
 };
 
 export type SampleOptions = {
   size?: number;
+};
+
+export type PublishedDirectoryDataFiles = {
+  listingSearchRecordsJsonFile: string;
+  listingSearchIndexJsonFile: string;
+  listingFilterCountsJsonFile: string;
+  shortlistSummariesJsonFile: string;
+  shortlistIndexJsonFile: string;
+  publishedListings: ImportedListing[];
 };
 
 const fieldAliases: Record<string, string[]> = {
@@ -198,6 +244,7 @@ const fieldAliases: Record<string, string[]> = {
   latitude: ["latitude", "lat"],
   longitude: ["longitude", "lng", "long"],
   googleMapsUrl: ["google maps url", "maps url", "location_link"],
+  sourceId: ["source id", "place id", "place_id", "google id", "google_id", "cid"],
   facebook: ["facebook"],
   instagram: ["instagram"],
   whatsapp: ["whatsapp"],
@@ -208,25 +255,49 @@ const fieldAliases: Record<string, string[]> = {
   featured: ["featured", "highlighted"]
 };
 
-export function analyzeDirectoryFile(filePath: string, mode: ImportMode, roleOverrides?: Record<string, ImportFieldRole>): ImportResult {
+export function analyzeDirectoryFile(
+  filePath: string,
+  mode: ImportMode,
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+): ImportResult {
   const sourceFile = path.basename(filePath);
   assertCsvSource(sourceFile);
-  return analyzeRows(parseCsvRows(fs.readFileSync(filePath, "utf8")), sourceFile, mode, roleOverrides);
+  return analyzeRows(parseCsvRows(fs.readFileSync(filePath, "utf8")), sourceFile, mode, roleOverrides, provenanceOptions);
 }
 
-export function analyzeDirectoryBuffer(buffer: ArrayBuffer | Buffer, sourceFile: string, mode: ImportMode = "preview", roleOverrides?: Record<string, ImportFieldRole>) {
+export function analyzeDirectoryBuffer(
+  buffer: ArrayBuffer | Buffer,
+  sourceFile: string,
+  mode: ImportMode = "preview",
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+) {
   assertCsvSource(sourceFile);
   const text = Buffer.isBuffer(buffer) ? buffer.toString("utf8") : Buffer.from(new Uint8Array(buffer)).toString("utf8");
-  return analyzeRows(parseCsvRows(text), sourceFile, mode, roleOverrides);
+  return analyzeRows(parseCsvRows(text), sourceFile, mode, roleOverrides, provenanceOptions);
 }
 
-export function analyzeDirectoryRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOverrides?: Record<string, ImportFieldRole>): ImportResult {
-  return analyzeRows(rows, sourceFile, mode, roleOverrides);
+export function analyzeDirectoryRows(
+  rows: Row[],
+  sourceFile: string,
+  mode: ImportMode,
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+): ImportResult {
+  return analyzeRows(rows, sourceFile, mode, roleOverrides, provenanceOptions);
 }
 
-function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOverrides?: Record<string, ImportFieldRole>): ImportResult {
+function analyzeRows(
+  rows: Row[],
+  sourceFile: string,
+  mode: ImportMode,
+  roleOverrides?: Record<string, ImportFieldRole>,
+  provenanceOptions?: ImportProvenanceOptions
+): ImportResult {
   const headers = Object.keys(rows[0] ?? {});
   const analysis = analyzeColumns(headers, rows, roleOverrides);
+  const provenance = importProvenance(sourceFile, provenanceOptions);
   const listings: ImportedListing[] = [];
   const usedSlugs = new Map<string, number>();
   const listingBySourceId = new Map<string, ImportedListing>();
@@ -239,34 +310,58 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     }
 
     const sourceId = dedupeKey(row, analysis);
+    const entitySourceId = resolveListingEntitySourceId(sourceId);
     if (isNonOperational(row, analysis)) {
       analysis.nonOperationalCount += 1;
       analysis.warnings.push(`Row ${index + 2}: "${firstByRole(row, analysis, "name") || "Listing"}" is not marked operational.`);
     }
 
-    const listing = toListing(row, index, analysis);
+    const listing = toListing(row, index, analysis, provenance, sourceId);
     if (!listing.name) {
       analysis.skippedCount += 1;
       analysis.warnings.push(`Row ${index + 2}: skipped because no listing name was found.`);
       return;
     }
 
-    if (sourceId && listingBySourceId.has(sourceId)) {
+    if (entitySourceId && listingBySourceId.has(entitySourceId)) {
       analysis.duplicateCount += 1;
-      mergeDuplicateListing(listingBySourceId.get(sourceId)!, listing);
-      analysis.warnings.push(`Row ${index + 2}: duplicate source ID "${sourceId}" was merged into the existing listing.`);
+      const retainedListing = listingBySourceId.get(entitySourceId)!;
+      const retainedSourceId = retainedListing.provenance.sourceId;
+      const canonicalRowArrivedAfterAlias = sourceId === entitySourceId && retainedSourceId !== entitySourceId;
+
+      if (canonicalRowArrivedAfterAlias) {
+        mergeDuplicateListing(listing, retainedListing);
+        const retainedIndex = listings.indexOf(retainedListing);
+        if (retainedIndex < 0) throw new Error(`Canonical entity target is not retained: ${entitySourceId}`);
+
+        usedSlugs.delete(retainedListing.slug);
+        const baseSlug = listing.slug || stableSlug(listing.name, row, index, analysis);
+        listing.slug = uniqueListingSlug(baseSlug, listing, usedSlugs, index, analysis);
+        listings[retainedIndex] = listing;
+        listingBySourceId.set(entitySourceId, listing);
+        analysis.warnings.push(
+          `Row ${index + 2}: canonical source ID "${sourceId}" replaced earlier confirmed entity alias "${retainedSourceId}" -> "${entitySourceId}".`
+        );
+        return;
+      }
+
+      mergeDuplicateListing(retainedListing, listing);
+      const reason = entitySourceId === sourceId
+        ? `duplicate source ID "${sourceId}"`
+        : `confirmed entity alias "${sourceId}" -> "${entitySourceId}"`;
+      analysis.warnings.push(`Row ${index + 2}: ${reason} was merged into the existing listing.`);
       return;
     }
 
     const baseSlug = listing.slug || stableSlug(listing.name, row, index, analysis);
     listing.slug = uniqueListingSlug(baseSlug, listing, usedSlugs, index, analysis);
-    if (sourceId) listingBySourceId.set(sourceId, listing);
+    if (entitySourceId) listingBySourceId.set(entitySourceId, listing);
 
     addRowWarnings(row, index, listing, analysis);
     listings.push(listing);
   });
 
-  const reportData = buildReportData(sourceFile, rows.length, listings, analysis, mode, rows);
+  const reportData = buildReportData(sourceFile, rows.length, listings, analysis, mode, rows, provenance);
   const report = renderReport(reportData);
 
   return {
@@ -277,7 +372,10 @@ function analyzeRows(rows: Row[], sourceFile: string, mode: ImportMode, roleOver
     listingsFile: renderListingsFile(),
     listingsJsonFile: renderListingsJsonFile(listings),
     listingSearchRecordsJsonFile: renderListingSearchRecordsJsonFile(listings),
+    listingSearchIndexJsonFile: renderListingSearchIndexJsonFile(listings),
+    listingFilterCountsJsonFile: renderListingFilterCountsJsonFile(listings),
     shortlistSummariesJsonFile: renderShortlistSummariesJsonFile(listings),
+    shortlistIndexJsonFile: renderShortlistIndexJsonFile(listings),
     sourceFile,
     rows
   };
@@ -409,7 +507,8 @@ function genericRoles(headers: string[]): Record<string, ImportFieldRole> {
     postcode: "postcode",
     latitude: "latitude",
     longitude: "longitude",
-    logo: "logo"
+    logo: "logo",
+    sourceId: "dedupeId"
   };
 
   Object.entries(fieldAliases).forEach(([field, aliases]) => {
@@ -515,7 +614,13 @@ function inferFilterColumns(headers: string[], rows: Row[], usedHeaders: Set<str
     });
 }
 
-function toListing(row: Row, index: number, analysis: ImportAnalysis): ImportedListing {
+function toListing(
+  row: Row,
+  index: number,
+  analysis: ImportAnalysis,
+  provenance: NewImportProvenance,
+  sourceId: string
+): ImportedListing {
   const get = (field: string) => valueAt(row, analysis.mapped[field]);
   const sourceCategoryValues = unique([...valuesByRole(row, analysis, "category"), ...list(get("category"))]);
   const typeValues = unique([...valuesByRole(row, analysis, "typeFilter"), ...list(get("type"))]).filter((value) => !sourceCategoryValues.includes(value));
@@ -580,6 +685,14 @@ function toListing(row: Row, index: number, analysis: ImportAnalysis): ImportedL
     rating: number(firstByRole(row, analysis, "rating") || get("rating")),
     reviewCount: number(firstByRole(row, analysis, "reviews") || get("reviewCount")),
     businessStatus: firstByRole(row, analysis, "sourceStatus") || undefined,
+    provenance: {
+      ...provenance,
+      sourceId:
+        sourceId ||
+        firstByRole(row, analysis, "dedupeId") ||
+        valueAt(row, "place_id") ||
+        `${provenance.sourceName}#row=${index + 2}`
+    },
     featured: truthy(get("featured")),
     contact: compact({
       website: cleanListingUrl(get("website")),
@@ -698,7 +811,7 @@ function applyListingSourceOverride(listing: ImportedListing) {
   };
 }
 
-function mergeDuplicateListing(target: ImportedListing, duplicate: ImportedListing) {
+export function mergeDuplicateListing(target: ImportedListing, duplicate: ImportedListing) {
   target.categories = unique([...target.categories, ...duplicate.categories]);
   target.listingTypes = unique([...target.listingTypes, ...duplicate.listingTypes]);
   target.dietaryOptions = unique([...target.dietaryOptions, ...duplicate.dietaryOptions]);
@@ -1156,11 +1269,15 @@ function buildReportData(
   items: ImportedListing[],
   analysis: ImportAnalysis,
   mode: ImportMode,
-  rows: Row[]
+  rows: Row[],
+  provenance: NewImportProvenance
 ): ImportReportData {
   return {
     summary: {
       sourceFile,
+      provenanceSourceName: provenance.sourceName,
+      importedAt: provenance.importedAt,
+      verificationStatus: provenance.verificationStatus,
       sourceRows: sourceCount,
       importedListings: items.length,
       skippedRows: analysis.skippedCount,
@@ -1193,6 +1310,9 @@ export function renderReport(data: ImportReportData) {
   return `# Import Report
 
 - Source file: ${data.summary.sourceFile}
+- Provenance source name: ${data.summary.provenanceSourceName}
+- Imported at: ${data.summary.importedAt}
+- Initial verification status: ${data.summary.verificationStatus}
 - Source rows: ${data.summary.sourceRows}
 - Imported listings: ${data.summary.importedListings}
 - Skipped rows: ${data.summary.skippedRows}
@@ -1343,6 +1463,20 @@ export type ReviewDistribution = {
   1: number;
 };
 
+export type ListingProvenance = {
+  sourceName: string;
+  sourceId?: string;
+  sourceUrl?: string;
+  importedAt?: string;
+  firstRecordedAt?: string;
+  recordDateBasis?: "first-committed";
+  sourceCommit?: string;
+  sourceSnapshotSha256?: string;
+  lastVerifiedAt?: string;
+  lastVerificationEventId?: string;
+  verificationStatus: "unverified" | "source-verified" | "editor-verified";
+};
+
 export type Listing = {
   name: string;
   slug: string;
@@ -1367,6 +1501,7 @@ export type Listing = {
   rating?: number;
   reviewCount?: number;
   businessStatus?: string;
+  provenance?: ListingProvenance;
   featured?: boolean;
   reviewDistribution?: ReviewDistribution;
   contact?: {
@@ -1432,8 +1567,65 @@ export function renderListingSearchRecordsJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(items.map(toListingSearchRecord))}\n`;
 }
 
+export function renderListingSearchIndexJsonFile(items: ImportedListing[]) {
+  const records = items.map(toListingSearchRecord) as ListingSearchRecord[];
+  return `${JSON.stringify(packListingSearchRecords(records))}\n`;
+}
+
+export function renderListingFilterCountsJsonFile(items: ImportedListing[]) {
+  const counts = {
+    area: {} as Record<string, number>,
+    neighborhood: {} as Record<string, number>,
+    category: {} as Record<string, number>,
+    type: {} as Record<string, number>,
+    dietary: {} as Record<string, number>,
+    service: {} as Record<string, number>,
+    offering: {} as Record<string, number>,
+    price: {} as Record<string, number>
+  };
+
+  for (const listing of items) {
+    incrementSlugCount(counts.area, listing.area);
+    incrementSlugCount(counts.neighborhood, listing.neighborhood);
+    listing.categories.forEach((value) => incrementSlugCount(counts.category, value));
+    listing.listingTypes.forEach((value) => incrementSlugCount(counts.type, value));
+    listing.dietaryOptions.forEach((value) => incrementSlugCount(counts.dietary, value));
+    asStringArray(listing.details?.serviceOptions).forEach((value) => incrementSlugCount(counts.service, value));
+    asStringArray(listing.details?.offerings).forEach((value) => incrementSlugCount(counts.offering, value));
+    incrementExactCount(counts.price, listing.priceLevel);
+  }
+
+  return `${JSON.stringify(counts)}\n`;
+}
+
 export function renderShortlistSummariesJsonFile(items: ImportedListing[]) {
   return `${JSON.stringify(getAllShortlistListingSummaries(items))}\n`;
+}
+
+export function renderShortlistIndexJsonFile(items: ImportedListing[]) {
+  return `${JSON.stringify(packShortlistSummaries(getAllShortlistListingSummaries(items)))}\n`;
+}
+
+export function selectPublishedImportedListings(items: ImportedListing[], registry: ListingPublicationRegistry) {
+  const stateBySlug = new Map(registry.entries.map((state) => [state.listingSlug, state]));
+  return items.filter((listing) => {
+    const state = stateBySlug.get(listing.slug);
+    if (!state) throw new Error(`Missing publication state while rendering: ${listing.slug}`);
+    if (state.listingSourceId !== listing.provenance?.sourceId) throw new Error(`Publication source ID mismatch while rendering: ${listing.slug}`);
+    return state.status === "published";
+  });
+}
+
+export function renderPublishedDirectoryDataFiles(items: ImportedListing[], registry: ListingPublicationRegistry): PublishedDirectoryDataFiles {
+  const publishedListings = selectPublishedImportedListings(items, registry);
+  return {
+    listingSearchRecordsJsonFile: renderListingSearchRecordsJsonFile(publishedListings),
+    listingSearchIndexJsonFile: renderListingSearchIndexJsonFile(publishedListings),
+    listingFilterCountsJsonFile: renderListingFilterCountsJsonFile(publishedListings),
+    shortlistSummariesJsonFile: renderShortlistSummariesJsonFile(publishedListings),
+    shortlistIndexJsonFile: renderShortlistIndexJsonFile(publishedListings),
+    publishedListings
+  };
 }
 
 function toListingSearchRecord(listing: ImportedListing) {
@@ -1481,7 +1673,7 @@ function toListingSearchRecord(listing: ImportedListing) {
     slug: listing.slug,
     name: listing.name,
     description: listing.description,
-    images: asStringArray(listing.images).slice(0, 2),
+    images: asStringArray(listing.images).slice(0, 3),
     imageFallbackLabel: listing.imageFallbackLabel,
     area: listing.area,
     neighborhood: listing.neighborhood,
@@ -1549,6 +1741,38 @@ function valueAt(row: Row, header?: string) {
   if (!header) return "";
   const value = row[header];
   return value === undefined || value === null ? "" : String(value).trim();
+}
+
+function importProvenance(
+  sourceFile: string,
+  options?: ImportProvenanceOptions
+): NewImportProvenance {
+  const sourceName = options?.sourceName?.trim() || sourceFile;
+  const requestedImportedAt = options?.importedAt?.trim() || new Date().toISOString();
+  const parsedImportedAt = new Date(requestedImportedAt);
+  if (Number.isNaN(parsedImportedAt.getTime())) {
+    throw new Error(`Invalid provenance import timestamp: ${requestedImportedAt}`);
+  }
+
+  const sourceUrl = options?.sourceUrl?.trim();
+  if (sourceUrl) {
+    let parsedSourceUrl: URL;
+    try {
+      parsedSourceUrl = new URL(sourceUrl);
+    } catch {
+      throw new Error(`Invalid provenance source URL: ${sourceUrl}`);
+    }
+    if (parsedSourceUrl.protocol !== "http:" && parsedSourceUrl.protocol !== "https:") {
+      throw new Error(`Provenance source URL must use HTTP(S): ${sourceUrl}`);
+    }
+  }
+
+  return {
+    sourceName,
+    sourceUrl: sourceUrl || undefined,
+    importedAt: parsedImportedAt.toISOString(),
+    verificationStatus: "unverified"
+  };
 }
 
 function assertCsvSource(sourceFile: string) {
@@ -1752,6 +1976,17 @@ function countValues(items: Array<string | number | undefined>) {
 
 function asStringArray(value: unknown) {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+function incrementSlugCount(counts: Record<string, number>, value?: string) {
+  if (!value) return;
+  const slug = slugify(value);
+  counts[slug] = (counts[slug] ?? 0) + 1;
+}
+
+function incrementExactCount(counts: Record<string, number>, value?: string) {
+  if (!value) return;
+  counts[value] = (counts[value] ?? 0) + 1;
 }
 
 function allFeatureValues(item: ImportedListing) {

@@ -7,6 +7,7 @@ import {
   getVisibleMapItems,
   type VisibleMapItem
 } from "@/lib/map-density";
+import { mapProviderConfig } from "@/config/map-provider";
 import type { MapPoint } from "@/lib/listings-page";
 import { listingDetailPath } from "@/lib/routes";
 
@@ -20,6 +21,7 @@ const mapStylePromises = new Map<string, Promise<void>>();
 export function ListingMap({ listings }: ListingMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const mapKey = useMemo(
     () => listings.map((listing) => `${listing.slug}:${listing.latitude},${listing.longitude}`).join("|"),
     [listings]
@@ -32,64 +34,70 @@ export function ListingMap({ listings }: ListingMapProps) {
     let markerLayer: L.LayerGroup | null = null;
     let isMounted = true;
     setLoaded(false);
+    setLoadError(false);
 
-    loadMapStyles().then(() => import("leaflet")).then((L) => {
-      if (!isMounted || !mapRef.current) return;
+    loadMapStyles()
+      .then(() => import("leaflet"))
+      .then((L) => {
+        if (!isMounted || !mapRef.current) return;
 
-      const container = mapRef.current as HTMLDivElement & { _leaflet_id?: number | null };
-      if (container._leaflet_id) {
-        container._leaflet_id = null;
-      }
+        const container = mapRef.current as HTMLDivElement & { _leaflet_id?: number | null };
+        if (container._leaflet_id) {
+          container._leaflet_id = null;
+        }
 
-      delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
-      });
-
-      const latitudes = listings.map((listing) => listing.latitude);
-      const longitudes = listings.map((listing) => listing.longitude);
-      const centerLat = latitudes.reduce((sum, latitude) => sum + latitude, 0) / latitudes.length;
-      const centerLng = longitudes.reduce((sum, longitude) => sum + longitude, 0) / longitudes.length;
-
-      map = L.map(mapRef.current, {
-        scrollWheelZoom: false
-      }).setView([centerLat, centerLng], 13);
-      markerLayer = L.layerGroup().addTo(map);
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
-      }).addTo(map);
-
-      const index = createMapClusterIndex(listings);
-      const renderVisibleMarkers = () => {
-        if (!map || !markerLayer) return;
-        const bounds = map.getBounds();
-        const items = getVisibleMapItems(
-          index,
-          [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()],
-          map.getZoom()
-        );
-
-        markerLayer.clearLayers();
-        items.forEach((item) => {
-          markerLayer?.addLayer(createMarker(L, item, index, map!));
+        delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconUrl: mapProviderConfig.markerIconUrl,
+          iconRetinaUrl: mapProviderConfig.markerIconRetinaUrl,
+          shadowUrl: mapProviderConfig.markerShadowUrl
         });
-      };
 
-      if (listings.length > 1) {
-        const group = L.featureGroup(
-          listings.map((listing) => L.marker([listing.latitude, listing.longitude]))
-        );
-        map.fitBounds(group.getBounds().pad(0.1));
-      }
+        const latitudes = listings.map((listing) => listing.latitude);
+        const longitudes = listings.map((listing) => listing.longitude);
+        const centerLat = latitudes.reduce((sum, latitude) => sum + latitude, 0) / latitudes.length;
+        const centerLng = longitudes.reduce((sum, longitude) => sum + longitude, 0) / longitudes.length;
 
-      renderVisibleMarkers();
-      map.on("moveend zoomend", renderVisibleMarkers);
-      setLoaded(true);
-    });
+        map = L.map(mapRef.current, {
+          scrollWheelZoom: false
+        }).setView([centerLat, centerLng], 13);
+        markerLayer = L.layerGroup().addTo(map);
+
+        L.tileLayer(mapProviderConfig.tileUrl, {
+          attribution: mapProviderConfig.attributionHtml,
+          maxZoom: 19
+        }).addTo(map);
+
+        const index = createMapClusterIndex(listings);
+        const renderVisibleMarkers = () => {
+          if (!map || !markerLayer) return;
+          const bounds = map.getBounds();
+          const items = getVisibleMapItems(
+            index,
+            [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()],
+            map.getZoom()
+          );
+
+          markerLayer.clearLayers();
+          items.forEach((item) => {
+            markerLayer?.addLayer(createMarker(L, item, index, map!));
+          });
+        };
+
+        if (listings.length > 1) {
+          const group = L.featureGroup(
+            listings.map((listing) => L.marker([listing.latitude, listing.longitude]))
+          );
+          map.fitBounds(group.getBounds().pad(0.1));
+        }
+
+        renderVisibleMarkers();
+        map.on("moveend zoomend", renderVisibleMarkers);
+        setLoaded(true);
+      })
+      .catch(() => {
+        if (isMounted) setLoadError(true);
+      });
 
     return () => {
       isMounted = false;
@@ -105,18 +113,29 @@ export function ListingMap({ listings }: ListingMapProps) {
 
   if (!listings.length) {
     return (
-      <div className="grid min-h-[400px] place-items-center rounded-lg border border-dashed border-line bg-white text-muted">
+      <div role="status" className="grid min-h-[400px] place-items-center rounded-lg border border-dashed border-line bg-white text-muted">
         No listings with map coordinates to display.
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-line shadow-soft">
-      <div ref={mapRef} className="h-[500px] w-full lg:h-[600px]" style={{ zIndex: 0 }} />
-      {!loaded ? (
-        <div className="flex items-center justify-center bg-slate-50 p-4 text-sm text-muted">
+    <div aria-busy={!loaded && !loadError} className="overflow-hidden rounded-lg border border-line shadow-soft">
+      <div
+        ref={mapRef}
+        role="region"
+        aria-label={`Map showing ${listings.length} ${listings.length === 1 ? "restaurant" : "restaurants"}`}
+        className="h-[500px] w-full lg:h-[600px]"
+        style={{ zIndex: 0 }}
+      />
+      {!loaded && !loadError ? (
+        <div role="status" aria-live="polite" className="flex items-center justify-center bg-slate-50 p-4 text-sm text-muted">
           Loading map...
+        </div>
+      ) : null}
+      {loadError ? (
+        <div role="alert" className="flex items-center justify-center bg-red-50 p-4 text-sm font-semibold text-red-700">
+          The map could not be loaded. Use list view or try again later.
         </div>
       ) : null}
     </div>
@@ -241,7 +260,7 @@ function buildPopupElement(listing: MapPoint) {
   details.style.display = "inline-block";
   details.style.marginTop = "8px";
   details.style.padding = "5px 12px";
-  details.style.background = "#e67e22";
+  details.style.background = "#c2410c";
   details.style.color = "#fff";
   details.style.borderRadius = "6px";
   details.style.fontSize = "12px";

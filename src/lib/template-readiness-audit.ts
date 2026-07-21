@@ -6,6 +6,7 @@ import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import { buildFreshnessAuditReport } from "@/lib/freshness-audit";
 import { getIndexedListingFilterCount, getListingFilterCount } from "@/lib/listing-filter-counts";
 import { auditLocalBusinessDataQuality } from "@/lib/local-business-data-quality";
+import type { ListingPublicationQualityReport } from "@/lib/listing-publication-quality";
 import { SEO_POLICY, isApprovedHighIntentFacet, isListingIndexable } from "@/lib/seo-policy";
 
 export type TemplateReadinessSeverity = "pass" | "info" | "warning" | "blocker";
@@ -38,6 +39,7 @@ export type TemplateReadinessSiteConfig = {
   heroCopy?: string;
   description?: string;
   navigation?: readonly { label: string; href: string }[];
+  copySafety?: { blockedStaleTerms: readonly string[] };
 };
 
 export type TemplateReadinessDirectoryConfig = {
@@ -53,6 +55,7 @@ export type TemplateReadinessOptions = {
   directory: TemplateReadinessDirectoryConfig;
   listings: Listing[];
   importReportText?: string;
+  publicationReport?: ListingPublicationQualityReport;
   env?: Record<string, string | undefined>;
   now?: Date;
 };
@@ -73,6 +76,7 @@ export function buildTemplateReadinessReport(options: TemplateReadinessOptions):
   issues.push(...identityIssues(options.site, options.directory));
   issues.push(...productionUrlIssues(options.env ?? process.env));
   issues.push(...importReportIssues(options.importReportText));
+  issues.push(...publicationControlIssues(options.publicationReport));
   issues.push(...listingQualityIssues(options.listings, now));
   issues.push(...localBusinessDataQualityIssues(options.listings));
   issues.push(...hubStrengthIssues(options.listings));
@@ -82,7 +86,7 @@ export function buildTemplateReadinessReport(options: TemplateReadinessOptions):
     code: "verification_guidance",
     severity: "info",
     message: "Run the standard verification commands before launch or after copying the template.",
-    recommendation: "Run npm test, npm run typecheck, npm run lint, npm run audit:seo, npm run audit:links, npm run audit:freshness, and npm run build."
+    recommendation: "Run npm test, npm run typecheck, npm run lint, npm run audit:publication, npm run audit:seo, npm run audit:links, npm run audit:freshness, and npm run build."
   });
 
   const totals = {
@@ -134,7 +138,7 @@ function identityIssues(site: TemplateReadinessSiteConfig, directory: TemplateRe
     .filter(Boolean)
     .join(" ");
   const expectedNicheTerms = nicheTerms(site);
-  const oldTerms = ["indian"];
+  const oldTerms = site.copySafety?.blockedStaleTerms ?? ["indian"];
   const staleTerms = oldTerms.filter((term) => !expectedNicheTerms.includes(term) && includesWord(mainCopy, term));
 
   if (!site.siteName || !site.name || !site.niche || !site.cityOrRegion) {
@@ -324,6 +328,31 @@ function listingQualityIssues(listings: Listing[], now: Date) {
   }
 
   return issues;
+}
+
+function publicationControlIssues(report: ListingPublicationQualityReport | undefined) {
+  if (!report) {
+    return [{
+      code: "publication_control_missing",
+      severity: "blocker",
+      message: "Publication eligibility was not supplied to the template-readiness audit.",
+      recommendation: "Load and validate the publication registry before assessing production readiness."
+    } satisfies TemplateReadinessIssue];
+  }
+  if (report.status !== "ready") {
+    return [{
+      code: "publication_control_not_ready",
+      severity: "blocker",
+      message: `Publication control has ${report.issues.length.toLocaleString()} integrity or public-behaviour finding(s).`,
+      recommendation: "Run npm run audit:publication and resolve every critical or high publication finding before release."
+    } satisfies TemplateReadinessIssue];
+  }
+  return [{
+    code: "publication_control_ready",
+    severity: "info",
+    message: `Publication control covers ${report.totalStates.toLocaleString()} retained listings: ${report.counts.published.toLocaleString()} published, ${report.counts.pendingReview.toLocaleString()} pending review, and ${report.counts.excluded.toLocaleString()} excluded.`,
+    recommendation: "Continue using the guarded publication-decision command for every eligibility change."
+  } satisfies TemplateReadinessIssue];
 }
 
 function localBusinessDataQualityIssues(listings: Listing[]) {

@@ -1,0 +1,21 @@
+{
+  "listingSlug": "sucess-worker",
+  "expectedSourceId": "ChIJBQt1YxkPdkgREqTLaIkJL6k",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:23:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-sucess-worker-6d0f0654f1f8"
+    }
+  ],
+  "notes": "The record has a misspelled generic name and no numbered address. No primary or authoritative source corroborates the entity among the many current businesses in W6 0RA. Withhold until exact premises and identity evidence exists."
+}

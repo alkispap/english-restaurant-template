@@ -2,15 +2,15 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { directoryConfig } from "@/config/directory";
+import { siteConfig } from "@/config/site";
 import { getFeaturedCategoryCards } from "@/lib/directory";
 import { categoriesIndexHeadings } from "@/lib/categories-index-headings";
 import { getPopularSearches } from "@/lib/directory-growth";
 import { pageShareMetadata } from "@/lib/share-metadata";
 import { directoryRouteLink } from "@/lib/directory-route-links";
 
-const metadataTitle = "Indian Restaurants in London by Cuisine";
-const metadataDescription =
-  "Browse Indian restaurant cuisines and styles in London, then compare matching restaurants by area, rating, price, and service options.";
+const metadataTitle = `${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion} by Cuisine`;
+const metadataDescription = `Browse ${siteConfig.cuisineLabel} restaurant cuisines and styles in ${siteConfig.cityOrRegion}, then compare matching restaurants by area, rating, price, and service options.`;
 
 export const metadata: Metadata = {
   title: metadataTitle,

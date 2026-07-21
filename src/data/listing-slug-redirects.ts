@@ -1,4 +1,6 @@
-export const listingSlugRedirects = {
+import { confirmedListingEntityResolutions } from "@/data/listing-entity-resolutions";
+
+const configuredListingSlugRedirects = {
   "akash-2": "akash-wandsworth",
   "amols-vada-pav-2": "amols-vada-pav-harrow",
   "banana-leaf-2": "banana-leaf-redbridge",
@@ -143,14 +145,24 @@ export const listingSlugRedirects = {
   "vaghaar-2": "vaghaar-harrow",
   "village-tandoori-2": "village-tandoori-southwark",
   "wimbledon-tandoori-2": "wimbledon-tandoori-merton",
+  "yummy-dosa-catering": "yummy-dosa",
   "yako-2": "yako-harrow",
   "yasmin-restaurant-2": "yasmin-restaurant-bromley",
   "zaika-2": "zaika-bromley",
   "zoya-indian-and-vegan-2": "zoya-indian-and-vegan-southwark"
 } as const;
 
-export type LegacyListingSlug = keyof typeof listingSlugRedirects;
+const entityResolutionSlugRedirects = Object.fromEntries(
+  confirmedListingEntityResolutions.flatMap((resolution) => resolution.aliasSlugs.map((aliasSlug) => [aliasSlug, resolution.canonicalSlug]))
+);
+
+export const listingSlugRedirects: Readonly<Record<string, string>> = Object.freeze({
+  ...configuredListingSlugRedirects,
+  ...entityResolutionSlugRedirects
+});
+
+export type LegacyListingSlug = keyof typeof configuredListingSlugRedirects;
 
 export function resolveListingSlugRedirect(slug: string) {
-  return listingSlugRedirects[slug as LegacyListingSlug];
+  return listingSlugRedirects[slug];
 }

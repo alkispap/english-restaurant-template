@@ -1,0 +1,21 @@
+{
+  "listingSlug": "premier-inn-london-hendon-the-hyde-hotel",
+  "expectedSourceId": "ChIJ__8PMTsRdkgRo5alyJADRsg",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T18:16:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "excluded",
+    "reason": "out-of-directory-scope"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-premier-inn-london-hendon-the-hyde-hotel-ecd6f20dca78"
+    }
+  ],
+  "notes": "The exact entity is a Premier Inn hotel with a Thyme Bar & Grill, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+}

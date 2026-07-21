@@ -28,7 +28,7 @@ export function SeoLandingResultsShell({ model, hiddenGroups = [], definingConte
   };
 
   return (
-    <div id="seo-landing-client-results" className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+    <div id="seo-landing-client-results" className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
       <ResponsiveDirectoryFilters model={filterModel} action={model.basePath} hiddenGroups={hiddenGroups} />
       <div className="min-w-0">
         <ListingsResults

@@ -1,0 +1,21 @@
+{
+  "listingSlug": "staffordshire",
+  "expectedSourceId": "ChIJS7-SQAAbdkgRwJcA_qnpt8k",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:23:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "scope-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-staffordshire-0d2008cbac49"
+    }
+  ],
+  "notes": "The address is Just Eat's registered office and current FSA records identify workplace/corporate food operations, not a public restaurant named Staffordshire. Withhold until the imported identity and public-directory scope can be established."
+}

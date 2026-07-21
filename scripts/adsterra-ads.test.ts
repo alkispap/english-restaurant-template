@@ -47,6 +47,12 @@ assert.doesNotMatch(adConfigSource, /effectivecpmnetwork\.com/, "native network 
 assert.doesNotMatch(adComponentSource, /highperformanceformat\.com/, "iframe network script should not be loaded while redirect ads are disabled");
 assert.match(adComponentSource, /"use client"/, "ad component should be client-side");
 assert.match(adComponentSource, /Advertisement/, "ad component should label ad areas");
+assert.doesNotMatch(adComponentSource, /<aside/, "repeated advertisements should not create duplicate complementary landmarks");
+assert.match(
+  adComponentSource,
+  /role="group"[\s\S]*aria-label="Advertisement"/,
+  "advertisements should retain a programmatic label without becoming repeated landmarks"
+);
 assert.match(adComponentSource, /no-print/, "ad component should be hidden from print");
 assert.match(adComponentSource, /localhost|127\.0\.0\.1/, "ad component should support local preview placeholders");
 

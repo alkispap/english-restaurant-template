@@ -1,0 +1,29 @@
+{
+  "listingSlug": "home-kitchen",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact-name and postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Home%20Kitchen&address=SE18%206AP",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "FSA FHRS current SE18 6AP premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AP&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "No current source corroborates Home Kitchen at 13A Spray Street. Current postcode evidence identifies other businesses at 7-11 and 33-37 Spray Street but provides no successor or same-entity link. The generic name and missing contact data require direct operator or premises evidence. Hold pending review."
+}

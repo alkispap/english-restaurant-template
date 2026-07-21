@@ -38,6 +38,7 @@ const expectedIds = [
   "terms",
   "methodology",
   "suggest-update",
+  "directory-search-data",
   "sitemap",
   "robots"
 ];
@@ -55,6 +56,11 @@ assert.equal(byId.get("legacy-listing-detail-redirect")?.category, "redirect", "
 assert.equal(byId.get("listing-detail")?.urlPattern, "/restaurants/[slug]", "restaurant detail route should use /restaurants/[slug]");
 assert.equal(byId.get("sitemap")?.category, "system-seo", "sitemap should be classified as system SEO");
 assert.equal(byId.get("robots")?.category, "system-seo", "robots should be classified as system SEO");
+assert.equal(
+  byId.get("directory-search-data")?.category,
+  "system-data",
+  "browser search data should be classified separately from public and SEO pages"
+);
 
 const dynamicSeoIds = inventory.filter((page) => page.category === "dynamic-seo").map((page) => page.id).sort();
 assert.deepEqual(
@@ -99,6 +105,7 @@ const expectedCategories: TemplatePageCategory[] = [
   "article-guide",
   "utility",
   "trust-support",
+  "system-data",
   "system-seo"
 ];
 assert.deepEqual(

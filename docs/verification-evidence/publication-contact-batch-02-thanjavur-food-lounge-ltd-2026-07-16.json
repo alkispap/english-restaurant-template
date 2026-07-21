@@ -1,0 +1,21 @@
+{
+  "listingSlug": "thanjavur-food-lounge-ltd",
+  "expectedSourceId": "ChIJf4whtp4HdkgRZ1Q2X7e-zr0",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:23:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "operating-status-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-thanjavur-food-lounge-ltd-d39734159bac"
+    }
+  ],
+  "notes": "An active company registration exists, but current customer-facing operation, unit occupancy, contact details and hours are not corroborated; the FSA identifies a supermarket at the exact address. Withhold until direct operating evidence is available."
+}

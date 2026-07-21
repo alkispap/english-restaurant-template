@@ -1,0 +1,42 @@
+{
+  "listingSlug": "everyman-maida-vale",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Everyman official Maida Vale venue page",
+      "sourceUrl": "https://www.everymancinema.com/venues-list/x0lwi-everyman-maida-vale/",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "Everyman official Maida Vale food and drink page",
+      "sourceUrl": "https://www.everymancinema.com/food-and-drink/x0lwi-everyman-maida-vale/",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Everyman Cinema exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1099878",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current official venue and food pages plus current exact-premises FSA record support an operating Everyman cinema."
+    }
+  ],
+  "notes": "The exact entity is a cinema with a bar, Spielburger kitchen and food delivered to cinema seats. Its daily opening time is a cinema venue time, not an Indian restaurant schedule. No hours were added. Publication eligibility is handled separately as out of directory scope."
+}

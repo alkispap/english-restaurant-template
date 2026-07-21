@@ -1,12 +1,17 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
+import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
+import { unpackShortlistSummaries } from "../src/lib/shortlist-index";
 
 const root = process.cwd();
 const listingsSourcePath = path.join(root, "src", "data", "listings.ts");
 const listingsJsonPath = path.join(root, "data", "listings.json");
 const listingSearchRecordsJsonPath = path.join(root, "data", "listing-search-records.json");
+const listingSearchIndexJsonPath = path.join(root, "data", "listing-search-index.json");
 const shortlistSummariesJsonPath = path.join(root, "data", "shortlist-summaries.json");
+const shortlistIndexJsonPath = path.join(root, "data", "shortlist-index.json");
+const publicationStatesJsonPath = path.join(root, "data", "listing-publication-states.json");
 
 assert.ok(fs.existsSync(listingsJsonPath), "listing records should be stored in data/listings.json");
 assert.ok(
@@ -14,9 +19,14 @@ assert.ok(
   "compact client search records should be stored in data/listing-search-records.json"
 );
 assert.ok(
+  fs.existsSync(listingSearchIndexJsonPath),
+  "browser search records should have a generated packed index"
+);
+assert.ok(
   fs.existsSync(shortlistSummariesJsonPath),
   "compact compare shortlist summaries should be stored in data/shortlist-summaries.json"
 );
+assert.ok(fs.existsSync(shortlistIndexJsonPath), "compare summaries should have a generated packed index");
 
 const listingsSource = fs.readFileSync(listingsSourcePath, "utf8");
 assert.ok(
@@ -31,25 +41,39 @@ assert.ok(
 const listings = JSON.parse(fs.readFileSync(listingsJsonPath, "utf8"));
 assert.ok(Array.isArray(listings), "data/listings.json should contain a listing array");
 assert.ok(listings.length > 0, "data/listings.json should include imported listings");
+const publicationRegistry = JSON.parse(fs.readFileSync(publicationStatesJsonPath, "utf8"));
+const publishedCount = publicationRegistry.entries.filter((state: { status: string }) => state.status === "published").length;
 
 const searchRecords = JSON.parse(fs.readFileSync(listingSearchRecordsJsonPath, "utf8"));
 assert.ok(Array.isArray(searchRecords), "data/listing-search-records.json should contain a listing array");
 assert.equal(
   searchRecords.length,
-  listings.length,
-  "compact client search records should stay in sync with full listing records"
+  publishedCount,
+  "compact client search records should stay in sync with published listing records"
 );
 assert.ok(
   fs.statSync(listingSearchRecordsJsonPath).size < fs.statSync(listingsJsonPath).size,
   "compact client search records should be smaller than full listing records"
 );
 
+const packedSearchIndex = JSON.parse(fs.readFileSync(listingSearchIndexJsonPath, "utf8"));
+const unpackedSearchRecords = JSON.parse(JSON.stringify(unpackListingSearchRecords(packedSearchIndex)));
+assert.deepEqual(
+  unpackedSearchRecords,
+  searchRecords,
+  "packed browser search records should decode without losing listing fields"
+);
+assert.ok(
+  fs.statSync(listingSearchIndexJsonPath).size < fs.statSync(listingSearchRecordsJsonPath).size / 2,
+  "packed browser search index should remain less than half the verbose search-record size"
+);
+
 const shortlistSummaries = JSON.parse(fs.readFileSync(shortlistSummariesJsonPath, "utf8"));
 assert.ok(Array.isArray(shortlistSummaries), "data/shortlist-summaries.json should contain a listing array");
 assert.equal(
   shortlistSummaries.length,
-  listings.length,
-  "compact compare shortlist summaries should stay in sync with full listing records"
+  publishedCount,
+  "compact compare shortlist summaries should stay in sync with published listing records"
 );
 assert.ok(
   fs.statSync(shortlistSummariesJsonPath).size < fs.statSync(listingSearchRecordsJsonPath).size,
@@ -58,6 +82,18 @@ assert.ok(
 assert.ok(
   shortlistSummaries.every((summary) => !("description" in summary) && !("images" in summary) && !("details" in summary)),
   "compare shortlist summaries should not carry full search-card fields"
+);
+
+const packedShortlistIndex = JSON.parse(fs.readFileSync(shortlistIndexJsonPath, "utf8"));
+const unpackedShortlistSummaries = JSON.parse(JSON.stringify(unpackShortlistSummaries(packedShortlistIndex)));
+assert.deepEqual(
+  unpackedShortlistSummaries,
+  shortlistSummaries,
+  "packed shortlist summaries should decode without losing compare fields"
+);
+assert.ok(
+  fs.statSync(shortlistIndexJsonPath).size < fs.statSync(shortlistSummariesJsonPath).size / 2,
+  "packed shortlist index should remain less than half the verbose summary size"
 );
 
 const listingImagesBySlug = new Map(listings.map((listing) => [listing.slug, listing.images.slice(0, 3)]));

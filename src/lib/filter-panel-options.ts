@@ -1,7 +1,7 @@
 import { directoryConfig } from "@/config/directory";
 import type { ListingSearchRecord } from "@/data/listing-search-records";
 import {
-  filterListingSearchRecords,
+  buildListingSearchState,
   getSearchAccessibilityOptions,
   getSearchAmenities,
   getSearchAreas,
@@ -25,8 +25,10 @@ import {
   getSearchRatingFilterOptions,
   getSearchServiceOptions,
   getSearchTubeStations,
+  type ListingFacetAvailability,
+  type ListingFacetName,
   type ListingSearchFilters
-} from "@/lib/listing-search";
+} from "@/lib/listing-search-runtime";
 import { isDirectoryFeatureEnabled } from "@/lib/directory-features";
 import type { ListingsPageLinkValues } from "@/lib/listings-page";
 import { slugify } from "@/lib/slug";
@@ -67,11 +69,15 @@ type DetailOptionKey =
 const DEFAULT_MAX_INITIAL_OPTIONS = 16;
 let cachedOptionGroupConfigs: OptionGroupConfig[] | null = null;
 
-export function getFilterPanelOptionGroups(values: ListingsPageLinkValues = {}) {
+export function getFilterPanelOptionGroups(
+  values: ListingsPageLinkValues = {},
+  availableValuesByGroup?: ListingFacetAvailability
+) {
   const groups = getOptionGroupConfigs();
+  const contextualAvailability = availableValuesByGroup ?? buildContextualAvailability(values);
 
   return groups.map((group) => {
-    const contextOptions = getContextualOptions(group, values);
+    const contextOptions = getContextualOptions(group, values, contextualAvailability);
     const options = limitOptions(
       contextOptions,
       valueForName(values, group.name),
@@ -89,7 +95,7 @@ export function getFilterPanelOptionGroups(values: ListingsPageLinkValues = {}) 
   });
 }
 
-function getOptionGroupConfigs() {
+function getOptionGroupConfigs(): OptionGroupConfig[] {
   if (cachedOptionGroupConfigs) return cachedOptionGroupConfigs;
 
   const labels = directoryConfig.filterLabels;
@@ -135,14 +141,22 @@ function getOptionGroupConfigs() {
   return cachedOptionGroupConfigs;
 }
 
-function getContextualOptions(group: OptionGroupConfig, values: ListingsPageLinkValues) {
+function getContextualOptions(
+  group: OptionGroupConfig,
+  values: ListingsPageLinkValues,
+  availableValuesByGroup?: ListingFacetAvailability
+) {
   if (!group.contextualOptions || !hasContextualValues(values, group.name)) return group.options;
 
-  const filters = filtersForOptionGroup(values, group.name);
-  const listings = filterListingSearchRecords(filters);
-  const availableValues = new Set(group.contextualOptions(listings).map((option) => option.value));
+  const availableValues = availableValuesByGroup?.get(group.name as ListingFacetName);
+  if (!availableValues) return group.options;
 
   return group.options.filter((option) => availableValues.has(option.value));
+}
+
+function buildContextualAvailability(values: ListingsPageLinkValues) {
+  if (!filterNames.some((name) => Boolean(values[name as keyof ListingsPageLinkValues]))) return undefined;
+  return buildListingSearchState(filtersForValues(values)).availableValuesByGroup;
 }
 
 function limitOptions(
@@ -160,10 +174,9 @@ function limitOptions(
 
 type SearchFilterName = keyof ListingSearchFilters;
 
-function filtersForOptionGroup(values: ListingsPageLinkValues, groupName: string): ListingSearchFilters {
+function filtersForValues(values: ListingsPageLinkValues): ListingSearchFilters {
   const filters: ListingSearchFilters = {};
   filterNames.forEach((name) => {
-    if (name === groupName) return;
     const value = values[name as keyof ListingsPageLinkValues];
     if (!value) return;
     if (name === "rating") {

@@ -1,0 +1,21 @@
+{
+  "listingSlug": "contemporary-indian-cuisine",
+  "expectedSourceId": "ChIJWYJjFXEQdkgRftY39xKtKwM",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:04.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-contemporary-indian-cuisine-ec7be3761323"
+    }
+  ],
+  "notes": "The generic imported identity cannot be corroborated at the residential-style address and no safe contact action exists. Hold it without making a closure or invalid-import claim."
+}

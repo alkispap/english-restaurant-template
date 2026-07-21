@@ -1,0 +1,34 @@
+{
+  "listingSlug": "real-taste-of-india",
+  "checkedAt": "2026-07-16T10:50:05.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Current Google profile by stored Place ID",
+      "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Real%20Taste%20Of%20India&query_place_id=ChIJq6p2PbJydkgRcPzXHlGQpP0",
+      "accessedAt": "2026-07-16T10:50:05.000Z"
+    },
+    {
+      "sourceName": "Kulcha Express official locations",
+      "sourceUrl": "https://kulchaexpress.co.uk/",
+      "accessedAt": "2026-07-16T10:50:05.000Z"
+    },
+    {
+      "sourceName": "Current FSA FHRS UB2 4BQ premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=UB2%204BQ&pageSize=100",
+      "accessedAt": "2026-07-16T10:50:05.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The exact Real Taste Google profile remains and displays hours, but official and FSA evidence identifies Kulcha Express at the same premises. A stale duplicate profile, rename or successor are all possible. Do not republish, merge or redirect until explicit continuity evidence exists."
+}

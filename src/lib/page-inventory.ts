@@ -7,6 +7,7 @@ export type TemplatePageCategory =
   | "article-guide"
   | "utility"
   | "trust-support"
+  | "system-data"
   | "system-seo";
 
 export type TemplateReusableStatus =
@@ -374,6 +375,19 @@ const pageInventory = [
     notes: "Supports freshness and trust signals."
   },
   {
+    id: "directory-search-data",
+    category: "system-data",
+    urlPattern: "/directory-search-index.json",
+    routeFile: "src/app/directory-search-index.json/route.ts",
+    componentOrModel: "Static browser search-data response",
+    headingSource: "No rendered headings",
+    metadataSource: "No public page metadata",
+    reusableStatus: "system-generated",
+    staleWordingRisk: "none",
+    upgradePriority: "none",
+    notes: "First-party packed search data loaded on demand by interactive directory filters."
+  },
+  {
     id: "sitemap",
     category: "system-seo",
     urlPattern: "/sitemap.xml",
@@ -431,12 +445,13 @@ export function getPublicSeoUpgradeTargets(): TemplatePageInventoryItem[] {
     utility: 5,
     "homepage-search": 6,
     redirect: 7,
-    "system-seo": 8
+    "system-data": 8,
+    "system-seo": 9
   };
 
   return getTemplatePageInventory()
     .filter((page) => page.upgradePriority !== "none")
-    .filter((page) => page.category !== "system-seo" && page.category !== "redirect")
+    .filter((page) => page.category !== "system-seo" && page.category !== "system-data" && page.category !== "redirect")
     .sort(
       (a, b) =>
         priorityRank[a.upgradePriority] - priorityRank[b.upgradePriority] ||

@@ -44,7 +44,7 @@ export function SearchableCardGrid({
           />
         </label>
 
-        <div aria-label={alphabetLabel ?? "Filter by first letter"} className="flex flex-wrap gap-1.5">
+        <div role="group" aria-label={alphabetLabel ?? "Filter by first letter"} className="flex flex-wrap gap-1.5">
           <button
             type="button"
             onClick={() => setLetter("")}
@@ -65,6 +65,9 @@ export function SearchableCardGrid({
             </button>
           ))}
         </div>
+        <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {visibleItems.length.toLocaleString()} results
+        </p>
       </div>
 
       {visibleItems.length ? (

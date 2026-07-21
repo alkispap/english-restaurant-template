@@ -1,0 +1,21 @@
+{
+  "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+  "expectedSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-b5e10640cc58"
+    }
+  ],
+  "notes": "Current premises records identify The Empress and Burgers LDN at 141 Leman Street, while the Bazaar domain no longer identifies a restaurant location. Withhold until direct Bazaar identity, successor or closure evidence is available."
+}

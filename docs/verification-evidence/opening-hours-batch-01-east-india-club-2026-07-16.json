@@ -1,0 +1,42 @@
+{
+  "listingSlug": "east-india-club",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "East India Club official bars and dining page",
+      "sourceUrl": "https://eastindiaclub.co.uk/bar-dining-times/",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS East India Devonshire Sports and Public Schools Club record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/412568",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current official club dining page and September 2025 FSA inspection support an operating members' club."
+    },
+    {
+      "field": "contact.website",
+      "value": "https://eastindiaclub.co.uk/",
+      "reason": "The current official website is available over HTTPS."
+    }
+  ],
+  "notes": "The exact entity is a private members' club. Its official dining page restricts dining to members and guests and describes the cuisine as British. Club dining-room and lounge hours were not added to an Indian restaurant listing. Publication eligibility is handled separately as out of directory scope."
+}

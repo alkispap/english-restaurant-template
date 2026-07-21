@@ -49,13 +49,20 @@ import { ListingComments } from "@/components/ListingComments";
 import { FactAnswer } from "@/components/FactAnswer";
 import { DirectoryAnalyticsTracker } from "@/components/DirectoryAnalyticsTracker";
 import { DirectoryFreshnessLabel } from "@/components/DirectoryFreshnessLabel";
+import { JsonLd } from "@/components/JsonLd";
+import { ListingUnderReview } from "@/components/ListingUnderReview";
 import { TrackedActionLink } from "@/components/TrackedActionLink";
 import { buildListingEavSummary } from "@/lib/listing-eav-summary";
 import { directoryConfig } from "@/config/directory";
 import { siteConfig } from "@/config/site";
-import { listings } from "@/data/listings";
+import type { Listing } from "@/data/listings";
+import {
+  getListingPublicationState,
+  getRetainedListingBySlug,
+  publiclyRoutableListings
+} from "@/data/listing-publication";
 import { resolveListingSlugRedirect } from "@/data/listing-slug-redirects";
-import { getListingBySlug, getRelatedListings, isCategoryTag, slugify } from "@/lib/directory";
+import { getRelatedListings, isCategoryTag, slugify } from "@/lib/directory";
 import {
   buildListingDetailTabs,
   hasContact,
@@ -92,15 +99,25 @@ export function generateStaticParams() {
   if (!shouldGenerateFullStaticParams()) return [];
 
   return [
-    ...listings.map((listing) => ({ slug: listing.slug }))
+    ...publiclyRoutableListings.map((listing) => ({ slug: listing.slug }))
   ];
 }
 
 export async function generateMetadata({ params }: ListingPageProps): Promise<Metadata> {
   const { slug } = await params;
   const redirectTarget = resolveListingSlugRedirect(slug);
-  const listing = getListingBySlug(redirectTarget ?? slug);
+  const canonicalSlug = redirectTarget ?? slug;
+  const listing = getRetainedListingBySlug(canonicalSlug);
   if (!listing) return {};
+  const publication = getListingPublicationState(listing.slug);
+  if (publication.status === "excluded") return {};
+  if (publication.status === "pending-review") {
+    return {
+      title: `${listing.name} under editorial review`,
+      description: "This restaurant listing is temporarily withheld while its identity or current information is checked.",
+      robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false, noarchive: true } }
+    };
+  }
 
   const title = buildListingDetailSeoTitle(listing);
   const description = buildListingDetailMetaDescription(listing);
@@ -134,8 +151,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const redirectTarget = resolveListingSlugRedirect(slug);
   if (redirectTarget) redirect(listingDetailPath(redirectTarget));
 
-  const listing = getListingBySlug(slug);
+  const listing = getRetainedListingBySlug(slug);
   if (!listing) notFound();
+  const publication = getListingPublicationState(slug);
+  if (publication.status === "excluded") {
+    if (publication.successorSlug) redirect(listingDetailPath(publication.successorSlug));
+    notFound();
+  }
+  if (publication.status === "pending-review") return <ListingUnderReview name={listing.name} slug={listing.slug} />;
 
   const related = getRelatedListings(listing, 8).map(relatedListingCardFromListing);
   const gallery = listing.images.slice(0, 3);
@@ -174,14 +197,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
       <ListingNav name={listing.name} tabs={tabs} />
       <ListingDetailMobileChrome listing={mobileChromeListing} tabs={tabs} shareUrl={share.url} route={route} />
       <DirectoryAnalyticsTracker pageType="listing_detail" route={route} listingSlug={listing.slug} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(listing)) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(breadcrumbs)) }}
-      />
+      <JsonLd data={localBusinessJsonLd(listing)} />
+      <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
       <section id="photos" className="scroll-mt-20 bg-white">
         <div className="mx-auto max-w-7xl px-0 py-0 sm:px-6 sm:py-8 lg:px-8">
           <div className="mb-6 hidden flex-wrap items-center gap-2 text-sm text-muted md:flex">
@@ -255,7 +272,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
           {isClosed ? <StatusBanner status={status} /> : null}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <h1 className="hidden text-4xl font-bold text-ink md:block">{headings.h1}</h1>
+            <h1 className="sr-only text-4xl font-bold text-ink md:not-sr-only md:block">{headings.h1}</h1>
             <div className="flex flex-wrap gap-2 sm:mt-1">
               {isDirectoryFeatureEnabled("shortlist") ? <SaveListingButton slug={listing.slug} /> : null}
               <ShareButton 
@@ -409,6 +426,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
           {hasTransportSection ? <TransportSection listing={listing} heading={headings.transport} /> : null}
           {hasNearbySection ? <NearbySection listing={listing} heading={headings.nearby} /> : null}
           <ListingComments slug={listing.slug} heading={headings.comments} />
+          <div className="rounded-lg border border-line bg-white p-5 shadow-soft">
+            <h2 className="text-lg font-bold text-ink">Is this information incorrect?</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">Prepare a structured correction with a public source so the directory can review it before changing this listing.</p>
+            <Link
+              href={`/suggest-update?restaurant=${encodeURIComponent(listing.name)}&area=${encodeURIComponent(listing.area ?? listing.neighborhood ?? "")}&listing=${encodeURIComponent(listing.slug)}`}
+              className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark"
+            >
+              Suggest an update <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+          </div>
         </article>
 
         {hasContactSection ? (
@@ -550,7 +577,7 @@ function InfoCard({ icon, label, value, href }: { icon: React.ReactNode; label: 
   return <div className={className}>{content}</div>;
 }
 
-function getListingTagHref(listing: NonNullable<ReturnType<typeof getListingBySlug>>, tag: string) {
+function getListingTagHref(listing: Listing, tag: string) {
   const tagSlug = slugify(tag);
 
   if (isCategoryTag(tag)) return directoryRouteLink("category", tagSlug);
@@ -560,7 +587,7 @@ function getListingTagHref(listing: NonNullable<ReturnType<typeof getListingBySl
   return directorySearchPath(`?q=${encodeURIComponent(tag)}`);
 }
 
-function relatedListingCardFromListing(listing: typeof listings[number]): RelatedListingCard {
+function relatedListingCardFromListing(listing: Listing): RelatedListingCard {
   return {
     slug: listing.slug,
     name: listing.name,
@@ -573,7 +600,7 @@ function relatedListingCardFromListing(listing: typeof listings[number]): Relate
   };
 }
 
-function mobileChromeListingFromListing(listing: typeof listings[number]): MobileChromeListing {
+function mobileChromeListingFromListing(listing: Listing): MobileChromeListing {
   return {
     slug: listing.slug,
     name: listing.name,
@@ -655,7 +682,7 @@ function PillGroup({
   );
 }
 
-function TransportSection({ listing, heading }: { listing: typeof listings[number]; heading: string }) {
+function TransportSection({ listing, heading }: { listing: Listing; heading: string }) {
   const tube = listing.location?.tubeStation;
   const bus = listing.location?.busStop;
   if (!tube && !bus) return null;
@@ -671,7 +698,7 @@ function TransportSection({ listing, heading }: { listing: typeof listings[numbe
           >
             <Train className="mb-3 h-5 w-5 text-primary" aria-hidden />
             <h3 className="font-bold text-ink">{tube}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
+            <p className="mt-2 text-sm leading-6 text-muted-strong">
               {[listing.location?.tubeLines?.join(", "), distanceText(listing.location?.tubeDistanceMeters), walkText(listing.location?.tubeWalkMinutes)]
                 .filter(Boolean)
                 .join(" · ")}
@@ -685,7 +712,7 @@ function TransportSection({ listing, heading }: { listing: typeof listings[numbe
           >
             <MapPin className="mb-3 h-5 w-5 text-primary" aria-hidden />
             <h3 className="font-bold text-ink">{bus}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
+            <p className="mt-2 text-sm leading-6 text-muted-strong">
               {[listing.location?.busRoutes?.slice(0, 8).join(", "), distanceText(listing.location?.busDistanceMeters), walkText(listing.location?.busWalkMinutes)]
                 .filter(Boolean)
                 .join(" · ")}
@@ -697,7 +724,7 @@ function TransportSection({ listing, heading }: { listing: typeof listings[numbe
   );
 }
 
-function NearbySection({ listing, heading }: { listing: typeof listings[number]; heading: string }) {
+function NearbySection({ listing, heading }: { listing: Listing; heading: string }) {
   const nearby = listing.location?.nearbyPlaces;
   if (!nearby?.length) return null;
 

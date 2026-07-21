@@ -1,0 +1,21 @@
+{
+  "listingSlug": "spice-garden",
+  "expectedSourceId": "ChIJ5RHe8JCp2EcRzEJIX5GXwXY",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:23:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-spice-garden-ed30d7abfcf9"
+    }
+  ],
+  "notes": "Current and historical official premises evidence identifies Beijing at 127/129 Chinbrook Road, while no source corroborates Spice Garden there. Do not infer closure or attach Beijing details; withhold pending identity evidence."
+}

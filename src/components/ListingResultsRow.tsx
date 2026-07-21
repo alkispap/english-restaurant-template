@@ -79,7 +79,12 @@ export function ListingResultsRow({ listing, rank }: ListingResultsRowProps) {
   return (
     <article className={`overflow-hidden rounded-lg border-2 ${statusBorderClass} bg-white shadow-soft transition hover:-translate-y-0.5 hover:shadow-xl`}>
       <div className="grid md:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_160px]">
-        <div className="relative min-h-[210px] overflow-hidden bg-orange-50 md:min-h-full">
+        <div
+          role={hasCarousel ? "group" : undefined}
+          aria-roledescription={hasCarousel ? "carousel" : undefined}
+          aria-label={hasCarousel ? `${listing.name} images` : undefined}
+          className="relative min-h-[210px] overflow-hidden bg-orange-50 md:min-h-full"
+        >
           <Link href={detailHref} className="block h-full min-h-[210px]">
             <DirectoryImage
               key={image ?? "fallback"}
@@ -122,7 +127,12 @@ export function ListingResultsRow({ listing, rank }: ListingResultsRowProps) {
               >
                 <ChevronRight className="h-5 w-5" aria-hidden />
               </button>
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-bold text-white">
+              <div
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-bold text-white"
+              >
                 {currentImageIndex + 1} / {imageCount}
               </div>
             </>

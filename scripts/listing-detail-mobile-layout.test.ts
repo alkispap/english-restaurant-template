@@ -73,8 +73,38 @@ assert.match(
 );
 assert.match(
   mobileChromeSource,
+  /inert=\{!showStickyAreaBar\}/,
+  "mobile sticky area bar controls should not remain focusable while the bar is off-screen"
+);
+assert.match(
+  mobileChromeSource,
+  /aria-hidden=\{!showStickyAreaBar\}/,
+  "mobile sticky area bar should leave the accessibility tree while it is off-screen"
+);
+assert.match(
+  mobileChromeSource,
+  /inert=\{showStickyAreaBar\}/,
+  "original mobile actions should not duplicate sticky keyboard stops after scrolling"
+);
+assert.match(
+  mobileChromeSource,
   /md:hidden/,
   "mobile TripAdvisor-style chrome should be hidden on tablet and desktop layouts"
+);
+assert.equal(
+  countOccurrences(pageSource, "<h1"),
+  1,
+  "restaurant detail pages should retain one semantic H1"
+);
+assert.match(
+  pageSource,
+  /<h1 className="sr-only text-4xl font-bold text-ink md:not-sr-only md:block">\{headings\.h1\}<\/h1>/,
+  "the restaurant H1 should remain in the mobile accessibility tree while retaining the desktop layout"
+);
+assert.match(
+  mobileChromeSource,
+  /<p aria-hidden="true" className="mt-5 text-\[2rem\]/,
+  "the mirrored visual mobile title should not duplicate the semantic H1 for assistive technology"
 );
 assert.match(
   pageSource,
@@ -86,5 +116,9 @@ assert.match(
   /<section id="mobile-location"/,
   "restaurant detail page should render a mobile Location section"
 );
+
+function countOccurrences(value: string, pattern: string) {
+  return value.split(pattern).length - 1;
+}
 
 console.log("listing detail mobile layout tests passed");

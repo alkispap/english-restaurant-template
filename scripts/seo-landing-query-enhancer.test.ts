@@ -4,6 +4,15 @@ import path from "node:path";
 import { buildBrowserSeoLandingListingsModel } from "../src/lib/seo-landing-listings-browser";
 import { buildDirectoryListingsModel } from "../src/lib/directory-listings-model";
 
+const packedSearchIndex = fs.readFileSync(path.join(process.cwd(), "data", "listing-search-index.json"), "utf8");
+let searchDataRequestCount = 0;
+globalThis.fetch = async () => {
+  searchDataRequestCount += 1;
+  return new Response(packedSearchIndex, {
+  headers: { "Content-Type": "application/json" }
+  });
+};
+
 function seoLandingPageMountsQueryEnhancer() {
   const source = fs.readFileSync(path.join(process.cwd(), "src", "components", "SeoLandingPage.tsx"), "utf8");
 
@@ -39,6 +48,21 @@ function seoLandingQueryEnhancerLazyLoadsHeavyModules() {
     "SEO landing query enhancer should lazy-load only the SEO landing results shell"
   );
   assert.ok(fs.existsSync(browserPath), "seo-landing-browser module should still exist until removed intentionally");
+  assert.match(
+    source,
+    /captureDirectoryQuerySnapshot\(window\.location\)[\s\S]*normalizedQuery[\s\S]*prefetchDirectorySearchData/,
+    "SEO landing startup should preload search data only for recognized directory query state"
+  );
+  assert.doesNotMatch(
+    source,
+    /window\.location\.search\.length/,
+    "tracking-only SEO landing URLs should not preload the search index"
+  );
+  assert.match(
+    source,
+    /const \{[\s\S]*?href: currentUrl,[\s\S]*?pathname,[\s\S]*?searchParams: currentParams,[\s\S]*?normalizedQuery: nextQuery[\s\S]*?\} = captureDirectoryQuerySnapshot\(window\.location\)/,
+    "SEO landing updates should capture pathname and query parameters from one URL snapshot"
+  );
 }
 
 function browserLoadedSeoQueryModulesAvoidFullSeoDataset() {
@@ -105,17 +129,27 @@ function seoLandingQueryEnhancerMountsClientResultsIntoDedicatedRoot() {
     /seo-landing-client-results-root/,
     "SEO landing query enhancer should target the dedicated client results root"
   );
+  assert.match(
+    source,
+    /serverResults\.style\.display = activeModel !== null \? "none" : ""/,
+    "SEO landing query enhancer should explicitly hide the grid server region while client results are active"
+  );
+  assert.match(
+    source,
+    /serverResults\.style\.display = ""/,
+    "SEO landing query enhancer should restore the server region display state during cleanup"
+  );
 }
 
-function browserSeoLandingBuilderUsesCurrentQueryParams() {
-  const cleanModel = buildBrowserSeoLandingListingsModel({
+async function browserSeoLandingBuilderUsesCurrentQueryParams() {
+  const cleanModel = await buildBrowserSeoLandingListingsModel({
     pathname: "/areas/harrow",
     searchParams: new URLSearchParams(),
     basePath: "/areas/harrow",
     title: "Indian restaurants in Harrow",
     description: "Compare Indian restaurants in Harrow."
   });
-  const openModel = buildBrowserSeoLandingListingsModel({
+  const openModel = await buildBrowserSeoLandingListingsModel({
     pathname: "/areas/harrow",
     searchParams: new URLSearchParams("open=1"),
     basePath: "/areas/harrow",
@@ -134,7 +168,7 @@ function browserSeoLandingBuilderUsesCurrentQueryParams() {
   assert.equal(openModel.filters.area, "harrow");
 }
 
-function browserSeoLandingBuilderCoversSeoPageFamilies() {
+async function browserSeoLandingBuilderCoversSeoPageFamilies() {
   const paths = [
     "/areas/harrow",
     "/categories/indian",
@@ -147,7 +181,7 @@ function browserSeoLandingBuilderCoversSeoPageFamilies() {
     "/types/casual-dining"
   ];
 
-  const resolved = paths.map((pathname) =>
+  const resolved = await Promise.all(paths.map((pathname) =>
     buildBrowserSeoLandingListingsModel({
       pathname,
       searchParams: new URLSearchParams("sort=reviews"),
@@ -155,14 +189,14 @@ function browserSeoLandingBuilderCoversSeoPageFamilies() {
       title: "SEO landing results",
       description: "Compare matching restaurants."
     })
-  );
+  ));
 
   assert.equal(resolved.length, paths.length);
   assert.ok(resolved.every(Boolean), "browser builder should resolve all SEO landing route families");
 }
 
-function categoryQueriesStayCanonicalizedAndNoindexed() {
-  const queriedCategoryModel = buildBrowserSeoLandingListingsModel({
+async function categoryQueriesStayCanonicalizedAndNoindexed() {
+  const queriedCategoryModel = await buildBrowserSeoLandingListingsModel({
     pathname: "/categories/indian",
     searchParams: new URLSearchParams("open=1&sort=reviews"),
     basePath: "/categories/indian",
@@ -184,13 +218,20 @@ function categoryQueriesStayCanonicalizedAndNoindexed() {
   assert.equal(queriedCategoryModel.totalCount, directCategoryModel.totalCount);
 }
 
-seoLandingPageMountsQueryEnhancer();
-seoLandingQueryEnhancerLazyLoadsHeavyModules();
-browserLoadedSeoQueryModulesAvoidFullSeoDataset();
-seoLandingServerContentExposesReplaceableResultsRegion();
-seoLandingQueryEnhancerMountsClientResultsIntoDedicatedRoot();
-browserSeoLandingBuilderUsesCurrentQueryParams();
-browserSeoLandingBuilderCoversSeoPageFamilies();
-categoryQueriesStayCanonicalizedAndNoindexed();
+async function main() {
+  seoLandingPageMountsQueryEnhancer();
+  seoLandingQueryEnhancerLazyLoadsHeavyModules();
+  browserLoadedSeoQueryModulesAvoidFullSeoDataset();
+  seoLandingServerContentExposesReplaceableResultsRegion();
+  seoLandingQueryEnhancerMountsClientResultsIntoDedicatedRoot();
+  await browserSeoLandingBuilderUsesCurrentQueryParams();
+  await browserSeoLandingBuilderCoversSeoPageFamilies();
+  await categoryQueriesStayCanonicalizedAndNoindexed();
+  assert.equal(searchDataRequestCount, 1, "browser SEO models should reuse one initialized search runtime");
+  console.log("SEO landing query enhancer tests passed");
+}
 
-console.log("SEO landing query enhancer tests passed");
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

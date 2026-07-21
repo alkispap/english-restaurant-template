@@ -1,0 +1,29 @@
+{
+  "listingSlug": "sucess-worker",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact-name and postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=sucess%20worker&address=W6%200RA&pageSize=100",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS current W6 0RA premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=W6%200RA&pageSize=100",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The imported name is misspelled and the address is only 'near Hammersmith'. Current FSA data identifies numerous real businesses at numbered King Street premises in W6 0RA but no Sucess Worker entity. Search results repeat the imported map label without a primary business source. Do not select a nearby restaurant, infer closure, or exclude automatically; hold pending a real street number and identity evidence."
+}

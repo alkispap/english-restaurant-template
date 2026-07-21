@@ -1,0 +1,29 @@
+{
+  "listingSlug": "chef-tazzy",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact-name and postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Chef%20Tazzy&address=E3%202PA",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "FSA FHRS current E3 2PA premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E3%202PA&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "No current authoritative or first-party source corroborates Chef Tazzy at 4A Roach Road. The current postcode result identifies a different restaurant at number 7 and cannot be used as successor or contact evidence. The imported entity may be a home chef, delivery brand, historical operator, or incorrect record. Hold pending direct evidence."
+}

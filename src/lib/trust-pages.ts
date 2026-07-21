@@ -1,10 +1,15 @@
 import { siteConfig } from "@/config/site";
+import { mapProviderConfig } from "@/config/map-provider";
 import type { Metadata } from "next";
 import { pageShareMetadata } from "@/lib/share-metadata";
 
 export type TrustPageSection = {
   heading: string;
   body: string;
+  links?: readonly {
+    label: string;
+    href: string;
+  }[];
 };
 
 export type TrustPage = {
@@ -21,13 +26,13 @@ export const trustPages = [
   {
     key: "about",
     title: "About",
-    metadataTitle: "About This Indian Restaurant Directory",
-    heading: "About This Indian Restaurant Directory",
+    metadataTitle: `About This ${siteConfig.localNicheSingularTitle} Directory`,
+    heading: `About This ${siteConfig.localNicheSingularTitle} Directory`,
     href: "/about",
     description: `${siteConfig.name} is a local directory for comparing ${siteConfig.niche}.`,
     sections: [
       {
-        heading: "What This Indian Restaurant Directory Does",
+        heading: `What This ${siteConfig.localNicheSingularTitle} Directory Does`,
         body: `${siteConfig.name} helps visitors compare ${siteConfig.niche} by area, cuisine, service options, Google rating, Google review count, transport links, opening hours, and dining details.`
       },
       {
@@ -39,7 +44,7 @@ export const trustPages = [
         body: "This site is not a restaurant owner, booking agent, delivery provider, or official representative of the listed businesses."
       },
       {
-        heading: "How to Use the Indian Restaurant Directory",
+        heading: `How to Use the ${siteConfig.localNicheSingularTitle} Directory`,
         body: "Use the filters, area pages, category pages, comparison tools, and listing details to shortlist restaurants before checking directly with the restaurant."
       }
     ]
@@ -47,8 +52,8 @@ export const trustPages = [
   {
     key: "contact",
     title: "Contact",
-    metadataTitle: "Contact the Indian Restaurants in London Directory",
-    heading: "Contact the Indian Restaurants in London Directory",
+    metadataTitle: `Contact the ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion} Directory`,
+    heading: `Contact the ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion} Directory`,
     href: "/contact",
     description: `Contact ${siteConfig.name} about corrections, partnerships, listing updates, or general questions.`,
     sections: [
@@ -57,7 +62,7 @@ export const trustPages = [
         body: "Use this page as the contact point for directory questions, feedback, corrections, and partnership enquiries."
       },
       {
-        heading: "Indian Restaurant Listing Updates",
+        heading: `${siteConfig.cuisineLabel} Restaurant Listing Updates`,
         body: "Restaurants can request corrections for opening hours, contact links, service options, photos, categories, or closed-status information."
       },
       {
@@ -75,12 +80,32 @@ export const trustPages = [
     description: `Privacy information for visitors using ${siteConfig.name}.`,
     sections: [
       {
-        heading: "Information This Restaurant Directory May Use",
-        body: "The directory may use privacy-friendly analytics, browser storage for saved listings, and information submitted voluntarily through contact or update requests."
+        heading: "Current Analytics and Data Collection",
+        body: "The current site does not send analytics events to an external analytics provider and does not set analytics cookies. Interface events stay in the page unless a separately configured analytics adapter is added later. This policy and any required consent controls must be updated before external analytics is enabled."
       },
       {
-        heading: "Saved Restaurant Listings",
-        body: "Saved and compared listings can work in the visitor's browser, so they may remain on the device unless the browser data is cleared."
+        heading: "Browser Storage for Saved Listings and Comments",
+        body: "Saved and compared restaurant identifiers and listing comments are stored in the visitor's browser so those requested features work. Browser comments are private to that browser: they are not published or sent to this directory. This data remains on the device until it is removed in the interface or the browser data is cleared."
+      },
+      {
+        heading: "Location Permission",
+        body: "The near-you feature asks for location only after the visitor selects it. Coordinates are used in the browser to choose the nearest directory area and are not stored or sent to this directory. The browser, device, or location provider may apply its own privacy terms."
+      },
+      {
+        heading: "Optional Account Synchronisation",
+        body: "Account synchronisation is currently disabled. If it is enabled with Supabase, sign-in details, saved restaurant identifiers, and private notes will be sent to the configured account service; Google or Microsoft will also process data when that sign-in option is chosen. The production privacy notice and provider details must be reviewed before activation."
+      },
+      {
+        heading: "Contact and Update Requests",
+        body: "The current contact page provides guidance only. The suggest-an-update form prepares correction text in the visitor's browser and does not automatically submit, publish, or retain it. If a corrections email address is configured, choosing to open an email app passes the generated text to the visitor's email provider and the directory mailbox; their retention policies then apply."
+      },
+      {
+        heading: "Embedded OpenStreetMap",
+        body: "The interactive directory map does not request map tiles in ordinary list view. When a visitor chooses Map view or opens a map-view URL, their browser requests tiles directly from the OpenStreetMap Foundation. Standard connection information, including the visitor's IP address, browser and device information, referring site origin, request time, and requested tiles, may be processed under the OpenStreetMap Foundation privacy policy. This directory does not use those tile requests for its own analytics.",
+        links: [
+          { label: "OpenStreetMap Foundation privacy policy", href: mapProviderConfig.privacyPolicyUrl },
+          { label: "OpenStreetMap tile usage policy", href: mapProviderConfig.tileUsagePolicyUrl }
+        ]
       },
       {
         heading: "Third-Party Restaurant Links",
@@ -88,7 +113,7 @@ export const trustPages = [
       },
       {
         heading: "Advertising and Cookies",
-        body: "This directory may show advertising from third-party ad partners. These partners may use cookies or similar technologies to deliver ads, measure performance, prevent fraud, and understand interactions with adverts. Ads and ad links are controlled by those third parties and may be subject to their own privacy policies."
+        body: "Third-party advertising network loading is currently disabled, so the visible advertisement placeholders do not load partner scripts or advertising cookies. Before ads are enabled, the operator must review the provider, update this notice, add any consent controls required for cookies or similar technologies, and identify the third-party ad partners and their privacy terms."
       }
     ]
   },
@@ -101,7 +126,7 @@ export const trustPages = [
     description: `Terms for using ${siteConfig.name}.`,
     sections: [
       {
-        heading: "Indian Restaurant Directory Information",
+        heading: `${siteConfig.cuisineLabel} Restaurant Directory Information`,
         body: "Listing details are provided for comparison and convenience. Restaurant hours, menus, prices, services, links, and availability can change."
       },
       {
@@ -117,13 +142,13 @@ export const trustPages = [
   {
     key: "methodology",
     title: "How We Rank",
-    metadataTitle: "How We Rank Indian Restaurants in London",
-    heading: "How We Rank Indian Restaurants in London",
+    metadataTitle: `How We Rank ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion}`,
+    heading: `How We Rank ${siteConfig.localNicheTitle} in ${siteConfig.cityOrRegion}`,
     href: "/methodology",
     description: `How ${siteConfig.name} selects, sorts, and compares listings.`,
     sections: [
       {
-        heading: "How Indian Restaurant Listings Are Selected",
+        heading: `How ${siteConfig.cuisineLabel} Restaurant Listings Are Selected`,
         body: "Pages are built from the current directory dataset and focus on restaurants with enough useful information to help visitors compare options."
       },
       {
@@ -151,8 +176,8 @@ export const trustPages = [
   {
     key: "suggest-update",
     title: "Suggest an Update",
-    metadataTitle: "Suggest an Indian Restaurant Update",
-    heading: "Suggest an Indian Restaurant Update",
+    metadataTitle: `Suggest ${indefiniteArticle(siteConfig.cuisineLabel)} ${siteConfig.cuisineLabel} Restaurant Update`,
+    heading: `Suggest ${indefiniteArticle(siteConfig.cuisineLabel)} ${siteConfig.cuisineLabel} Restaurant Update`,
     href: "/suggest-update",
     description: `Suggest corrections or missing restaurant information for ${siteConfig.name}.`,
     sections: [
@@ -166,7 +191,7 @@ export const trustPages = [
       },
       {
         heading: "How Restaurant Updates Are Reviewed",
-        body: "Suggested changes should be reviewed before publication so the directory stays useful, factual, and consistent."
+        body: "Suggested changes are evidence requests, not automatic edits. A directory editor should compare the public source, record the fields checked and check date, and either verify the record or retain conflicting evidence for manual review."
       }
     ]
   }
@@ -193,4 +218,8 @@ export function getTrustPageMetadata(page: TrustPage): Metadata {
       path: page.href
     })
   };
+}
+
+function indefiniteArticle(value: string) {
+  return /^[aeiou]/i.test(value) ? "an" : "a";
 }

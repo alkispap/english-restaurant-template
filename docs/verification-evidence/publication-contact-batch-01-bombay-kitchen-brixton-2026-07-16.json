@@ -1,0 +1,21 @@
+{
+  "listingSlug": "bombay-kitchen-brixton",
+  "expectedSourceId": "ChIJM8r9pGgEdkgRZU5-EOOFvGQ",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "excluded",
+    "reason": "confirmed-permanently-closed"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-bombay-kitchen-brixton-a8a7bd0c326d"
+    }
+  ],
+  "notes": "Contemporaneous premises reporting and a current closure record confirm that Bombay Kitchen ceased trading at 384 Coldharbour Lane and was replaced by a different business. Retain the historical row and evidence, but remove it from ordinary public restaurant discovery without redirecting to the unrelated replacement."
+}

@@ -1,0 +1,30 @@
+{
+  "listingSlug": "dancing-elephant",
+  "checkedAt": "2026-07-16T09:54:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current SW19 8UG premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SW19%208UG&pageSize=100",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Shahi Catering at Unit 23",
+      "sourceUrl": "https://ratings.food.gov.uk/business/200075",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The imported address appears to mean Unit 23, 55-59 Weir Road. Current FSA evidence identifies Shahi Catering at that exact unit and numerous other commercial kitchens nearby, but no source connects Dancing Elephant to Shahi Catering or a current delivery brand. Do not copy another tenant's contact details, preserve the imported hours as current, or infer closure. Hold pending exact brand and unit evidence."
+}

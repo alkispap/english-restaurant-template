@@ -1,7 +1,8 @@
 import { directoryConfig } from "@/config/directory";
 import { featuredDiningHubs } from "@/config/featured-dining-hubs";
 import { siteConfig } from "@/config/site";
-import { listings, type Listing } from "@/data/listings";
+import type { Listing } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import {
   getBestRatedListings,
   filterListings,
@@ -160,9 +161,24 @@ const primaryNeedDefinitions = [
 ] as const;
 
 const serviceNeedDefinitions = [
-  { title: "Takeaway", slug: "takeaway" },
-  { title: "Delivery", slug: "delivery" },
-  { title: "Outdoor seating", slug: "outdoor-seating" }
+  {
+    title: "Takeaway",
+    slug: "takeaway",
+    image: "/images/homepage/services/takeaway.webp",
+    imageAlt: "Illustrated Indian takeaway meal with biryani, curry, naan, chutneys, and a paper collection bag"
+  },
+  {
+    title: "Delivery",
+    slug: "delivery",
+    image: "/images/homepage/services/delivery.webp",
+    imageAlt: "Illustrated Indian food delivery with an insulated bag, biryani, curry, naan, and a route motif"
+  },
+  {
+    title: "Outdoor seating",
+    slug: "outdoor-seating",
+    image: "/images/homepage/services/outdoor-seating.webp",
+    imageAlt: "Illustrated outdoor Indian dining table with curry, biryani, naan, brass tableware, and garden seating"
+  }
 ] as const;
 
 export function getDirectoryLandingModel(): DirectoryLandingModel {
@@ -290,8 +306,8 @@ function getServiceNeedCards(): DirectoryLandingCard[] {
         href: servicePath(need.slug),
         description: `${count.toLocaleString()} ${directoryConfig.listingPluralLabel.toLowerCase()} with ${need.title.toLowerCase()} options.`,
         count,
-        image: imageForFilters({ service: need.slug }),
-        imageAlt: `${need.title} ${siteConfig.niche}`
+        image: need.image,
+        imageAlt: need.imageAlt
       };
     })
     .filter((card) => card.count > 0);
@@ -338,33 +354,6 @@ function restaurantCard(listing: Listing): DirectoryLandingRestaurantCard {
     image: listing.images[0],
     imageAlt: listing.images[0] ? `${listing.name} ${directoryConfig.listingLabel.toLowerCase()} in ${siteConfig.cityOrRegion}` : listing.name
   };
-}
-
-function imageForFilters(filters: { area?: unknown; category?: unknown; dietary?: unknown; service?: unknown; type?: unknown }) {
-  const category = firstString(filters.category);
-  const area = firstString(filters.area);
-  const dietary = firstString(filters.dietary);
-  const service = firstString(filters.service);
-  const type = firstString(filters.type);
-
-  return listings.find((listing) => {
-    if (area && listing.area && slugMatches(listing.area, area)) return listing.images[0];
-    if (category && listing.categories.some((value) => slugMatches(value, category))) return listing.images[0];
-    if (dietary && listing.dietaryOptions.some((value) => slugMatches(value, dietary))) return listing.images[0];
-    if (service && listing.details?.serviceOptions?.some((value) => slugMatches(value, service))) return listing.images[0];
-    if (type && listing.listingTypes.some((value) => slugMatches(value, type))) return listing.images[0];
-    return false;
-  })?.images[0];
-}
-
-function firstString(value: unknown) {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value) && typeof value[0] === "string") return value[0];
-  return undefined;
-}
-
-function slugMatches(label: string, slug: string) {
-  return label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") === slug;
 }
 
 function hasCoordinates(point: { latitude?: number; longitude?: number }): point is { latitude: number; longitude: number } {

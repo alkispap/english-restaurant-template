@@ -1,0 +1,34 @@
+{
+  "listingSlug": "chotiwala",
+  "checkedAt": "2026-07-16T08:42:39.665Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS Tadka Holland Park business record",
+      "sourceUrl": "https://ratings.food.gov.uk/business/1687834/tadka-holland-park-london",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    },
+    {
+      "sourceName": "Deliveroo Tadka Holland Park current menu",
+      "sourceUrl": "https://deliveroo.co.uk/menu/london/notting-hill/tadka-holland-park-109-clarendon-road",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    },
+    {
+      "sourceName": "Uber Eats historical Chotiwala page",
+      "sourceUrl": "https://www.ubereats.com/gb/store/chotiwala-indian-vegetarian-food/5KOaaSidSlyK7LMjQ7RwYw",
+      "accessedAt": "2026-07-16T08:42:39.665Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Tadka Holland Park currently trades at the same address, and its current menu materially overlaps the historical Chotiwala menu. The Chotiwala delivery page is closed on Uber Eats. Same premises and menu continuity are strong replacement signals but do not establish that Chotiwala renamed, moved, merged, or retained the same entity/operator. No canonical rename, successor redirect, closure claim, or exclusion is supported without direct owner or entity evidence. Keep the listing pending review."
+}

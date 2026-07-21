@@ -12,11 +12,12 @@ import {
 import { getPublicGuideArticles } from "../src/lib/articles";
 import { generateStaticParams as legacyListingStaticParams } from "../src/app/listings/[slug]/page";
 import { generateStaticParams as restaurantDetailStaticParams } from "../src/app/restaurants/[slug]/page";
+import { activeDirectoryPack } from "../src/config/directory-packs";
 
 process.env.NEXT_STATIC_EXPORT = "1";
 
 const outDir = path.join(process.cwd(), "out");
-const expectedSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+const expectedSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || activeDirectoryPack.productionUrl;
 
 console.log("Static export diagnostics");
 console.log(`NEXT_PUBLIC_SITE_URL: ${expectedSiteUrl || "not set"}`);

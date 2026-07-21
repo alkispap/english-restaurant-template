@@ -57,12 +57,18 @@ Check:
 
 Do:
 
-- Run `npm run prepare:cloudflare` before upload.
-- Use direct upload only if `prepare:cloudflare` passed and no files changed after it:
+- Commit the intended release and confirm `git status --short` is empty.
+- Use `npm run prepare:cloudflare` for a local, non-publishing artifact check.
+- Publish only through the guarded production workflow:
 
-```txt
-npx wrangler pages deploy out --project-name indianrestaurantlondon
+```powershell
+$env:CLOUDFLARE_PROJECT_NAME = "indianrestaurantlondon"
+$env:CLOUDFLARE_PRODUCTION_BRANCH = "main"
+npm run publish:cloudflare -- --confirm-project=indianrestaurantlondon
 ```
+
+- Do not deploy `out/` with a raw Wrangler command; ignored output can be stale.
+- Follow `docs/cloudflare-upload-checklist.md` for the complete release and live-verification sequence.
 
 - Keep `public/_headers` included in the export.
 - Keep these long-cache rules:
@@ -140,19 +146,44 @@ Check:
 
 Do:
 
-- Treat Googleusercontent restaurant images as allowed for now.
-- Keep the Royal Nawaab image warning documented as a known limitation.
-- Decide on a full local-image strategy before replacing images widely.
+- Treat Googleusercontent origin as traceability only, not reuse permission.
+- Publish listing media only when `data/listing-media-provenance.json` contains adequate rights evidence and any required licence/attribution fields.
+- Keep unknown-rights assets quarantined and use the designed fallback; do not restore URLs directly in listing JSON.
+- Decide on local hosting/optimization only after the evidence permits downloading, modification, and hosting.
 
 Do not:
 
-- Fix image strategy piecemeal without deciding whether images should become local assets.
+- Bypass `npm run enrich:outscraper-media` or manually add unregistered media to listing JSON.
 - Assume Google image cache/compression can be controlled from this repo.
 
 Check:
 
 - If local images are introduced later, prefer optimized WebP/AVIF at display-appropriate sizes.
 - Make sure images keep stable dimensions and do not create CLS.
+
+## Listing Verification and Correction Rules
+
+Do:
+
+- Keep historical import provenance separate from current verification.
+- Use `npm run verify:listing -- <proposal.json>` as a dry run before every verification or correction write.
+- Retain public evidence, access time, reviewer, fields checked, reason, and prior/new values in the append-only ledger.
+- Use a `needs-review` event when sources conflict; it must not change the canonical listing or claim verification.
+- Recheck name, address, postcode, business status, website, phone, and opening hours before counting a listing as freshly verified.
+
+Do not:
+
+- Manually set `verificationStatus`, `lastVerifiedAt`, or `lastVerificationEventId` in listing JSON.
+- Rewrite or delete a historical ledger event to hide a superseded decision.
+- Treat a visitor correction request as verified evidence or publish it automatically.
+- Configure `CORRECTIONS_EMAIL` until a monitored mailbox, privacy owner, and retention process exist.
+
+Check:
+
+- `npm run audit:verification` has no ledger-integrity or unmatched-state errors.
+- Repeating an accepted proposal returns the existing deterministic event ID and performs no write.
+- Canonical, search, filter, and shortlist outputs are regenerated together.
+- The correction builder transmits nothing from the website and clearly discloses its local-only behavior.
 
 ## Testing Checklist
 

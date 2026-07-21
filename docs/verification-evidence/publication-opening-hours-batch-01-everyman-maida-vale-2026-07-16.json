@@ -1,0 +1,21 @@
+{
+  "listingSlug": "everyman-maida-vale",
+  "expectedSourceId": "ChIJrU2Z1KUadkgRqFMP9XqZlFU",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T18:16:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "excluded",
+    "reason": "out-of-directory-scope"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-everyman-maida-vale-5b7fb289dc24"
+    }
+  ],
+  "notes": "The exact entity is an Everyman cinema with bar and cinema-seat food service, not an Indian restaurant location. Preserve the historical record and verification evidence, but remove it from public restaurant discovery without redirecting or merging it."
+}

@@ -1,0 +1,21 @@
+{
+  "listingSlug": "chakra-indian-cuisine",
+  "expectedSourceId": "ChIJBWFjnlUPdkgRMAy1_il_Ag8",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T09:55:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-chakra-indian-cuisine-d9ecafb86b27"
+    }
+  ],
+  "notes": "Chakra's official current location list does not include the imported Tooting industrial-unit address, and current FSA premises data does not identify Chakra. Withhold until exact branch or delivery-kitchen evidence supports publication, correction, exclusion, or entity resolution."
+}

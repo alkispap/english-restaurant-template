@@ -8,9 +8,10 @@ assert.ok(
   "homepage should render Organization and WebSite structured data"
 );
 
-assert.ok(
-  homepageSource.match(/type="application\/ld\+json"/g)?.length,
-  "homepage should render JSON-LD script tags"
+assert.equal(
+  homepageSource.match(/<JsonLd\b/g)?.length,
+  2,
+  "homepage should emit Organization and WebSite data through the safe JSON-LD component"
 );
 
 console.log("homepage structured data tests passed");

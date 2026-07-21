@@ -65,7 +65,12 @@ export function ListingCard({ listing, compact = false }: ListingCardProps) {
     <div className="h-full p-0.5">
       <div className="h-full transition">
         <article className={`group flex h-full flex-col rounded-lg border-2 ${statusBorderClass} overflow-hidden bg-white shadow-soft transition hover:shadow-xl`}>
-      <div className={`relative overflow-hidden bg-orange-50 ${compact ? "aspect-[16/11]" : "aspect-[4/3]"}`}>
+      <div
+        role={hasCarousel ? "group" : undefined}
+        aria-roledescription={hasCarousel ? "carousel" : undefined}
+        aria-label={hasCarousel ? `${listing.name} images` : undefined}
+        className={`relative overflow-hidden bg-orange-50 ${compact ? "aspect-[16/11]" : "aspect-[4/3]"}`}
+      >
         <Link href={listingDetailPath(listing.slug)} className="block h-full">
           <DirectoryImage
             key={image ?? "fallback"}
@@ -108,7 +113,12 @@ export function ListingCard({ listing, compact = false }: ListingCardProps) {
             >
               <ChevronRight className="h-5 w-5" aria-hidden />
             </button>
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-ink/75 px-2.5 py-1 text-xs font-bold text-white">
+            <div
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-ink/75 px-2.5 py-1 text-xs font-bold text-white"
+            >
               {currentImageIndex + 1} / {imageCount}
             </div>
           </>

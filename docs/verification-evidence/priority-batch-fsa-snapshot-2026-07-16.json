@@ -1,0 +1,89 @@
+{
+  "capturedAt": "2026-07-16T04:47:00.000Z",
+  "source": "Food Standards Agency Food Hygiene Rating Scheme API v2",
+  "sourceBaseUrl": "https://api.ratings.food.gov.uk/",
+  "observations": [
+    {
+      "listingSlug": "biriyani-junction",
+      "queryUrl": "https://api.ratings.food.gov.uk/Establishments?name=Biriyani%20Junction&address=118%20Windmill%20Road",
+      "exactMatchCount": 0,
+      "corroboration": "A one-mile coordinate query returned current nearby establishments but no Biriyani Junction match. This absence does not prove closure."
+    },
+    {
+      "listingSlug": "chotiwala",
+      "queryUrl": "https://api.ratings.food.gov.uk/Establishments?address=W11%204JG",
+      "exactMatchCount": 0,
+      "selectedCurrentResult": {
+        "FHRSID": 716746,
+        "BusinessName": "Premier Convenience Store",
+        "BusinessType": "Retailers - other",
+        "AddressLine1": "Ground Floor",
+        "AddressLine2": "109 Clarendon Road",
+        "PostCode": "W11 4JG",
+        "RatingValue": "5",
+        "RatingDate": "2024-05-14T00:00:00"
+      },
+      "corroboration": "Uber Eats identifies Chotiwala Indian Vegetarian Food at the same address as closed on that platform since 29 May 2024."
+    },
+    {
+      "listingSlug": "golis-south-norwood",
+      "queryUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE25%206EE",
+      "exactMatchCount": 0,
+      "selectedCurrentResult": {
+        "FHRSID": 1960003,
+        "BusinessName": "D And D Grocery Shop",
+        "BusinessType": "Retailers - other",
+        "AddressLine1": "1 Commercial Buildings",
+        "AddressLine2": "High Street",
+        "AddressLine3": "South Norwood",
+        "PostCode": "SE25 6EE",
+        "RatingValue": "AwaitingInspection"
+      },
+      "corroboration": "The current same-postcode result conflicts with the imported name at the number-one High Street premises. It does not establish whether the original business moved or closed."
+    },
+    {
+      "listingSlug": "spikky-pepperdem-food",
+      "queryUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AN",
+      "exactMatchCount": 0,
+      "selectedCurrentResults": [
+        {
+          "FHRSID": 1761336,
+          "BusinessName": "Tac-Dish",
+          "AddressLine1": "6 Parry Place",
+          "PostCode": "SE18 6AN",
+          "RatingDate": "2025-02-20T00:00:00"
+        },
+        {
+          "FHRSID": 1598104,
+          "BusinessName": "Taste of West Africa",
+          "AddressLine1": "Unit 5 11 Parry Place",
+          "PostCode": "SE18 6AN",
+          "RatingDate": "2025-06-26T00:00:00"
+        }
+      ],
+      "corroboration": "Current results list several Parry Place food businesses but no Spikky Pepperdem Food or exact 8-12 identity. This is insufficient to infer a replacement entity."
+    },
+    {
+      "listingSlug": "arena-lounge-uk",
+      "queryUrl": "https://api.ratings.food.gov.uk/Establishments?name=Arena%20Lounge&address=HA0%202HA",
+      "exactMatchCount": 1,
+      "selectedCurrentResult": {
+        "FHRSID": 531816,
+        "BusinessName": "Arena Lounge UK Ltd",
+        "BusinessType": "Restaurant/Cafe/Canteen",
+        "AddressLine1": "Arena Lounge",
+        "AddressLine2": "Harrow Road",
+        "AddressLine3": "Wembley",
+        "PostCode": "HA0 2HA",
+        "RatingValue": "5",
+        "RatingDate": "2023-06-27T00:00:00"
+      },
+      "corroboration": "The live official site identifies Arena Lounge at 652 Harrow Road, Wembley HA0 2HA, publishes 020 8248 1280, and lists restaurant hours for all seven days."
+    }
+  ],
+  "limitations": [
+    "FHRS absence is not proof that a business is closed.",
+    "FHRS hygiene ratings are not customer-review ratings and were not copied into listing rating fields.",
+    "The four conflicting records require direct business evidence or an explicit exclusion decision before canonical status changes."
+  ]
+}

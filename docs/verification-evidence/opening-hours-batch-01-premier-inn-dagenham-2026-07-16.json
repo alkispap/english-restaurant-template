@@ -1,0 +1,48 @@
+{
+  "listingSlug": "premier-inn-london-dagenham-hotel",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Premier Inn official London Dagenham hotel page",
+      "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-dagenham.html",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Brewers Fayre and Premier Inn exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/553061",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [
+    {
+      "field": "fullAddress",
+      "value": "Chequers Corner, 2 New Rd, Dagenham, RM9 6YS, London",
+      "reason": "The full address is synchronized with the current official hotel and FSA postcode."
+    },
+    {
+      "field": "postcode",
+      "value": "RM9 6YS",
+      "reason": "The current official hotel page and FSA record support RM9 6YS rather than the imported RM10 6YS."
+    },
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current official hotel page and October 2025 exact-premises FSA inspection support an operating Premier Inn and Brewers Fayre site."
+    }
+  ],
+  "notes": "The exact recorded entity is a Premier Inn hotel with an adjacent Brewers Fayre serving a general British/international menu rather than an Indian restaurant. No hotel or Brewers Fayre hours were added. Publication eligibility is handled separately as out of directory scope."
+}

@@ -1,0 +1,30 @@
+{
+  "listingSlug": "faizan-ahmad",
+  "checkedAt": "2026-07-16T09:54:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current NW3 6HY premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW3%206HY&pageSize=100",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    },
+    {
+      "sourceName": "Camden Council 115 Finchley Road licensing record",
+      "sourceUrl": "https://camden.moderngov.co.uk/documents/g5488/Public%20reports%20pack%2007th-Jan-2016%2019.00%20Licensing%20Panel%20B.pdf?T=10",
+      "accessedAt": "2026-07-16T09:54:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "categories",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The imported customer-facing name is a person's name. Camden licensing history identifies Piano Bar Restaurant at 115 Finchley Road, while current FSA postcode data identifies station/market businesses and no Faizan Ahmad restaurant. Search results for people with this name do not establish a food business or identity link. Do not expose personal contact data, copy another restaurant's details, or infer closure; hold pending a genuine business identity."
+}

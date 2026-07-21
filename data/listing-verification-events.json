@@ -1,0 +1,2426 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "verification-2026-07-15-wimbledon-tandoori-merton-d184af1d280a",
+      "listingSlug": "wimbledon-tandoori-merton",
+      "listingSourceId": "ChIJZUKRbZUJdkgRruAFyYS048Q",
+      "recordedAt": "2026-07-15T22:57:23.976Z",
+      "checkedAt": "2026-07-15T22:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Wimbledon Village business directory - The Village Tandoori",
+          "sourceUrl": "https://wimbledonvillage.com/food-drink/restaurants/the-village-tandoori/",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        },
+        {
+          "sourceName": "London Borough of Merton - All Ratepayers and Property 1 July 2025",
+          "sourceUrl": "https://www.merton.gov.uk/sites/default/files/2025-07/All%20Ratepayers%20and%20Property%201%20July%202025.pdf",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        },
+        {
+          "sourceName": "The Village Tandoori website snapshot returned by public search",
+          "sourceUrl": "https://www.thevillagetandoori.co.uk/home/",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        },
+        {
+          "sourceName": "Previously recorded ordering website - DNS resolution failed",
+          "sourceUrl": "https://thevillagetandoorionline.com/",
+          "accessedAt": "2026-07-15T22:55:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "name",
+          "value": "The Village Tandoori",
+          "reason": "Current local-directory and restaurant-site evidence identifies the 28 Ridgway premises as The Village Tandoori, distinct from Wimbledon Tandoori at 26 Ridgway.",
+          "previousValue": "Wimbledon Tandoori",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current Wimbledon Village entry presents the restaurant as operating at 28 Ridgway.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": null,
+          "reason": "The recorded thevillagetandoorionline.com hostname did not resolve during the dated check; no replacement URL passed both identity and live-origin checks.",
+          "previousValue": "https://thevillagetandoorionline.com/",
+          "applied": true
+        }
+      ],
+      "notes": "This is a correction of the 28 Ridgway entity, not a merge with the separate 26 Ridgway Wimbledon Tandoori record. Rating and review totals were not verified by this event."
+    },
+    {
+      "id": "verification-2026-07-16-biriyani-junction-238d8307d4f5",
+      "listingSlug": "biriyani-junction",
+      "listingSourceId": "ChIJAQAMzygHdkgR0OIzlZNS2CU",
+      "recordedAt": "2026-07-16T04:51:51.594Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact name and address query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Biriyani%20Junction&address=118%20Windmill%20Road",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS coordinate-area query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.3864681&longitude=-0.0973369&maxDistanceLimit=1",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The current FSA exact query returned no match and nearby results did not corroborate the imported entity. Absence from FHRS is not proof of closure, so identity, current trading status, contact details, and hours remain unresolved. Obtain direct business evidence or make an explicit exclusion decision before changing the canonical record. The captured result summary is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-chotiwala-233f1ca317f1",
+      "listingSlug": "chotiwala",
+      "listingSourceId": "ChIJRyq4CesPdkgRy1hZio7BcLs",
+      "recordedAt": "2026-07-16T04:51:54.548Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=W11%204JG",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "Uber Eats historical Chotiwala page",
+          "sourceUrl": "https://www.ubereats.com/gb/store/chotiwala-indian-vegetarian-food/5KOaaSidSlyK7LMjQ7RwYw",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The FSA currently identifies Premier Convenience Store at Ground Floor, 109 Clarendon Road; Uber Eats marks Chotiwala Indian Vegetarian Food at that address as closed on its platform since 29 May 2024. These sources indicate a conflict but do not prove whether Chotiwala closed, renamed, or moved. Obtain direct business evidence or make an explicit exclusion decision before changing status, contact details, or hours. The captured FSA result is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-golis-south-norwood-def1041be243",
+      "listingSlug": "golis-south-norwood",
+      "listingSourceId": "ChIJ8-_5yzwBdkgRGs7oVdz_rCE",
+      "recordedAt": "2026-07-16T04:52:00.125Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE25%206EE",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS coordinate-area query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.3997282&longitude=-0.0741702&maxDistanceLimit=1",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current FSA results identify D And D Grocery Shop at 1 Commercial Buildings, High Street, SE25 6EE and no Golis South Norwood match. This conflicts with the imported entity but does not establish whether it closed, renamed, or moved. Obtain direct business evidence or make an explicit exclusion decision before changing the canonical record. The captured result is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-spikky-pepperdem-food-035d3e0d282d",
+      "listingSlug": "spikky-pepperdem-food",
+      "listingSourceId": "ChIJE258j9up2EcR1Gj1X4sm6M4",
+      "recordedAt": "2026-07-16T04:52:05.237Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AN",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS coordinate-area query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.4905196&longitude=0.0718448&maxDistanceLimit=1",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current FSA results list several Parry Place food businesses but no Spikky Pepperdem Food or exact 8-12 entity. The evidence is insufficient to infer closure or substitute a nearby business. Obtain direct business evidence or make an explicit exclusion decision before changing identity, status, contact details, or hours. The captured result summary is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+    },
+    {
+      "id": "verification-2026-07-16-arena-lounge-uk-d22bd6571f86",
+      "listingSlug": "arena-lounge-uk",
+      "listingSourceId": "ChIJ9VBVBLsTdkgRrJGmgnLrdgo",
+      "recordedAt": "2026-07-16T04:52:11.406Z",
+      "checkedAt": "2026-07-16T04:47:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Arena Lounge official website",
+          "sourceUrl": "https://www.arenalounge.co.uk/",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Arena Lounge query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Arena%20Lounge&address=HA0%202HA",
+          "accessedAt": "2026-07-16T04:47:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "categories",
+          "value": [
+            "Indian / Asian"
+          ],
+          "reason": "The official restaurant describes its food as Kenyan and Indo-Chinese infused; Indian / Asian is the closest existing directory taxonomy value without overstating a narrower cuisine.",
+          "previousValue": [],
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The live official site publishes current restaurant hours, contact actions, menus, and booking links, and the FSA identifies the premises as a restaurant/cafe/canteen.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://www.arenalounge.co.uk/",
+          "reason": "The recorded HTTP URL resolves to the live canonical HTTPS official site.",
+          "previousValue": "http://www.arenalounge.co.uk/",
+          "applied": true
+        },
+        {
+          "field": "details.workingHours",
+          "value": [
+            {
+              "day": "Monday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Tuesday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Wednesday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Thursday",
+              "hours": "12:00-22:00"
+            },
+            {
+              "day": "Friday",
+              "hours": "12:00-23:00"
+            },
+            {
+              "day": "Saturday",
+              "hours": "12:00-23:00"
+            },
+            {
+              "day": "Sunday",
+              "hours": "12:00-22:00"
+            }
+          ],
+          "reason": "The official site publishes a complete seven-day Restaurant Opening Hours schedule.",
+          "applied": true
+        }
+      ],
+      "notes": "The official site supports the existing Arena Lounge UK identity, 652 Harrow Road address, HA0 2HA postcode, and 020 8248 1280 phone. The FSA result corroborates the entity and restaurant use. The FSA hygiene score was not copied into customer rating fields."
+    },
+    {
+      "id": "verification-2026-07-16-arena-lounge-uk-ea98a427cae6",
+      "listingSlug": "arena-lounge-uk",
+      "listingSourceId": "ChIJ9VBVBLsTdkgRrJGmgnLrdgo",
+      "recordedAt": "2026-07-16T04:55:38.496Z",
+      "checkedAt": "2026-07-16T04:55:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Arena Lounge official website",
+          "sourceUrl": "https://www.arenalounge.co.uk/",
+          "accessedAt": "2026-07-16T04:55:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Arena Lounge query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Arena%20Lounge&address=HA0%202HA",
+          "accessedAt": "2026-07-16T04:55:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "categories",
+          "value": [
+            "East African",
+            "Chinese"
+          ],
+          "reason": "The official wording is Kenyan and Indo-Chinese infused. Existing East African and Chinese taxonomy values preserve both supported cuisine signals without introducing an unsupported general Indian claim.",
+          "previousValue": [
+            "Indian / Asian"
+          ],
+          "applied": true
+        }
+      ],
+      "notes": "This event supersedes only the category normalization in verification-2026-07-16-arena-lounge-uk-d22bd6571f86. It preserves the earlier event and repeats the core verification scope so current provenance remains fully auditable."
+    },
+    {
+      "id": "verification-2026-07-16-biriyani-junction-f8b78c7041fd",
+      "listingSlug": "biriyani-junction",
+      "listingSourceId": "ChIJAQAMzygHdkgR0OIzlZNS2CU",
+      "recordedAt": "2026-07-16T08:44:07.206Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Magic Tastes official contact page",
+          "sourceUrl": "https://www.magictastes.com/contact",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "FSA FHRS exact name and address query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Biriyani%20Junction&address=118%20Windmill%20Road",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Follow-up research found a current first-party food-manufacturing business, Magic Tastes, using 118 Windmill Road and publishing its own identity, phone, email and weekday hours. The FSA query still does not corroborate Biriyani Junction. This does not prove that the imported restaurant closed, moved, or was the same entity, so no canonical fact, closure claim, merge, or exclusion is supported. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-chotiwala-64b3cb86c158",
+      "listingSlug": "chotiwala",
+      "listingSourceId": "ChIJRyq4CesPdkgRy1hZio7BcLs",
+      "recordedAt": "2026-07-16T08:44:11.172Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS Tadka Holland Park business record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1687834/tadka-holland-park-london",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Deliveroo Tadka Holland Park current menu",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/notting-hill/tadka-holland-park-109-clarendon-road",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Uber Eats historical Chotiwala page",
+          "sourceUrl": "https://www.ubereats.com/gb/store/chotiwala-indian-vegetarian-food/5KOaaSidSlyK7LMjQ7RwYw",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Tadka Holland Park currently trades at the same address, and its current menu materially overlaps the historical Chotiwala menu. The Chotiwala delivery page is closed on Uber Eats. Same premises and menu continuity are strong replacement signals but do not establish that Chotiwala renamed, moved, merged, or retained the same entity/operator. No canonical rename, successor redirect, closure claim, or exclusion is supported without direct owner or entity evidence. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-golis-south-norwood-476e2e8db7e5",
+      "listingSlug": "golis-south-norwood",
+      "listingSourceId": "ChIJ8-_5yzwBdkgRGs7oVdz_rCE",
+      "recordedAt": "2026-07-16T08:44:15.365Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE25%206EE",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Yell Kismat Tandoori premises listing",
+          "sourceUrl": "https://www.yell.com/biz/kismat-tandoori-indian-takeaway-london-2842826/",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "FSA-derived D And D Grocery Shop premises record",
+          "sourceUrl": "https://www.eatible.co.uk/london/croydon/d-and-d-grocery-shop",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current premises evidence identifies other businesses at 1 Commercial Buildings, including D And D Grocery Shop and a directory listing for Kismat Tandoori, but no reliable source connects either business to Golis South Norwood. The imported entity may be historical, a delivery brand, moved, or erroneous; the available evidence cannot distinguish those outcomes. No closure, merge, successor, or exclusion decision is supported. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-spikky-pepperdem-food-a4fe152085ae",
+      "listingSlug": "spikky-pepperdem-food",
+      "listingSourceId": "ChIJE258j9up2EcR1Gj1X4sm6M4",
+      "recordedAt": "2026-07-16T08:44:20.913Z",
+      "checkedAt": "2026-07-16T08:42:39.665Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AN",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Royal Borough of Greenwich Parry Place occupancy schedule",
+          "sourceUrl": "https://www.royalgreenwich.gov.uk/download/downloads/id/5703/sealed_cpo_and_schedule.pdf",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        },
+        {
+          "sourceName": "Current Parry Place business-directory page",
+          "sourceUrl": "https://www.192.com/places/se/se18-6/se18-6an/",
+          "accessedAt": "2026-07-16T08:42:39.665Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The address is a multi-unit premises with several historical and current businesses. Current FSA and premises sources do not corroborate Spikky Pepperdem Food and do not identify a reliable successor. Source absence and other occupants do not prove closure, invalid import, or a rename. No canonical change, merge, successor, or exclusion is supported. Keep the listing pending review."
+    },
+    {
+      "id": "verification-2026-07-16-bombay-kitchen-brixton-a8a7bd0c326d",
+      "listingSlug": "bombay-kitchen-brixton",
+      "listingSourceId": "ChIJM8r9pGgEdkgRZU5-EOOFvGQ",
+      "recordedAt": "2026-07-16T08:49:49.891Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Brixton Buzz contemporaneous replacement report",
+          "sourceUrl": "https://www.brixtonbuzz.com/2014/05/popular-market-row-cocktail-bar-seven-at-brixton-gets-set-to-open-a-second-brixton-cocktail-bar-at-384-coldharbour-lane/",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Brixton Buzz premises history",
+          "sourceUrl": "https://www.brixtonbuzz.com/2014/06/from-horsemeat-to-fish-to-curry-to-cocktails-the-story-of-384-coldharbour-lane-brixton/",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Current London directory closure record",
+          "sourceUrl": "https://www.allinlondon.co.uk/restaurants/indian/18260-bombay-kitchen",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Permanently closed",
+          "reason": "Contemporaneous local reporting states that Bombay Kitchen was the previous occupant of 384 Coldharbour Lane and was replaced by a new bar in 2014; a current directory also records Bombay Kitchen as closed.",
+          "applied": true
+        }
+      ],
+      "notes": "This verifies permanent closure of the historical Bombay Kitchen location. The replacement venue is a different business and must not be merged into this restaurant record. Historical phone numbers and website details were not copied because they are not current contact actions."
+    },
+    {
+      "id": "verification-2026-07-16-borough-market-81483adbd7f8",
+      "listingSlug": "borough-market",
+      "listingSourceId": "ChIJcQ-6AAAFdkgRbDuFu5GdTEg",
+      "recordedAt": "2026-07-16T08:49:53.401Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "City of Westminster current planning report",
+          "sourceUrl": "https://westminster.moderngov.co.uk/documents/s25549/ITEM%2003%20-%2031-35%20BRICK%20STREET%20LONDON%20W1J%207HQ.pdf",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Companies House property charge",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/OC368907/charges/9Vzon0vY-hqb4hupNvqDvVAp-qw",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Authoritative property and planning records identify 37-49 Brick Street as ancillary Park Lane Hotel space containing parking, plant, and upper-floor hotel uses. They do not identify a restaurant named Borough MARKET, and the imported postcode also conflicts with current planning records. This supports an invalid-import publication decision, not a closure claim or substitution with the unrelated Borough Market in Southwark."
+    },
+    {
+      "id": "verification-2026-07-16-calm-indiana-cow-562fbdf95502",
+      "listingSlug": "calm-indiana-cow",
+      "listingSourceId": "ChIJXfZLIg8FdkgRro83UWTXJGg",
+      "recordedAt": "2026-07-16T08:49:57.831Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Calm%20Indiana%20Cow&address=SE1%201TD",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current SE1 1TD premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE1%201TD&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current authoritative result corroborates Calm Indiana Cow. Current postcode results identify other businesses around 66-68 Union Street, but they do not establish whether this was a delivery brand, transcription error, moved business, or historical operator. Do not copy another occupant's contact details or infer closure. Hold pending direct evidence."
+    },
+    {
+      "id": "verification-2026-07-16-chef-tazzy-e9ca9cb5f803",
+      "listingSlug": "chef-tazzy",
+      "listingSourceId": "ChIJMUbUPAAddkgRCRLGpEqZURg",
+      "recordedAt": "2026-07-16T08:50:01.748Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Chef%20Tazzy&address=E3%202PA",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current E3 2PA premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E3%202PA&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current authoritative or first-party source corroborates Chef Tazzy at 4A Roach Road. The current postcode result identifies a different restaurant at number 7 and cannot be used as successor or contact evidence. The imported entity may be a home chef, delivery brand, historical operator, or incorrect record. Hold pending direct evidence."
+    },
+    {
+      "id": "verification-2026-07-16-contemporary-indian-cuisine-ec7be3761323",
+      "listingSlug": "contemporary-indian-cuisine",
+      "listingSourceId": "ChIJWYJjFXEQdkgRftY39xKtKwM",
+      "recordedAt": "2026-07-16T08:50:05.198Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and address query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Contemporary%20Indian%20Cuisine&address=50C%20Gascony%20Avenue",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current NW6 4NE premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW6%204NE&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current authoritative, first-party, or transactional source corroborates this generic imported identity at 50C Gascony Avenue, and no safe contact action can be assigned. Absence does not prove closure or invalid import. Hold pending direct owner, premises, licensing, or registry evidence."
+    },
+    {
+      "id": "verification-2026-07-16-delhiacacies-deliveroo-8802153adb87",
+      "listingSlug": "delhiacacies-deliveroo",
+      "listingSourceId": "ChIJk_lBVAAbdkgR_C5VfT36C54",
+      "recordedAt": "2026-07-16T08:50:08.931Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Delhiacacies&address=N7%209NH",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current N7 9NH premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=N7%209NH&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported address appears malformed ('Floor 60, 40 Brewery Road') and current FSA data identifies numerous different delivery brands at ground/first-floor kitchens at numbers 40 and 60. No source corroborates Delhiacacies or connects it to a current brand. Do not copy a shared-kitchen or other brand's contact details. Hold pending entity and unit evidence."
+    },
+    {
+      "id": "verification-2026-07-16-home-kitchen-9760b1e3a6b1",
+      "listingSlug": "home-kitchen",
+      "listingSourceId": "ChIJT3V-Zsep2EcRLWpwaHiyyVY",
+      "recordedAt": "2026-07-16T08:50:11.859Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Home%20Kitchen&address=SE18%206AP",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current SE18 6AP premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE18%206AP&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "No current source corroborates Home Kitchen at 13A Spray Street. Current postcode evidence identifies other businesses at 7-11 and 33-37 Spray Street but provides no successor or same-entity link. The generic name and missing contact data require direct operator or premises evidence. Hold pending review."
+    },
+    {
+      "id": "verification-2026-07-16-indian-food-camden-da3aece425b1",
+      "listingSlug": "indian-food-camden",
+      "listingSourceId": "ChIJC_VNdwAbdkgRoJLHm6kn1Z4",
+      "recordedAt": "2026-07-16T08:50:15.967Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Camden Market historical Munch Club page",
+          "sourceUrl": "https://camdenmarket.com/journal/camden-market-munch-club",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current NW1 8AH premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW1%208AH&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Current Google Maps Camden Market search result",
+          "sourceUrl": "https://www.google.com/maps/search/Lunch%2Bat%2BCamden%2BMarket%2C%2BLondon%2C%2BUnited%2BKingdom",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Camden Market confirms Indian Food Camden existed historically, but independent contemporaneous location evidence places it at 6F Paddock Alley. The imported Unit 312-313 location is currently associated with Magic Falafel in FSA and map evidence. This is a material location/entity conflict, not proof of closure. Hold the imported record pending direct trader or Camden Market evidence that resolves its current status and canonical unit."
+    },
+    {
+      "id": "verification-2026-07-16-republic-restaurant-verney-road-76dc7386371a",
+      "listingSlug": "republic-restaurant-verney-road",
+      "listingSourceId": "ChIJHQo6vpgDdkgRcfoH2r3FwXc",
+      "recordedAt": "2026-07-16T08:50:21.292Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current SE16 3DH premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE16%203DH&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "Republic Restaurant Verney Road public directory profile",
+          "sourceUrl": "https://hampsteadvillagelondon.com/republic-restaurant-verney-road-8661/",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Allard House is a current multi-brand production/ghost-kitchen site. The FSA query lists many current businesses at 18 Verney Road but no Republic Restaurant or Unit 36 match, and the only exact-name profile publishes no phone, website, or hours. Source absence does not establish closure or invalid import, and contact details from another kitchen must not be copied. Hold for direct operator or premises evidence."
+    },
+    {
+      "id": "verification-2026-07-16-the-palm-indian-restaurant-limited-3ffd38f7e677",
+      "listingSlug": "the-palm-indian-restaurant-limited",
+      "listingSourceId": "ChIJJxrEHNQcdkgRr0udpyx-ejw",
+      "recordedAt": "2026-07-16T08:50:25.114Z",
+      "checkedAt": "2026-07-16T08:47:08.644Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Companies House filing history",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/05194842/filing-history",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        },
+        {
+          "sourceName": "FSA FHRS current E1 4UN premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E1%204UN&pageSize=100",
+          "accessedAt": "2026-07-16T08:47:08.644Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The company moved its registered office away from 88 Mile End Road in 2022 and current FSA data shows a multi-brand ghost-kitchen/food-production site without The Palm. A registered-office move and source absence do not prove the restaurant closed or identify a successor. No current location-specific phone, website, or hours could be validated. Hold for direct operator, licensing, rates, or premises evidence."
+    },
+    {
+      "id": "verification-2026-07-16-ishaak-05d42ce65ad5",
+      "listingSlug": "ishaak",
+      "listingSourceId": "ChIJ3w_RcgCr2EcRD8EKQSmfU-w",
+      "recordedAt": "2026-07-16T09:22:09.581Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Ishaak official contact page",
+          "sourceUrl": "https://ishaak.co.uk/contact-us/",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Ishaak record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1920234/ishaak-bromley",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "217 Southborough Lane",
+          "reason": "The official contact page and current FSA record both publish the unabbreviated street address.",
+          "previousValue": "217 Southborough Ln",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "217 Southborough Lane, Bickley, Bromley, BR2 8AT",
+          "reason": "The official contact page identifies Bickley and Bromley, and the FSA corroborates the street and postcode.",
+          "previousValue": "217 Southborough Ln, London, BR2 8AT",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The live first-party site accepts current collection and delivery orders and publishes current contact details.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://ishaak.co.uk/",
+          "reason": "This is the live official website for the exact business and premises.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 20 4635 3356",
+          "reason": "The official contact page publishes this number for the exact location.",
+          "applied": true
+        }
+      ],
+      "notes": "Ishaak is a current fine Indian takeaway at the imported premises. The official site and a March 2026 FSA inspection corroborate identity and location. No customer rating was copied from the FSA hygiene record, and no weekly hours were added because the inspected pages did not publish a complete permanent seven-day schedule."
+    },
+    {
+      "id": "verification-2026-07-16-kothu-04b3c5213516",
+      "listingSlug": "kothu",
+      "listingSourceId": "ChIJweM5OAAHdkgR-N4eKq3nC7E",
+      "recordedAt": "2026-07-16T09:22:12.897Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Kothu Restaurant official website",
+          "sourceUrl": "https://kothurestaurant.co.uk/",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Kothu record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1888353/kothu-croydon",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.email",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "48-50 South End",
+          "reason": "The official site and May 2026 FSA record identify the Croydon restaurant at 48-50 South End, not 50C South End.",
+          "previousValue": "50C S End",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "48-50 South End, Croydon, CR0 1DP",
+          "reason": "The current official and FSA sources agree on the corrected premises and postcode.",
+          "previousValue": "50C S End, London, CR0 1DP",
+          "applied": true
+        },
+        {
+          "field": "categories",
+          "value": [
+            "Sri Lankan",
+            "South Indian"
+          ],
+          "reason": "The official restaurant describes its food as Sri Lankan and South Indian; these are supported existing directory taxonomy values.",
+          "previousValue": [
+            "Indian"
+          ],
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The live official site publishes current contact, ordering and branch information, corroborated by a May 2026 FSA inspection.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://kothurestaurant.co.uk/",
+          "reason": "This is the live official multi-location website and explicitly lists the Croydon branch.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 20 4635 4074",
+          "reason": "The official site publishes this number specifically for the Croydon branch.",
+          "applied": true
+        },
+        {
+          "field": "contact.email",
+          "value": "kothurestaurant@gmail.com",
+          "reason": "The official site publishes this as the restaurant contact email.",
+          "applied": true
+        },
+        {
+          "field": "details.workingHours",
+          "value": [
+            {
+              "day": "Monday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Tuesday",
+              "hours": "Closed"
+            },
+            {
+              "day": "Wednesday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Thursday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Friday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Saturday",
+              "hours": "11:00-23:00"
+            },
+            {
+              "day": "Sunday",
+              "hours": "11:00-23:00"
+            }
+          ],
+          "reason": "The official site publishes daily 11:00-23:00 hours for Croydon with Tuesday closed.",
+          "applied": true
+        }
+      ],
+      "notes": "The official site spells the postcode with the letter O in one visual location, but the FSA and canonical UK postcode use CR0 1DP. The FSA hygiene score was not copied into customer-rating fields."
+    },
+    {
+      "id": "verification-2026-07-16-kundar-tandoori-05df04eea88b",
+      "listingSlug": "kundar-tandoori",
+      "listingSourceId": "ChIJK0y7wyIQdkgRKrhlNLPAYBg",
+      "recordedAt": "2026-07-16T09:22:17.328Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Current Kundar Tandoori Deliveroo page",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/north-kensington/kundar-tandoori",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current 316B Ladbroke Grove premises record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1809354/taste-of-punjab",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current delivery page is accepting the exact Kundar Tandoori brand and publishes a live closing time and menu.",
+          "applied": true
+        },
+        {
+          "field": "contact.orderOnlineUrl",
+          "value": "https://deliveroo.co.uk/menu/london/north-kensington/kundar-tandoori",
+          "reason": "This current transactional page is the only contact/action source verified for the exact Kundar Tandoori brand.",
+          "applied": true
+        }
+      ],
+      "notes": "The premises also trades publicly as Taste of Punjab and has a separate canonical listing. Kundar Tandoori remains a distinct current delivery brand; same premises and overlapping menu do not justify merging the records. No Taste of Punjab phone, website or hours were copied to Kundar Tandoori."
+    },
+    {
+      "id": "verification-2026-07-16-modern-indian-75c0acddf997",
+      "listingSlug": "modern-indian",
+      "listingSourceId": "ChIJcconfAAFdkgRD1hcO4PoaA8",
+      "recordedAt": "2026-07-16T09:22:21.696Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Farzi London official contact page",
+          "sourceUrl": "https://farzilondon.com/contact",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "Farzi London official website",
+          "sourceUrl": "https://farzilondon.com/",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The exact 8 Haymarket premises is currently and explicitly operated by Farzi London, which already has a separate canonical directory record. No source corroborates a business whose customer-facing name is Modern Indian or proves that the imported place ID is an alias of Farzi. Do not copy Farzi contact details, merge records, redirect, or claim closure without explicit entity evidence. Hold this record pending identity resolution."
+    },
+    {
+      "id": "verification-2026-07-16-spice-garden-ed30d7abfcf9",
+      "listingSlug": "spice-garden",
+      "listingSourceId": "ChIJ5RHe8JCp2EcRzEJIX5GXwXY",
+      "recordedAt": "2026-07-16T09:23:01.646Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS Beijing record at 127 Chinbrook Road",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1799971",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "Lewisham Council Local Shopping Parade Survey",
+          "sourceUrl": "https://lewisham.gov.uk/-/media/archive/files/imported/localparadesretailsurvey2011.pdf?sc_lang=en",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current FSA evidence identifies Beijing at 127 Chinbrook Road, and the official Lewisham retail survey identifies Beijing at 127/129 in both 2005 and 2011. No source corroborates Spice Garden at this address or connects it to Beijing. The imported identity is materially conflicted, but the evidence does not prove whether it was a temporary virtual brand, a wrong map pin, or another error. Do not copy Beijing contact details or infer closure; hold pending identity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-staffordshire-0d2008cbac49",
+      "listingSlug": "staffordshire",
+      "listingSourceId": "ChIJS7-SQAAbdkgRwJcA_qnpt8k",
+      "recordedAt": "2026-07-16T09:23:13.280Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Just Eat official terms and company address",
+          "sourceUrl": "https://www.just-eat.co.uk/info/terms-and-conditions",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current EC4M 7RF premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=EC4M%207RF&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "2 Fleet Place is the official Just Eat registered office, and current FSA records identify Fika Catering at Just Eat and Just Eat for Business at the premises. No source identifies a public Indian restaurant named Staffordshire. The name may be an import artefact, internal catering label, or invalid map entity, but current evidence does not establish which. Hold pending scope and identity evidence; do not attach Just Eat corporate contact details."
+    },
+    {
+      "id": "verification-2026-07-16-sucess-worker-6d0f0654f1f8",
+      "listingSlug": "sucess-worker",
+      "listingSourceId": "ChIJBQt1YxkPdkgREqTLaIkJL6k",
+      "recordedAt": "2026-07-16T09:23:19.210Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=sucess%20worker&address=W6%200RA&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current W6 0RA premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=W6%200RA&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported name is misspelled and the address is only 'near Hammersmith'. Current FSA data identifies numerous real businesses at numbered King Street premises in W6 0RA but no Sucess Worker entity. Search results repeat the imported map label without a primary business source. Do not select a nearby restaurant, infer closure, or exclude automatically; hold pending a real street number and identity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-taj-2e89d5d42847",
+      "listingSlug": "taj",
+      "listingSourceId": "ChIJ41FeQgCr2EcR6Nx-Xt9TAAk",
+      "recordedAt": "2026-07-16T09:23:25.847Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS exact-name and postcode query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Taj&address=BR1%202ND&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current BR1 2ND premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=BR1%202ND&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported record has no street number and the current postcode query identifies only caring premises at 11 and 21 Bickley Road. A separate Taj Authentic Indian Cuisine exists in Biggin Hill, but no evidence connects it to this imported place ID or address. Do not copy the other Taj's details, infer a move, or claim closure. Hold pending exact premises and entity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-thanjavur-food-lounge-ltd-d39734159bac",
+      "listingSlug": "thanjavur-food-lounge-ltd",
+      "listingSourceId": "ChIJf4whtp4HdkgRZ1Q2X7e-zr0",
+      "recordedAt": "2026-07-16T09:23:32.337Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Companies House company record",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/16418113",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current CR0 2XP premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=CR0%202XP&pageSize=100",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Companies House confirms an active takeaway company registered at 70 Windmill Road, but company registration does not prove current customer-facing operation. Current FSA data identifies Food Land Supermarket at the exact address and does not identify Thanjavur Food Lounge. Search results provide no first-party contact, menu, order page, or unit evidence. Hold pending operating and premises evidence; do not copy the supermarket's details or infer closure."
+    },
+    {
+      "id": "verification-2026-07-16-the-layered-biryani-by-mom-4b2c0918363b",
+      "listingSlug": "the-layered-biryani-by-mom",
+      "listingSourceId": "ChIJi07kCgAFdkgRaRsazE3Vrj8",
+      "recordedAt": "2026-07-16T09:23:38.970Z",
+      "checkedAt": "2026-07-16T09:20:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Current The Layered Biryani By Mom Deliveroo page",
+          "sourceUrl": "https://deliveroo.co.uk/menu/London/nine-elms/the-layered-biryani-76-stewarts-rd-nine-elms",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS The Layered Biryani By Mom record",
+          "sourceUrl": "https://ratings.food.gov.uk/business/1793078/the-layered-biryani-by-mom",
+          "accessedAt": "2026-07-16T09:20:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "Kitchen 23, 76 Stewarts Road",
+          "reason": "The current FSA record identifies Kitchen 23 at 76 Stewarts Road without an apostrophe.",
+          "previousValue": "Kitchen 23, 76 Stewart's Rd",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "Kitchen 23, 76 Stewarts Road, Nine Elms, London, SW8 4DE",
+          "reason": "The current FSA and transactional sources agree on the exact kitchen and postcode.",
+          "previousValue": "Kitchen 23, 76 Stewart's Rd, Nine Elms, SW8 4DE, London",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The exact brand has a current delivery menu and a current FSA premises record.",
+          "applied": true
+        },
+        {
+          "field": "contact.orderOnlineUrl",
+          "value": "https://deliveroo.co.uk/menu/London/nine-elms/the-layered-biryani-76-stewarts-rd-nine-elms",
+          "reason": "This is the current transactional page for the exact brand and Nine Elms kitchen.",
+          "applied": true
+        }
+      ],
+      "notes": "The brand operates from a multi-brand commercial kitchen. The exact kitchen number and FSA identity prevent accidental attribution of another tenant's contact details. No phone, first-party website, or permanent weekly hours were found, and the FSA hygiene score was not copied into customer-rating fields."
+    },
+    {
+      "id": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-b5e10640cc58",
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "recordedAt": "2026-07-16T09:55:08.900Z",
+      "checkedAt": "2026-07-16T09:54:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current E1 8EY premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E1%208EY&pageSize=100",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "Current Bazaar Indian domain",
+          "sourceUrl": "https://bazaarindian.com/",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "The Empress current ordering site",
+          "sourceUrl": "https://the-empress-e1.co.uk/",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current FSA evidence identifies The Empress and Burgers LDN at 141 Leman Street. The Bazaar domain now displays a generic 'Indian inspired treasures - coming soon' page without restaurant locations, ordering or contact details. No evidence connects Bazaar to either current tenant. Do not attach The Empress details, infer a rename, or claim closure; hold pending direct entity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-bazaar-london-s-indian-takeaway-hackney-4714cda58f2c",
+      "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+      "listingSourceId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
+      "recordedAt": "2026-07-16T09:55:12.972Z",
+      "checkedAt": "2026-07-16T09:54:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current E5 8RL premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E5%208RL&pageSize=100",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "Current Bazaar Indian domain",
+          "sourceUrl": "https://bazaarindian.com/",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "Current Rays Curry Base Pizza Clapton listing",
+          "sourceUrl": "https://thatsup.co.uk/london/restaurant/rays-curry-base-pizza-clapton/",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current premises evidence identifies Rays Curry Base Pizza at 92 Northwold Road, while the Bazaar domain no longer provides restaurant location, order or contact information. No source establishes that Bazaar renamed to, operates within, or is succeeded by Rays. Do not copy Rays details or infer closure; hold pending direct entity evidence."
+    },
+    {
+      "id": "verification-2026-07-16-chakra-indian-cuisine-d9ecafb86b27",
+      "listingSlug": "chakra-indian-cuisine",
+      "listingSourceId": "ChIJBWFjnlUPdkgRMAy1_il_Ag8",
+      "recordedAt": "2026-07-16T09:55:17.582Z",
+      "checkedAt": "2026-07-16T09:54:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Chakra Restaurant official locations",
+          "sourceUrl": "https://chakra.restaurant/",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current SW17 0AR premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SW17%200AR&pageSize=100",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Chakra's current official site lists Little Venice, Kensington and Kingston but no Tooting or 15 Rosemary Road location. Current FSA data identifies multiple unrelated catering and manufacturing units in the Swan Centre but no Chakra entity. The imported record may be a historical delivery kitchen, unrelated business, or map error. Do not attach another Chakra branch's contact details, infer closure, or merge without explicit location evidence."
+    },
+    {
+      "id": "verification-2026-07-16-dancing-elephant-49e1ca5b692e",
+      "listingSlug": "dancing-elephant",
+      "listingSourceId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
+      "recordedAt": "2026-07-16T09:55:22.016Z",
+      "checkedAt": "2026-07-16T09:54:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current SW19 8UG premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SW19%208UG&pageSize=100",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Shahi Catering at Unit 23",
+          "sourceUrl": "https://ratings.food.gov.uk/business/200075",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported address appears to mean Unit 23, 55-59 Weir Road. Current FSA evidence identifies Shahi Catering at that exact unit and numerous other commercial kitchens nearby, but no source connects Dancing Elephant to Shahi Catering or a current delivery brand. Do not copy another tenant's contact details, preserve the imported hours as current, or infer closure. Hold pending exact brand and unit evidence."
+    },
+    {
+      "id": "verification-2026-07-16-faizan-ahmad-4fb013298625",
+      "listingSlug": "faizan-ahmad",
+      "listingSourceId": "ChIJyQzhQqEbdkgRmExK_r8zbu0",
+      "recordedAt": "2026-07-16T09:55:26.383Z",
+      "checkedAt": "2026-07-16T09:54:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current NW3 6HY premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW3%206HY&pageSize=100",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "Camden Council 115 Finchley Road licensing record",
+          "sourceUrl": "https://camden.moderngov.co.uk/documents/g5488/Public%20reports%20pack%2007th-Jan-2016%2019.00%20Licensing%20Panel%20B.pdf?T=10",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The imported customer-facing name is a person's name. Camden licensing history identifies Piano Bar Restaurant at 115 Finchley Road, while current FSA postcode data identifies station/market businesses and no Faizan Ahmad restaurant. Search results for people with this name do not establish a food business or identity link. Do not expose personal contact data, copy another restaurant's details, or infer closure; hold pending a genuine business identity."
+    },
+    {
+      "id": "verification-2026-07-16-ghani-food-and-spices-7769ce2cfeb8",
+      "listingSlug": "ghani-food-and-spices",
+      "listingSourceId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
+      "recordedAt": "2026-07-16T09:55:29.733Z",
+      "checkedAt": "2026-07-16T09:54:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS current RM13 8ET premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=RM13%208ET&pageSize=100",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "BT Havering business directory",
+          "sourceUrl": "https://img01.products.bt.co.uk/content/dam/bt/a-z-directory/haverg-a-z-directory.pdf",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "Current Rainham company-category directory",
+          "sourceUrl": "https://www.192.com/atoz/business/rainham/e-commerce/",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Business directories identify Ghani Food & Spices Ltd at Unit 12, Fordview Estate and provide a telephone number, but classify it as e-commerce rather than a public restaurant. Current FSA postcode data identifies only Mimiann Kitchen at number 83 and no Ghani establishment. The imported address omits the unit and the stored hours are internally implausible. Do not publish a directory phone until restaurant scope, current operation and exact unit are established."
+    },
+    {
+      "id": "verification-2026-07-16-real-taste-of-india-50ac3a9c6711",
+      "listingSlug": "real-taste-of-india",
+      "listingSourceId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
+      "recordedAt": "2026-07-16T09:55:33.367Z",
+      "checkedAt": "2026-07-16T09:54:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Kulcha Express official locations",
+          "sourceUrl": "https://kulchaexpress.co.uk/",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS current UB2 4BQ premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=UB2%204BQ&pageSize=100",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        },
+        {
+          "sourceName": "Current directory closure record for Real Taste of India",
+          "sourceUrl": "https://www.allinlondon.co.uk/restaurants/vegetarian/22569-real-taste-of-india",
+          "accessedAt": "2026-07-16T09:54:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Current official and FSA evidence identifies Kulcha Express at 108 The Green. Historical/current directories associate Real Taste of India with the same address and phone, and one records it as closed. This strongly suggests replacement or rename, but it does not establish legal/entity continuity or authorize merging the existing Real Taste and Kulcha canonical records. Do not copy Kulcha details, redirect, or claim a successor without explicit entity evidence; hold pending resolution."
+    },
+    {
+      "id": "verification-2026-07-16-bazaar-london-s-indian-takeaway-aldgate-78f847496a5c",
+      "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+      "listingSourceId": "ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "recordedAt": "2026-07-16T13:37:00.066Z",
+      "checkedAt": "2026-07-16T10:50:01.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Aldgate&query_place_id=ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        },
+        {
+          "sourceName": "Retired exact Deliveroo Aldgate route",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/whitechapel/bazaar-londons-indian-takeaway-aldgate",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        },
+        {
+          "sourceName": "Current FSA FHRS E1 8EY premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E1%208EY&pageSize=100",
+          "accessedAt": "2026-07-16T10:50:01.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Permanently closed",
+          "reason": "The exact stored Google Place ID explicitly marks the Aldgate profile closed and provides a reopen action; its exact Deliveroo route is retired and current premises evidence identifies different operators.",
+          "applied": true
+        }
+      ],
+      "notes": "This follow-up resolves operating status for the historical Aldgate listing without identifying a successor. The unrelated current premises operators must not receive a redirect or inherited listing history."
+    },
+    {
+      "id": "verification-2026-07-16-bazaar-london-s-indian-takeaway-hackney-7510917f6faa",
+      "listingSlug": "bazaar-london-s-indian-takeaway-hackney",
+      "listingSourceId": "ChIJdygVHJgddkgRWVZ_R49Ff14",
+      "recordedAt": "2026-07-16T13:37:03.772Z",
+      "checkedAt": "2026-07-16T10:50:02.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Hackney&query_place_id=ChIJdygVHJgddkgRWVZ_R49Ff14",
+          "accessedAt": "2026-07-16T10:50:02.000Z"
+        },
+        {
+          "sourceName": "Retired exact Deliveroo Hackney route",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/upper-clapton/bazaar-londons-indian-takeaway-hackney",
+          "accessedAt": "2026-07-16T10:50:02.000Z"
+        },
+        {
+          "sourceName": "Current Rays Curry Base Pizza Deliveroo route",
+          "sourceUrl": "https://deliveroo.co.uk/menu/london/upper-clapton/pizza-palace-express",
+          "accessedAt": "2026-07-16T10:50:02.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The stored Google Place ID still resolves to the exact Bazaar name and address and displays hours, but the exact Bazaar Deliveroo route now redirects away while Rays Curry Base Pizza is actively orderable at the premises. Google hours are insufficient to resolve whether Bazaar remains a delivery brand or is a stale profile. Keep pending and do not copy Rays details."
+    },
+    {
+      "id": "verification-2026-07-16-dancing-elephant-51f30f4f0494",
+      "listingSlug": "dancing-elephant",
+      "listingSourceId": "ChIJbfH2mFYPdkgRwca1DGLpXuo",
+      "recordedAt": "2026-07-16T13:37:07.414Z",
+      "checkedAt": "2026-07-16T10:50:03.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Dancing%20Elephant&query_place_id=ChIJbfH2mFYPdkgRwca1DGLpXuo",
+          "accessedAt": "2026-07-16T10:50:03.000Z"
+        },
+        {
+          "sourceName": "Shahi Caterers official operator site",
+          "sourceUrl": "https://shahicaterers.co.uk/",
+          "accessedAt": "2026-07-16T10:50:03.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Shahi Catering at Unit 23",
+          "sourceUrl": "https://ratings.food.gov.uk/business/200075",
+          "accessedAt": "2026-07-16T10:50:03.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The exact Google profile resolves as an Indian takeaway and displays hours, strengthening the historical identity. However, Shahi Caterers identifies Unit 23 under Biryani House London Limited and current FSA evidence names Shahi Catering. No source explicitly connects Dancing Elephant to either operator, so publication remains unsafe."
+    },
+    {
+      "id": "verification-2026-07-16-ghani-food-and-spices-01556e744b9b",
+      "listingSlug": "ghani-food-and-spices",
+      "listingSourceId": "ChIJISKOKZCl2EcRcl6n8zBeAYY",
+      "recordedAt": "2026-07-16T13:37:12.625Z",
+      "checkedAt": "2026-07-16T10:50:04.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Ghani%20Food%20%26%20Spices&query_place_id=ChIJISKOKZCl2EcRcl6n8zBeAYY",
+          "accessedAt": "2026-07-16T10:50:04.000Z"
+        },
+        {
+          "sourceName": "Restaurantji Ghani Food and Spices listing",
+          "sourceUrl": "https://www.restaurantji.co.uk/greater-london/rainham/ghani-food-and-spices-/",
+          "accessedAt": "2026-07-16T10:50:04.000Z"
+        },
+        {
+          "sourceName": "Current Rainham company-category directory",
+          "sourceUrl": "https://www.192.com/atoz/business/rainham/e-commerce/",
+          "accessedAt": "2026-07-16T10:50:04.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "categories",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.orderOnlineUrl",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "Google currently categorises the exact profile as an Indian restaurant and displays hours, and Restaurantji describes delivery. This strengthens restaurant scope, but no current official or transactional menu was found and company directories still classify the entity as e-commerce at an industrial unit. Keep pending until a current order/menu source or direct operator evidence resolves scope."
+    },
+    {
+      "id": "verification-2026-07-16-real-taste-of-india-f89c22192a86",
+      "listingSlug": "real-taste-of-india",
+      "listingSourceId": "ChIJq6p2PbJydkgRcPzXHlGQpP0",
+      "recordedAt": "2026-07-16T13:37:17.325Z",
+      "checkedAt": "2026-07-16T10:50:05.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "Current Google profile by stored Place ID",
+          "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Real%20Taste%20Of%20India&query_place_id=ChIJq6p2PbJydkgRcPzXHlGQpP0",
+          "accessedAt": "2026-07-16T10:50:05.000Z"
+        },
+        {
+          "sourceName": "Kulcha Express official locations",
+          "sourceUrl": "https://kulchaexpress.co.uk/",
+          "accessedAt": "2026-07-16T10:50:05.000Z"
+        },
+        {
+          "sourceName": "Current FSA FHRS UB2 4BQ premises query",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=UB2%204BQ&pageSize=100",
+          "accessedAt": "2026-07-16T10:50:05.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [],
+      "notes": "The exact Real Taste Google profile remains and displays hours, but official and FSA evidence identifies Kulcha Express at the same premises. A stale duplicate profile, rename or successor are all possible. Do not republish, merge or redirect until explicit continuity evidence exists."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-blackfriars-fleet-street-hotel-7aa4eb9763d1",
+      "listingSlug": "premier-inn-london-blackfriars-fleet-street-hotel",
+      "listingSourceId": "ChIJ24SRYq0EdkgRAksghbg1UM8",
+      "recordedAt": "2026-07-16T18:20:34.619Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Blackfriars hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-blackfriars-fleet-street.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/430568",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and exact-premises FSA record support an operating Premier Inn hotel.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 333 321 9269",
+          "reason": "The current official hotel page publishes this location-specific contact number.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-edgware-hotel-eda67a370e91",
+      "listingSlug": "premier-inn-london-edgware-hotel",
+      "listingSourceId": "ChIJO8aWP6kWdkgRpF4FIamiqvk",
+      "recordedAt": "2026-07-16T18:20:37.334Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Edgware hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-edgware.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS London Edgware Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/276598",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "435 Burnt Oak Broadway",
+          "reason": "The current FSA record supplies the exact street number for the Premier Inn premises.",
+          "previousValue": "Burnt Oak Broadway",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "435 Burnt Oak Broadway, Burnt Oak, HA8 5AQ, London",
+          "reason": "The full address is synchronized with the current exact-premises FSA address and existing locality.",
+          "previousValue": "Burnt Oak Broadway, London, HA8 5AQ",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and February 2026 exact-premises FSA inspection support an operating Premier Inn hotel.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 333 321 1259",
+          "reason": "The current official hotel page publishes this location-specific contact number.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill with a general hotel menu rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-harrow-hotel-549cdb113d7e",
+      "listingSlug": "premier-inn-london-harrow-hotel",
+      "listingSourceId": "ChIJKeTqne0TdkgRXoPmHqy8yGg",
+      "recordedAt": "2026-07-16T18:20:40.493Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Harrow hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-harrow.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Traveller's Rest exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/276943",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "address",
+          "value": "Kenton Road",
+          "reason": "The current official hotel page and FSA partner-premises record identify the site on Kenton Road without supporting the imported 134A unit label.",
+          "previousValue": "134A Kenton Rd",
+          "applied": true
+        },
+        {
+          "field": "fullAddress",
+          "value": "Kenton Road, Kenton, HA3 8AT, London",
+          "reason": "The full address is synchronized with the official hotel location and the current FSA postcode for Traveller's Rest.",
+          "previousValue": "134A Kenton Rd, London, HA3 8AL",
+          "applied": true
+        },
+        {
+          "field": "postcode",
+          "value": "HA3 8AT",
+          "reason": "The current official hotel page and FSA record support HA3 8AT rather than the imported HA3 8AL.",
+          "previousValue": "HA3 8AL",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and current FSA partner-premises record support an operating hotel and Beefeater site.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel with the Traveller's Rest Beefeater, whose published menu is a general steak and pub menu rather than an Indian restaurant operation. No hotel or Beefeater hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-everyman-maida-vale-5b7fb289dc24",
+      "listingSlug": "everyman-maida-vale",
+      "listingSourceId": "ChIJrU2Z1KUadkgRqFMP9XqZlFU",
+      "recordedAt": "2026-07-16T18:20:43.509Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Everyman official Maida Vale venue page",
+          "sourceUrl": "https://www.everymancinema.com/venues-list/x0lwi-everyman-maida-vale/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Everyman official Maida Vale food and drink page",
+          "sourceUrl": "https://www.everymancinema.com/food-and-drink/x0lwi-everyman-maida-vale/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Everyman Cinema exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1099878",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official venue and food pages plus current exact-premises FSA record support an operating Everyman cinema.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact entity is a cinema with a bar, Spielburger kitchen and food delivered to cinema seats. Its daily opening time is a cinema venue time, not an Indian restaurant schedule. No hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-hendon-the-hyde-hotel-ecd6f20dca78",
+      "listingSlug": "premier-inn-london-hendon-the-hyde-hotel",
+      "listingSourceId": "ChIJ__8PMTsRdkgRo5alyJADRsg",
+      "recordedAt": "2026-07-16T18:20:47.020Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Hendon The Hyde hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-hendon-the-hyde.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/758451",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and November 2025 exact-premises FSA inspection support an operating Premier Inn hotel.",
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 333 321 9324",
+          "reason": "The current official hotel page publishes this location-specific contact number.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel, and the on-site food operation is Thyme Bar & Grill rather than an Indian restaurant. No hotel, breakfast or Thyme venue hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-premier-inn-london-dagenham-hotel-25c7a74d709a",
+      "listingSlug": "premier-inn-london-dagenham-hotel",
+      "listingSourceId": "ChIJp1t__G6l2EcR0e3lX2oGko4",
+      "recordedAt": "2026-07-16T18:20:50.209Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Premier Inn official London Dagenham hotel page",
+          "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-dagenham.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Brewers Fayre and Premier Inn exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/553061",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "fullAddress",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "fullAddress",
+          "value": "Chequers Corner, 2 New Rd, Dagenham, RM9 6YS, London",
+          "reason": "The full address is synchronized with the current official hotel and FSA postcode.",
+          "previousValue": "Chequers Corner, 2 New Rd, Dagenham, RM10 6YS, London",
+          "applied": true
+        },
+        {
+          "field": "postcode",
+          "value": "RM9 6YS",
+          "reason": "The current official hotel page and FSA record support RM9 6YS rather than the imported RM10 6YS.",
+          "previousValue": "RM10 6YS",
+          "applied": true
+        },
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official hotel page and October 2025 exact-premises FSA inspection support an operating Premier Inn and Brewers Fayre site.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact recorded entity is a Premier Inn hotel with an adjacent Brewers Fayre serving a general British/international menu rather than an Indian restaurant. No hotel or Brewers Fayre hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-chaiwrap-eb3cba91f617",
+      "listingSlug": "chaiwrap",
+      "listingSourceId": "ChIJ8Tu2h_QCdkgR9Krj19ZQyNI",
+      "recordedAt": "2026-07-16T18:20:53.169Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "needs-review",
+      "evidence": [
+        {
+          "sourceName": "FSA FHRS Yak Yummy exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1872204",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Hullabaloo current official website",
+          "sourceUrl": "https://hullabaloostreetfood.co.uk/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Current claimed Tripadvisor Chai Wrap profile",
+          "sourceUrl": "https://www.tripadvisor.co.uk/Restaurant_Review-g186338-d12416219-Reviews-Chai_Wrap-London_England.html",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Current Hullabaloo Deptford closure report",
+          "sourceUrl": "https://thatsup.co.uk/london/restaurant/hullabaloo-deptford/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "TUHITU trading-as Hullabaloo Companies House filing history",
+          "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/14867840/filing-history",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [],
+      "notes": "Current authoritative premises evidence identifies Yak Yummy at 111B Deptford High Street. Hullabaloo's first-party site now identifies 10 Greenwich Church Street, while a current venue directory explicitly reports Hullabaloo Deptford closed and Companies House records link TUHITU trading as Hullabaloo to the historical Chaiwrap address before dissolution. However, a claimed Tripadvisor Chai Wrap profile still presents the exact historical name, address, phone and current hours as open. Do not infer closure, transfer Chaiwrap history to Yak Yummy, merge with Hullabaloo Greenwich, redirect, or apply any hours until the conflict is resolved."
+    },
+    {
+      "id": "verification-2026-07-16-east-india-club-07f1fea0fb56",
+      "listingSlug": "east-india-club",
+      "listingSourceId": "ChIJlQlo39YEdkgRsev5YsuZgZA",
+      "recordedAt": "2026-07-16T18:20:56.376Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "East India Club official bars and dining page",
+          "sourceUrl": "https://eastindiaclub.co.uk/bar-dining-times/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS East India Devonshire Sports and Public Schools Club record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/412568",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official club dining page and September 2025 FSA inspection support an operating members' club.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://eastindiaclub.co.uk/",
+          "reason": "The current official website is available over HTTPS.",
+          "previousValue": "http://www.eastindiaclub.co.uk/",
+          "applied": true
+        }
+      ],
+      "notes": "The exact entity is a private members' club. Its official dining page restricts dining to members and guests and describes the cuisine as British. Club dining-room and lounge hours were not added to an Indian restaurant listing. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-the-hornbeam-community-centre-cic-97114b4c347b",
+      "listingSlug": "the-hornbeam-community-centre-cic",
+      "listingSourceId": "ChIJ-_EoA5MddkgR9Ex1TEbJsOw",
+      "recordedAt": "2026-07-16T18:20:59.584Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Hornbeam Centre official current hub and cafe-space schedule",
+          "sourceUrl": "https://www.hornbeam.org.uk/",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Hornbeam Centre exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/514378",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS The Gleaners Cafe at Hornbeam Centre record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1228290",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "contact.website",
+        "contact.phone",
+        "contact.email",
+        "details.workingHours",
+        "categories"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The current official site and current FSA records support an operating community hub and cafe-space activities.",
+          "applied": true
+        },
+        {
+          "field": "contact.website",
+          "value": "https://www.hornbeam.org.uk/",
+          "reason": "The current official website is available over HTTPS.",
+          "previousValue": "http://www.hornbeam.org.uk/",
+          "applied": true
+        },
+        {
+          "field": "contact.email",
+          "value": "admin@hornbeam.org.uk",
+          "reason": "The current official site publishes this general administrative contact instead of the imported personal-role address.",
+          "previousValue": "paul@hornbeam.org.uk",
+          "applied": true
+        }
+      ],
+      "notes": "The exact entity is a community hub. Its cafe space hosts changing community projects, a supermarket, community meals, an apothecary and a referral-only wellbeing cafe; office hours and event schedules are not permanent Indian restaurant hours. No hours were added. Publication eligibility is handled separately as out of directory scope."
+    },
+    {
+      "id": "verification-2026-07-16-three-falcons-hotel-and-pub-fdc36da0fec8",
+      "listingSlug": "three-falcons-hotel-and-pub",
+      "listingSourceId": "ChIJ04AeTsMbdkgRBwyQ9iClxZs",
+      "recordedAt": "2026-07-16T18:21:02.648Z",
+      "checkedAt": "2026-07-16T18:15:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Three Falcons official about page",
+          "sourceUrl": "https://threefalcons.com/about",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons official Indian food page",
+          "sourceUrl": "https://threefalcons.com/food-menu",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons live OpenTable profile",
+          "sourceUrl": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        },
+        {
+          "sourceName": "FSA FHRS Three Falcons Hotel and Bar exact-premises record",
+          "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/410989",
+          "accessedAt": "2026-07-16T18:15:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "address",
+        "postcode",
+        "businessStatus",
+        "categories",
+        "tags",
+        "contact.website",
+        "contact.phone",
+        "contact.email",
+        "contact.reserveUrl",
+        "contact.menuUrl",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "businessStatus",
+          "value": "Operational",
+          "reason": "The official site, live transactional booking profile and current FSA record support an operating restaurant at the exact address.",
+          "applied": true
+        },
+        {
+          "field": "categories",
+          "value": [
+            "Indian"
+          ],
+          "reason": "The official site describes the Old Delhi Times menu and authentic Indian cuisine, and OpenTable classifies the exact restaurant as Indian.",
+          "previousValue": [],
+          "applied": true
+        },
+        {
+          "field": "tags",
+          "value": [
+            "Casual Dining",
+            "Bar",
+            "Indian"
+          ],
+          "reason": "The supported Indian category is synchronized into the listing tags without removing the existing dining and bar types.",
+          "previousValue": [
+            "Casual Dining",
+            "Bar"
+          ],
+          "applied": true
+        },
+        {
+          "field": "contact.phone",
+          "value": "+44 20 7724 8928",
+          "reason": "The live OpenTable profile linked from the official site publishes this restaurant contact number, replacing the imported reserved-range placeholder.",
+          "previousValue": "+44 7700 012345",
+          "applied": true
+        },
+        {
+          "field": "contact.email",
+          "value": "reservations@threefalcons.com",
+          "reason": "The official site publishes this restaurant reservations address, replacing the imported website-template placeholder.",
+          "previousValue": "hello@envytheme.com",
+          "applied": true
+        },
+        {
+          "field": "contact.reserveUrl",
+          "value": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+          "reason": "The official site links to the current OpenTable restaurant booking profile.",
+          "applied": true
+        },
+        {
+          "field": "contact.menuUrl",
+          "value": "https://threefalcons.com/food-menu",
+          "reason": "The official site publishes the current Indian food page.",
+          "applied": true
+        },
+        {
+          "field": "details.workingHours",
+          "value": [
+            {
+              "day": "Monday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Tuesday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Wednesday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Thursday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Friday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Saturday",
+              "hours": "12-10pm"
+            },
+            {
+              "day": "Sunday",
+              "hours": "12-10pm"
+            }
+          ],
+          "reason": "The current live OpenTable restaurant profile publishes daily hours of 12:00-22:00 for the exact Indian gastropub.",
+          "applied": true
+        }
+      ],
+      "notes": "The exact operation combines a pub, hotel and in-scope Indian restaurant. Restaurant hours, cuisine and restaurant contacts are recorded; hotel room or generic venue hours are not substituted. The FSA rating is retained only as identity and premises evidence and is not copied into the customer rating fields."
+    },
+    {
+      "id": "verification-2026-07-16-three-falcons-hotel-and-pub-7c671a89f93c",
+      "listingSlug": "three-falcons-hotel-and-pub",
+      "listingSourceId": "ChIJ04AeTsMbdkgRBwyQ9iClxZs",
+      "recordedAt": "2026-07-16T18:25:59.742Z",
+      "checkedAt": "2026-07-16T18:22:00.000Z",
+      "reviewedBy": "directory-editor",
+      "outcome": "verified",
+      "verificationStatus": "editor-verified",
+      "evidence": [
+        {
+          "sourceName": "Three Falcons official about page",
+          "sourceUrl": "https://threefalcons.com/about",
+          "accessedAt": "2026-07-16T18:22:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons official Indian food page",
+          "sourceUrl": "https://threefalcons.com/food-menu",
+          "accessedAt": "2026-07-16T18:22:00.000Z"
+        },
+        {
+          "sourceName": "Three Falcons live OpenTable profile",
+          "sourceUrl": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+          "accessedAt": "2026-07-16T18:22:00.000Z"
+        }
+      ],
+      "fieldsChecked": [
+        "name",
+        "description",
+        "metaDescription",
+        "address",
+        "postcode",
+        "businessStatus",
+        "categories",
+        "contact.website",
+        "contact.phone",
+        "details.workingHours"
+      ],
+      "changes": [
+        {
+          "field": "description",
+          "value": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. The venue combines its Old Delhi Times menu with a pub and hotel at 1 Orchardson Street.",
+          "reason": "The first sentence is synchronized with the verified Indian restaurant category and exact Marylebone location.",
+          "previousValue": "Three Falcons Hotel & Pub is a restaurant in Marylebone, Westminster. Details include nearby landmarks such as Hadson Mall.",
+          "applied": true
+        },
+        {
+          "field": "metaDescription",
+          "value": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. Check daily hours, menu, bookings and contact details.",
+          "reason": "The metadata is synchronized with the verified cuisine, location and newly recorded restaurant actions.",
+          "previousValue": "Three Falcons Hotel & Pub is a restaurant in Marylebone, Westminster. Details include nearby landmarks such as Hadson Mall.",
+          "applied": true
+        }
+      ],
+      "notes": "This append-only follow-up corrects inherited descriptive copy after the supported Indian category was added. It does not change identity, publication state, hours or entity resolution."
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { directoryConfig } from "@/config/directory";
-import { listings } from "@/data/listings";
 import type { Listing } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import { directorySemanticMap } from "@/lib/directory-semantic-map";
 import { homepageHeadings } from "@/lib/homepage-headings";
 import {
@@ -368,7 +368,7 @@ function areaCategoryLinks(limit: number): DirectoryShortcutLink[] {
     .sort((a, b) => b.count - a.count || a.areaLabel.localeCompare(b.areaLabel))
     .slice(0, limit)
     .map((item) => ({
-      label: `${item.categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${item.areaLabel}`,
+      label: `Browse ${item.categoryLabel} ${directoryConfig.listingPluralLabel.toLowerCase()} in ${item.areaLabel}`,
       href: areaCategoryPath(item.areaSlug, item.categorySlug),
       count: item.count
     }));

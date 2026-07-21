@@ -15,9 +15,10 @@ import { directorySearchPath } from "@/lib/routes";
 type DirectoryListingsViewProps = {
   model: DirectoryListingsModel;
   viewId?: string;
+  includeSecondaryContent?: boolean;
 };
 
-export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewProps) {
+export function DirectoryListingsView({ model, viewId, includeSecondaryContent = true }: DirectoryListingsViewProps) {
   const isHomepage = model.basePath === "/";
   const isCleanHomepage = isHomepage && !model.searchQuery;
   const searchBasePath = isCleanHomepage ? directorySearchPath() : model.basePath;
@@ -103,7 +104,7 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
           <DirectoryListingRows rows={homepageStartRows(model.relatedRows)} className="mt-6" />
         </>
       ) : (
-      <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
         <ResponsiveDirectoryFilters model={model} />
         <div className="min-w-0">
           <ListingsResults
@@ -118,8 +119,12 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
             linkValues={model.linkValues}
             headingContext={model.headingContext}
           />
-          <SourceContextGuide guide={model.sourceContextGuide} />
-          <DirectoryListingRows rows={model.relatedRows} className="mt-12" />
+          {includeSecondaryContent ? (
+            <>
+              <SourceContextGuide guide={model.sourceContextGuide} />
+              <DirectoryListingRows rows={model.relatedRows} className="mt-12" />
+            </>
+          ) : null}
         </div>
       </div>
       )}
@@ -128,12 +133,7 @@ export function DirectoryListingsView({ model, viewId }: DirectoryListingsViewPr
 }
 
 function HomepageQuickLinks({ tone = "dark" }: { tone?: "dark" | "light" }) {
-  const links = [
-    { label: "Open now", href: directorySearchPath("?open=1") },
-    { label: "Best rated", href: directorySearchPath("?sort=rating") },
-    { label: "Takeaway", href: "/services/takeaway" },
-    { label: "Halal", href: "/dietary/halal" }
-  ];
+  const links = siteConfig.homepageQuickLinks;
   const linkClass =
     tone === "dark"
       ? "focus-ring rounded-full border border-white/30 bg-white/15 px-3 py-1.5 text-sm font-bold text-white transition hover:bg-white hover:text-ink"
@@ -155,50 +155,10 @@ function HomepageQuickLinks({ tone = "dark" }: { tone?: "dark" | "light" }) {
 }
 
 function HomepageDiscoveryCards() {
-  const cards = [
-    {
-      title: homepageHeadings.discoveryCardTitles.area,
-      copy: "Start with London neighbourhoods and local hubs.",
-      href: "/areas",
-      image: "/images/homepage/discovery-area.webp",
-      imageAlt: "London street with Indian restaurants for browsing by area"
-    },
-    {
-      title: homepageHeadings.discoveryCardTitles.category,
-      copy: "Narrow the directory by cuisine and restaurant style.",
-      href: "/categories",
-      image: "/images/homepage/discovery-cuisines.webp",
-      imageAlt: "Indian dishes showing different cuisines and restaurant styles"
-    },
-    {
-      title: homepageHeadings.discoveryCardTitles.takeaway,
-      copy: "Find Indian restaurants set up for takeaway orders.",
-      href: "/services/takeaway",
-      image: "/images/homepage/discovery-takeaway.webp",
-      imageAlt: "Indian takeaway containers ready for collection"
-    },
-    {
-      title: homepageHeadings.discoveryCardTitles.halal,
-      copy: "Explore restaurants with halal-friendly details.",
-      href: "/dietary/halal",
-      image: "/images/homepage/discovery-halal.webp",
-      imageAlt: "Halal-friendly Indian restaurant table with shared dishes"
-    },
-    {
-      title: homepageHeadings.discoveryCardTitles.vegetarian,
-      copy: "Compare places with vegetarian options.",
-      href: "/dietary/vegetarian",
-      image: "/images/homepage/discovery-vegetarian.webp",
-      imageAlt: "Vegetarian Indian thali with colourful vegetable dishes"
-    },
-    {
-      title: homepageHeadings.discoveryCardTitles.bestRated,
-      copy: "Jump to restaurants sorted by strong review signals.",
-      href: directorySearchPath("?sort=rating"),
-      image: "/images/homepage/discovery-best-rated.webp",
-      imageAlt: "Highly rated Indian restaurant table with polished dishes"
-    }
-  ];
+  const cards = siteConfig.homepageDiscoveryCards.map((card) => ({
+    ...card,
+    title: homepageHeadings.discoveryCardTitles[card.titleKey]
+  }));
 
   return (
     <section className="mt-10">

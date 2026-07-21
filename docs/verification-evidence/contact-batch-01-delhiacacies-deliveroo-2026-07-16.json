@@ -1,0 +1,29 @@
+{
+  "listingSlug": "delhiacacies-deliveroo",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact-name and postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Delhiacacies&address=N7%209NH",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "FSA FHRS current N7 9NH premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=N7%209NH&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The imported address appears malformed ('Floor 60, 40 Brewery Road') and current FSA data identifies numerous different delivery brands at ground/first-floor kitchens at numbers 40 and 60. No source corroborates Delhiacacies or connects it to a current brand. Do not copy a shared-kitchen or other brand's contact details. Hold pending entity and unit evidence."
+}

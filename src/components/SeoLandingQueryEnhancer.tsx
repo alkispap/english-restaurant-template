@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  normalizeSearchParams,
-  searchParamsRecordFromUrlSearchParams
+  captureDirectoryQuerySnapshot
 } from "@/lib/directory-listings-search-params";
 import type { SeoLandingResultsShell } from "@/components/SeoLandingResultsShell";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 import { getSeoLandingHiddenFilterGroups } from "@/lib/seo-landing-filter-context";
+import { directoryConfig } from "@/config/directory";
+import { prefetchDirectorySearchData } from "@/lib/directory-search-data-request";
 
 type SeoLandingResultsShellComponent = typeof SeoLandingResultsShell;
 type SeoLandingBrowserModule = typeof import("@/lib/seo-landing-listings-browser");
@@ -33,6 +34,16 @@ type SeoLandingQueryEnhancerProps = {
 
 let seoLandingClientModulesPromise: Promise<[SeoLandingBrowserModule, SeoLandingResultsShellModule]> | null = null;
 
+if (typeof window !== "undefined") {
+  const { normalizedQuery } = captureDirectoryQuerySnapshot(window.location);
+  if (normalizedQuery) {
+    void prefetchDirectorySearchData().catch(() => undefined);
+    void import("@/lib/directory-search-runtime-browser")
+      .then((runtime) => runtime.loadBrowserDirectorySearchRuntime())
+      .catch(() => undefined);
+  }
+}
+
 function loadSeoLandingClientModules() {
   seoLandingClientModulesPromise ??= Promise.all([
     import("@/lib/seo-landing-listings-browser"),
@@ -45,16 +56,58 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
   const [activeModel, setActiveModel] = useState<DirectoryListingsModel | null>(null);
   const [ActiveResultsShell, setActiveResultsShell] = useState<SeoLandingResultsShellComponent | null>(null);
   const [clientResultsRoot, setClientResultsRoot] = useState<HTMLElement | null>(null);
+  const [queryBusy, setQueryBusy] = useState(false);
+  const [queryMessage, setQueryMessage] = useState("");
+  const [queryError, setQueryError] = useState(false);
   const hiddenGroups = getSeoLandingHiddenFilterGroups(initialPage);
 
   useEffect(() => {
+    let intentTimer: number | null = null;
+
+    function handleDirectoryIntent(event: Event) {
+      const target = event.target;
+      if (target instanceof Element && target.closest('[data-directory-query-intent="true"]')) {
+        if (intentTimer !== null) return;
+        intentTimer = window.setTimeout(() => {
+          intentTimer = null;
+          void prefetchDirectorySearchData().catch(() => undefined);
+        }, 75);
+      }
+    }
+
+    document.addEventListener("pointerover", handleDirectoryIntent, { passive: true, capture: true });
+    document.addEventListener("focusin", handleDirectoryIntent, { capture: true });
+    return () => {
+      if (intentTimer !== null) window.clearTimeout(intentTimer);
+      document.removeEventListener("pointerover", handleDirectoryIntent, { capture: true });
+      document.removeEventListener("focusin", handleDirectoryIntent, { capture: true });
+    };
+  }, []);
+
+  useEffect(() => {
     const serverResults = document.getElementById("seo-landing-server-results");
-    if (serverResults) serverResults.hidden = activeModel !== null;
+    if (serverResults) {
+      serverResults.hidden = activeModel !== null;
+      serverResults.style.display = activeModel !== null ? "none" : "";
+    }
 
     return () => {
-      if (serverResults) serverResults.hidden = false;
+      if (serverResults) {
+        serverResults.hidden = false;
+        serverResults.style.display = "";
+      }
     };
   }, [activeModel]);
+
+  useEffect(() => {
+    const results = [
+      document.getElementById("seo-landing-server-results"),
+      document.getElementById("seo-landing-client-results")
+    ].filter((element): element is HTMLElement => Boolean(element));
+
+    results.forEach((element) => element.setAttribute("aria-busy", String(queryBusy)));
+    return () => results.forEach((element) => element.removeAttribute("aria-busy"));
+  }, [activeModel, queryBusy]);
 
   useEffect(() => {
     setClientResultsRoot(document.getElementById("seo-landing-client-results-root"));
@@ -67,32 +120,55 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
     let requestVersion = 0;
 
     async function updateFromCurrentUrl() {
-      const currentUrl = window.location.href;
+      const {
+        href: currentUrl,
+        pathname,
+        searchParams: currentParams,
+        normalizedQuery: nextQuery
+      } = captureDirectoryQuerySnapshot(window.location);
       if (currentUrl === lastHandledUrl) return;
 
       lastHandledUrl = currentUrl;
       const version = ++requestVersion;
-      const currentParams = new URLSearchParams(window.location.search);
-      const nextQuery = normalizeSearchParams(searchParamsRecordFromUrlSearchParams(currentParams));
       if (!nextQuery) {
         setActiveModel(null);
+        setQueryBusy(false);
+        setQueryError(false);
+        setQueryMessage("Filters cleared.");
         return;
       }
 
-      const [{ buildBrowserSeoLandingListingsModel }, shellModule] = await loadSeoLandingClientModules();
-      if (cancelled || version !== requestVersion) return;
+      setQueryBusy(true);
+      setQueryError(false);
+      setQueryMessage(`Updating ${directoryConfig.listingPluralLabel.toLowerCase()}.`);
+      try {
+        const [{ buildBrowserSeoLandingListingsModel }, shellModule] = await loadSeoLandingClientModules();
+        if (cancelled || version !== requestVersion) return;
 
-      setActiveResultsShell(() => shellModule.SeoLandingResultsShell);
-      setActiveModel(
-        buildBrowserSeoLandingListingsModel({
-          pathname: window.location.pathname,
+        const nextModel = await buildBrowserSeoLandingListingsModel({
+          pathname,
           searchParams: currentParams,
           basePath: initialPage.metadata.canonical,
           title: initialPage.hero.title,
           description: initialPage.hero.description,
           headingContext: initialPage.resultsHeadingContext
-        }) ?? null
-      );
+        }) ?? null;
+        if (cancelled || version !== requestVersion) return;
+        setActiveResultsShell(() => shellModule.SeoLandingResultsShell);
+        setActiveModel(nextModel);
+        setQueryMessage(
+          nextModel
+            ? `${nextModel.totalCount.toLocaleString()} ${directoryConfig.listingPluralLabel.toLowerCase()} updated.`
+            : "Filters cleared."
+        );
+      } catch {
+        if (cancelled || version !== requestVersion) return;
+        seoLandingClientModulesPromise = null;
+        setQueryError(true);
+        setQueryMessage(`${directoryConfig.listingPluralLabel} could not be updated. Reload the page to try again.`);
+      } finally {
+        if (!cancelled && version === requestVersion) setQueryBusy(false);
+      }
     }
 
     function scheduleUpdateFromCurrentUrl() {
@@ -135,14 +211,26 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
     };
   }, [initialPage.hero.description, initialPage.hero.title, initialPage.metadata.canonical, initialPage.resultsHeadingContext]);
 
-  if (!activeModel || !ActiveResultsShell || !clientResultsRoot) return null;
-
-  return createPortal(
-    <ActiveResultsShell
-      model={activeModel}
-      hiddenGroups={[...hiddenGroups]}
-      definingContextKey={initialPage.definingContext?.key}
-    />,
-    clientResultsRoot
+  return (
+    <>
+      <p
+        role={queryError ? "alert" : "status"}
+        aria-live={queryError ? "assertive" : "polite"}
+        aria-atomic="true"
+        className={queryError ? "mx-auto my-4 max-w-7xl rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" : "sr-only"}
+      >
+        {queryMessage}
+      </p>
+      {activeModel && ActiveResultsShell && clientResultsRoot
+        ? createPortal(
+            <ActiveResultsShell
+              model={activeModel}
+              hiddenGroups={[...hiddenGroups]}
+              definingContextKey={initialPage.definingContext?.key}
+            />,
+            clientResultsRoot
+          )
+        : null}
+    </>
   );
 }

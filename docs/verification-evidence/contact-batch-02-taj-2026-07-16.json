@@ -1,0 +1,29 @@
+{
+  "listingSlug": "taj",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact-name and postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Taj&address=BR1%202ND&pageSize=100",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS current BR1 2ND premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=BR1%202ND&pageSize=100",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "The imported record has no street number and the current postcode query identifies only caring premises at 11 and 21 Bickley Road. A separate Taj Authentic Indian Cuisine exists in Biggin Hill, but no evidence connects it to this imported place ID or address. Do not copy the other Taj's details, infer a move, or claim closure. Hold pending exact premises and entity evidence."
+}

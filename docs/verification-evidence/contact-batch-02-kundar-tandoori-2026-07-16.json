@@ -1,0 +1,42 @@
+{
+  "listingSlug": "kundar-tandoori",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Current Kundar Tandoori Deliveroo page",
+      "sourceUrl": "https://deliveroo.co.uk/menu/london/north-kensington/kundar-tandoori",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS current 316B Ladbroke Grove premises record",
+      "sourceUrl": "https://ratings.food.gov.uk/business/1809354/taste-of-punjab",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "contact.orderOnlineUrl",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current delivery page is accepting the exact Kundar Tandoori brand and publishes a live closing time and menu."
+    },
+    {
+      "field": "contact.orderOnlineUrl",
+      "value": "https://deliveroo.co.uk/menu/london/north-kensington/kundar-tandoori",
+      "reason": "This current transactional page is the only contact/action source verified for the exact Kundar Tandoori brand."
+    }
+  ],
+  "notes": "The premises also trades publicly as Taste of Punjab and has a separate canonical listing. Kundar Tandoori remains a distinct current delivery brand; same premises and overlapping menu do not justify merging the records. No Taste of Punjab phone, website or hours were copied to Kundar Tandoori."
+}

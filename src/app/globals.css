@@ -7,13 +7,14 @@
 
   --color-ink: #1f2933;
   --color-muted: #64748b;
+  --color-muted-strong: #475569;
   --color-line: #e2e8f0;
   --color-paper: #fffaf3;
   --color-surface: #ffffff;
   --color-surface-alt: #f8fafc;
   --shadow-soft-color: rgba(15, 23, 42, 0.08);
 
-  --color-primary: #f97316;
+  --color-primary: #c2410c;
   --color-secondary: #15803d;
   --color-accent: #9f1239;
 }

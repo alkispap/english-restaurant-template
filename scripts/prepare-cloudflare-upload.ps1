@@ -3,8 +3,6 @@ $ErrorActionPreference = "Stop"
 $ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $WatchedPorts = @(3000, 3001)
 $OutDir = Join-Path $ProjectRoot "out"
-$env:NEXT_PUBLIC_SITE_URL = "https://indianrestaurantlondon.co.uk"
-$env:NEXT_STATIC_EXPORT = "1"
 
 function Get-ProjectNodeProcesses {
   Get-CimInstance Win32_Process -Filter "name = 'node.exe'" |

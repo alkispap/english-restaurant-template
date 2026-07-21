@@ -1,0 +1,53 @@
+{
+  "listingSlug": "the-layered-biryani-by-mom",
+  "checkedAt": "2026-07-16T09:20:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Current The Layered Biryani By Mom Deliveroo page",
+      "sourceUrl": "https://deliveroo.co.uk/menu/London/nine-elms/the-layered-biryani-76-stewarts-rd-nine-elms",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS The Layered Biryani By Mom record",
+      "sourceUrl": "https://ratings.food.gov.uk/business/1793078/the-layered-biryani-by-mom",
+      "accessedAt": "2026-07-16T09:20:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "contact.orderOnlineUrl",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "address",
+      "value": "Kitchen 23, 76 Stewarts Road",
+      "reason": "The current FSA record identifies Kitchen 23 at 76 Stewarts Road without an apostrophe."
+    },
+    {
+      "field": "fullAddress",
+      "value": "Kitchen 23, 76 Stewarts Road, Nine Elms, London, SW8 4DE",
+      "reason": "The current FSA and transactional sources agree on the exact kitchen and postcode."
+    },
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The exact brand has a current delivery menu and a current FSA premises record."
+    },
+    {
+      "field": "contact.orderOnlineUrl",
+      "value": "https://deliveroo.co.uk/menu/London/nine-elms/the-layered-biryani-76-stewarts-rd-nine-elms",
+      "reason": "This is the current transactional page for the exact brand and Nine Elms kitchen."
+    }
+  ],
+  "notes": "The brand operates from a multi-brand commercial kitchen. The exact kitchen number and FSA identity prevent accidental attribution of another tenant's contact details. No phone, first-party website, or permanent weekly hours were found, and the FSA hygiene score was not copied into customer-rating fields."
+}

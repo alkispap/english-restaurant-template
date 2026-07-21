@@ -1,0 +1,159 @@
+name: Code quality
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - converted_to_draft
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code-quality-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_PUBLIC_SITE_URL: https://indianrestaurantlondon.co.uk
+
+jobs:
+  fast-quality-gate:
+    name: Fast quality gate
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript checks
+        run: npm run typecheck
+
+      - name: Enforce dependency policy
+        run: npm run audit:dependencies
+
+      - name: Verify publication integrity
+        run: npm run audit:publication
+
+      - name: Verify SEO and crawl policy
+        run: |
+          npm run audit:seo
+          npm run audit:indexation
+          npm run audit:links
+
+      - name: Verify template readiness
+        run: npm run audit:template
+
+      - name: Build production application
+        run: npm run build
+
+      - name: Confirm checks did not edit tracked files
+        run: |
+          git diff --check
+          if (git status --porcelain) {
+            git status --short
+            throw "Quality checks changed tracked or untracked repository files."
+          }
+
+  full-static-export:
+    name: Full static export and rendered benchmark
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    needs: fast-quality-gate
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build static export
+        run: npm run build:static
+
+      - name: Validate Cloudflare artifact
+        run: npm run check:cloudflare
+
+      - name: Run rendered filter benchmark
+        shell: powershell
+        env:
+          RUNS: "3"
+          CPU_THROTTLE: "4"
+          BASE_URL: http://127.0.0.1:3000
+        run: |
+          $server = Start-Process python -ArgumentList @(
+            "-m",
+            "http.server",
+            "3000",
+            "--bind",
+            "127.0.0.1",
+            "--directory",
+            "out"
+          ) -WindowStyle Hidden -PassThru
+
+          try {
+            $ready = $false
+            for ($attempt = 0; $attempt -lt 40; $attempt += 1) {
+              try {
+                $response = Invoke-WebRequest -Uri "$env:BASE_URL/restaurants/" -UseBasicParsing -TimeoutSec 2
+                if ($response.StatusCode -eq 200) {
+                  $ready = $true
+                  break
+                }
+              } catch {
+              }
+              Start-Sleep -Milliseconds 250
+            }
+
+            if (-not $ready) {
+              throw "Static export server did not become ready."
+            }
+
+            npm run benchmark:filters
+            if ($LASTEXITCODE -ne 0) {
+              throw "Rendered filter benchmark failed with exit code $LASTEXITCODE."
+            }
+          } finally {
+            Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Confirm export left source clean
+        run: |
+          git diff --check
+          if (git status --porcelain) {
+            git status --short
+            throw "Static export changed tracked or untracked repository files."
+          }

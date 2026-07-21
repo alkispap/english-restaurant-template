@@ -1,0 +1,29 @@
+{
+  "listingSlug": "republic-restaurant-verney-road",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current SE16 3DH premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE16%203DH&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "Republic Restaurant Verney Road public directory profile",
+      "sourceUrl": "https://hampsteadvillagelondon.com/republic-restaurant-verney-road-8661/",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Allard House is a current multi-brand production/ghost-kitchen site. The FSA query lists many current businesses at 18 Verney Road but no Republic Restaurant or Unit 36 match, and the only exact-name profile publishes no phone, website, or hours. Source absence does not establish closure or invalid import, and contact details from another kitchen must not be copied. Hold for direct operator or premises evidence."
+}

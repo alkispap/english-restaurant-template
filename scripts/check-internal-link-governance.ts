@@ -39,10 +39,10 @@ async function runAudit() {
   ];
 
   const seoSources = [
-    ...getIndexableAreaSeoPages().slice(0, 25),
-    ...getIndexableCategorySeoPages().slice(0, 25),
-    ...getIndexablePopularSearchSeoPages().slice(0, 25),
-    ...getIndexableFacetSeoPages().slice(0, 25)
+    ...getIndexableAreaSeoPages(),
+    ...getIndexableCategorySeoPages(),
+    ...getIndexablePopularSearchSeoPages(),
+    ...getIndexableFacetSeoPages()
   ].map((page) => ({
     sourcePageType: page.kind === "area"
       ? "area_hub" as const

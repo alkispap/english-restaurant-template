@@ -1,5 +1,9 @@
-import searchRecordsData from "../../data/listing-search-records.json";
+import packedSearchIndexData from "../../data/listing-search-index.json";
 import type { ListingResultSummary } from "@/lib/listings-page";
+import {
+  unpackListingSearchRecords,
+  type PackedListingSearchIndex
+} from "@/lib/listing-search-index";
 
 export type ListingSearchRecord = ListingResultSummary & {
   borough?: string;
@@ -32,4 +36,6 @@ export type ListingSearchRecord = ListingResultSummary & {
   };
 };
 
-export const listingSearchRecords = searchRecordsData as ListingSearchRecord[];
+export const listingSearchRecords = unpackListingSearchRecords(
+  packedSearchIndexData as PackedListingSearchIndex
+);

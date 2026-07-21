@@ -1,0 +1,34 @@
+{
+  "listingSlug": "indian-food-camden",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "Camden Market historical Munch Club page",
+      "sourceUrl": "https://camdenmarket.com/journal/camden-market-munch-club",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "FSA FHRS current NW1 8AH premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW1%208AH&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "Current Google Maps Camden Market search result",
+      "sourceUrl": "https://www.google.com/maps/search/Lunch%2Bat%2BCamden%2BMarket%2C%2BLondon%2C%2BUnited%2BKingdom",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Camden Market confirms Indian Food Camden existed historically, but independent contemporaneous location evidence places it at 6F Paddock Alley. The imported Unit 312-313 location is currently associated with Magic Falafel in FSA and map evidence. This is a material location/entity conflict, not proof of closure. Hold the imported record pending direct trader or Camden Market evidence that resolves its current status and canonical unit."
+}

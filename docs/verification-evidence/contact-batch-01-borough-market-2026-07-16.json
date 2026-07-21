@@ -1,0 +1,29 @@
+{
+  "listingSlug": "borough-market",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "City of Westminster current planning report",
+      "sourceUrl": "https://westminster.moderngov.co.uk/documents/s25549/ITEM%2003%20-%2031-35%20BRICK%20STREET%20LONDON%20W1J%207HQ.pdf",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "Companies House property charge",
+      "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/OC368907/charges/9Vzon0vY-hqb4hupNvqDvVAp-qw",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Authoritative property and planning records identify 37-49 Brick Street as ancillary Park Lane Hotel space containing parking, plant, and upper-floor hotel uses. They do not identify a restaurant named Borough MARKET, and the imported postcode also conflicts with current planning records. This supports an invalid-import publication decision, not a closure claim or substitution with the unrelated Borough Market in Southwark."
+}

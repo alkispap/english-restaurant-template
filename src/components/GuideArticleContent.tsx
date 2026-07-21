@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, CheckCircle2 } from "lucide-react";
 import { AdsterraAd } from "@/components/AdsterraAd";
+import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/JsonLd";
 import type {
   ArticleComparisonTable as ArticleComparisonTableModel,
   ArticleContent,
@@ -23,13 +25,8 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
     <main className="bg-page">
       {!preview ? (
         <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(buildArticleJsonLd(article)) }}
-          />
-          {faqSchema ? (
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-          ) : null}
+          <JsonLd data={buildArticleJsonLd(article)} />
+          {faqSchema ? <JsonLd data={faqSchema} /> : null}
         </>
       ) : null}
 
@@ -147,7 +144,7 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
 
         {article.internalLinks.length ? (
           <section className="mx-auto max-w-6xl border-t border-line px-4 py-8 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-ink">Related Indian Restaurant Directory Pages</h2>
+            <h2 className="text-2xl font-bold text-ink">Related {siteConfig.localNicheSingularTitle} Directory Pages</h2>
             <div className="mt-4 grid gap-3">
               {article.internalLinks.map((link) => (
                 <Link
@@ -164,7 +161,7 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
 
         {article.faqs.length ? (
           <section className="mx-auto max-w-6xl border-t border-line px-4 py-8 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-ink">Indian Food and Restaurant FAQs</h2>
+            <h2 className="text-2xl font-bold text-ink">{siteConfig.cuisineLabel} Food and Restaurant FAQs</h2>
             <div className="mt-4 space-y-4">
               {article.faqs.map((faq) => (
                 <details key={faq.question} className="rounded-md border border-line bg-white p-4">
@@ -178,7 +175,7 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
 
         {article.researchSources.length ? (
           <section className="mx-auto max-w-6xl border-t border-line px-4 py-8 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-ink">Sources for This Indian Restaurant Guide</h2>
+            <h2 className="text-2xl font-bold text-ink">Sources for This {siteConfig.cuisineLabel} Restaurant Guide</h2>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               {article.researchSources.slice(0, 6).map((source) => (
                 <a key={`${source.url}-${source.title}`} href={source.url} className="rounded-md border border-line bg-white p-4 hover:border-primary">

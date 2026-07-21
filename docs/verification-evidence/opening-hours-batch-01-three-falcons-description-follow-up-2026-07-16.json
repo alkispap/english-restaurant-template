@@ -1,0 +1,49 @@
+{
+  "listingSlug": "three-falcons-hotel-and-pub",
+  "checkedAt": "2026-07-16T18:22:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Three Falcons official about page",
+      "sourceUrl": "https://threefalcons.com/about",
+      "accessedAt": "2026-07-16T18:22:00.000Z"
+    },
+    {
+      "sourceName": "Three Falcons official Indian food page",
+      "sourceUrl": "https://threefalcons.com/food-menu",
+      "accessedAt": "2026-07-16T18:22:00.000Z"
+    },
+    {
+      "sourceName": "Three Falcons live OpenTable profile",
+      "sourceUrl": "https://www.opentable.co.uk/r/three-falcons-gastro-pub-london",
+      "accessedAt": "2026-07-16T18:22:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "description",
+    "metaDescription",
+    "address",
+    "postcode",
+    "businessStatus",
+    "categories",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "description",
+      "value": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. The venue combines its Old Delhi Times menu with a pub and hotel at 1 Orchardson Street.",
+      "reason": "The first sentence is synchronized with the verified Indian restaurant category and exact Marylebone location."
+    },
+    {
+      "field": "metaDescription",
+      "value": "Three Falcons Hotel & Pub is an Indian restaurant in Marylebone, Westminster serving North Indian food. Check daily hours, menu, bookings and contact details.",
+      "reason": "The metadata is synchronized with the verified cuisine, location and newly recorded restaurant actions."
+    }
+  ],
+  "notes": "This append-only follow-up corrects inherited descriptive copy after the supported Indian category was added. It does not change identity, publication state, hours or entity resolution."
+}

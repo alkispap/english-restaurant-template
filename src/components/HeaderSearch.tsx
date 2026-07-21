@@ -37,6 +37,7 @@ export function HeaderSearch({ className = "", onSearch }: HeaderSearchProps) {
       <input
         name="q"
         type="search"
+        aria-label={`Search ${directoryConfig.listingPluralLabel.toLowerCase()}`}
         placeholder={`${directoryConfig.listingLabel}, category, keyword...`}
         className="min-w-0 flex-1 bg-transparent px-3 text-sm text-ink outline-none placeholder:text-muted"
       />

@@ -1,0 +1,21 @@
+{
+  "listingSlug": "chaiwrap",
+  "expectedSourceId": "ChIJ8Tu2h_QCdkgR9Krj19ZQyNI",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T18:16:00.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "material-data-conflict"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-chaiwrap-eb3cba91f617"
+    }
+  ],
+  "notes": "Current exact-premises, first-party and directory evidence conflicts over whether Chaiwrap remains open, was succeeded by Hullabaloo, or has been replaced by Yak Yummy. Withhold it from normal discovery until explicit continuity and operating-status evidence supports publication, exclusion, correction or entity resolution."
+}

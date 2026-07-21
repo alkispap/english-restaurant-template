@@ -7,6 +7,7 @@ const rootEntries = fs.readdirSync(process.cwd(), { withFileTypes: true });
 const listingsSourcePath = path.join(process.cwd(), "src", "data", "listings.ts");
 const listingsJsonPath = path.join(process.cwd(), "data", "listings.json");
 const listingSearchRecordsJsonPath = path.join(process.cwd(), "data", "listing-search-records.json");
+const listingSearchIndexJsonPath = path.join(process.cwd(), "data", "listing-search-index.json");
 const directoryListingsPagePath = path.join(process.cwd(), "src", "components", "DirectoryListingsPage.tsx");
 const listingsPagePath = path.join(process.cwd(), "src", "app", "listings", "page.tsx");
 const restaurantsPagePath = path.join(process.cwd(), "src", "app", "restaurants", "page.tsx");
@@ -14,9 +15,9 @@ const directoryListingsInteractiveShellPath = path.join(process.cwd(), "src", "c
 const filterPanelOptionsPath = path.join(process.cwd(), "src", "lib", "filter-panel-options.ts");
 const searchBarPath = path.join(process.cwd(), "src", "components", "SearchBar.tsx");
 const directorySidebarPath = path.join(process.cwd(), "src", "components", "DirectorySidebar.tsx");
-const homepageSeoLinksPath = path.join(process.cwd(), "src", "components", "HomepageSeoLinks.tsx");
 const geoAreaPath = path.join(process.cwd(), "src", "lib", "geo-area.ts");
 const shortlistSummariesPath = path.join(process.cwd(), "src", "data", "shortlist-summaries.ts");
+const shortlistIndexJsonPath = path.join(process.cwd(), "data", "shortlist-index.json");
 const globalsCssPath = path.join(process.cwd(), "src", "app", "globals.css");
 const listingMapPath = path.join(process.cwd(), "src", "components", "ListingMap.tsx");
 const supabaseBrowserPath = path.join(process.cwd(), "src", "lib", "supabase-browser.ts");
@@ -45,6 +46,11 @@ assert.ok(
   fs.existsSync(listingSearchRecordsJsonPath),
   "browser-facing search records should live in data/listing-search-records.json"
 );
+assert.ok(
+  fs.existsSync(listingSearchIndexJsonPath),
+  "browser-facing search records should have a generated packed index"
+);
+assert.ok(fs.existsSync(shortlistIndexJsonPath), "compare summaries should have a generated packed index");
 
 const listingsSource = fs.readFileSync(listingsSourcePath, "utf8");
 const listingsSourceSize = fs.statSync(listingsSourcePath).size;
@@ -122,8 +128,7 @@ assert.ok(
 for (const browserComponentPath of [
   directoryListingsInteractiveShellPath,
   searchBarPath,
-  directorySidebarPath,
-  homepageSeoLinksPath
+  directorySidebarPath
 ]) {
   if (!fs.existsSync(browserComponentPath)) continue;
   const content = fs.readFileSync(browserComponentPath, "utf8");
@@ -142,7 +147,6 @@ for (const browserComponentPath of [
 for (const clientDataPath of [
   searchBarPath,
   directorySidebarPath,
-  homepageSeoLinksPath,
   geoAreaPath,
   shortlistSummariesPath
 ]) {

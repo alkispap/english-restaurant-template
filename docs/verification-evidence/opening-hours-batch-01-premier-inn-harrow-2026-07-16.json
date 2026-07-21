@@ -1,0 +1,53 @@
+{
+  "listingSlug": "premier-inn-london-harrow-hotel",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Premier Inn official London Harrow hotel page",
+      "sourceUrl": "https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-harrow.html",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Traveller's Rest exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/276943",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "fullAddress",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [
+    {
+      "field": "address",
+      "value": "Kenton Road",
+      "reason": "The current official hotel page and FSA partner-premises record identify the site on Kenton Road without supporting the imported 134A unit label."
+    },
+    {
+      "field": "fullAddress",
+      "value": "Kenton Road, Kenton, HA3 8AT, London",
+      "reason": "The full address is synchronized with the official hotel location and the current FSA postcode for Traveller's Rest."
+    },
+    {
+      "field": "postcode",
+      "value": "HA3 8AT",
+      "reason": "The current official hotel page and FSA record support HA3 8AT rather than the imported HA3 8AL."
+    },
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current official hotel page and current FSA partner-premises record support an operating hotel and Beefeater site."
+    }
+  ],
+  "notes": "The exact recorded entity is a Premier Inn hotel with the Traveller's Rest Beefeater, whose published menu is a general steak and pub menu rather than an Indian restaurant operation. No hotel or Beefeater hours were added. Publication eligibility is handled separately as out of directory scope."
+}

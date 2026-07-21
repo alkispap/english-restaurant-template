@@ -3,6 +3,7 @@ import sitemap from "../src/app/sitemap";
 import { generateMetadata as listingMetadata } from "../src/app/restaurants/[slug]/page";
 import { siteConfig } from "../src/config/site";
 import { listings } from "../src/data/listings";
+import { publishedListings } from "../src/data/listing-publication";
 import { isListingIndexable } from "../src/lib/seo-policy";
 import { listingDetailPath } from "../src/lib/routes";
 
@@ -41,7 +42,7 @@ function sitemapUsesListingQualityGate() {
     .filter((url) => url.includes(`/${siteConfig.listingBasePath}/`))
     .filter((url) => url !== `${siteConfig.url}/${siteConfig.listingBasePath}/`)
     .sort();
-  const expectedListingUrls = listings
+  const expectedListingUrls = publishedListings
     .filter(isListingIndexable)
     .map((listing) => `${siteConfig.url}${listingDetailPath(listing.slug)}/`)
     .sort();

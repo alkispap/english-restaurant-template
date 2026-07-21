@@ -1,0 +1,29 @@
+{
+  "listingSlug": "golis-south-norwood",
+  "checkedAt": "2026-07-16T04:47:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS current postcode query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=SE25%206EE",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS coordinate-area query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?latitude=51.3997282&longitude=-0.0741702&maxDistanceLimit=1",
+      "accessedAt": "2026-07-16T04:47:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "Current FSA results identify D And D Grocery Shop at 1 Commercial Buildings, High Street, SE25 6EE and no Golis South Norwood match. This conflicts with the imported entity but does not establish whether it closed, renamed, or moved. Obtain direct business evidence or make an explicit exclusion decision before changing the canonical record. The captured result is retained in priority-batch-fsa-snapshot-2026-07-16.json."
+}

@@ -7,6 +7,7 @@ import {
   renderTemplateReadinessReport,
   type TemplateReadinessReport
 } from "../src/lib/template-readiness-audit";
+import type { ListingPublicationQualityReport } from "../src/lib/listing-publication-quality";
 
 const completeListing: Listing = {
   name: "Complete Listing",
@@ -70,12 +71,23 @@ const cleanImportReport = `# Import Report
 - None
 `;
 
+const readyPublicationReport: ListingPublicationQualityReport = {
+  generatedAt: "2026-06-01T00:00:00.000Z",
+  status: "ready",
+  totalListings: 1,
+  totalStates: 1,
+  totalEvents: 0,
+  counts: { published: 1, pendingReview: 0, excluded: 0 },
+  issues: []
+};
+
 function report(overrides: Partial<Parameters<typeof buildTemplateReadinessReport>[0]> = {}): TemplateReadinessReport {
   return buildTemplateReadinessReport({
     site: siteConfig,
     directory: directoryConfig,
     listings: [completeListing],
     importReportText: cleanImportReport,
+    publicationReport: readyPublicationReport,
     env: {
       NEXT_PUBLIC_SITE_URL: "https://example.com",
       NEXT_PUBLIC_SUPABASE_URL: "",
@@ -211,6 +223,20 @@ assert.equal(issue(result, "seo_policy_facet_review").severity, "warning");
 result = report({ env: { NEXT_PUBLIC_SITE_URL: "https://example.com" } });
 assert.equal(issue(result, "supabase_disabled").severity, "info");
 assert.match(issue(result, "verification_guidance").recommendation, /npm run audit:links/);
+assert.equal(issue(result, "publication_control_ready").severity, "info");
+
+result = report({ publicationReport: undefined });
+assert.equal(issue(result, "publication_control_missing").severity, "blocker");
+
+result = report({ publicationReport: { ...readyPublicationReport, status: "not_ready", issues: [{
+  code: "test",
+  severity: "critical",
+  count: 1,
+  samples: ["complete-listing"],
+  impact: "test",
+  recommendation: "test"
+}] } });
+assert.equal(issue(result, "publication_control_not_ready").severity, "blocker");
 
 result = report({
   env: {

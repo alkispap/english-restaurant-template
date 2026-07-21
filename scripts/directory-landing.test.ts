@@ -84,6 +84,12 @@ assert.deepEqual(
   ["/services/takeaway", "/services/delivery", "/services/outdoor-seating"],
   "service cards should use existing service routes"
 );
+assert.ok(
+  model.serviceNeeds.items.every(
+    (item) => item.image?.startsWith("/images/homepage/services/") && item.imageAlt.length >= 40
+  ),
+  "service cards should use meaningful fixed local illustrations"
+);
 
 assert.deepEqual(
   model.regionLinks.items.map((item) => item.title),

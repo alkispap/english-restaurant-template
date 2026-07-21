@@ -1,0 +1,21 @@
+{
+  "listingSlug": "borough-market",
+  "expectedSourceId": "ChIJcQ-6AAAFdkgRbDuFu5GdTEg",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:01.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "excluded",
+    "reason": "invalid-import"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-borough-market-81483adbd7f8"
+    }
+  ],
+  "notes": "Authoritative property and planning evidence identifies the imported address as Park Lane Hotel ancillary space, not a restaurant called Borough MARKET. Preserve the imported history but exclude the invalid restaurant record. Do not redirect it to the unrelated Borough Market in Southwark."
+}

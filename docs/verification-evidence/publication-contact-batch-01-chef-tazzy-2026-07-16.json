@@ -1,0 +1,21 @@
+{
+  "listingSlug": "chef-tazzy",
+  "expectedSourceId": "ChIJMUbUPAAddkgRCRLGpEqZURg",
+  "expectedCurrent": {
+    "status": "published",
+    "reason": "legacy-public-baseline"
+  },
+  "reviewedAt": "2026-07-16T08:48:03.000Z",
+  "reviewedBy": "directory-editor",
+  "next": {
+    "status": "pending-review",
+    "reason": "identity-uncertain"
+  },
+  "evidence": [
+    {
+      "type": "verification-event",
+      "eventId": "verification-2026-07-16-chef-tazzy-e9ca9cb5f803"
+    }
+  ],
+  "notes": "No current operator, restaurant, or contact evidence corroborates Chef Tazzy at the imported address. Retain the record but withhold it until direct entity evidence is available."
+}

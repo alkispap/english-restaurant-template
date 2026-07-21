@@ -1,0 +1,41 @@
+{
+  "listingSlug": "bazaar-london-s-indian-takeaway-aldgate",
+  "checkedAt": "2026-07-16T10:50:01.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Current Google profile by stored Place ID",
+      "sourceUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20London%27s%20Indian%20Takeaway%20Aldgate&query_place_id=ChIJFd9iuaUDdkgRA6P8FsMuKCg",
+      "accessedAt": "2026-07-16T10:50:01.000Z"
+    },
+    {
+      "sourceName": "Retired exact Deliveroo Aldgate route",
+      "sourceUrl": "https://deliveroo.co.uk/menu/london/whitechapel/bazaar-londons-indian-takeaway-aldgate",
+      "accessedAt": "2026-07-16T10:50:01.000Z"
+    },
+    {
+      "sourceName": "Current FSA FHRS E1 8EY premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=E1%208EY&pageSize=100",
+      "accessedAt": "2026-07-16T10:50:01.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Permanently closed",
+      "reason": "The exact stored Google Place ID explicitly marks the Aldgate profile closed and provides a reopen action; its exact Deliveroo route is retired and current premises evidence identifies different operators."
+    }
+  ],
+  "notes": "This follow-up resolves operating status for the historical Aldgate listing without identifying a successor. The unrelated current premises operators must not receive a redirect or inherited listing history."
+}

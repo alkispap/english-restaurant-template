@@ -1,0 +1,53 @@
+{
+  "listingSlug": "the-hornbeam-community-centre-cic",
+  "checkedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "verified",
+  "verificationStatus": "editor-verified",
+  "evidence": [
+    {
+      "sourceName": "Hornbeam Centre official current hub and cafe-space schedule",
+      "sourceUrl": "https://www.hornbeam.org.uk/",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS Hornbeam Centre exact-premises record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/514378",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    },
+    {
+      "sourceName": "FSA FHRS The Gleaners Cafe at Hornbeam Centre record",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments/1228290",
+      "accessedAt": "2026-07-16T18:15:00.000Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "contact.email",
+    "details.workingHours",
+    "categories"
+  ],
+  "changes": [
+    {
+      "field": "businessStatus",
+      "value": "Operational",
+      "reason": "The current official site and current FSA records support an operating community hub and cafe-space activities."
+    },
+    {
+      "field": "contact.website",
+      "value": "https://www.hornbeam.org.uk/",
+      "reason": "The current official website is available over HTTPS."
+    },
+    {
+      "field": "contact.email",
+      "value": "admin@hornbeam.org.uk",
+      "reason": "The current official site publishes this general administrative contact instead of the imported personal-role address."
+    }
+  ],
+  "notes": "The exact entity is a community hub. Its cafe space hosts changing community projects, a supermarket, community meals, an apothecary and a referral-only wellbeing cafe; office hours and event schedules are not permanent Indian restaurant hours. No hours were added. Publication eligibility is handled separately as out of directory scope."
+}

@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-16T18:15:00.000Z",
+  "reviewedBy": "directory-editor",
+  "cohort": "First published missing-opening-hours batch",
+  "baseline": {
+    "retainedListings": 3186,
+    "published": 3159,
+    "pendingReview": 24,
+    "excluded": 3,
+    "freshEditorVerified": 8,
+    "unverified": 3178,
+    "publishedMissingOpeningHours": 106
+  },
+  "records": [
+    {
+      "listingSlug": "premier-inn-london-blackfriars-fleet-street-hotel",
+      "entityResolution": "Exact current entity is a Premier Inn hotel with a Thyme Bar & Grill.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Venue and hotel dining hours were not copied into an Indian restaurant listing.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Premier Inn identifies the exact Dorset Rise entity as a hotel and its food operation as Thyme Bar & Grill. Current FSA data classifies the exact premises as a hotel/bed and breakfast/guest house."
+    },
+    {
+      "listingSlug": "premier-inn-london-edgware-hotel",
+      "entityResolution": "Exact current entity is a Premier Inn hotel with a Thyme Bar & Grill.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Venue and hotel dining hours were not copied into an Indian restaurant listing.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Premier Inn identifies the exact Burnt Oak Broadway entity as a hotel and its food operation as Thyme Bar & Grill with a general hotel menu. Current FSA data classifies it as a hotel/bed and breakfast/guest house."
+    },
+    {
+      "listingSlug": "premier-inn-london-harrow-hotel",
+      "entityResolution": "Exact current entity is a Premier Inn hotel with the adjacent Traveller's Rest Beefeater.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Hotel and Beefeater hours were not copied into an Indian restaurant listing.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Premier Inn identifies the property as a hotel with an on-site Beefeater serving a general steak/pub menu. Current FSA data classifies Traveller's Rest as a pub/bar/nightclub."
+    },
+    {
+      "listingSlug": "everyman-maida-vale",
+      "entityResolution": "Exact current entity is an Everyman cinema with a bar and cinema food service.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Cinema opening times were not treated as restaurant hours.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Everyman's venue page identifies two cinema screens and a bar serving cocktails, pizzas and sharing plates; the food page describes Spielburger and cinema food. Current FSA data identifies Everyman Cinema at the exact address."
+    },
+    {
+      "listingSlug": "premier-inn-london-hendon-the-hyde-hotel",
+      "entityResolution": "Exact current entity is a Premier Inn hotel with a Thyme Bar & Grill.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Venue and hotel dining hours were not copied into an Indian restaurant listing.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Premier Inn identifies the exact Hyde House entity as a hotel and its food operation as Thyme Bar & Grill. Current FSA data classifies Premier Inn at the exact premises as a hotel/bed and breakfast/guest house."
+    },
+    {
+      "listingSlug": "premier-inn-london-dagenham-hotel",
+      "entityResolution": "Exact current entity is a Premier Inn hotel with an adjacent Brewers Fayre.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Hotel and Brewers Fayre hours were not copied into an Indian restaurant listing.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Premier Inn identifies the exact Chequers Corner entity as a hotel with Brewers Fayre and publishes a general British/international menu. Current FSA data identifies Brewers Fayre & Premier Inn at the premises."
+    },
+    {
+      "listingSlug": "chaiwrap",
+      "entityResolution": "Unresolved exact-premises identity conflict.",
+      "scopeOutcome": "pending-review",
+      "hoursOutcome": "No hours were applied.",
+      "operatingStatus": "Unknown/current evidence insufficient",
+      "evidenceSummary": "Current FSA data identifies Yak Yummy at 111B Deptford High Street. Hullabaloo's first-party site now identifies a Greenwich location, and a current venue directory reports Hullabaloo Deptford permanently closed. A claimed Tripadvisor Chai Wrap profile still presents the historical name and address as open. Do not infer closure, merge with Yak Yummy, or redirect to Hullabaloo without explicit continuity evidence."
+    },
+    {
+      "listingSlug": "east-india-club",
+      "entityResolution": "Exact current entity is a private members' club with member-and-guest dining.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Members' club dining hours were not copied into an Indian restaurant listing.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "The club's official dining page states that members and guests receive British cuisine in its dining rooms. Current FSA data identifies the East India Devonshire Sports & Public Schools Club at the exact address."
+    },
+    {
+      "listingSlug": "the-hornbeam-community-centre-cic",
+      "entityResolution": "Exact current entity is a community hub with a shared cafe space and scheduled community projects.",
+      "scopeOutcome": "out-of-directory-scope",
+      "hoursOutcome": "Office hours and changing cafe-space schedules were not treated as restaurant hours.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Hornbeam's official site identifies a community hub whose cafe space hosts a supermarket, people's kitchen, apothecary, living room and referral-only wellbeing cafe. Current FSA data separately identifies Hornbeam Centre as retail and The Gleaners Cafe at Hornbeam Centre as a cafe/canteen."
+    },
+    {
+      "listingSlug": "three-falcons-hotel-and-pub",
+      "entityResolution": "Exact current entity includes an in-scope Indian gastropub and restaurant operation.",
+      "scopeOutcome": "published",
+      "hoursOutcome": "Restaurant hours supported as daily 12:00-22:00.",
+      "operatingStatus": "Operational",
+      "evidenceSummary": "Three Falcons' official site describes authentic Indian cuisine and its Old Delhi Times menu. The linked live OpenTable profile identifies the exact address, Indian cuisine, current booking availability and daily hours of 12:00-22:00. Current FSA data identifies Three Falcons Hotel and Bar at the exact premises."
+    }
+  ],
+  "mediaDecision": "Google/Outscraper media restoration remains separate and on hold."
+}

@@ -1,0 +1,29 @@
+{
+  "listingSlug": "contemporary-indian-cuisine",
+  "checkedAt": "2026-07-16T08:47:08.644Z",
+  "reviewedBy": "directory-editor",
+  "outcome": "needs-review",
+  "evidence": [
+    {
+      "sourceName": "FSA FHRS exact-name and address query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?name=Contemporary%20Indian%20Cuisine&address=50C%20Gascony%20Avenue",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    },
+    {
+      "sourceName": "FSA FHRS current NW6 4NE premises query",
+      "sourceUrl": "https://api.ratings.food.gov.uk/Establishments?address=NW6%204NE&pageSize=100",
+      "accessedAt": "2026-07-16T08:47:08.644Z"
+    }
+  ],
+  "fieldsChecked": [
+    "name",
+    "address",
+    "postcode",
+    "businessStatus",
+    "contact.website",
+    "contact.phone",
+    "details.workingHours"
+  ],
+  "changes": [],
+  "notes": "No current authoritative, first-party, or transactional source corroborates this generic imported identity at 50C Gascony Avenue, and no safe contact action can be assigned. Absence does not prove closure or invalid import. Hold pending direct owner, premises, licensing, or registry evidence."
+}

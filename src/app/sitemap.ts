@@ -1,6 +1,6 @@
 ﻿import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
-import { listings } from "@/data/listings";
+import { publishedListings as listings } from "@/data/listing-publication";
 import { articleSitemapRoutes } from "@/lib/articles";
 import { canonicalPageUrl } from "@/lib/canonical-page-url";
 import {
