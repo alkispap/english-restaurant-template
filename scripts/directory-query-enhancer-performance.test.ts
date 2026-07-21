@@ -36,8 +36,23 @@ assert.match(
 );
 assert.match(
   source,
-  /window\.location\.search\.length > 1[\s\S]*prepareDirectoryListingsClientModules\(\)/,
-  "an existing query should prepare required client modules while React hydration continues"
+  /captureDirectoryQuerySnapshot\(window\.location\)[\s\S]*normalizedQuery[\s\S]*prepareDirectoryListingsClientModules\(\)/,
+  "a recognized existing query should prepare required client modules while React hydration continues"
+);
+assert.doesNotMatch(
+  source,
+  /window\.location\.search\.length/,
+  "tracking-only query strings should not wake the directory search runtime"
+);
+assert.match(
+  source,
+  /const snapshot = captureDirectoryQuerySnapshot\(window\.location\)[\s\S]*const \{ href, searchParams \} = snapshot/,
+  "initial query preparation should capture URL and query parameters atomically"
+);
+assert.doesNotMatch(
+  source,
+  /searchParams: new URLSearchParams\(window\.location\.search\)/,
+  "async preparation should not reread mutable browser query state"
 );
 assert.match(
   source,

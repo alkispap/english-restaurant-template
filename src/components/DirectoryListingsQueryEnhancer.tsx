@@ -2,8 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import {
-  normalizeSearchParams,
-  searchParamsRecordFromUrlSearchParams
+  captureDirectoryQuerySnapshot
 } from "@/lib/directory-listings-search-params";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 import { directoryConfig } from "@/config/directory";
@@ -41,17 +40,20 @@ function markDirectoryStartupOnce(name: string) {
 
 markDirectoryStartup("directory-query-enhancer-module-evaluated");
 
-if (typeof window !== "undefined" && window.location.search.length > 1) {
-  markDirectoryStartup("directory-query-startup-detected");
-  void prefetchDirectorySearchData().catch(() => undefined);
-  markDirectoryStartup("directory-runtime-import-started");
-  void import("@/lib/directory-search-runtime-browser")
-    .then((runtime) => {
-      markDirectoryStartup("directory-runtime-import-resolved");
-      return runtime.loadBrowserDirectorySearchRuntime();
-    })
-    .catch(() => undefined);
-  void prepareDirectoryListingsClientModules().catch(resetDirectoryListingsClientModules);
+if (typeof window !== "undefined") {
+  const { normalizedQuery } = captureDirectoryQuerySnapshot(window.location);
+  if (normalizedQuery) {
+    markDirectoryStartup("directory-query-startup-detected");
+    void prefetchDirectorySearchData().catch(() => undefined);
+    markDirectoryStartup("directory-runtime-import-started");
+    void import("@/lib/directory-search-runtime-browser")
+      .then((runtime) => {
+        markDirectoryStartup("directory-runtime-import-resolved");
+        return runtime.loadBrowserDirectorySearchRuntime();
+      })
+      .catch(() => undefined);
+    void prepareDirectoryListingsClientModules().catch(resetDirectoryListingsClientModules);
+  }
 }
 
 function loadDirectoryListingsClientModules() {
@@ -92,8 +94,10 @@ function preloadDirectoryListingsClientModules() {
 function prepareInitialDirectoryQuery(
   initialPage: DirectoryListingsQueryEnhancerProps["initialPage"]
 ): PreparedInitialDirectoryQuery | null {
-  if (typeof window === "undefined" || window.location.search.length <= 1) return null;
-  const href = window.location.href;
+  if (typeof window === "undefined") return null;
+  const snapshot = captureDirectoryQuerySnapshot(window.location);
+  if (!snapshot.normalizedQuery) return null;
+  const { href, searchParams } = snapshot;
   if (preparedInitialDirectoryQuery?.href === href) return preparedInitialDirectoryQuery;
 
   const preparation: PreparedInitialDirectoryQuery = {
@@ -101,7 +105,7 @@ function prepareInitialDirectoryQuery(
     promise: prepareDirectoryListingsClientModules().then(async ([browserModule, shellModule]) => {
       const modelStarted = performance.now();
       const model = await browserModule.buildBrowserDirectoryListingsModel({
-        searchParams: new URLSearchParams(window.location.search),
+        searchParams,
         basePath: initialPage.basePath,
         title: initialPage.title,
         description: initialPage.description
@@ -184,13 +188,15 @@ export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListing
       if (urlChange) {
         performance.measure("directory-update-scheduling", { start: urlChange.startTime, end: updateStarted });
       }
-      const currentUrl = window.location.href;
+      const {
+        href: currentUrl,
+        searchParams: currentParams,
+        normalizedQuery: nextQuery
+      } = captureDirectoryQuerySnapshot(window.location);
       if (currentUrl === lastHandledUrl) return;
 
       lastHandledUrl = currentUrl;
       const version = ++requestVersion;
-      const currentParams = new URLSearchParams(window.location.search);
-      const nextQuery = normalizeSearchParams(searchParamsRecordFromUrlSearchParams(currentParams));
       if (!nextQuery) {
         setActiveModel(null);
         setQueryBusy(false);
@@ -221,6 +227,7 @@ export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListing
             title: initialPage.title,
             description: initialPage.description
           });
+          if (cancelled || version !== requestVersion) return;
           performance.measure("directory-model-build", { start: modelStarted, end: performance.now() });
         }
         if (!nextModel || !shellModule) throw new Error("Directory query preparation did not produce a model.");

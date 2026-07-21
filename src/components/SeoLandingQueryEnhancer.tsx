@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  normalizeSearchParams,
-  searchParamsRecordFromUrlSearchParams
+  captureDirectoryQuerySnapshot
 } from "@/lib/directory-listings-search-params";
 import type { SeoLandingResultsShell } from "@/components/SeoLandingResultsShell";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
@@ -35,11 +34,14 @@ type SeoLandingQueryEnhancerProps = {
 
 let seoLandingClientModulesPromise: Promise<[SeoLandingBrowserModule, SeoLandingResultsShellModule]> | null = null;
 
-if (typeof window !== "undefined" && window.location.search.length > 1) {
-  void prefetchDirectorySearchData().catch(() => undefined);
-  void import("@/lib/directory-search-runtime-browser")
-    .then((runtime) => runtime.loadBrowserDirectorySearchRuntime())
-    .catch(() => undefined);
+if (typeof window !== "undefined") {
+  const { normalizedQuery } = captureDirectoryQuerySnapshot(window.location);
+  if (normalizedQuery) {
+    void prefetchDirectorySearchData().catch(() => undefined);
+    void import("@/lib/directory-search-runtime-browser")
+      .then((runtime) => runtime.loadBrowserDirectorySearchRuntime())
+      .catch(() => undefined);
+  }
 }
 
 function loadSeoLandingClientModules() {
@@ -118,13 +120,16 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
     let requestVersion = 0;
 
     async function updateFromCurrentUrl() {
-      const currentUrl = window.location.href;
+      const {
+        href: currentUrl,
+        pathname,
+        searchParams: currentParams,
+        normalizedQuery: nextQuery
+      } = captureDirectoryQuerySnapshot(window.location);
       if (currentUrl === lastHandledUrl) return;
 
       lastHandledUrl = currentUrl;
       const version = ++requestVersion;
-      const currentParams = new URLSearchParams(window.location.search);
-      const nextQuery = normalizeSearchParams(searchParamsRecordFromUrlSearchParams(currentParams));
       if (!nextQuery) {
         setActiveModel(null);
         setQueryBusy(false);
@@ -141,13 +146,14 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
         if (cancelled || version !== requestVersion) return;
 
         const nextModel = await buildBrowserSeoLandingListingsModel({
-          pathname: window.location.pathname,
+          pathname,
           searchParams: currentParams,
           basePath: initialPage.metadata.canonical,
           title: initialPage.hero.title,
           description: initialPage.hero.description,
           headingContext: initialPage.resultsHeadingContext
         }) ?? null;
+        if (cancelled || version !== requestVersion) return;
         setActiveResultsShell(() => shellModule.SeoLandingResultsShell);
         setActiveModel(nextModel);
         setQueryMessage(

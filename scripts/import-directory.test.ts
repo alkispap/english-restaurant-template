@@ -15,6 +15,8 @@ import {
 import { getServiceOptions } from "../src/lib/directory";
 import { unpackListingSearchRecords } from "../src/lib/listing-search-index";
 import { unpackShortlistSummaries } from "../src/lib/shortlist-index";
+import { reconcileListingImport } from "../src/lib/listing-import-publication";
+import type { ListingPublicationRegistry } from "../src/lib/listing-publication";
 
 const fixtureProvenance = {
   sourceName: "test.csv",
@@ -689,6 +691,82 @@ function confirmedEntityAliasesMergeWithoutLosingSourceProvenance() {
   );
 }
 
+function confirmedEntityAliasesPreserveCanonicalIdentityRegardlessOfRowOrder() {
+  const aliasSourceId = "ChIJocOA2Stm2qoRoXP2Vrhu6T4";
+  const canonicalSourceId = "ChIJHW95Q7an2EcRTtMQy-XzTBg";
+  const rows: Row[] = [
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "Catering",
+      Website: "https://alias.example.test/",
+      place_id: aliasSourceId
+    },
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "South Indian",
+      "Service options": "Delivery",
+      place_id: aliasSourceId
+    },
+    {
+      "Restaurant Name": "Yummy Dosa",
+      "Cuisine Type": "Indian",
+      Website: "https://yummydosarestaurant.co.uk/",
+      "Google Rating": "5",
+      place_id: canonicalSourceId
+    }
+  ];
+
+  const aliasFirst = analyzeDirectoryRows(rows, "test.csv", "normal import", undefined, {
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const canonicalFirst = analyzeDirectoryRows([rows[2], rows[0], rows[1]], "test.csv", "normal import", undefined, {
+    importedAt: "2026-07-15T12:00:00Z"
+  });
+  const [listing] = aliasFirst.listings;
+
+  assert.equal(aliasFirst.listings.length, 1);
+  assert.equal(aliasFirst.reportData.duplicateCount, 2);
+  assert.equal(listing.name, "Yummy Dosa");
+  assert.equal(listing.slug, "yummy-dosa");
+  assert.equal(listing.provenance.sourceId, canonicalSourceId);
+  assert.equal(listing.details?.placeId, canonicalSourceId);
+  assert.deepEqual(listing.categories, canonicalFirst.listings[0].categories);
+  assert.deepEqual(listing.listingTypes, canonicalFirst.listings[0].listingTypes);
+  assert.equal(listing.slug, canonicalFirst.listings[0].slug);
+  assert.equal(listing.provenance.sourceId, canonicalFirst.listings[0].provenance.sourceId);
+  assert.match(aliasFirst.report, new RegExp(`confirmed entity alias "${aliasSourceId}" -> "${canonicalSourceId}"`));
+
+  const registry: ListingPublicationRegistry = {
+    version: 1,
+    baseline: {
+      id: "alias-order-baseline",
+      createdAt: "2026-07-16T00:00:00.000Z",
+      sourceSha256: "fixture-hash",
+      listingCount: 1,
+      actor: "system:migration",
+      reason: "legacy-public-baseline"
+    },
+    entries: [{
+      listingSlug: "yummy-dosa",
+      listingSourceId: canonicalSourceId,
+      status: "published",
+      reason: "legacy-public-baseline",
+      origin: "migration-baseline",
+      effectiveAt: "2026-07-16T00:00:00.000Z",
+      changedBy: "system:migration"
+    }]
+  };
+  const reconciliation = reconcileListingImport([listing], aliasFirst.listings, registry);
+  assert.equal(reconciliation.matchedCount, 1);
+  assert.equal(reconciliation.newCount, 0);
+
+  const unresolved = analyzeDirectoryRows([
+    { "Restaurant Name": "Unresolved Kitchen", place_id: "unresolved-source-a" },
+    { "Restaurant Name": "Unresolved Kitchen", place_id: "unresolved-source-b" }
+  ], "test.csv", "normal import");
+  assert.equal(unresolved.listings.length, 2, "different source IDs must not merge without explicit entity evidence");
+}
+
 function importProvenanceIsExplicitAndCannotClaimVerification() {
   const rows: Row[] = [{ "Restaurant Name": "Provenance Kitchen", place_id: "source-123" }];
   const result = analyzeDirectoryRows(rows, "upload.csv", "normal import", undefined, {
@@ -745,6 +823,7 @@ missingCategoriesUseConservativeInferenceAndReview();
 sourceDataOverridesCorrectKnownLocalBusinessErrors();
 duplicateSourceRowsMergeUsefulFieldsInsteadOfSkipping();
 confirmedEntityAliasesMergeWithoutLosingSourceProvenance();
+confirmedEntityAliasesPreserveCanonicalIdentityRegardlessOfRowOrder();
 importProvenanceIsExplicitAndCannotClaimVerification();
 
 console.log("import-directory behavior tests passed");

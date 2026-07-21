@@ -54,7 +54,7 @@ const nextConfig = (phase) => {
         }
       ]
     },
-    ...(!isStaticExport || isDevServer
+    ...(!isDevServer && !isStaticExport
       ? {
           async headers() {
             return [{ source: "/:path*", headers: securityHeaders }];

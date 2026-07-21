@@ -1,5 +1,11 @@
 export type DirectoryListingsSearchParams = Record<string, string | string[] | undefined>;
 
+type DirectoryQueryLocation = {
+  href: string;
+  pathname: string;
+  search: string;
+};
+
 const directorySearchParamKeys = new Set([
   "q",
   "area",
@@ -50,6 +56,20 @@ export function searchParamsRecordFromUrlSearchParams(searchParams: URLSearchPar
   });
 
   return record;
+}
+
+export function hasActiveDirectoryQuery(searchParams: URLSearchParams) {
+  return normalizeSearchParams(searchParamsRecordFromUrlSearchParams(searchParams)).length > 0;
+}
+
+export function captureDirectoryQuerySnapshot(location: DirectoryQueryLocation) {
+  const searchParams = new URLSearchParams(location.search);
+  return {
+    href: location.href,
+    pathname: location.pathname,
+    searchParams,
+    normalizedQuery: normalizeSearchParams(searchParamsRecordFromUrlSearchParams(searchParams))
+  };
 }
 
 export function normalizeSearchParams(searchParams: DirectoryListingsSearchParams = {}) {

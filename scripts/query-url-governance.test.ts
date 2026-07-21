@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { generateMetadata as homepageMetadata } from "../src/app/page";
 import { getAreas, getCategories, slugify } from "../src/lib/directory";
 import {
+  captureDirectoryQuerySnapshot,
+  hasActiveDirectoryQuery,
   normalizeSearchParams,
   searchParamsRecordFromUrlSearchParams
 } from "../src/lib/directory-listings-search-params";
@@ -40,8 +42,31 @@ function unknownHomepageQueryParamsDoNotWakeDirectoryDataset() {
   assert.equal(normalizeSearchParams(mixed), "q=dosa");
 }
 
+function directoryQuerySnapshotsAreRecognizedAndImmutable() {
+  assert.equal(hasActiveDirectoryQuery(new URLSearchParams()), false);
+  assert.equal(hasActiveDirectoryQuery(new URLSearchParams("utm_source=newsletter&verify=20260721")), false);
+  assert.equal(hasActiveDirectoryQuery(new URLSearchParams("utm_source=newsletter&q=Dishoom")), true);
+  assert.equal(hasActiveDirectoryQuery(new URLSearchParams("view=map")), true);
+
+  const location = {
+    href: "https://example.test/restaurants/?q=Dishoom",
+    pathname: "/restaurants/",
+    search: "?q=Dishoom"
+  };
+  const snapshot = captureDirectoryQuerySnapshot(location);
+  location.href = "https://example.test/restaurants/?area=harrow";
+  location.search = "?area=harrow";
+
+  assert.equal(snapshot.href, "https://example.test/restaurants/?q=Dishoom");
+  assert.equal(snapshot.pathname, "/restaurants/");
+  assert.equal(snapshot.normalizedQuery, "q=Dishoom");
+  assert.equal(snapshot.searchParams.get("q"), "Dishoom");
+  assert.equal(snapshot.searchParams.has("area"), false);
+}
+
 homepageMetadataStaysStaticForExport().then(() => {
   seoHubQueryStatesAreNoindexed();
   unknownHomepageQueryParamsDoNotWakeDirectoryDataset();
+  directoryQuerySnapshotsAreRecognizedAndImmutable();
   console.log("query URL governance tests passed");
 });

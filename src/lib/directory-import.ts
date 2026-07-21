@@ -325,7 +325,27 @@ function analyzeRows(
 
     if (entitySourceId && listingBySourceId.has(entitySourceId)) {
       analysis.duplicateCount += 1;
-      mergeDuplicateListing(listingBySourceId.get(entitySourceId)!, listing);
+      const retainedListing = listingBySourceId.get(entitySourceId)!;
+      const retainedSourceId = retainedListing.provenance.sourceId;
+      const canonicalRowArrivedAfterAlias = sourceId === entitySourceId && retainedSourceId !== entitySourceId;
+
+      if (canonicalRowArrivedAfterAlias) {
+        mergeDuplicateListing(listing, retainedListing);
+        const retainedIndex = listings.indexOf(retainedListing);
+        if (retainedIndex < 0) throw new Error(`Canonical entity target is not retained: ${entitySourceId}`);
+
+        usedSlugs.delete(retainedListing.slug);
+        const baseSlug = listing.slug || stableSlug(listing.name, row, index, analysis);
+        listing.slug = uniqueListingSlug(baseSlug, listing, usedSlugs, index, analysis);
+        listings[retainedIndex] = listing;
+        listingBySourceId.set(entitySourceId, listing);
+        analysis.warnings.push(
+          `Row ${index + 2}: canonical source ID "${sourceId}" replaced earlier confirmed entity alias "${retainedSourceId}" -> "${entitySourceId}".`
+        );
+        return;
+      }
+
+      mergeDuplicateListing(retainedListing, listing);
       const reason = entitySourceId === sourceId
         ? `duplicate source ID "${sourceId}"`
         : `confirmed entity alias "${sourceId}" -> "${entitySourceId}"`;

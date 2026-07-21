@@ -48,6 +48,21 @@ function seoLandingQueryEnhancerLazyLoadsHeavyModules() {
     "SEO landing query enhancer should lazy-load only the SEO landing results shell"
   );
   assert.ok(fs.existsSync(browserPath), "seo-landing-browser module should still exist until removed intentionally");
+  assert.match(
+    source,
+    /captureDirectoryQuerySnapshot\(window\.location\)[\s\S]*normalizedQuery[\s\S]*prefetchDirectorySearchData/,
+    "SEO landing startup should preload search data only for recognized directory query state"
+  );
+  assert.doesNotMatch(
+    source,
+    /window\.location\.search\.length/,
+    "tracking-only SEO landing URLs should not preload the search index"
+  );
+  assert.match(
+    source,
+    /const \{[\s\S]*?href: currentUrl,[\s\S]*?pathname,[\s\S]*?searchParams: currentParams,[\s\S]*?normalizedQuery: nextQuery[\s\S]*?\} = captureDirectoryQuerySnapshot\(window\.location\)/,
+    "SEO landing updates should capture pathname and query parameters from one URL snapshot"
+  );
 }
 
 function browserLoadedSeoQueryModulesAvoidFullSeoDataset() {
