@@ -24,7 +24,7 @@ moduleWithLoad._load = function patchedLoad(request: string, parent: unknown, is
   return originalLoad(request, parent, isMain);
 };
 
-function textFromTags(html: string, tag: "h1" | "h2" | "h3") {
+function textFromTags(html: string, tag: "h1" | "h2" | "h3" | "h4") {
   return Array.from(html.matchAll(new RegExp(`<${tag}[^>]*>(.*?)</${tag}>`, "gis"))).map((match) =>
     decodeHtml(match[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim())
   );
@@ -45,7 +45,8 @@ async function renderListingHeadings(slug: string) {
   return {
     h1s: textFromTags(html, "h1"),
     h2s: textFromTags(html, "h2"),
-    h3s: textFromTags(html, "h3")
+    h3s: textFromTags(html, "h3"),
+    h4s: textFromTags(html, "h4")
   };
 }
 
@@ -57,7 +58,7 @@ async function listingDetailPagesUseSeoFocusedH1AndH2Headings() {
   ];
 
   for (const sample of samples) {
-    const { h1s, h2s, h3s } = await renderListingHeadings(sample.slug);
+    const { h1s, h2s, h3s, h4s } = await renderListingHeadings(sample.slug);
 
     assert.deepEqual(h1s, [`${sample.name} in Redbridge, London`], `${sample.slug} should have one local SEO H1`);
 
@@ -101,6 +102,8 @@ async function listingDetailPagesUseSeoFocusedH1AndH2Headings() {
     ["Local area", "Similar cuisine", "Features & dietary", "Social links"].forEach((oldHeading) => {
       assert.ok(!h3s.includes(oldHeading), `${sample.slug} should not keep weak H3 "${oldHeading}"`);
     });
+
+    assert.equal(h4s.length, 0, `${sample.slug} quick facts should not skip from H2 to H4`);
   }
 }
 

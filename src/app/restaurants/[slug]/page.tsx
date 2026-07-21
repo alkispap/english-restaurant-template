@@ -272,7 +272,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
           {isClosed ? <StatusBanner status={status} /> : null}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <h1 className="hidden text-4xl font-bold text-ink md:block">{headings.h1}</h1>
+            <h1 className="sr-only text-4xl font-bold text-ink md:not-sr-only md:block">{headings.h1}</h1>
             <div className="flex flex-wrap gap-2 sm:mt-1">
               {isDirectoryFeatureEnabled("shortlist") ? <SaveListingButton slug={listing.slug} /> : null}
               <ShareButton 

@@ -52,15 +52,16 @@ export function AdsterraAd({ placement, className = "" }: AdsterraAdProps) {
   }, [config]);
 
   return (
-    <aside
+    <div
       className={`no-print mx-auto overflow-hidden rounded-md border border-dashed border-line bg-white text-center shadow-sm ${className}`}
+      role="group"
       aria-label="Advertisement"
       style={{ width, maxWidth: "100%", minHeight: config.height }}
     >
       <div ref={containerRef} className="grid h-full place-items-center">
         <LocalAdPlaceholder placement={placement} height={config.height} />
       </div>
-    </aside>
+    </div>
   );
 }
 

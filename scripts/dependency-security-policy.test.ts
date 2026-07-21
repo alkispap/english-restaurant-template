@@ -8,6 +8,9 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), 
   devDependencies?: Record<string, string>;
 };
 const policySource = fs.readFileSync(path.join(root, "scripts", "check-dependency-security.ts"), "utf8");
+const packageLock = JSON.parse(fs.readFileSync(path.join(root, "package-lock.json"), "utf8")) as {
+  packages?: Record<string, { version?: string }>;
+};
 
 assert.equal(
   packageJson.scripts?.["audit:dependencies"],
@@ -21,5 +24,10 @@ assert.match(policySource, /packageName === "next"/, "policy should constrain th
 assert.match(policySource, /packageName !== "postcss"/, "policy should reject unrelated moderate or low advisories");
 assert.match(policySource, /process\.env\.ComSpec \?\? "cmd\.exe"/, "policy command should launch through the Windows command shim when required");
 assert.match(policySource, /do not use npm audit fix --force/, "policy output should preserve the unsafe-force decision");
+assert.equal(
+  packageLock.packages?.["node_modules/brace-expansion"]?.version,
+  "1.1.16",
+  "the lockfile should resolve the patched brace-expansion release used by ESLint's minimatch dependency"
+);
 
 console.log("dependency security policy tests passed");

@@ -107,7 +107,7 @@ export function ListingDetailMobileChrome({ listing, tabs, shareUrl, route }: Li
           </div>
         </div>
 
-        <p className="mt-5 text-[2rem] font-extrabold leading-tight text-ink">{listing.name}</p>
+        <p aria-hidden="true" className="mt-5 text-[2rem] font-extrabold leading-tight text-ink">{listing.name}</p>
         <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink">
           {listing.rating ? <span>{listing.rating.toFixed(1)}</span> : null}
           {listing.rating ? <RatingDots rating={listing.rating} /> : null}
