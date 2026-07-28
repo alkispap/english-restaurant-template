@@ -25,7 +25,7 @@ let iframeAdQueue = Promise.resolve();
 export function AdsterraAd({ placement, className = "" }: AdsterraAdProps) {
   const config = adsterraAds[placement];
   const containerRef = useRef<HTMLDivElement>(null);
-  const width = config.width === "fluid" ? "100%" : `${config.width}px`;
+  const maxWidth = config.width === "fluid" ? "100%" : `${config.width}px`;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -53,10 +53,10 @@ export function AdsterraAd({ placement, className = "" }: AdsterraAdProps) {
 
   return (
     <div
-      className={`no-print mx-auto overflow-hidden rounded-md border border-dashed border-line bg-white text-center shadow-sm ${className}`}
+      className={`no-print mx-auto min-w-0 overflow-hidden rounded-md border border-dashed border-line bg-white text-center shadow-sm ${className}`}
       role="group"
       aria-label="Advertisement"
-      style={{ width, maxWidth: "100%", minHeight: config.height }}
+      style={{ width: "100%", maxWidth, minHeight: config.height }}
     >
       <div ref={containerRef} className="grid h-full place-items-center">
         <LocalAdPlaceholder placement={placement} height={config.height} />

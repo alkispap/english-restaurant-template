@@ -39,6 +39,10 @@ const directorySearchParamKeys = new Set([
   "page"
 ]);
 
+const directoryQueryRobotsSelector = 'meta[data-directory-query-robots="true"]';
+
+export const DIRECTORY_QUERY_ROBOTS_CONTENT = "noindex, follow";
+
 export function searchParamsRecordFromUrlSearchParams(searchParams: URLSearchParams): DirectoryListingsSearchParams {
   const record: DirectoryListingsSearchParams = {};
 
@@ -60,6 +64,26 @@ export function searchParamsRecordFromUrlSearchParams(searchParams: URLSearchPar
 
 export function hasActiveDirectoryQuery(searchParams: URLSearchParams) {
   return normalizeSearchParams(searchParamsRecordFromUrlSearchParams(searchParams)).length > 0;
+}
+
+export function getDirectoryQueryRobotsContent(searchParams: URLSearchParams) {
+  return hasActiveDirectoryQuery(searchParams) ? DIRECTORY_QUERY_ROBOTS_CONTENT : null;
+}
+
+export function syncDirectoryQueryRobotsMeta(searchParams: URLSearchParams, documentRoot: Document = document) {
+  const existing = documentRoot.head.querySelector<HTMLMetaElement>(directoryQueryRobotsSelector);
+  const content = getDirectoryQueryRobotsContent(searchParams);
+
+  if (!content) {
+    existing?.remove();
+    return;
+  }
+
+  const meta = existing ?? documentRoot.createElement("meta");
+  meta.name = "robots";
+  meta.content = content;
+  meta.dataset.directoryQueryRobots = "true";
+  if (!existing) documentRoot.head.append(meta);
 }
 
 export function captureDirectoryQuerySnapshot(location: DirectoryQueryLocation) {

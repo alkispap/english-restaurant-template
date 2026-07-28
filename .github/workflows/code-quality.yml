@@ -64,6 +64,7 @@ jobs:
           npm run audit:seo
           npm run audit:indexation
           npm run audit:links
+          npm run audit:freshness
 
       - name: Verify template readiness
         run: npm run audit:template

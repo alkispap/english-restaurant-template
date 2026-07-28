@@ -3,11 +3,14 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
+  buildReleaseAttemptCommitMessage,
   buildDeployArgs,
   createArtifactManifest,
   findDeploymentForCommit,
   redactSensitiveText,
   selectRollbackDeployment,
+  validateArtifactConfirmation,
+  validateArtifactUnchanged,
   validateCloudflareProject,
   validateReleaseContext,
   validateRequiredChecks
@@ -79,6 +82,7 @@ assert.ok(
   publishScript.includes('runNpm(["run", "prepare:cloudflare"])'),
   "publish script should run the full Cloudflare preparation workflow before deployment"
 );
+assert.ok(publishScript.includes('"audit:freshness"'), "publish script should block releases when directory data is stale");
 assert.ok(publishScript.includes("shell: false"), "publish script should not pass deployment arguments through a shell");
 assert.ok(
   publishScript.includes('"--branch"') && publishScript.includes("productionBranch"),
@@ -87,6 +91,10 @@ assert.ok(
 assert.ok(publishScript.includes('"--confirm-production"'), "production publish should require explicit production confirmation");
 assert.ok(publishScript.includes('"--confirm-branch"'), "production publish should confirm the main branch");
 assert.ok(publishScript.includes('"--confirm-commit"'), "production publish should confirm the full Git SHA");
+assert.ok(
+  publishScript.includes('"--confirm-artifact-sha256"'),
+  "production publish should confirm the exact generated artifact"
+);
 assert.ok(
   publishScript.includes('"--confirm-previous-deployment"'),
   "production publish should confirm the current rollback target"
@@ -139,6 +147,28 @@ assert.ok(
 assert.ok(
   publishScript.includes("artifact-manifest.sha256") && publishScript.includes("aggregateSha256"),
   "release checks should create deterministic artifact evidence"
+);
+assert.ok(
+  (publishScript.match(/run\("git", \["fetch", "--quiet", "origin", "main"\]\)/g)?.length ?? 0) >= 2,
+  "production publish should fetch origin/main again after the lengthy local gates"
+);
+assert.ok(
+  (publishScript.match(/githubChecks = loadGitHubChecks\(repositoryName,/g)?.length ?? 0) >= 2 &&
+    publishScript.includes("filter=latest"),
+  "production publish should reload the latest required checks immediately before upload"
+);
+assert.ok(
+  publishScript.indexOf("runQualityGates();") <
+      publishScript.indexOf("validateArtifactConfirmation(manifest", publishScript.indexOf("runQualityGates();")) &&
+    publishScript.indexOf("validateArtifactConfirmation(manifest", publishScript.indexOf("runQualityGates();")) <
+      publishScript.indexOf("runCaptured(process.execPath"),
+  "artifact approval and fresh remote validation should gate Wrangler after the full local checks"
+);
+assert.ok(
+  publishScript.includes("knownDeploymentIds") &&
+    publishScript.includes("multiple new deployments match") &&
+    publishScript.includes("releaseAttemptCommitMessage"),
+  "post-upload reconciliation should accept exactly one newly created deployment from this upload attempt"
 );
 assert.ok(
   exportCheckScript.includes("_redirects"),
@@ -284,18 +314,55 @@ const deployed = {
   project_name: "directory",
   url: "https://aaaaaaaa.directory.pages.dev"
 };
-assert.equal(findDeploymentForCommit([deployed], { branch: "main", commit, projectName: "directory" }), deployed);
+const expectedDeployment = { branch: "main", commit, commitMessage: "release", projectName: "directory" };
+assert.equal(findDeploymentForCommit([deployed], expectedDeployment), deployed);
 assert.equal(
-  findDeploymentForCommit([{ ...deployed, environment: "preview" }], { branch: "main", commit, projectName: "directory" }),
+  findDeploymentForCommit([deployed], {
+    ...expectedDeployment,
+    knownDeploymentIds: new Set([deployed.id]),
+  }),
+  undefined,
+  "reconciliation must not accept a matching deployment that existed before upload"
+);
+const newlyDeployed = { ...deployed, id: "bbbbbbbb-cccc-dddd-eeee-ffffffffffff" };
+assert.equal(
+  findDeploymentForCommit([deployed, newlyDeployed], {
+    ...expectedDeployment,
+    knownDeploymentIds: new Set([deployed.id]),
+  }),
+  newlyDeployed
+);
+assert.throws(
+  () =>
+    findDeploymentForCommit([newlyDeployed, { ...newlyDeployed, id: "cccccccc-dddd-eeee-ffff-000000000000" }], {
+      ...expectedDeployment,
+      knownDeploymentIds: new Set(),
+    }),
+  /multiple new deployments match/
+);
+assert.equal(
+  findDeploymentForCommit([{ ...deployed, environment: "preview" }], expectedDeployment),
   undefined
 );
 assert.equal(
   findDeploymentForCommit(
     [{ ...deployed, deployment_trigger: { metadata: { ...deployed.deployment_trigger.metadata, commit_dirty: true } } }],
-    { branch: "main", commit, projectName: "directory" }
+    expectedDeployment
   ),
   undefined
 );
+assert.equal(
+  findDeploymentForCommit(
+    [{ ...deployed, deployment_trigger: { metadata: { ...deployed.deployment_trigger.metadata, commit_message: "other-attempt" } } }],
+    expectedDeployment
+  ),
+  undefined,
+  "a concurrent deployment for the same commit must not satisfy this upload attempt"
+);
+
+const releaseAttemptId = "12345678-1234-4123-8123-123456789abc";
+assert.equal(buildReleaseAttemptCommitMessage(releaseAttemptId), `codex-release-attempt:${releaseAttemptId}`);
+assert.throws(() => buildReleaseAttemptCommitMessage("not-a-uuid"), /lowercase UUID v4/);
 
 assert.deepEqual(
   buildDeployArgs({ branch: "main", commit, commitMessage: "release", projectName: "directory" }),
@@ -323,12 +390,18 @@ try {
   const firstManifest = createArtifactManifest(manifestRoot);
   const secondManifest = createArtifactManifest(manifestRoot);
   assert.deepEqual(firstManifest, secondManifest, "artifact manifest should be deterministic");
+  assert.doesNotThrow(() => validateArtifactConfirmation(firstManifest, firstManifest.aggregateSha256));
+  assert.doesNotThrow(() => validateArtifactUnchanged(firstManifest, secondManifest));
+  assert.throws(() => validateArtifactConfirmation(firstManifest, "a".repeat(64)), /does not match/);
+  assert.throws(() => validateArtifactConfirmation(firstManifest, "not-a-sha"), /full lowercase artifact SHA-256/);
   assert.equal(firstManifest.fileCount, 2);
   assert.equal(firstManifest.totalBytes, 2);
   assert.match(firstManifest.aggregateSha256, /^[0-9a-f]{64}$/);
   assert.ok(firstManifest.lines[0]?.endsWith("  nested/a.txt"), "manifest paths should be sorted and portable");
   fs.writeFileSync(path.join(manifestRoot, "z.txt"), "changed", "utf8");
-  assert.notEqual(createArtifactManifest(manifestRoot).aggregateSha256, firstManifest.aggregateSha256);
+  const changedManifest = createArtifactManifest(manifestRoot);
+  assert.notEqual(changedManifest.aggregateSha256, firstManifest.aggregateSha256);
+  assert.throws(() => validateArtifactUnchanged(firstManifest, changedManifest), /artifact changed after approval/);
 } finally {
   fs.rmSync(manifestRoot, { force: true, recursive: true });
 }
