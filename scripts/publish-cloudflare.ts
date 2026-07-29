@@ -12,6 +12,8 @@ const SHA256_PATTERN = /^[0-9a-f]{64}$/;
 const RELEASE_ATTEMPT_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const DEPLOYMENT_ID_PATTERN = /^[0-9a-f-]{8,}$/i;
 const PRODUCTION_UPLOAD_TIMEOUT_MS = 15 * 60_000;
+const CLOUDFLARE_API_MAX_ATTEMPTS = 3;
+const CLOUDFLARE_API_RETRY_DELAY_MS = 1_000;
 
 type CheckRun = {
   conclusion?: string | null;
@@ -145,6 +147,27 @@ export async function collectPaginatedResults<T>(
     const pageResults = await loadPage(page);
     results.push(...pageResults);
     if (pageResults.length < perPage) return results;
+  }
+}
+
+export async function retryCloudflareApiRead<T>(
+  operation: () => Promise<T>,
+  maxAttempts = CLOUDFLARE_API_MAX_ATTEMPTS,
+  retryDelayMs = CLOUDFLARE_API_RETRY_DELAY_MS
+): Promise<T> {
+  assert.ok(Number.isInteger(maxAttempts) && maxAttempts > 0, "Cloudflare API retries require a positive attempt count.");
+  assert.ok(retryDelayMs >= 0, "Cloudflare API retries require a non-negative delay.");
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      const retryable = error instanceof TypeError || (error instanceof Error && error.name === "AbortError");
+      if (!retryable || attempt >= maxAttempts) throw error;
+      console.warn(`Cloudflare API read hit a transient network error; retrying (${attempt}/${maxAttempts}).`);
+      if (retryDelayMs > 0) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+      }
+    }
   }
 }
 
@@ -553,25 +576,27 @@ async function listProductionDeployments(accountId: string, apiToken: string, pr
 }
 
 async function cloudflareApi<T>(pathname: string, apiToken: string): Promise<T> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30_000);
-  try {
-    const response = await fetch(`https://api.cloudflare.com/client/v4${pathname}`, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json"
-      },
-      method: "GET",
-      signal: controller.signal
-    });
-    assert.ok(response.ok, `Cloudflare API verification failed with HTTP ${response.status}; no production upload was attempted.`);
-    const payload = (await response.json()) as CloudflareApiResponse<T>;
-    assert.equal(payload.success, true, "Cloudflare API verification failed; no production upload was attempted.");
-    assert.ok(payload.result, "Cloudflare API verification returned no result; no production upload was attempted.");
-    return payload.result;
-  } finally {
-    clearTimeout(timeout);
-  }
+  return retryCloudflareApiRead(async () => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+    try {
+      const response = await fetch(`https://api.cloudflare.com/client/v4${pathname}`, {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json"
+        },
+        method: "GET",
+        signal: controller.signal
+      });
+      assert.ok(response.ok, `Cloudflare API verification failed with HTTP ${response.status}; no production upload was attempted.`);
+      const payload = (await response.json()) as CloudflareApiResponse<T>;
+      assert.equal(payload.success, true, "Cloudflare API verification failed; no production upload was attempted.");
+      assert.ok(payload.result, "Cloudflare API verification returned no result; no production upload was attempted.");
+      return payload.result;
+    } finally {
+      clearTimeout(timeout);
+    }
+  });
 }
 
 function summarizeDeployment(deployment?: CloudflareDeployment) {
