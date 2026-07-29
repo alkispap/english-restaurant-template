@@ -5,6 +5,7 @@ import path from "node:path";
 import {
   buildReleaseAttemptCommitMessage,
   buildDeployArgs,
+  collectPaginatedResults,
   createArtifactManifest,
   findDeploymentForCommit,
   redactSensitiveText,
@@ -136,8 +137,16 @@ assert.ok(
 assert.ok(!publishScript.includes('run("npm",'), "release checks should not use the Windows-fragile npm.cmd spawn path");
 assert.ok(
   publishScript.includes("https://api.cloudflare.com/client/v4") &&
-    publishScript.includes("?env=production&per_page=100"),
+    publishScript.includes("?env=production&page=${page}&per_page=${perPage}"),
   "production verification should use full Cloudflare API deployment metadata"
+);
+assert.ok(
+  !publishScript.includes("pages/projects/${encodeURIComponent(projectName)}/deployments?env=production&per_page=100"),
+  "production verification should not request Cloudflare's rejected 100-deployment page size"
+);
+assert.ok(
+  publishScript.includes("return collectPaginatedResults("),
+  "production verification should traverse every Cloudflare deployment page"
 );
 assert.ok(
   !publishScript.includes('"pages", "project", "list", "--json"') &&
@@ -293,6 +302,19 @@ const rollback = {
   project_name: "directory",
   url: "https://11111111.directory.pages.dev"
 };
+const failedDeployments = Array.from({ length: 25 }, (_, index) => ({
+  environment: "production",
+  id: `failed-${index}`,
+  latest_stage: { status: "failure" },
+  project_name: "directory"
+}));
+const requestedPages: number[] = [];
+const paginationTest = collectPaginatedResults(async (page) => {
+  requestedPages.push(page);
+  if (page === 1) return failedDeployments;
+  if (page === 2) return [rollback];
+  return [];
+}, 25);
 assert.equal(selectRollbackDeployment([rollback], rollback.id, "directory"), rollback);
 assert.throws(
   () => selectRollbackDeployment([{ ...rollback, environment: "preview" }], rollback.id, "directory"),
@@ -412,4 +434,8 @@ const sensitive = redactSensitiveText(
 assert.ok(!sensitive.includes("secret-token") && !sensitive.includes("private-account") && !sensitive.includes("private-token"));
 assert.ok(sensitive.includes("[REDACTED]"));
 
-console.log("Cloudflare publish tests passed");
+paginationTest.then((paginatedDeployments) => {
+  assert.deepEqual(requestedPages, [1, 2]);
+  assert.equal(selectRollbackDeployment(paginatedDeployments, rollback.id, "directory"), rollback);
+  console.log("Cloudflare publish tests passed");
+});
