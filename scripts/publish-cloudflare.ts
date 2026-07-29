@@ -135,6 +135,19 @@ export function validateCloudflareProject(projects: CloudflareProject[], project
   return project;
 }
 
+export async function collectPaginatedResults<T>(
+  loadPage: (page: number) => Promise<T[]>,
+  perPage: number
+): Promise<T[]> {
+  assert.ok(Number.isInteger(perPage) && perPage > 0, "Cloudflare pagination requires a positive integer page size.");
+  const results: T[] = [];
+  for (let page = 1; ; page += 1) {
+    const pageResults = await loadPage(page);
+    results.push(...pageResults);
+    if (pageResults.length < perPage) return results;
+  }
+}
+
 export function selectRollbackDeployment(
   deployments: CloudflareDeployment[],
   confirmedDeploymentId: string,
@@ -526,9 +539,14 @@ function loadGitHubChecks(repositoryName: string, commit: string) {
 }
 
 async function listProductionDeployments(accountId: string, apiToken: string, projectName: string) {
-  return cloudflareApi<CloudflareDeployment[]>(
-    `/accounts/${accountId}/pages/projects/${encodeURIComponent(projectName)}/deployments?env=production&per_page=25`,
-    apiToken
+  const perPage = 25;
+  return collectPaginatedResults(
+    (page) =>
+      cloudflareApi<CloudflareDeployment[]>(
+        `/accounts/${accountId}/pages/projects/${encodeURIComponent(projectName)}/deployments?env=production&page=${page}&per_page=${perPage}`,
+        apiToken
+      ),
+    perPage
   );
 }
 
