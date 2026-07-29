@@ -174,6 +174,11 @@ assert.ok(
   "artifact approval and fresh remote validation should gate Wrangler after the full local checks"
 );
 assert.ok(
+  publishScript.includes("process.env.NEXT_BUILD_ID = head") &&
+    publishScript.indexOf("process.env.NEXT_BUILD_ID = head") < publishScript.indexOf("runQualityGates();"),
+  "release builds should use the exact confirmed commit as the deterministic Next.js build ID"
+);
+assert.ok(
   publishScript.includes("knownDeploymentIds") &&
     publishScript.includes("multiple new deployments match") &&
     publishScript.includes("releaseAttemptCommitMessage"),

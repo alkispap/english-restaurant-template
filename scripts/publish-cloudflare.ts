@@ -283,6 +283,7 @@ async function main() {
   assertCleanWorktree("before release checks");
   const branch = capture("git", ["branch", "--show-current"]);
   const head = capture("git", ["rev-parse", "HEAD"]);
+  process.env.NEXT_BUILD_ID = head;
   const commitMessage = capture("git", ["log", "-1", "--pretty=%s"]);
   const releaseAttemptId = checksOnly ? null : randomUUID();
   const releaseAttemptCommitMessage = releaseAttemptId ? buildReleaseAttemptCommitMessage(releaseAttemptId) : commitMessage;
@@ -357,6 +358,7 @@ async function main() {
   console.log(`Project: ${projectName || "not required for checks-only mode"}`);
   console.log(`Production branch: ${productionBranch}`);
   console.log(`Source: ${branch || "detached HEAD"} @ ${head}`);
+  console.log(`Next.js build ID: ${head}`);
   console.log(`Wrangler: ${wranglerVersion}`);
 
   runQualityGates();
