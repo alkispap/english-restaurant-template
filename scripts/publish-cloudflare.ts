@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,6 +8,8 @@ import { getDirectoryPack } from "../src/config/directory-packs";
 
 const REQUIRED_CHECKS = ["Fast quality gate", "Full static export and rendered benchmark"] as const;
 const FULL_COMMIT_PATTERN = /^[0-9a-f]{40}$/;
+const SHA256_PATTERN = /^[0-9a-f]{64}$/;
+const RELEASE_ATTEMPT_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const DEPLOYMENT_ID_PATTERN = /^[0-9a-f-]{8,}$/i;
 const PRODUCTION_UPLOAD_TIMEOUT_MS = 15 * 60_000;
 
@@ -88,6 +90,35 @@ export function validateRequiredChecks(checkRuns: CheckRun[], commit: string) {
   }
 }
 
+export function validateArtifactConfirmation(manifest: ArtifactManifest, confirmedSha256?: string) {
+  assert.match(
+    confirmedSha256 || "",
+    SHA256_PATTERN,
+    "Production publish refused: --confirm-artifact-sha256 must contain the full lowercase artifact SHA-256."
+  );
+  assert.equal(
+    manifest.aggregateSha256,
+    confirmedSha256,
+    "Production publish refused: the generated artifact does not match --confirm-artifact-sha256."
+  );
+}
+
+export function validateArtifactUnchanged(expected: ArtifactManifest, current: ArtifactManifest) {
+  assert.deepEqual(
+    {
+      aggregateSha256: current.aggregateSha256,
+      fileCount: current.fileCount,
+      totalBytes: current.totalBytes
+    },
+    {
+      aggregateSha256: expected.aggregateSha256,
+      fileCount: expected.fileCount,
+      totalBytes: expected.totalBytes
+    },
+    "Production publish refused: the release artifact changed after approval."
+  );
+}
+
 export function validateCloudflareProject(projects: CloudflareProject[], projectName: string, productionBranch: string) {
   const project = projects.find((candidate) => candidate.name === projectName);
   assert.ok(project, `Production publish refused: Cloudflare Pages project ${projectName} was not found.`);
@@ -134,17 +165,36 @@ export function selectRollbackDeployment(
 
 export function findDeploymentForCommit(
   deployments: CloudflareDeployment[],
-  expected: { branch: string; commit: string; projectName: string }
+  expected: {
+    branch: string;
+    commit: string;
+    commitMessage: string;
+    knownDeploymentIds?: ReadonlySet<string>;
+    projectName: string;
+  }
 ) {
-  return deployments.find(
+  const matches = deployments.filter(
     (deployment) =>
+      Boolean(deployment.id) &&
+      !expected.knownDeploymentIds?.has(deployment.id as string) &&
       deployment.environment === "production" &&
       deployment.latest_stage?.status === "success" &&
       deployment.project_name === expected.projectName &&
       deployment.deployment_trigger?.metadata?.branch === expected.branch &&
       deployment.deployment_trigger?.metadata?.commit_hash === expected.commit &&
+      deployment.deployment_trigger?.metadata?.commit_message === expected.commitMessage &&
       deployment.deployment_trigger?.metadata?.commit_dirty === false
   );
+  assert.ok(
+    matches.length <= 1,
+    "Production deployment is indeterminate because multiple new deployments match the confirmed commit."
+  );
+  return matches[0];
+}
+
+export function buildReleaseAttemptCommitMessage(releaseAttemptId: string) {
+  assert.match(releaseAttemptId, RELEASE_ATTEMPT_ID_PATTERN, "Release attempt ID must be a lowercase UUID v4.");
+  return `codex-release-attempt:${releaseAttemptId}`;
 }
 
 export function buildDeployArgs(options: {
@@ -206,6 +256,7 @@ async function main() {
   const confirmedProject = readOption("--confirm-project");
   const confirmedBranch = readOption("--confirm-branch");
   const confirmedCommit = readOption("--confirm-commit");
+  const confirmedArtifactSha256 = readOption("--confirm-artifact-sha256");
   const confirmedPreviousDeployment = readOption("--confirm-previous-deployment");
   const productionConfirmed = process.argv.includes("--confirm-production");
   const wranglerCli = path.join(process.cwd(), "node_modules", "wrangler", "bin", "wrangler.js");
@@ -220,11 +271,15 @@ async function main() {
   const branch = capture("git", ["branch", "--show-current"]);
   const head = capture("git", ["rev-parse", "HEAD"]);
   const commitMessage = capture("git", ["log", "-1", "--pretty=%s"]);
+  const releaseAttemptId = checksOnly ? null : randomUUID();
+  const releaseAttemptCommitMessage = releaseAttemptId ? buildReleaseAttemptCommitMessage(releaseAttemptId) : commitMessage;
   const wranglerVersion = capture(process.execPath, [wranglerCli, "--version"]);
 
   let project: CloudflareProject | undefined;
   let rollbackDeployment: CloudflareDeployment | undefined;
   let githubChecks: CheckRun[] = [];
+  let knownDeploymentIds = new Set<string>();
+  let repositoryName = "";
 
   if (!checksOnly) {
     assert.ok(productionConfirmed, "Production publish refused. Re-run with --confirm-production after explicit approval.");
@@ -261,10 +316,8 @@ async function main() {
 
     const repository = parseJson<{ nameWithOwner?: string }>(capture("gh", ["repo", "view", "--json", "nameWithOwner"]));
     assert.ok(repository.nameWithOwner, "Production publish refused: GitHub repository identity could not be resolved.");
-    const checkResponse = parseJson<{ check_runs?: CheckRun[] }>(
-      capture("gh", ["api", `repos/${repository.nameWithOwner}/commits/${head}/check-runs?per_page=100`])
-    );
-    githubChecks = checkResponse.check_runs || [];
+    repositoryName = repository.nameWithOwner;
+    githubChecks = loadGitHubChecks(repositoryName, head);
     validateRequiredChecks(githubChecks, head);
 
     const projectResponse = await cloudflareApi<CloudflareProject>(
@@ -297,6 +350,52 @@ async function main() {
   assertCleanWorktree("after release checks and static export");
 
   const manifest = createArtifactManifest(path.join(process.cwd(), "out"));
+  if (!checksOnly) {
+    validateArtifactConfirmation(manifest, confirmedArtifactSha256);
+
+    run("git", ["fetch", "--quiet", "origin", "main"]);
+    const freshBranch = capture("git", ["branch", "--show-current"]);
+    const freshHead = capture("git", ["rev-parse", "HEAD"]);
+    const freshLocalMain = capture("git", ["rev-parse", "refs/heads/main"]);
+    const freshOriginMain = capture("git", ["rev-parse", "refs/remotes/origin/main"]);
+    validateReleaseContext({
+      branch: freshBranch,
+      confirmedBranch,
+      confirmedCommit,
+      head: freshHead,
+      localMain: freshLocalMain,
+      originMain: freshOriginMain,
+      productionBranch
+    });
+
+    githubChecks = loadGitHubChecks(repositoryName, freshHead);
+    validateRequiredChecks(githubChecks, freshHead);
+
+    const freshProjectResponse = await cloudflareApi<CloudflareProject>(
+      `/accounts/${cloudflareAccountId}/pages/projects/${encodeURIComponent(projectName as string)}`,
+      cloudflareApiToken as string
+    );
+    project = validateCloudflareProject(freshProjectResponse ? [freshProjectResponse] : [], projectName as string, productionBranch);
+    const freshProductionDeployments = await listProductionDeployments(
+      cloudflareAccountId as string,
+      cloudflareApiToken as string,
+      projectName as string
+    );
+    rollbackDeployment = selectRollbackDeployment(
+      freshProductionDeployments,
+      confirmedPreviousDeployment || "",
+      projectName as string
+    );
+    knownDeploymentIds = new Set(
+      freshProductionDeployments
+        .map((deployment) => deployment.id)
+        .filter((id): id is string => Boolean(id))
+    );
+
+    assertCleanWorktree("immediately before production upload");
+    validateArtifactUnchanged(manifest, createArtifactManifest(path.join(process.cwd(), "out")));
+  }
+
   const evidenceDirectory = createEvidenceDirectory();
   fs.writeFileSync(path.join(evidenceDirectory, "artifact-manifest.sha256"), `${manifest.lines.join("\n")}\n`);
   writeEvidence(path.join(evidenceDirectory, "preflight.json"), {
@@ -315,6 +414,8 @@ async function main() {
     project: project ? { name: project.name, productionBranch: project.production_branch, type: "direct-upload" } : null,
     productionUrl: productionUrl || null,
     rollbackTarget: summarizeDeployment(rollbackDeployment),
+    releaseAttemptId,
+    sourceCommitMessage: commitMessage,
     timestamp: new Date().toISOString(),
     wranglerVersion
   });
@@ -331,7 +432,7 @@ async function main() {
   const deployArgs = buildDeployArgs({
     branch: productionBranch,
     commit: head,
-    commitMessage,
+    commitMessage: releaseAttemptCommitMessage,
     projectName: projectName as string
   });
   const upload = runCaptured(process.execPath, [wranglerCli, ...deployArgs]);
@@ -356,6 +457,8 @@ async function main() {
   const deployed = findDeploymentForCommit(reconciledDeployments, {
     branch: productionBranch,
     commit: head,
+    commitMessage: releaseAttemptCommitMessage,
+    knownDeploymentIds,
     projectName: projectName as string
   });
 
@@ -376,6 +479,7 @@ async function main() {
     commit: head,
     deployment: summarizeDeployment(deployed),
     project: projectName,
+    releaseAttemptId,
     status: upload.status === 0 ? "verified" : "recovered-after-command-failure",
     timestamp: new Date().toISOString()
   });
@@ -392,6 +496,7 @@ function runQualityGates() {
     "lint",
     "audit:dependencies",
     "audit:publication",
+    "audit:freshness",
     "audit:seo",
     "audit:indexation",
     "audit:links",
@@ -411,6 +516,13 @@ function runNpm(args: string[]) {
     "Release checks must be launched through an npm script so npm_execpath identifies the locked npm CLI."
   );
   run(process.execPath, [npmCli, ...args]);
+}
+
+function loadGitHubChecks(repositoryName: string, commit: string) {
+  const response = parseJson<{ check_runs?: CheckRun[] }>(
+    capture("gh", ["api", `repos/${repositoryName}/commits/${commit}/check-runs?per_page=100&filter=latest`])
+  );
+  return response.check_runs || [];
 }
 
 async function listProductionDeployments(accountId: string, apiToken: string, projectName: string) {
@@ -447,6 +559,7 @@ function summarizeDeployment(deployment?: CloudflareDeployment) {
   return {
     branch: deployment.deployment_trigger?.metadata?.branch || null,
     commit: deployment.deployment_trigger?.metadata?.commit_hash || null,
+    commitMessage: deployment.deployment_trigger?.metadata?.commit_message || null,
     environment: deployment.environment || null,
     id: deployment.id || null,
     status: deployment.latest_stage?.status || null,

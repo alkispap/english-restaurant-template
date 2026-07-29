@@ -70,6 +70,7 @@ type RunResult = {
   resultHeading: string;
   viewportWidth: number;
   documentWidth: number;
+  robotsContent: string;
 };
 
 type CacheMode = "cold" | "warm";
@@ -106,6 +107,7 @@ const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3000";
 const HOMEPAGE_URL = `${BASE_URL.replace(/\/$/, "")}/`;
 const RESTAURANTS_URL = `${BASE_URL.replace(/\/$/, "")}/restaurants/`;
 const QUERY_ACTIVATION_URL = `${RESTAURANTS_URL}?q=Dishoom`;
+const SEO_LANDING_QUERY_URL = `${BASE_URL.replace(/\/$/, "")}/areas/redbridge/?open=1`;
 const BROWSER_STDERR_LIMIT = 4_000;
 const ACTIVE_TEXT_LIMIT = 200;
 
@@ -131,7 +133,7 @@ const scenarios: Scenario[] = [
   {
     id: "mobile-fullscreen-area",
     label: "Mobile full-screen filter checkbox",
-    viewport: { width: 393, height: 852, mobile: true },
+    viewport: { width: 320, height: 852, mobile: true },
     prepareScript: `
       await openMobileFilters();
       const label = findLabelByText("#mobile-filter-screen label", "Barking & Dagenham");
@@ -242,6 +244,8 @@ async function main() {
     const results: RunResult[] = [];
     for (const cacheMode of selectedCacheModes()) {
       if (cacheMode === "warm") await primeFilterModuleCache(client);
+      if (cacheMode === "cold") await client.send("Network.clearBrowserCache");
+      await validateSeoLandingQueryRobots(client, cacheMode);
       // Measure navigation startup immediately after the declared cache setup so unrelated
       // interaction stress and garbage collection cannot contaminate the navigation result.
       for (let run = 1; run <= RUNS; run += 1) {
@@ -290,6 +294,49 @@ async function main() {
       throw new Error(cleanupWarnings.join(" "));
     }
   }
+}
+
+async function validateSeoLandingQueryRobots(client: CdpClient, cacheMode: CacheMode) {
+  console.log(`[benchmark] scenario: seo-landing-query-robots cache=${cacheMode} stage=navigate`);
+  const nextLoad = client.waitForNext("Page.loadEventFired", 20_000);
+  await Promise.all([client.send("Page.navigate", { url: SEO_LANDING_QUERY_URL }), nextLoad]);
+  await evaluateRuntimeStage(
+    client,
+    `seo-landing-query-robots ${cacheMode}`,
+    {
+      expression: `(async () => {
+        const waitFor = async (predicate, message) => {
+          const started = performance.now();
+          while (performance.now() - started < 10000) {
+            if (predicate()) return;
+            await new Promise((resolve) => setTimeout(resolve, 25));
+          }
+          throw new Error(message);
+        };
+        const robots = () => document.querySelector('meta[data-directory-query-robots="true"]')?.getAttribute("content") ?? "";
+        await waitFor(() => robots() === "noindex, follow", "SEO landing query did not expose noindex, follow");
+        await waitFor(
+          () => Boolean(document.getElementById("seo-landing-client-results")),
+          "SEO landing query enhancer did not finish hydration"
+        );
+        history.replaceState({}, "", window.location.pathname);
+        await waitFor(() => robots() === "", "SEO landing query robots metadata remained after clearing filters");
+        history.replaceState({}, "", window.location.pathname + "?open=1");
+        await waitFor(() => robots() === "noindex, follow", "SEO landing query did not restore noindex after reactivation");
+        const homeLink = document.querySelector('header a[href="/"]');
+        if (!(homeLink instanceof HTMLAnchorElement)) throw new Error("Header home link was not available");
+        homeLink.click();
+        await waitFor(
+          () => window.location.pathname === "/" && robots() === "",
+          "Client-side navigation carried SEO landing noindex onto the homepage"
+        );
+        return true;
+      })()`,
+      awaitPromise: true,
+      returnByValue: true
+    },
+    12_000
+  );
 }
 
 async function runScenario(client: CdpClient, scenario: Scenario, run: number, cacheMode: CacheMode): Promise<RunResult[]> {
@@ -446,6 +493,9 @@ async function measureScenarioInteraction(
       `${scenario.id}: page-level horizontal overflow (${measurement.documentWidth}px document at ${measurement.viewportWidth}px viewport)`
     );
   }
+  if (measurement.robotsContent !== "noindex, follow") {
+    throw new Error(`${scenario.id}: active filter URL did not expose noindex, follow robots metadata`);
+  }
 
   if (scenario.cleanupScript !== "true") await cleanupScenario(client, scenario);
 
@@ -497,6 +547,9 @@ async function runQueryActivationScenario(client: CdpClient, run: number, cacheM
   }
   if (!state.finalUrl.includes("q=Dishoom") || !state.resultHeading.toLowerCase().includes("found")) {
     throw new Error(`query-string-activation: result or URL correctness failed: ${JSON.stringify(state)}`);
+  }
+  if (state.robotsContent !== "noindex, follow") {
+    throw new Error("query-string-activation: query URL did not expose noindex, follow robots metadata");
   }
 
   return {
@@ -577,6 +630,9 @@ async function runHomepageSearchSubmissionScenario(
   if (!state.finalUrl.includes("q=Dishoom") || !state.resultHeading.toLowerCase().includes("found")) {
     throw new Error(`homepage-search-submission: result or URL correctness failed: ${JSON.stringify(state)}`);
   }
+  if (state.robotsContent !== "noindex, follow") {
+    throw new Error("homepage-search-submission: query URL did not expose noindex, follow robots metadata");
+  }
 
   return {
     scenario: "homepage-search-submission",
@@ -598,6 +654,7 @@ async function waitForQueryActivation(client: CdpClient) {
     resultHeading: string;
     viewportWidth: number;
     documentWidth: number;
+    robotsContent: string;
     clientReady?: boolean;
     navigationElapsedMs: number;
     moduleLoadMs: number | null;
@@ -642,6 +699,7 @@ async function waitForQueryActivation(client: CdpClient) {
             .find((heading) => heading.textContent?.toLowerCase().includes("found"))?.textContent?.trim() ?? "",
           viewportWidth: window.innerWidth,
           documentWidth: document.documentElement.scrollWidth,
+          robotsContent: document.querySelector('meta[name="robots"]')?.getAttribute("content") ?? "",
           clientReady: Boolean(document.getElementById("directory-listings-client-main")),
           ...(() => {
             const latest = (name) => performance.getEntriesByName(name, "measure").at(-1);
@@ -912,7 +970,8 @@ function pageHelpers() {
           finalUrl: window.location.href,
           resultHeading: currentResultsHeading(),
           viewportWidth: window.innerWidth,
-          documentWidth: document.documentElement.scrollWidth
+          documentWidth: document.documentElement.scrollWidth,
+          robotsContent: document.querySelector('meta[name="robots"]')?.getAttribute("content") ?? ""
         };
       };
       window.directoryPerformanceTimings = (startedAt) => {

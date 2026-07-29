@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import type { Listing } from "../src/data/listings";
 import {
+  assertDirectoryFreshForRelease,
   buildFreshnessAuditReport,
   renderFreshnessAuditReport,
   type FreshnessAuditReport
@@ -95,6 +96,7 @@ function issueCodes(report: FreshnessAuditReport, slug: string) {
 }
 
 let report = audit([activeListing]);
+assert.doesNotThrow(() => assertDirectoryFreshForRelease(report));
 assert.equal(resultFor(report, activeListing.slug).level, "ok");
 assert.equal(report.totals.ok, 1);
 assert.equal(report.totals.medium, 0);
@@ -145,6 +147,7 @@ report = buildFreshnessAuditReport([activeListing], {
 });
 assert.equal(report.directoryFreshnessLevel, "medium");
 assert.ok(report.recommendations.some((recommendation) => recommendation.includes("older than 90 days")));
+assert.throws(() => assertDirectoryFreshForRelease(report), /Release blocked.*medium freshness risk/);
 
 report = buildFreshnessAuditReport([activeListing], {
   now: new Date("2026-08-01T00:00:00.000Z"),
@@ -152,6 +155,7 @@ report = buildFreshnessAuditReport([activeListing], {
 });
 assert.equal(report.directoryFreshnessLevel, "high");
 assert.ok(report.recommendations.some((recommendation) => recommendation.includes("older than 180 days")));
+assert.throws(() => assertDirectoryFreshForRelease(report), /Release blocked.*high freshness risk/);
 
 const output = renderFreshnessAuditReport(audit([activeListing, thinListing]));
 assert.ok(output.includes("Freshness audit"));

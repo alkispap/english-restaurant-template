@@ -1,6 +1,12 @@
 import { listings } from "../src/data/listings";
-import { buildFreshnessAuditReport, renderFreshnessAuditReport } from "../src/lib/freshness-audit";
+import {
+  assertDirectoryFreshForRelease,
+  buildFreshnessAuditReport,
+  renderFreshnessAuditReport
+} from "../src/lib/freshness-audit";
 
 if (require.main === module) {
-  console.log(renderFreshnessAuditReport(buildFreshnessAuditReport(listings)));
+  const report = buildFreshnessAuditReport(listings);
+  console.log(renderFreshnessAuditReport(report));
+  assertDirectoryFreshForRelease(report);
 }

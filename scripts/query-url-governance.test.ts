@@ -1,19 +1,26 @@
 import assert from "node:assert/strict";
 import { generateMetadata as homepageMetadata } from "../src/app/page";
+import { generateMetadata as restaurantsMetadata } from "../src/app/restaurants/page";
 import { getAreas, getCategories, slugify } from "../src/lib/directory";
 import {
   captureDirectoryQuerySnapshot,
+  DIRECTORY_QUERY_ROBOTS_CONTENT,
+  getDirectoryQueryRobotsContent,
   hasActiveDirectoryQuery,
   normalizeSearchParams,
-  searchParamsRecordFromUrlSearchParams
+  searchParamsRecordFromUrlSearchParams,
+  syncDirectoryQueryRobotsMeta
 } from "../src/lib/directory-listings-search-params";
 import { getAreaSeoPage, getCategorySeoPage } from "../src/lib/seo-pages";
 
 async function homepageMetadataStaysStaticForExport() {
   const metadata = await homepageMetadata();
+  const restaurants = await restaurantsMetadata();
 
   assert.deepEqual(metadata.alternates, { canonical: "/" });
   assert.equal(metadata.robots, undefined);
+  assert.deepEqual(restaurants.alternates, { canonical: "/restaurants/" });
+  assert.equal(restaurants.robots, undefined);
 }
 
 function seoHubQueryStatesAreNoindexed() {
@@ -64,9 +71,53 @@ function directoryQuerySnapshotsAreRecognizedAndImmutable() {
   assert.equal(snapshot.searchParams.has("area"), false);
 }
 
+function directoryQueryRobotsPolicyMatchesRecognizedFilters() {
+  assert.equal(getDirectoryQueryRobotsContent(new URLSearchParams()), null);
+  assert.equal(getDirectoryQueryRobotsContent(new URLSearchParams("utm_source=newsletter&verify=20260721")), null);
+  assert.equal(getDirectoryQueryRobotsContent(new URLSearchParams("q=Dishoom")), DIRECTORY_QUERY_ROBOTS_CONTENT);
+  assert.equal(
+    getDirectoryQueryRobotsContent(new URLSearchParams("utm_source=newsletter&area=harrow")),
+    DIRECTORY_QUERY_ROBOTS_CONTENT
+  );
+}
+
+function directoryQueryRobotsMetaIsAddedUpdatedAndRemoved() {
+  type FakeMeta = { content: string; dataset: Record<string, string>; name: string; remove: () => void };
+  const state: { currentMeta: FakeMeta | null } = { currentMeta: null };
+  const documentRoot = {
+    createElement() {
+      return {
+        content: "",
+        dataset: {},
+        name: "",
+        remove() {
+          state.currentMeta = null;
+        }
+      };
+    },
+    head: {
+      append(meta: FakeMeta) {
+        state.currentMeta = meta;
+      },
+      querySelector() {
+        return state.currentMeta;
+      }
+    }
+  } as unknown as Document;
+
+  syncDirectoryQueryRobotsMeta(new URLSearchParams("area=harrow"), documentRoot);
+  assert.equal(state.currentMeta?.name, "robots");
+  assert.equal(state.currentMeta?.content, DIRECTORY_QUERY_ROBOTS_CONTENT);
+  assert.equal(state.currentMeta?.dataset.directoryQueryRobots, "true");
+  syncDirectoryQueryRobotsMeta(new URLSearchParams(), documentRoot);
+  assert.equal(state.currentMeta, null);
+}
+
 homepageMetadataStaysStaticForExport().then(() => {
   seoHubQueryStatesAreNoindexed();
   unknownHomepageQueryParamsDoNotWakeDirectoryDataset();
   directoryQuerySnapshotsAreRecognizedAndImmutable();
+  directoryQueryRobotsPolicyMatchesRecognizedFilters();
+  directoryQueryRobotsMetaIsAddedUpdatedAndRemoved();
   console.log("query URL governance tests passed");
 });

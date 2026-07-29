@@ -2,7 +2,8 @@
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import {
-  captureDirectoryQuerySnapshot
+  captureDirectoryQuerySnapshot,
+  syncDirectoryQueryRobotsMeta
 } from "@/lib/directory-listings-search-params";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 import { directoryConfig } from "@/config/directory";
@@ -41,7 +42,9 @@ function markDirectoryStartupOnce(name: string) {
 markDirectoryStartup("directory-query-enhancer-module-evaluated");
 
 if (typeof window !== "undefined") {
-  const { normalizedQuery } = captureDirectoryQuerySnapshot(window.location);
+  const snapshot = captureDirectoryQuerySnapshot(window.location);
+  syncDirectoryQueryRobotsMeta(snapshot.searchParams);
+  const { normalizedQuery } = snapshot;
   if (normalizedQuery) {
     markDirectoryStartup("directory-query-startup-detected");
     void prefetchDirectorySearchData().catch(() => undefined);
@@ -193,6 +196,7 @@ export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListing
         searchParams: currentParams,
         normalizedQuery: nextQuery
       } = captureDirectoryQuerySnapshot(window.location);
+      syncDirectoryQueryRobotsMeta(currentParams);
       if (currentUrl === lastHandledUrl) return;
 
       lastHandledUrl = currentUrl;
@@ -281,6 +285,7 @@ export function DirectoryListingsQueryEnhancer({ initialPage }: DirectoryListing
       if (pendingUpdateTimer !== null) {
         window.clearTimeout(pendingUpdateTimer);
       }
+      syncDirectoryQueryRobotsMeta(new URLSearchParams());
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
       window.removeEventListener("popstate", scheduleUpdateFromCurrentUrl);

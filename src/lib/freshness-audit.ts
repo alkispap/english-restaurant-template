@@ -241,6 +241,13 @@ export function renderFreshnessAuditReport(report: FreshnessAuditReport) {
   ].join("\n");
 }
 
+export function assertDirectoryFreshForRelease(report: FreshnessAuditReport) {
+  if (report.directoryFreshnessLevel === "ok") return;
+  throw new Error(
+    `Release blocked: directory data is ${report.daysSinceDirectoryUpdate} days old (${report.directoryFreshnessLevel} freshness risk).`
+  );
+}
+
 function hasUsefulContactAction(listing: Listing) {
   const contact = listing.contact;
   const socials = Object.keys(contact?.socials ?? {}).length > 0;

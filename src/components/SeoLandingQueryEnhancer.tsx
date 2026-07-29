@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  captureDirectoryQuerySnapshot
+  captureDirectoryQuerySnapshot,
+  syncDirectoryQueryRobotsMeta
 } from "@/lib/directory-listings-search-params";
 import type { SeoLandingResultsShell } from "@/components/SeoLandingResultsShell";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
@@ -35,7 +36,9 @@ type SeoLandingQueryEnhancerProps = {
 let seoLandingClientModulesPromise: Promise<[SeoLandingBrowserModule, SeoLandingResultsShellModule]> | null = null;
 
 if (typeof window !== "undefined") {
-  const { normalizedQuery } = captureDirectoryQuerySnapshot(window.location);
+  const snapshot = captureDirectoryQuerySnapshot(window.location);
+  syncDirectoryQueryRobotsMeta(snapshot.searchParams);
+  const { normalizedQuery } = snapshot;
   if (normalizedQuery) {
     void prefetchDirectorySearchData().catch(() => undefined);
     void import("@/lib/directory-search-runtime-browser")
@@ -126,6 +129,7 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
         searchParams: currentParams,
         normalizedQuery: nextQuery
       } = captureDirectoryQuerySnapshot(window.location);
+      syncDirectoryQueryRobotsMeta(currentParams);
       if (currentUrl === lastHandledUrl) return;
 
       lastHandledUrl = currentUrl;
@@ -204,6 +208,7 @@ export function SeoLandingQueryEnhancer({ initialPage }: SeoLandingQueryEnhancer
       if (pendingUpdateTimer !== null) {
         window.clearTimeout(pendingUpdateTimer);
       }
+      syncDirectoryQueryRobotsMeta(new URLSearchParams());
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
       window.removeEventListener("popstate", scheduleUpdateFromCurrentUrl);

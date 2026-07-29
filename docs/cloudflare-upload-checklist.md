@@ -55,6 +55,13 @@ node node_modules/wrangler/bin/wrangler.js pages deployment list `
 
 Confirm that the project is Direct Upload, its production branch is `main`, and the first successful production deployment is an eligible rollback target. Preview deployments are never valid rollback targets.
 
+Run the non-deploying release check first and record the generated artifact SHA-256:
+
+```powershell
+$commit = git rev-parse HEAD
+npm run check:release -- --confirm-commit=$commit
+```
+
 Request explicit approval naming all of the following:
 
 - Full `main` commit SHA.
@@ -77,6 +84,7 @@ npm run publish:cloudflare -- `
   --confirm-project=indianrestaurantlondon `
   --confirm-branch=main `
   --confirm-commit=$commit `
+  --confirm-artifact-sha256=<APPROVED_ARTIFACT_SHA256> `
   --confirm-previous-deployment=<CURRENT_PRODUCTION_DEPLOYMENT_ID>
 ```
 
@@ -86,10 +94,11 @@ The command:
 2. Refuses a dirty worktree, feature branch, stale local `main`, or commit that differs from `origin/main`.
 3. Requires both protected GitHub checks to have succeeded for the exact commit.
 4. Verifies the Direct Upload project, Cloudflare production branch, and current successful production deployment.
-5. Runs the complete release gates and creates deterministic artifact evidence.
-6. Deploys with the exact commit hash, message, and clean-worktree metadata.
-7. Fetches deployment history and verifies environment, project, branch, commit, status, ID, and URL.
-8. Never retries an indeterminate production upload automatically.
+5. Runs the complete release gates, verifies the generated artifact against the approved SHA-256, and creates deterministic evidence.
+6. Re-fetches main, the latest required checks, the project, and the rollback target immediately before upload.
+7. Deploys with the exact commit hash, message, and clean-worktree metadata.
+8. Tags the upload with a unique per-attempt marker and accepts only one newly created deployment ID with that marker and the expected environment, project, branch, commit, and status.
+9. Never retries an indeterminate production upload automatically.
 
 Never paste Cloudflare API tokens into a command, source file, commit, screenshot, or audit log. Use Wrangler authentication or a private environment variable outside the repository.
 
