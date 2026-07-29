@@ -527,7 +527,7 @@ function loadGitHubChecks(repositoryName: string, commit: string) {
 
 async function listProductionDeployments(accountId: string, apiToken: string, projectName: string) {
   return cloudflareApi<CloudflareDeployment[]>(
-    `/accounts/${accountId}/pages/projects/${encodeURIComponent(projectName)}/deployments?env=production&per_page=100`,
+    `/accounts/${accountId}/pages/projects/${encodeURIComponent(projectName)}/deployments?env=production&per_page=25`,
     apiToken
   );
 }

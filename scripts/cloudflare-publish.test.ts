@@ -136,8 +136,12 @@ assert.ok(
 assert.ok(!publishScript.includes('run("npm",'), "release checks should not use the Windows-fragile npm.cmd spawn path");
 assert.ok(
   publishScript.includes("https://api.cloudflare.com/client/v4") &&
-    publishScript.includes("?env=production&per_page=100"),
+    publishScript.includes("?env=production&per_page=25"),
   "production verification should use full Cloudflare API deployment metadata"
+);
+assert.ok(
+  !publishScript.includes("pages/projects/${encodeURIComponent(projectName)}/deployments?env=production&per_page=100"),
+  "production verification should not request Cloudflare's rejected 100-deployment page size"
 );
 assert.ok(
   !publishScript.includes('"pages", "project", "list", "--json"') &&
