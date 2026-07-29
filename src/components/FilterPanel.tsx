@@ -158,6 +158,14 @@ export type SelectedFilter = {
   href: string;
 };
 
+export function ActiveFilterCountBadge({ count }: { count: number }) {
+  return (
+    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-muted-strong">
+      {count.toLocaleString()} active
+    </span>
+  );
+}
+
 type FilterChipSource = {
   name: SidebarFilterName;
   value?: string | string[];
@@ -201,15 +209,12 @@ export function SelectedFilterChips({
   className?: string;
 }) {
   if (!filters.length) return null;
-  const activeCountLabel = `${filters.length.toLocaleString()} active`;
 
   return (
     <section className={className} aria-label="Selected filters">
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="text-sm font-bold text-ink">Selected filters</h2>
-        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-muted">
-          {activeCountLabel}
-        </span>
+        <ActiveFilterCountBadge count={filters.length} />
       </div>
       <div className="flex flex-wrap items-center gap-2">
         {filters.map((filter) => (

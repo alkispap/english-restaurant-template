@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { SlidersHorizontal, X } from "lucide-react";
 import { AdsterraAd } from "@/components/AdsterraAd";
 import { DirectorySidebar } from "@/components/DirectorySidebar";
-import { FilterPanel, SelectedFilterChips, getSelectedFilters } from "@/components/FilterPanel";
+import { ActiveFilterCountBadge, FilterPanel, SelectedFilterChips, getSelectedFilters } from "@/components/FilterPanel";
 import type { FilterPanelOptionGroup } from "@/lib/filter-panel-options";
 import type { DirectoryListingsModel } from "@/lib/directory-listings-types";
 import { useModalDialog } from "@/lib/use-modal-dialog";
@@ -76,8 +76,6 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
     );
   }
 
-  const activeCountLabel = `${selectedFilters.length.toLocaleString()} active`;
-
   return (
     <aside aria-label="Directory filters" className="min-w-0 max-w-full lg:hidden" data-directory-query-intent="true">
       <button
@@ -92,9 +90,7 @@ export function ResponsiveDirectoryFilters({ model, action, hiddenGroups = [] }:
           <SlidersHorizontal className="h-4 w-4" aria-hidden />
           Filters
         </span>
-        {selectedFilters.length ? (
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-muted">{activeCountLabel}</span>
-        ) : null}
+        {selectedFilters.length ? <ActiveFilterCountBadge count={selectedFilters.length} /> : null}
       </button>
 
       {!mobileFiltersOpen ? (
