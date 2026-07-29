@@ -9,6 +9,7 @@ import {
   createArtifactManifest,
   findDeploymentForCommit,
   redactSensitiveText,
+  retryCloudflareApiRead,
   selectRollbackDeployment,
   validateArtifactConfirmation,
   validateArtifactUnchanged,
@@ -147,6 +148,10 @@ assert.ok(
 assert.ok(
   publishScript.includes("return collectPaginatedResults("),
   "production verification should traverse every Cloudflare deployment page"
+);
+assert.ok(
+  publishScript.includes("retryCloudflareApiRead") && publishScript.includes("CLOUDFLARE_API_MAX_ATTEMPTS"),
+  "transient Cloudflare API transport failures should use bounded read-only retries"
 );
 assert.ok(
   !publishScript.includes('"pages", "project", "list", "--json"') &&
@@ -320,6 +325,18 @@ const paginationTest = collectPaginatedResults(async (page) => {
   if (page === 2) return [rollback];
   return [];
 }, 25);
+let transientAttempts = 0;
+const transientRetryTest = retryCloudflareApiRead(async () => {
+  transientAttempts += 1;
+  if (transientAttempts < 3) throw new TypeError("fetch failed");
+  return "ok";
+}, 3, 0);
+let permanentAttempts = 0;
+const permanentFailureTest = () =>
+  retryCloudflareApiRead(async () => {
+    permanentAttempts += 1;
+    throw new Error("HTTP verification failed");
+  }, 3, 0);
 assert.equal(selectRollbackDeployment([rollback], rollback.id, "directory"), rollback);
 assert.throws(
   () => selectRollbackDeployment([{ ...rollback, environment: "preview" }], rollback.id, "directory"),
@@ -439,8 +456,13 @@ const sensitive = redactSensitiveText(
 assert.ok(!sensitive.includes("secret-token") && !sensitive.includes("private-account") && !sensitive.includes("private-token"));
 assert.ok(sensitive.includes("[REDACTED]"));
 
-paginationTest.then((paginatedDeployments) => {
+Promise.all([paginationTest, transientRetryTest]).then(([paginatedDeployments, retryResult]) => {
   assert.deepEqual(requestedPages, [1, 2]);
   assert.equal(selectRollbackDeployment(paginatedDeployments, rollback.id, "directory"), rollback);
+  assert.equal(retryResult, "ok");
+  assert.equal(transientAttempts, 3);
+  return assert.rejects(permanentFailureTest(), /HTTP verification failed/);
+}).then(() => {
+  assert.equal(permanentAttempts, 1, "HTTP and policy failures must not be retried");
   console.log("Cloudflare publish tests passed");
 });
