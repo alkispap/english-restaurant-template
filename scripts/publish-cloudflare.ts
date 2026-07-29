@@ -11,7 +11,7 @@ const FULL_COMMIT_PATTERN = /^[0-9a-f]{40}$/;
 const SHA256_PATTERN = /^[0-9a-f]{64}$/;
 const RELEASE_ATTEMPT_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const DEPLOYMENT_ID_PATTERN = /^[0-9a-f-]{8,}$/i;
-const PRODUCTION_UPLOAD_TIMEOUT_MS = 15 * 60_000;
+const PRODUCTION_UPLOAD_TIMEOUT_MS = 45 * 60_000;
 const CLOUDFLARE_API_MAX_ATTEMPTS = 3;
 const CLOUDFLARE_API_RETRY_DELAY_MS = 1_000;
 

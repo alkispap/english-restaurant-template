@@ -120,8 +120,9 @@ assert.ok(
   "a post-upload history failure should preserve an indeterminate result and forbid blind retry"
 );
 assert.ok(
-  publishScript.includes("PRODUCTION_UPLOAD_TIMEOUT_MS") && publishScript.includes("timeout: PRODUCTION_UPLOAD_TIMEOUT_MS"),
-  "production uploads should have a bounded timeout before reconciliation"
+  publishScript.includes("PRODUCTION_UPLOAD_TIMEOUT_MS = 45 * 60_000") &&
+    publishScript.includes("timeout: PRODUCTION_UPLOAD_TIMEOUT_MS"),
+  "large production uploads should have a sufficient but bounded timeout before reconciliation"
 );
 assert.ok(
   publishScript.includes("getDirectoryPack") && publishScript.includes("approvedProductionUrl"),
