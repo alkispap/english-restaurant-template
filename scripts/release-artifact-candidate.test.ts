@@ -34,6 +34,31 @@ try {
     assert.match(artifactChild.stderr, /Evidence directory must be outside/);
   }
 
+  const evidenceLink = path.join(temporaryDirectory, "evidence-link");
+  fs.symlinkSync(artifactDirectory, evidenceLink, "junction");
+  for (const linkedEvidenceDirectory of [evidenceLink, path.join(evidenceLink, "not-created-yet")]) {
+    const linkedEvidence = run([
+      "create",
+      ...sharedOptions.filter((option) => !option.startsWith("--evidence-directory=")),
+      `--evidence-directory=${linkedEvidenceDirectory}`,
+      "--created-at=2026-08-06T10:00:00.000Z",
+      "--expires-at=2026-08-13T10:00:00.000Z"
+    ]);
+    assert.notEqual(linkedEvidence.status, 0);
+    assert.match(linkedEvidence.stderr, /Evidence directory must be outside/);
+  }
+
+  const nonExistentEvidenceDirectory = path.join(temporaryDirectory, "new-evidence", "nested");
+  const createWithNonExistentEvidenceDirectory = run([
+    "create",
+    ...sharedOptions.filter((option) => !option.startsWith("--evidence-directory=")),
+    `--evidence-directory=${nonExistentEvidenceDirectory}`,
+    "--created-at=2026-08-06T10:00:00.000Z",
+    "--expires-at=2026-08-13T10:00:00.000Z"
+  ]);
+  assert.equal(createWithNonExistentEvidenceDirectory.status, 0, createWithNonExistentEvidenceDirectory.stderr);
+  assert.ok(fs.existsSync(path.join(nonExistentEvidenceDirectory, "release-candidate.json")));
+
   const missing = run(["verify", ...sharedOptions, "--verified-at=2026-08-07T10:00:00.000Z"]);
   assert.notEqual(missing.status, 0);
   assert.match(missing.stderr, /evidence is missing/);

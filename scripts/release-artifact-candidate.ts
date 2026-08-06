@@ -13,7 +13,9 @@ assert.ok(mode === "create" || mode === "verify", "Usage: release-artifact-candi
 
 const artifactDirectory = path.resolve(readRequiredOption("--artifact"));
 const evidenceDirectory = path.resolve(readRequiredOption("--evidence-directory"));
-const evidenceRelativeToArtifact = path.relative(artifactDirectory, evidenceDirectory);
+const resolvedArtifactDirectory = resolvePathForContainment(artifactDirectory);
+const resolvedEvidenceDirectory = resolvePathForContainment(evidenceDirectory);
+const evidenceRelativeToArtifact = path.relative(resolvedArtifactDirectory, resolvedEvidenceDirectory);
 const evidenceIsOutsideArtifact =
   evidenceRelativeToArtifact === ".." || evidenceRelativeToArtifact.startsWith(`..${path.sep}`);
 assert.ok(
@@ -61,4 +63,18 @@ function readRequiredOption(name: string): string {
   const value = process.argv.slice(3).find((argument) => argument.startsWith(prefix))?.slice(prefix.length).trim();
   assert.ok(value, `Missing required option ${name}=<value>.`);
   return value;
+}
+
+function resolvePathForContainment(targetPath: string): string {
+  const missingSegments: string[] = [];
+  let existingPath = targetPath;
+
+  while (!fs.existsSync(existingPath)) {
+    const parentPath = path.dirname(existingPath);
+    assert.notEqual(parentPath, existingPath, `Unable to resolve an existing parent for ${targetPath}.`);
+    missingSegments.unshift(path.basename(existingPath));
+    existingPath = parentPath;
+  }
+
+  return path.join(fs.realpathSync.native(existingPath), ...missingSegments);
 }
