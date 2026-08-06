@@ -39,6 +39,8 @@ Do not invent `importedAt` for a dataset created before provenance tracking exis
 
 This establishes lineage, not freshness or verification. The record must remain `unverified` until a separate source/editor verification event supplies `lastVerifiedAt`.
 
+The historical Outscraper CSV predates this contract and its recorded digest represents the original CRLF export, while Git stores an LF worktree representation. Its guarded backfill and registry checks canonicalize line feeds to CRLF before hashing. Only newline representation is canonicalized; every other byte remains covered, so a content change still invalidates provenance on every platform.
+
 There is intentionally no import option that marks records verified. A later source/editor verification workflow must set `source-verified` or `editor-verified` together with a real `lastVerifiedAt` value.
 
 ## Current dataset
