@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { listings } from "../src/data/listings";
 import { auditListingOperationalQuality } from "../src/lib/listing-operational-quality";
 import type { ListingVerificationLedger } from "../src/lib/listing-verification";
+import { historicalCsvSnapshotSha256 } from "./source-snapshot-hash";
 
 const expected = {
   sourceName: "Indian Restaurants - Outscraper - Test.csv",
@@ -15,7 +15,7 @@ const expected = {
 } as const;
 
 const sourcePath = path.join(process.cwd(), "data", expected.sourceName);
-const sourceHash = crypto.createHash("sha256").update(fs.readFileSync(sourcePath)).digest("hex");
+const sourceHash = historicalCsvSnapshotSha256(fs.readFileSync(sourcePath));
 assert.equal(sourceHash, expected.sourceSnapshotSha256, "historical source snapshot should remain byte-identical");
 const ledger = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "data", "listing-verification-events.json"), "utf8")

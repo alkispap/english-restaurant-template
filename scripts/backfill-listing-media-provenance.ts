@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { analyzeDirectoryFile } from "../src/lib/directory-import";
@@ -9,6 +8,7 @@ import {
   type ListingMediaRegistry,
   type ListingMediaUsage
 } from "../src/lib/listing-media-provenance";
+import { historicalCsvSnapshotSha256 } from "./source-snapshot-hash";
 
 const SOURCE_FILENAME = "Indian Restaurants - Outscraper - Test.csv";
 const SOURCE_REF = "historical-listing-snapshot";
@@ -21,7 +21,7 @@ const dataDirectory = path.join(process.cwd(), "data");
 const sourcePath = path.join(dataDirectory, SOURCE_FILENAME);
 const listings = JSON.parse(fs.readFileSync(path.join(dataDirectory, "listings.json"), "utf8")) as Listing[];
 const registryPath = path.join(dataDirectory, "listing-media-provenance.json");
-const sourceHash = crypto.createHash("sha256").update(fs.readFileSync(sourcePath)).digest("hex");
+const sourceHash = historicalCsvSnapshotSha256(fs.readFileSync(sourcePath));
 if (sourceHash !== SOURCE_SHA256) throw new Error(`Source snapshot hash mismatch: ${sourceHash}`);
 
 const preview = analyzeDirectoryFile(sourcePath, "dry run").listings;

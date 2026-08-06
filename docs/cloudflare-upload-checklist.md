@@ -14,6 +14,10 @@ Production releases must be rebuilt from the protected `main` branch in a fresh 
 
 The publish command refuses tracked or untracked changes. Ignored build output such as `.next/` and `out/` does not make the worktree dirty.
 
+### Non-production candidate evidence
+
+Development work may create and verify local candidate evidence with `npm run create:release-candidate` and `npm run verify:release-candidate`. This evidence is intentionally labeled `non-production-candidate`; the production publisher does not consume it, and it does not replace any check, approval, rebuild, or Cloudflare safeguard in this checklist. See `docs/deployment-artifact-handoff-plan-2026-08-06.md` for the staged migration and fail-closed contract.
+
 ## 2. Prepare Without Publishing
 
 From the isolated checkout, run:
