@@ -337,6 +337,7 @@ Deployment status:
 - Next action:
   - Rerun Google PageSpeed for desktop and mobile and save the third report for comparison.
 - Future upload rule:
+  - **Superseded:** do not use the raw direct-upload instructions below. The guarded workflow in `docs/cloudflare-upload-checklist.md` replaced this advice on 2026-07-15 because an ignored `out/` directory can be stale and cannot prove source or artifact provenance.
   - If `npm run prepare:cloudflare` has already passed and no files changed after it, use direct upload only:
     - `npx wrangler pages deploy out --project-name indianrestaurantlondon`
   - Do not rerun the full publish workflow in that case, because it repeats typecheck, tests, static export, Cloudflare checks, and then upload.

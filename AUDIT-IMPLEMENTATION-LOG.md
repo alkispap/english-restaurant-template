@@ -1275,6 +1275,40 @@ The main directory search, native sidebar selects, checkbox groups, open-now con
 - Evidence/data commit: `d0b5d5a` (`Verify first published missing-hours batch`).
 - No push or deployment occurred.
 
+### 2026-08-06 — Deployment artifact handoff Phase 1: cross-platform provenance and non-production evidence
+
+**Finding/outcome:**
+
+- The historical CSV provenance digest represented CRLF bytes while Git stored LF bytes, causing two Linux-only failures even though the source matched its original Git object.
+- The guarded release rebuilt equivalent deterministic output across approval and publish. Phase 1 now provides reusable manifest and candidate-evidence primitives without changing that production behavior.
+
+**Root cause or decision:**
+
+- Canonicalize only historical CSV newline representation to CRLF before hashing; retain the recorded digest and cover every non-newline byte.
+- Label the new evidence `non-production-candidate`, require external commit/branch/URL expectations, fail closed on expiry or artifact changes, and keep it disconnected from the production publisher.
+- Defer GitHub artifact transfer because current official documentation was inaccessible from the execution environment and the 1.1 GB candidate needs a credential-free storage/transfer spike.
+
+**Files changed:**
+
+- Added canonical snapshot hashing and regression tests.
+- Extracted the deterministic artifact manifest from the publisher.
+- Added versioned candidate evidence, local create/verify tooling, CLI/pure validation tests, and staged design documentation.
+- Updated the provenance, Cloudflare checklist, and performance-audit documentation.
+
+**Verification:**
+
+- Focused provenance, candidate-evidence, candidate-CLI, and Cloudflare publisher tests passed.
+- Full Linux suite passed 169/169 in 4m 35.64s; the prior audit baseline had 164/166 because of the line-ending mismatch.
+- No Cloudflare command, upload, secret, or production workflow activation occurred.
+
+**Risks/follow-ups:**
+
+- Verify current official GitHub artifact and Cloudflare limits, permissions, retention, and digest behavior before adding workflow transfer.
+- Measure compression/upload/download for the current export and bind required check IDs plus approval in a separate authority envelope.
+- Retain the existing publisher rebuild path until a production-equivalent dry run proves safeguard equivalence and expected savings.
+
+**Status:** Phase 1 foundation complete; production migration not authorized.
+
 ## Exact next checkpoint
 
 Follow `docs/restaurant-data-verification-program.md` as the controlling reference for the remaining operational-gap verification work.
