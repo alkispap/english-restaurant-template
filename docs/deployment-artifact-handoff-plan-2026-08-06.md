@@ -195,11 +195,14 @@ If artifact retrieval or verification fails before upload, no Cloudflare operati
 - `scripts/release-artifact-candidate.test.ts` exercises wrong commit and tampered-tree failures locally. The first authorized Actions run must record service ID, service digest, URL, size, retention, upload/download/verification time, and the action's own digest-verification result.
 - Expired/deleted artifact and wrong-ID behavior remain deliberately unexercised until an uploaded candidate exists; they must be tested only against the disposable spike artifact, never a production candidate.
 
-### Phase 3 — approval envelope (not implemented)
+### Phase 3 — approval envelope
 
-- Bind successful required check IDs, immutable artifact service identity, internal evidence hash, target, rollback, and approval.
-- Add pure validation and adversarial tests.
-- Keep production publisher on its existing rebuild path.
+**Implementation status:** Local contract and adversarial validation added; it is intentionally not connected to the publisher.
+
+- `scripts/release-approval-envelope.ts` binds the exact `main` commit, both successful required check IDs, immutable artifact ID, service digest, aggregate artifact hash, candidate-evidence hash, target, current rollback deployment, approver identity, and expiry.
+- The approval may not outlive the candidate; a changed commit, check, artifact, rollback target, digest, target, or expired approval fails closed.
+- `scripts/release-approval-envelope.test.ts` covers a valid approval plus wrong artifact, wrong check commit, duplicate check, changed rollback target, and expiry failures.
+- The current publisher remains on its existing local rebuild path. Phase 4 must separately retrieve the artifact and invoke this validation before any Cloudflare write.
 
 ### Phase 4 — guarded publisher migration (not implemented)
 
