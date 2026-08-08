@@ -34,6 +34,6 @@ assert.match(source, /downloaded-candidate\\evidence/, "verification must use th
 assert.doesNotMatch(source, /downloaded-candidate\\release-candidate-transfer/, "verification must not restore the upload action's stripped staging root");
 assert.match(source, /npm run verify:release-candidate/, "the downloaded candidate must be verified before any future use");
 assert.match(source, /retention-days: 7/, "the short-lived spike artifact should expire after seven days");
-assert.match(source, /compression-level: 0/, "the spike should measure transfer without compression variance");
+assert.match(source, /compression-level: 6/, "the spike should use the measured faster artifact compression level");
 
 console.log("artifact handoff workflow tests passed");

@@ -70,7 +70,7 @@ jobs:
           path: ${{ runner.temp }}/release-candidate-transfer
           if-no-files-found: error
           retention-days: 7
-          compression-level: 0
+          compression-level: 6
 
   download-and-verify:
     name: Download and verify candidate
