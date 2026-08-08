@@ -204,12 +204,13 @@ If artifact retrieval or verification fails before upload, no Cloudflare operati
 - `scripts/release-approval-envelope.test.ts` covers a valid approval plus wrong artifact, wrong check commit, duplicate check, changed rollback target, and expiry failures.
 - The current publisher remains on its existing local rebuild path. Phase 4 must separately retrieve the artifact and invoke this validation before any Cloudflare write.
 
-### Phase 4 — guarded publisher migration (not implemented)
+### Phase 4 — guarded publisher migration
 
-- Add an explicit artifact-source mode without removing the legacy rebuild path.
-- Retrieve and verify candidate before any Cloudflare API write.
-- Run a credential-free dry run and a Cloudflare preview/non-production exercise.
-- Require separate approval before production activation.
+**Implementation status:** Credential-free downloaded-artifact verification is implemented locally. The existing publisher remains unchanged, and no artifact retrieval or hosting write has been enabled.
+
+- `scripts/release-artifact-transfer.ts` verifies the downloaded artifact tree, retained manifest, candidate evidence, and Phase 3 approval as one bound tuple.
+- `npm run verify:release-transfer -- ...` provides a credential-free dry-run command for a downloaded Phase 2 artifact. It requires the exact artifact ID/service digest, commit, target, rollback target, candidate evidence, and approval envelope.
+- The legacy local rebuild publisher stays in place. Enabling an artifact-source publisher mode and any Cloudflare preview exercise waits for the Phase 2 disposable artifact results and separate authorization.
 
 ### Phase 5 — cleanup and optional CI parallelism (not implemented)
 

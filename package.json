@@ -32,6 +32,7 @@
     "publish:cloudflare": "tsx scripts/publish-cloudflare.ts",
     "create:release-candidate": "tsx scripts/release-artifact-candidate.ts create",
     "verify:release-candidate": "tsx scripts/release-artifact-candidate.ts verify",
+    "verify:release-transfer": "tsx scripts/verify-release-artifact-transfer.ts",
     "import:directory": "tsx scripts/import-directory.ts",
     "resolve:listing-entities": "tsx scripts/resolve-listing-entities.ts",
     "backfill:listing-provenance": "tsx scripts/backfill-listing-provenance.ts",
