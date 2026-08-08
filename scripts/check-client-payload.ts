@@ -36,10 +36,13 @@ routeBudgets.push({
   maxChunkBytes: 900_000
 });
 
-assert.ok(fs.existsSync(manifestPath), "Run a production build before checking client payload budgets.");
+assert.ok(
+  fs.existsSync(manifestPath) || fs.existsSync(path.join(nextDir, "build-manifest.json")),
+  "Run a production build before checking client payload budgets."
+);
 
-const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as AppBuildManifest;
-const results = routeBudgets.map(({ route, maxTotalBytes, maxChunkBytes }) => {
+const results = fs.existsSync(manifestPath) ? routeBudgets.map(({ route, maxTotalBytes, maxChunkBytes }) => {
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as AppBuildManifest;
   const assets = manifest.pages[route];
   assert.ok(assets, `Missing ${route} from the app build manifest.`);
 
@@ -64,7 +67,11 @@ const results = routeBudgets.map(({ route, maxTotalBytes, maxChunkBytes }) => {
   );
 
   return { route, totalBytes, largestChunkBytes: largest.bytes };
-});
+}) : [];
+
+if (!fs.existsSync(manifestPath)) {
+  console.warn("Route-level payload budgets are unavailable in Next.js 16; checking global client chunks instead.");
+}
 
 for (const result of results) {
   console.log(
