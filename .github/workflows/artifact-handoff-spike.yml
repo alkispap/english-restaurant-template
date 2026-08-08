@@ -96,14 +96,15 @@ jobs:
         with:
           artifact-ids: ${{ needs.build-and-upload.outputs.artifact-id }}
           path: ${{ runner.temp }}/downloaded-candidate
+          merge-multiple: true
 
       - name: Verify downloaded candidate
         shell: powershell
         run: |
           $verifiedAt = (Get-Date).ToUniversalTime().ToString('o')
           npm run verify:release-candidate -- `
-            --artifact="$env:RUNNER_TEMP\downloaded-candidate\out" `
-            --evidence-directory="$env:RUNNER_TEMP\downloaded-candidate\evidence" `
+            --artifact="$env:RUNNER_TEMP\downloaded-candidate\release-candidate-transfer\out" `
+            --evidence-directory="$env:RUNNER_TEMP\downloaded-candidate\release-candidate-transfer\evidence" `
             --branch='${{ github.ref_name }}' `
             --commit='${{ github.sha }}' `
             --production-url="$env:NEXT_PUBLIC_SITE_URL" `
