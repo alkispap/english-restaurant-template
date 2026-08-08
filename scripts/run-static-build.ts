@@ -12,7 +12,7 @@ assert.ok(!["localhost", "127.0.0.1", "0.0.0.0"].includes(parsedUrl.hostname), "
 console.log(`Building directory pack "${activeDirectoryPack.id}" for ${siteUrl}`);
 
 const nextCli = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");
-const result = spawnSync(process.execPath, [nextCli, "build"], {
+const result = spawnSync(process.execPath, [nextCli, "build", "--webpack"], {
   cwd: process.cwd(),
   env: {
     ...process.env,
