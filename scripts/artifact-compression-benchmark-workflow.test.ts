@@ -29,6 +29,15 @@ assert.equal(source.split("retention-days: 1").length - 1, 2, "both benchmark ar
 assert.match(source, /artifact-ids: \$\{\{ needs\.build-and-upload\.outputs\.artifact-id-0 \}\}/, "level 0 download must use its immutable artifact ID");
 assert.match(source, /artifact-ids: \$\{\{ needs\.build-and-upload\.outputs\.artifact-id-6 \}\}/, "level 6 download must use its immutable artifact ID");
 assert.match(source, /GITHUB_STEP_SUMMARY/, "the benchmark must record its measured timings");
+assert.ok(
+  source.indexOf("Start upload comparison summary") < source.indexOf("Record level 0 upload result"),
+  "the upload table header must be written in the same job before its rows"
+);
+assert.ok(
+  source.indexOf("Record level 0 download result") < source.indexOf("Verify level 0 candidate") &&
+    source.indexOf("Record level 6 download result") < source.indexOf("Verify level 6 candidate"),
+  "download durations must stop before full candidate verification"
+);
 assert.doesNotMatch(source, /CLOUDFLARE|wrangler|publish:cloudflare|publish:workers/i, "the benchmark must not deploy or require hosting credentials");
 
 console.log("artifact compression benchmark workflow tests passed");

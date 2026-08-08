@@ -55,6 +55,10 @@ assert.deepEqual(buildWorkersDeployArgs("temporary-config.json", commit, 123), [
   `immutable-artifact:123:${commit}`
 ]);
 
+const publisherSource = fs.readFileSync(path.join(process.cwd(), "scripts", "publish-workers-preview.ts"), "utf8");
+assert.ok(publisherSource.includes('spawn("gh", ["api", "--method", "GET", endpoint]'), "the artifact ZIP should stream from gh api stdout");
+assert.ok(!publisherSource.includes('"--output", archivePath'), "gh api must not use its unsupported --output flag");
+
 const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8")) as { scripts?: Record<string, string> };
 assert.equal(packageJson.scripts?.["publish:workers-preview"], "tsx scripts/publish-workers-preview.ts");
 

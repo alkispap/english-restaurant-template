@@ -63,6 +63,13 @@ jobs:
           Copy-Item -LiteralPath out -Destination (Join-Path $stage 'out') -Recurse
           Copy-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'release-candidate-evidence') -Destination (Join-Path $stage 'evidence') -Recurse
 
+      - name: Start upload comparison summary
+        shell: powershell
+        run: |
+          "## Artifact compression comparison" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| Compression level | Upload seconds | Artifact bytes | Artifact ID | SHA-256 |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| --- | ---: | ---: | ---: | --- |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
       - name: Mark level 0 upload start
         shell: powershell
         run: '"UPLOAD_0_STARTED=$((Get-Date).ToUniversalTime().ToString(''o''))" | Out-File -FilePath $env:GITHUB_ENV -Append'
@@ -140,9 +147,6 @@ jobs:
         shell: powershell
         run: |
           "## Artifact compression comparison" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "| Compression level | Upload seconds | Artifact bytes | Artifact ID | SHA-256 |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "| --- | ---: | ---: | ---: | --- |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "Upload results are recorded in the build job summary. Download timings below use the same deterministic candidate." | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "| Compression level | Download seconds | Verified |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "| --- | ---: | --- |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
@@ -157,6 +161,12 @@ jobs:
           path: ${{ runner.temp }}/compression-0
           merge-multiple: true
 
+      - name: Record level 0 download result
+        shell: powershell
+        run: |
+          $seconds = [math]::Round(((Get-Date).ToUniversalTime() - [DateTime]::Parse($env:DOWNLOAD_0_STARTED)).TotalSeconds, 3)
+          "DOWNLOAD_0_SECONDS=$seconds" | Out-File -FilePath $env:GITHUB_ENV -Append
+
       - name: Verify level 0 candidate
         shell: powershell
         run: |
@@ -168,8 +178,7 @@ jobs:
             --commit='${{ github.sha }}' `
             --production-url="$env:NEXT_PUBLIC_SITE_URL" `
             --verified-at=$verifiedAt
-          $seconds = [math]::Round(((Get-Date).ToUniversalTime() - [DateTime]::Parse($env:DOWNLOAD_0_STARTED)).TotalSeconds, 3)
-          "| 0 | $seconds | yes |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| 0 | $env:DOWNLOAD_0_SECONDS | yes |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
       - name: Mark level 6 download start
         shell: powershell
@@ -182,6 +191,12 @@ jobs:
           path: ${{ runner.temp }}/compression-6
           merge-multiple: true
 
+      - name: Record level 6 download result
+        shell: powershell
+        run: |
+          $seconds = [math]::Round(((Get-Date).ToUniversalTime() - [DateTime]::Parse($env:DOWNLOAD_6_STARTED)).TotalSeconds, 3)
+          "DOWNLOAD_6_SECONDS=$seconds" | Out-File -FilePath $env:GITHUB_ENV -Append
+
       - name: Verify level 6 candidate
         shell: powershell
         run: |
@@ -193,5 +208,4 @@ jobs:
             --commit='${{ github.sha }}' `
             --production-url="$env:NEXT_PUBLIC_SITE_URL" `
             --verified-at=$verifiedAt
-          $seconds = [math]::Round(((Get-Date).ToUniversalTime() - [DateTime]::Parse($env:DOWNLOAD_6_STARTED)).TotalSeconds, 3)
-          "| 6 | $seconds | yes |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| 6 | $env:DOWNLOAD_6_SECONDS | yes |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append

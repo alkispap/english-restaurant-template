@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -104,7 +104,7 @@ async function main() {
     const archivePath = path.join(temporaryRoot, "candidate.zip");
     const downloadRoot = path.join(temporaryRoot, "downloaded");
     fs.mkdirSync(downloadRoot);
-    run("gh", ["api", "--method", "GET", "--output", archivePath, `repos/${request.repository}/actions/artifacts/${request.artifactId}/zip`]);
+    await downloadArtifactArchive(`repos/${request.repository}/actions/artifacts/${request.artifactId}/zip`, archivePath);
     run("tar", ["-xf", archivePath, "-C", downloadRoot]);
 
     const artifactDirectory = path.join(downloadRoot, "out");
@@ -142,6 +142,46 @@ function verifyCandidate(options: { artifactDirectory: string; evidenceDirectory
   });
   console.log(`Verified downloaded candidate: ${manifest.aggregateSha256}`);
   console.log(`Candidate evidence SHA-256: ${createHash("sha256").update(rawEvidence).digest("hex")}`);
+}
+
+async function downloadArtifactArchive(endpoint: string, archivePath: string) {
+  await new Promise<void>((resolve, reject) => {
+    const result = spawn("gh", ["api", "--method", "GET", endpoint], {
+      shell: false,
+      stdio: ["ignore", "pipe", "pipe"],
+      windowsHide: true
+    });
+    const destination = fs.createWriteStream(archivePath);
+    let stderr = "";
+    let closed = false;
+    let finished = false;
+    let exitCode: number | null = null;
+    const complete = () => {
+      if (!closed || !finished) return;
+      if (exitCode === 0) {
+        resolve();
+      } else {
+        reject(new Error(`gh api ${endpoint} failed with exit code ${exitCode ?? 1}.\n${stderr.trim() || "No command output."}`));
+      }
+    };
+
+    result.stdout.pipe(destination);
+    result.stderr.setEncoding("utf8");
+    result.stderr.on("data", (chunk) => {
+      stderr += chunk;
+    });
+    result.once("error", reject);
+    destination.once("error", reject);
+    result.once("close", (code) => {
+      exitCode = code;
+      closed = true;
+      complete();
+    });
+    destination.once("finish", () => {
+      finished = true;
+      complete();
+    });
+  });
 }
 
 function required(name: string) {
