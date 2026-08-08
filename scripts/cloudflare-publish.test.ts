@@ -39,7 +39,7 @@ assert.equal(packageJson.scripts?.["publish:cloudflare"], "tsx scripts/publish-c
 assert.equal(
   (JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8")) as { devDependencies?: Record<string, string> })
     .devDependencies?.wrangler,
-  "4.120.0",
+  "4.119.0",
   "Wrangler should be pinned as a project development dependency"
 );
 

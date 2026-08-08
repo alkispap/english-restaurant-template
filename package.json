@@ -30,6 +30,9 @@
     "prepare:cloudflare": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-cloudflare-upload.ps1",
     "check:release": "tsx scripts/publish-cloudflare.ts --checks-only",
     "publish:cloudflare": "tsx scripts/publish-cloudflare.ts",
+    "create:release-candidate": "tsx scripts/release-artifact-candidate.ts create",
+    "verify:release-candidate": "tsx scripts/release-artifact-candidate.ts verify",
+    "verify:release-transfer": "tsx scripts/verify-release-artifact-transfer.ts",
     "import:directory": "tsx scripts/import-directory.ts",
     "resolve:listing-entities": "tsx scripts/resolve-listing-entities.ts",
     "backfill:listing-provenance": "tsx scripts/backfill-listing-provenance.ts",
@@ -51,7 +54,7 @@
     "@types/supercluster": "^7.1.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.468.0",
-    "next": "^16.3.0",
+    "next": "16.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.6.0",
@@ -65,11 +68,15 @@
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.16.0",
-    "eslint-config-next": "^15.0.0",
-    "postcss": "^8.5.23",
+    "eslint-config-next": "^16.3.0",
+    "postcss-remove-tailwind-global-scroll-snap-strictness": "file:postcss-plugins/remove-tailwind-global-scroll-snap-strictness",
+    "postcss": "^8.5.14",
     "tailwindcss": "^3.4.16",
     "tsx": "^4.23.1",
     "typescript": "^5.7.2",
-    "wrangler": "4.120.0"
+    "wrangler": "4.119.0"
+  },
+  "overrides": {
+    "undici": "7.29.0"
   }
 }

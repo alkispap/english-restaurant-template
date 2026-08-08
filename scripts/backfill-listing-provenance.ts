@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -7,6 +6,7 @@ import {
 } from "../src/lib/directory-import";
 import { absoluteDataOutputs, buildListingDataOutputs, readListingPublicationRegistry } from "./listing-data-output-utils";
 import { writeTextFilesAtomically } from "./publication-script-utils";
+import { historicalCsvSnapshotSha256 } from "./source-snapshot-hash";
 
 const SOURCE_FILENAME = "Indian Restaurants - Outscraper - Test.csv";
 const SOURCE_SHA256 = "3b7985768ff080490fb27767371979bd181ec1afb9ad4a1c40cf2219916d262d";
@@ -17,7 +17,7 @@ const write = process.argv.includes("--write");
 const dataDirectory = path.join(process.cwd(), "data");
 const sourcePath = path.join(dataDirectory, SOURCE_FILENAME);
 const listingsPath = path.join(dataDirectory, "listings.json");
-const sourceHash = crypto.createHash("sha256").update(fs.readFileSync(sourcePath)).digest("hex");
+const sourceHash = historicalCsvSnapshotSha256(fs.readFileSync(sourcePath));
 if (sourceHash !== SOURCE_SHA256) {
   throw new Error(`Source snapshot hash mismatch: expected ${SOURCE_SHA256}, found ${sourceHash}`);
 }
