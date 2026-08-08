@@ -120,7 +120,7 @@ try {
   driftLock.packages["node_modules/brace-expansion"].version = "1.1.16";
   fs.writeFileSync(driftLockPath, JSON.stringify(driftLock));
   assert.ok(
-    validateReviewedRiskContext(driftRoot).some((failure) => failure.includes("brace-expansion") && failure.includes("1.1.17")),
+    validateReviewedRiskContext(driftRoot).some((failure) => failure.includes("brace-expansion") && failure.includes("1.1.18")),
     "the exception must close if the patched brace-expansion backport drifts"
   );
   fs.writeFileSync(

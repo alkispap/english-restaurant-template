@@ -84,7 +84,7 @@ function listingRowsAvoidMobileCarouselLcpSuppression() {
 
 function buildRemovesTailwindGlobalScrollSnapStrictness() {
   const postcssSource = source("postcss.config.mjs");
-  const postcssPluginSource = source("scripts", "postcss-remove-tailwind-global-scroll-snap-strictness.cjs");
+  const postcssPluginSource = source("postcss-plugins", "remove-tailwind-global-scroll-snap-strictness", "index.cjs");
 
   assert.match(
     postcssSource,

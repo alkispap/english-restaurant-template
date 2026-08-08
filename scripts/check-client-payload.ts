@@ -1,14 +1,19 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
+import vm from "node:vm";
 
-type AppBuildManifest = {
-  pages: Record<string, string[]>;
+type BuildManifest = {
+  rootMainFiles: string[];
+};
+
+type ClientReferenceManifest = {
+  clientModules: Record<string, { chunks: string[] }>;
 };
 
 const root = process.cwd();
 const nextDir = path.join(root, ".next");
-const manifestPath = path.join(nextDir, "app-build-manifest.json");
+const manifestPath = path.join(nextDir, "build-manifest.json");
 const MAX_INITIAL_ROUTE_JS_BYTES = 650_000;
 const MAX_INITIAL_CHUNK_BYTES = 250_000;
 const MAX_ASYNC_CHUNK_BYTES = 900_000;
@@ -38,15 +43,15 @@ routeBudgets.push({
 
 assert.ok(fs.existsSync(manifestPath), "Run a production build before checking client payload budgets.");
 
-const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as AppBuildManifest;
+const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as BuildManifest;
 const results = routeBudgets.map(({ route, maxTotalBytes, maxChunkBytes }) => {
-  const assets = manifest.pages[route];
+  const assets = getRouteClientAssets(route, manifest);
   assert.ok(assets, `Missing ${route} from the app build manifest.`);
 
   const javascriptAssets = [...new Set(assets.filter((asset) => asset.endsWith(".js")))];
   const sizes = javascriptAssets.map((asset) => ({
     asset,
-    bytes: fs.statSync(path.join(nextDir, asset)).size
+    bytes: fs.statSync(path.join(nextDir, decodeURIComponent(asset))).size
   }));
   const totalBytes = sizes.reduce((total, item) => total + item.bytes, 0);
   const largest = sizes.reduce((current, item) => (item.bytes > current.bytes ? item : current), {
@@ -128,6 +133,22 @@ function collectFiles(directory: string): string[] {
     const fullPath = path.join(directory, entry.name);
     return entry.isDirectory() ? collectFiles(fullPath) : [fullPath];
   });
+}
+
+function getRouteClientAssets(route: string, buildManifest: BuildManifest): string[] {
+  const routePath = route.slice(1).split("/").join(path.sep);
+  const clientReferencePath = path.join(nextDir, "server", "app", `${routePath}_client-reference-manifest.js`);
+  assert.ok(fs.existsSync(clientReferencePath), `Missing client reference manifest for ${route}.`);
+
+  const context = { globalThis: {} as { __RSC_MANIFEST?: Record<string, ClientReferenceManifest> } };
+  vm.runInNewContext(fs.readFileSync(clientReferencePath, "utf8"), context, { filename: clientReferencePath });
+  const clientManifest = context.globalThis.__RSC_MANIFEST?.[route];
+  assert.ok(clientManifest, `Missing ${route} from its client reference manifest.`);
+
+  return [
+    ...buildManifest.rootMainFiles,
+    ...Object.values(clientManifest.clientModules).flatMap((module) => module.chunks)
+  ];
 }
 
 function formatBytes(bytes: number) {

@@ -28,7 +28,7 @@ assert.match(script, /Invoke-WebRequest/);
 assert.match(script, /127\.0\.0\.1/);
 
 const postcssConfig = fs.readFileSync(postcssConfigPath, "utf8");
-assert.match(postcssConfig, /fileURLToPath\(import\.meta\.url\)/);
+assert.match(postcssConfig, /"postcss-remove-tailwind-global-scroll-snap-strictness"\s*:\s*\{\}/);
 assert.doesNotMatch(
   postcssConfig,
   /["']\.\/scripts\/postcss-remove-tailwind-global-scroll-snap-strictness\.cjs["']\s*:/,

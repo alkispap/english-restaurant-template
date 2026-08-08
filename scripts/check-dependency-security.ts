@@ -61,14 +61,13 @@ const reviewedPackages = new Set([
 ]);
 
 const reviewedLockVersions: Record<string, string> = {
-  "node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion": "5.0.8",
-  "node_modules/brace-expansion": "1.1.17",
-  "node_modules/miniflare": "4.20260710.0",
-  "node_modules/next": "15.5.21",
-  "node_modules/next/node_modules/postcss": "8.4.31",
-  "node_modules/postcss": "8.5.14",
-  "node_modules/sharp": "0.34.5",
-  "node_modules/wrangler": "4.111.0"
+  "node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion": "5.0.9",
+  "node_modules/brace-expansion": "1.1.18",
+  "node_modules/miniflare": "5.20260801.0-alpha",
+  "node_modules/next": "16.3.0",
+  "node_modules/postcss": "8.5.23",
+  "node_modules/sharp": "0.35.2",
+  "node_modules/wrangler": "4.119.0"
 };
 
 const reviewedNodes: Record<string, string[]> = {
@@ -139,10 +138,10 @@ export function validateReviewedRiskContext(root: string) {
     }
   }
 
-  expectLockDependency(packageLock, "node_modules/next", "postcss", "8.4.31", failures);
-  expectLockDependency(packageLock, "node_modules/next", "sharp", "^0.34.3", failures, true);
-  expectLockDependency(packageLock, "node_modules/miniflare", "sharp", "0.34.5", failures);
-  expectLockDependency(packageLock, "node_modules/wrangler", "miniflare", "4.20260710.0", failures);
+  expectLockDependency(packageLock, "node_modules/next", "postcss", "8.5.23", failures);
+  expectLockDependency(packageLock, "node_modules/next", "sharp", "^0.35.3", failures, true);
+  expectLockDependency(packageLock, "node_modules/miniflare", "sharp", "0.35.2", failures);
+  expectLockDependency(packageLock, "node_modules/wrangler", "miniflare", "5.20260801.0-alpha", failures);
 
   const nextConfig = fs.readFileSync(path.join(root, "next.config.mjs"), "utf8");
   const staticBuild = fs.readFileSync(path.join(root, "scripts", "run-static-build.ts"), "utf8");
@@ -186,7 +185,7 @@ function runAudit() {
       "Accepted only for the pinned static-export build with trusted authored CSS/images; Sharp and PostCSS are not shipped in the Cloudflare artifact."
     );
     console.warn(
-      "The brace-expansion registry finding is accepted only for patched backports 1.1.17/5.0.8 on the locked ESLint development-tool chain."
+      "The brace-expansion registry finding is accepted only for patched backports 1.1.18/5.0.9 on the locked ESLint development-tool chain."
     );
   }
 
