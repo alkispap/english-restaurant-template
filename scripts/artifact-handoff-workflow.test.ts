@@ -23,6 +23,7 @@ assert.doesNotMatch(source, /secrets\.|CLOUDFLARE|wrangler\s+pages\s+deploy|publ
 assert.match(source, /npm run build:static/, "the spike should create the static candidate");
 assert.match(source, /npm run create:release-candidate/, "the spike should create internal candidate evidence");
 assert.match(source, /artifact-ids: \$\{\{ needs\.build-and-upload\.outputs\.artifact-id \}\}/, "the download must use the immutable artifact ID");
+assert.match(source, /merge-multiple: true/, "artifact-ID downloads must extract directly into the requested directory");
 assert.match(source, /downloaded-candidate\\release-candidate-transfer\\out/, "verification must use the artifact root created by the upload action");
 assert.match(source, /npm run verify:release-candidate/, "the downloaded candidate must be verified before any future use");
 assert.match(source, /retention-days: 7/, "the short-lived spike artifact should expire after seven days");

@@ -96,6 +96,7 @@ jobs:
         with:
           artifact-ids: ${{ needs.build-and-upload.outputs.artifact-id }}
           path: ${{ runner.temp }}/downloaded-candidate
+          merge-multiple: true
 
       - name: Verify downloaded candidate
         shell: powershell
