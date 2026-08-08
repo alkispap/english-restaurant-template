@@ -185,13 +185,15 @@ If artifact retrieval or verification fails before upload, no Cloudflare operati
 - Artifact evidence and CLI tests.
 - `package.json`: non-production create/verify commands.
 
-### Phase 2 — non-production Actions spike (not implemented)
+### Phase 2 — non-production Actions spike
 
-- Pin official upload/download actions by full commit.
-- Upload the current candidate without any Cloudflare credentials.
-- Measure compression, upload, retention metadata, download, and verification time.
-- Test wrong ID, expired/deleted artifact, wrong commit, and tampering.
-- Record current official limits and observed results in the audit.
+**Implementation status:** Workflow and local safety checks added; no GitHub Actions run has yet been authorized or performed.
+
+- `.github/workflows/artifact-handoff-spike.yml` is manual-dispatch only, uses a read-only token, and contains no secrets or Cloudflare commands.
+- It builds the static candidate, creates internal evidence, uploads it through a full-commit-pinned artifact action, downloads by immutable artifact ID in a separate job, and verifies the downloaded tree.
+- The spike uses seven-day retention and no compression so the first run can record the uncompressed transfer cost without an uncontrolled compression variable.
+- `scripts/release-artifact-candidate.test.ts` exercises wrong commit and tampered-tree failures locally. The first authorized Actions run must record service ID, service digest, URL, size, retention, upload/download/verification time, and the action's own digest-verification result.
+- Expired/deleted artifact and wrong-ID behavior remain deliberately unexercised until an uploaded candidate exists; they must be tested only against the disposable spike artifact, never a production candidate.
 
 ### Phase 3 — approval envelope (not implemented)
 
