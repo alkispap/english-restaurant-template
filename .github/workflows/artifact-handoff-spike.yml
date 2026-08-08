@@ -35,6 +35,8 @@ jobs:
         run: npm ci
 
       - name: Build static candidate
+        env:
+          NEXT_BUILD_ID: ${{ github.sha }}
         run: npm run build:static
 
       - name: Create local candidate evidence

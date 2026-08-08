@@ -21,6 +21,11 @@ assert.ok(source.includes(downloadRef), "download action must be pinned by full 
 assert.doesNotMatch(source, /@v\d/, "all actions must be pinned by immutable commit");
 assert.doesNotMatch(source, /secrets\.|CLOUDFLARE|wrangler\s+pages\s+deploy|publish:cloudflare/i, "the spike must not have deployment credentials or commands");
 assert.match(source, /npm run build:static/, "the spike should create the static candidate");
+assert.match(
+  source,
+  /name: Build static candidate\s+env:\s+NEXT_BUILD_ID: \$\{\{ github\.sha \}\}\s+run: npm run build:static/,
+  "the static candidate must use the commit SHA as its deterministic Next.js build ID"
+);
 assert.match(source, /npm run create:release-candidate/, "the spike should create internal candidate evidence");
 assert.match(source, /artifact-ids: \$\{\{ needs\.build-and-upload\.outputs\.artifact-id \}\}/, "the download must use the immutable artifact ID");
 assert.match(source, /merge-multiple: true/, "artifact-ID downloads must extract directly into the requested directory");
