@@ -1130,6 +1130,7 @@ function readBrowserVersion(chromePath: string) {
 function spawnChrome(chromePath: string, userDataDir: string, port: number): ChildProcessWithoutNullStreams {
   return spawn(chromePath, [
     "--headless=new",
+    "--remote-debugging-address=127.0.0.1",
     `--remote-debugging-port=${port}`,
     `--user-data-dir=${userDataDir}`,
     "--disable-gpu",
@@ -1180,7 +1181,7 @@ async function createPageTarget(port: number, browserDescription: () => string) 
 
 async function waitForJson(url: string, init?: RequestInit) {
   let lastError: unknown;
-  for (let attempt = 0; attempt < 40; attempt += 1) {
+  for (let attempt = 0; attempt < 120; attempt += 1) {
     try {
       const response = await fetch(url, init);
       if (response.ok) return response.json();
