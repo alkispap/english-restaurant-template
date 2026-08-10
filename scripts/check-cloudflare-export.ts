@@ -5,14 +5,17 @@ import { securityHeaders } from "../src/config/security-headers.mjs";
 import { activeDirectoryPack } from "../src/config/directory-packs";
 
 const outDir = path.join(process.cwd(), "out");
-const maxFiles = 20_000;
+const maxFiles = 100_000;
 const maxFileBytes = 25 * 1024 * 1024;
 
 assert.ok(fs.existsSync(outDir), "out folder is missing. Run npm run build first.");
 
 const files = listFiles(outDir);
 assert.ok(files.length > 0, "out folder is empty. Run npm run build first.");
-assert.ok(files.length <= maxFiles, `Cloudflare Pages Free supports up to ${maxFiles} files; found ${files.length}.`);
+assert.ok(
+  files.length <= maxFiles,
+  `Cloudflare Pages paid plans support up to ${maxFiles} files when PAGES_WRANGLER_MAJOR_VERSION=4 is configured; found ${files.length}.`
+);
 
 const oversizedFiles = files
   .map((file) => ({ file, size: fs.statSync(file).size }))

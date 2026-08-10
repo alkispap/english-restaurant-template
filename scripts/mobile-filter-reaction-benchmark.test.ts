@@ -57,6 +57,8 @@ assert.match(eventQueueSource, /Timed out waiting for next CDP event/, "CDP even
 assert.match(source, /CDP command \$\{method\} timed out/, "CDP commands should have bounded named timeouts");
 assert.match(source, /browser exited code=/, "early browser exits should include code and signal");
 assert.match(source, /stderr tail:/, "browser startup failures should include bounded stderr");
+assert.match(source, /--remote-debugging-address=127\.0\.0\.1/, "Chrome debugging should bind explicitly to the local benchmark endpoint");
+assert.match(source, /attempt < 120/, "Chrome startup readiness should tolerate slower CI browser initialization");
 assert.match(source, /BROWSER_STDERR_LIMIT = 4_000/, "browser stderr diagnostics should remain bounded");
 assert.match(source, /\.slice\(0, \$\{ACTIVE_TEXT_LIMIT\}\)/, "page diagnostics should truncate active element text");
 assert.match(source, /printBenchmarkHeader\(\)[\s\S]*await assertServerReady/, "benchmark identity should print before fallible startup work");
