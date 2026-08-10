@@ -113,7 +113,7 @@ export const trustPages = [
       },
       {
         heading: "Advertising and Cookies",
-        body: "Third-party advertising network loading is currently disabled, so the visible advertisement placeholders do not load partner scripts or advertising cookies. Before ads are enabled, the operator must review the provider, update this notice, add any consent controls required for cookies or similar technologies, and identify the third-party ad partners and their privacy terms."
+        body: "Public guide and directory pages may load advertisements from Adsterra and other third-party ad partners. These ads can use third-party scripts, cookies, or similar technologies (cookies or similar technologies) to deliver and measure advertising. Advertisement placements are not shown in the editor. Review Adsterra's privacy terms and manage any applicable cookie-consent preferences before continuing to use the site."
       }
     ]
   },
