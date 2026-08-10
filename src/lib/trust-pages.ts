@@ -113,7 +113,7 @@ export const trustPages = [
       },
       {
         heading: "Advertising and Cookies",
-        body: "Public guide and directory pages may load advertisements from Adsterra and other third-party ad partners. These ads can use third-party scripts, cookies, or similar technologies to deliver and measure advertising. Advertisement placements are not shown in the editor. Review Adsterra's privacy terms and manage any applicable cookie-consent preferences before continuing to use the site."
+        body: "Public guide and directory pages may load advertisements from Adsterra and other third-party ad partners. These ads can use third-party scripts, cookies, or similar technologies (cookies or similar technologies) to deliver and measure advertising. Advertisement placements are not shown in the editor. Review Adsterra's privacy terms and manage any applicable cookie-consent preferences before continuing to use the site."
       }
     ]
   },
