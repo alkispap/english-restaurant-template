@@ -1,0 +1,211 @@
+name: Non-production artifact compression benchmark
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  NEXT_PUBLIC_SITE_URL: https://indianrestaurantlondon.co.uk
+
+jobs:
+  build-and-upload:
+    name: Build once and compare compression
+    runs-on: windows-latest
+    timeout-minutes: 60
+    outputs:
+      artifact-id-0: ${{ steps.upload_0.outputs.artifact-id }}
+      artifact-digest-0: ${{ steps.upload_0.outputs.artifact-digest }}
+      artifact-id-6: ${{ steps.upload_6.outputs.artifact-id }}
+      artifact-digest-6: ${{ steps.upload_6.outputs.artifact-digest }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build one deterministic static candidate
+        env:
+          NEXT_BUILD_ID: ${{ github.sha }}
+        run: npm run build:static
+
+      - name: Create local candidate evidence
+        shell: powershell
+        run: |
+          $createdAt = (Get-Date).ToUniversalTime().ToString('o')
+          $expiresAt = (Get-Date).ToUniversalTime().AddDays(1).ToString('o')
+          npm run create:release-candidate -- `
+            --artifact=out `
+            --evidence-directory="$env:RUNNER_TEMP\release-candidate-evidence" `
+            --branch='${{ github.ref_name }}' `
+            --commit='${{ github.sha }}' `
+            --production-url="$env:NEXT_PUBLIC_SITE_URL" `
+            --created-at=$createdAt `
+            --expires-at=$expiresAt
+
+      - name: Stage candidate for transfer
+        shell: powershell
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP 'compression-benchmark-transfer'
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item -LiteralPath out -Destination (Join-Path $stage 'out') -Recurse
+          Copy-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'release-candidate-evidence') -Destination (Join-Path $stage 'evidence') -Recurse
+
+      - name: Start upload comparison summary
+        shell: powershell
+        run: |
+          "## Artifact compression comparison" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| Compression level | Upload seconds | Artifact bytes | Artifact ID | SHA-256 |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| --- | ---: | ---: | ---: | --- |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      - name: Mark level 0 upload start
+        shell: powershell
+        run: '"UPLOAD_0_STARTED=$((Get-Date).ToUniversalTime().ToString(''o''))" | Out-File -FilePath $env:GITHUB_ENV -Append'
+
+      - name: Upload level 0 candidate
+        id: upload_0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: compression-0-${{ github.sha }}
+          path: ${{ runner.temp }}/compression-benchmark-transfer
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+      - name: Record level 0 upload result
+        shell: powershell
+        env:
+          ARTIFACT_ID: ${{ steps.upload_0.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.upload_0.outputs.artifact-digest }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $finishedAt = (Get-Date).ToUniversalTime()
+          $startedAt = [DateTime]::Parse($env:UPLOAD_0_STARTED)
+          $artifact = gh api "repos/${{ github.repository }}/actions/artifacts/$env:ARTIFACT_ID" | ConvertFrom-Json
+          "| 0 | $([math]::Round(($finishedAt - $startedAt).TotalSeconds, 3)) | $($artifact.size_in_bytes) | $env:ARTIFACT_ID | $env:ARTIFACT_DIGEST |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      - name: Mark level 6 upload start
+        shell: powershell
+        run: '"UPLOAD_6_STARTED=$((Get-Date).ToUniversalTime().ToString(''o''))" | Out-File -FilePath $env:GITHUB_ENV -Append'
+
+      - name: Upload level 6 candidate
+        id: upload_6
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: compression-6-${{ github.sha }}
+          path: ${{ runner.temp }}/compression-benchmark-transfer
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
+
+      - name: Record level 6 upload result
+        shell: powershell
+        env:
+          ARTIFACT_ID: ${{ steps.upload_6.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.upload_6.outputs.artifact-digest }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $finishedAt = (Get-Date).ToUniversalTime()
+          $startedAt = [DateTime]::Parse($env:UPLOAD_6_STARTED)
+          $artifact = gh api "repos/${{ github.repository }}/actions/artifacts/$env:ARTIFACT_ID" | ConvertFrom-Json
+          "| 6 | $([math]::Round(($finishedAt - $startedAt).TotalSeconds, 3)) | $($artifact.size_in_bytes) | $env:ARTIFACT_ID | $env:ARTIFACT_DIGEST |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+  download-and-verify:
+    name: Download and verify both variants
+    needs: build-and-upload
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Start comparison summary
+        shell: powershell
+        run: |
+          "## Artifact compression comparison" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| Compression level | Download seconds | Verified |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "| --- | ---: | --- |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      - name: Mark level 0 download start
+        shell: powershell
+        run: '"DOWNLOAD_0_STARTED=$((Get-Date).ToUniversalTime().ToString(''o''))" | Out-File -FilePath $env:GITHUB_ENV -Append'
+
+      - name: Download level 0 by immutable artifact ID
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          artifact-ids: ${{ needs.build-and-upload.outputs.artifact-id-0 }}
+          path: ${{ runner.temp }}/compression-0
+          merge-multiple: true
+
+      - name: Record level 0 download result
+        shell: powershell
+        run: |
+          $seconds = [math]::Round(((Get-Date).ToUniversalTime() - [DateTime]::Parse($env:DOWNLOAD_0_STARTED)).TotalSeconds, 3)
+          "DOWNLOAD_0_SECONDS=$seconds" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Verify level 0 candidate
+        shell: powershell
+        run: |
+          $verifiedAt = (Get-Date).ToUniversalTime().ToString('o')
+          npm run verify:release-candidate -- `
+            --artifact="$env:RUNNER_TEMP\compression-0\out" `
+            --evidence-directory="$env:RUNNER_TEMP\compression-0\evidence" `
+            --branch='${{ github.ref_name }}' `
+            --commit='${{ github.sha }}' `
+            --production-url="$env:NEXT_PUBLIC_SITE_URL" `
+            --verified-at=$verifiedAt
+          "| 0 | $env:DOWNLOAD_0_SECONDS | yes |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      - name: Mark level 6 download start
+        shell: powershell
+        run: '"DOWNLOAD_6_STARTED=$((Get-Date).ToUniversalTime().ToString(''o''))" | Out-File -FilePath $env:GITHUB_ENV -Append'
+
+      - name: Download level 6 by immutable artifact ID
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          artifact-ids: ${{ needs.build-and-upload.outputs.artifact-id-6 }}
+          path: ${{ runner.temp }}/compression-6
+          merge-multiple: true
+
+      - name: Record level 6 download result
+        shell: powershell
+        run: |
+          $seconds = [math]::Round(((Get-Date).ToUniversalTime() - [DateTime]::Parse($env:DOWNLOAD_6_STARTED)).TotalSeconds, 3)
+          "DOWNLOAD_6_SECONDS=$seconds" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Verify level 6 candidate
+        shell: powershell
+        run: |
+          $verifiedAt = (Get-Date).ToUniversalTime().ToString('o')
+          npm run verify:release-candidate -- `
+            --artifact="$env:RUNNER_TEMP\compression-6\out" `
+            --evidence-directory="$env:RUNNER_TEMP\compression-6\evidence" `
+            --branch='${{ github.ref_name }}' `
+            --commit='${{ github.sha }}' `
+            --production-url="$env:NEXT_PUBLIC_SITE_URL" `
+            --verified-at=$verifiedAt
+          "| 6 | $env:DOWNLOAD_6_SECONDS | yes |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append

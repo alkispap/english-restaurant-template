@@ -1,19 +1,17 @@
 import assert from "node:assert/strict";
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { listings } from "../src/data/listings";
 import { auditListingMediaQuality } from "../src/lib/listing-media-quality";
 import { isApprovedListingMediaAsset, listingMediaUsages, type ListingMediaRegistry } from "../src/lib/listing-media-provenance";
+import { historicalCsvSnapshotSha256 } from "./source-snapshot-hash";
 
 const registry = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "data", "listing-media-provenance.json"), "utf8")
 ) as ListingMediaRegistry;
 const source = registry.sources["historical-listing-snapshot"];
 assert.ok(source, "historical media source should be registered");
-const sourceHash = crypto.createHash("sha256")
-  .update(fs.readFileSync(path.join(process.cwd(), "data", source.sourceName)))
-  .digest("hex");
+const sourceHash = historicalCsvSnapshotSha256(fs.readFileSync(path.join(process.cwd(), "data", source.sourceName)));
 assert.equal(sourceHash, source.sourceSnapshotSha256);
 
 const listingBySlug = new Map(listings.map((listing) => [listing.slug, listing]));

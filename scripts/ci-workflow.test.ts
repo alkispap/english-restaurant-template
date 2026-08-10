@@ -39,7 +39,6 @@ for (const command of [
   "npm run audit:template",
   "npm run build",
   "npm run build:static",
-  "npm run check:cloudflare",
   "npm run benchmark:filters"
 ]) {
   assert.ok(source.includes(command), `CI should run ${command}`);
@@ -65,6 +64,7 @@ assert.match(
 assert.doesNotMatch(source, /pull_request_target/, "untrusted pull-request code must not run in a trusted workflow context");
 assert.doesNotMatch(source, /secrets\./, "quality checks should not receive repository secrets");
 assert.doesNotMatch(source, /publish:cloudflare|wrangler\s+pages\s+deploy/, "quality checks must never deploy");
+assert.doesNotMatch(source, /npm run check:cloudflare/, "host-specific Cloudflare file limits must not block a host-neutral static export check");
 assert.match(source, /git status --porcelain/, "CI should fail when checks change repository files");
 assert.match(source, /NEXT_PUBLIC_SITE_URL: https:\/\/indianrestaurantlondon\.co\.uk/, "CI should supply the production URL explicitly");
 

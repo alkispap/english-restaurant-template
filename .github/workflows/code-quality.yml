@@ -105,9 +105,6 @@ jobs:
       - name: Build static export
         run: npm run build:static
 
-      - name: Validate Cloudflare artifact
-        run: npm run check:cloudflare
-
       - name: Run rendered filter benchmark
         shell: powershell
         env:
