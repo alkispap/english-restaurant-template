@@ -13,7 +13,7 @@ const updateSource = read("src/app/suggest-update/page.tsx");
 const updateFormSource = read("src/components/SuggestUpdateForm.tsx");
 
 assert.doesNotMatch(analyticsSource, /fetch\(|sendBeacon|XMLHttpRequest/, "current analytics should not transmit events externally");
-assert.match(adsSource, /adsterraAdsEnabled\s*=\s*false/, "advertising network loading should remain disabled");
+assert.match(adsSource, /adsterraAdsEnabled\s*=\s*true/, "advertising network loading should be enabled");
 assert.doesNotMatch(contactSource, /<form|fetch\(/, "contact page should not claim to submit data when it only provides guidance");
 assert.doesNotMatch(`${updateSource}\n${updateFormSource}`, /fetch\(|sendBeacon|XMLHttpRequest/, "update request builder should not transmit data from the website");
 assert.match(updateFormSource, /does not automatically submit, store, or publish/, "update form should disclose its local-only behavior");
@@ -33,8 +33,9 @@ assert.match(updateFormSource, /does not automatically submit, store, or publish
   /requests tiles directly from the OpenStreetMap Foundation/,
   /IP address, browser and device information, referring site origin, request time, and requested tiles/,
   /does not use those tile requests for its own analytics/,
-  /advertising network loading is currently disabled/,
-  /consent controls required for cookies/
+  /may load advertisements from Adsterra/,
+  /third-party scripts, cookies, or similar technologies/,
+  /not shown in the editor/
 ].forEach((pattern) => assert.match(privacyText, pattern, `privacy policy should disclose ${pattern}`));
 
 assert.doesNotMatch(

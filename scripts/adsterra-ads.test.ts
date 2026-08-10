@@ -42,8 +42,8 @@ const adComponentSource = fs.readFileSync(adComponentPath, "utf8");
 });
 
 assert.ok(!adConfigSource.includes("a3a2493ac8519efd48f4a2a364f4897e"), "popunder script should not be enabled in v1");
-assert.match(adConfigSource, /adsterraAdsEnabled\s*=\s*false/, "Adsterra network loading should stay disabled until redirect ads are resolved");
-assert.doesNotMatch(adConfigSource, /effectivecpmnetwork\.com/, "native network script should not be configured while redirect ads are disabled");
+assert.match(adConfigSource, /adsterraAdsEnabled\s*=\s*true/, "Adsterra network loading should be enabled with configured placements");
+assert.match(adConfigSource, /effectivecpmnetwork\.com/, "native network script should be configured");
 assert.doesNotMatch(adComponentSource, /highperformanceformat\.com/, "iframe network script should not be loaded while redirect ads are disabled");
 assert.match(adComponentSource, /"use client"/, "ad component should be client-side");
 assert.match(adComponentSource, /Advertisement/, "ad component should label ad areas");

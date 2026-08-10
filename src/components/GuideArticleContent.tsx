@@ -102,6 +102,11 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
                   ) : null}
                   {index === 2 && article.comparisonTables?.[0] ? <ArticleComparisonTable table={article.comparisonTables[0]} /> : null}
                   {index === 3 && article.dataBlocks?.[0] ? <ArticleDataBlock block={article.dataBlocks[0]} /> : null}
+                  {index === 3 ? (
+                    <div className="mt-7">
+                      <AdsterraAd placement="300x250" />
+                    </div>
+                  ) : null}
                   {index === 4 && article.ctaBlocks?.[1] ? <ArticleCta block={article.ctaBlocks[1]} /> : null}
                 </section>
               ))}
@@ -135,11 +140,15 @@ export function GuideArticleContent({ article, preview = false }: GuideArticleCo
               </div>
             ) : null}
             <AdsterraAd placement="160x300" />
+            <AdsterraAd placement="160x600" />
           </aside>
         </div>
 
         <section className="mx-auto max-w-6xl px-4 pb-8 sm:px-6 lg:px-8">
           <AdsterraAd placement="NativeBanner" />
+          <div className="mt-6 hidden justify-center md:flex">
+            <AdsterraAd placement="728x90" />
+          </div>
         </section>
 
         {article.internalLinks.length ? (
