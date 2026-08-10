@@ -1,3 +1,10 @@
+# Static export does not need a development server to be stopped. On Windows,
+# inspecting every process command line can occasionally hang, so only perform
+# that cleanup when a caller explicitly requests it.
+param(
+  [switch]$StopDevServers
+)
+
 $ErrorActionPreference = "Stop"
 
 $ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
@@ -61,7 +68,9 @@ function Run-Step {
 Set-Location $ProjectRoot
 
 Write-Host "Preparing Cloudflare upload for $ProjectRoot"
-Stop-ProjectDevServers
+if ($StopDevServers) {
+  Stop-ProjectDevServers
+}
 
 Run-Step "Static export build" @("run", "build:static")
 Run-Step "Cloudflare export checks" @("run", "check:cloudflare")
