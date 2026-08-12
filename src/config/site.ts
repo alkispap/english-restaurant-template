@@ -12,12 +12,12 @@ export function buildSiteConfig(pack: DirectoryPack, env: Record<string, string 
     navigation: [
       { label: "Restaurants", href: "/restaurants" },
       { label: "Areas", href: "/areas" },
-      { label: "Categories", href: "/categories" }
+      { label: "Cuisines", href: "/categories" }
     ],
     footerLinks: [
       { label: "All restaurants", href: "/restaurants" },
       { label: "Best rated", href: "/restaurants?sort=rating" },
-      { label: "Categories", href: "/categories" }
+      { label: "Cuisines", href: "/categories" }
     ]
   } as const;
 }
