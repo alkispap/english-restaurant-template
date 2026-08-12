@@ -1,12 +1,12 @@
 # Deployment performance audit — 2026-08-06
 
-> **Status: final audit.** Repository measurements and two representative GitHub Actions runs are incorporated. This report recommends a target design but does not implement or authorize deployment-process changes.
+> **Status: historical audit.** This report measured the former Cloudflare Pages Direct Upload process on 2026-08-06. It is retained for its timing evidence, but it is not a release runbook. Since 2026-08-12, normal releases use [release-process.md](release-process.md): GitHub merge → Cloudflare Workers Builds → Worker deployment.
 
 ## Executive summary
 
 The review confirmed the initial assumption: the release is slow primarily because safe, expensive work is repeated, not because it contains many individually useless checks.
 
-The documented manual release runs the complete check, regular-build, and static-build sequence during `check:release`, obtains approval for the resulting artifact hash, and then repeats that sequence during `publish:cloudflare`. The controlled model attributes approximately **17 minutes 47 seconds** to this pre-upload path. A historical repository record reports another **18 minutes 25 seconds** for Wrangler upload/deploy.
+The former documented manual release ran the complete check, regular-build, and static-build sequence during `check:release`, obtained approval for the resulting artifact hash, and then repeated that sequence during `publish:cloudflare`. The controlled model attributes approximately **17 minutes 47 seconds** to this pre-upload path. A historical repository record reports another **18 minutes 25 seconds** for Wrangler upload/deploy.
 
 Representative post-merge GitHub Actions run `30497304870` took **9 minutes 2 seconds**. A second successful run for pull request #40 produced job totals within seven seconds of the first run; the sum of its two job durations was only three seconds lower. Combining measured CI, modeled manual work, and historical upload gives a post-merge path of approximately **45 minutes 14 seconds**, excluding approval, Cloudflare metadata calls, reconciliation, and live checks. Including a comparable pre-merge pull-request workflow brings the change-to-production path toward **54 minutes 16 seconds**.
 
@@ -369,10 +369,10 @@ Approval, Cloudflare API calls, reconciliation, and live verification are exclud
 
 | Document | Finding |
 | --- | --- |
-| `docs/cloudflare-upload-checklist.md` | Authoritative guarded process. |
-| `docs/website-change-rules.md` | Points to the authoritative checklist; abbreviated command is not the complete modern invocation. |
+| `docs/release-process.md` | Current authoritative GitHub-to-Cloudflare Workers process. |
+| `docs/website-change-rules.md` | Points to the current release process. |
 | `AUDIT-IMPLEMENTATION-LOG.md` | Explains why weak/raw deployment was replaced. |
-| `docs/pagespeed-performance-report-2026-06-19.md` | Valuable upload timing, but its raw-upload advice is superseded. |
+| `docs/pagespeed-performance-report-2026-06-19.md` | Valuable historical timing, but its raw-upload advice is superseded. |
 
 The historical report retains its measurement but receives a superseded notice in this audit change.
 
@@ -464,7 +464,7 @@ These are targets, not guarantees. A later implementation is successful only if 
 
 ## Implementation foundation status
 
-The first non-production foundation is defined in `docs/deployment-artifact-handoff-plan-2026-08-06.md`. It extracts the deterministic manifest into a reusable module, adds a versioned candidate evidence contract and local create/verify tooling, and fixes historical CSV provenance hashing across LF/CRLF worktrees. The production publisher continues to rebuild and deploy exactly as documented; it does not consume the candidate evidence.
+The former non-production artifact-handoff experiment was retired with the Pages Direct Upload workflow. Its code-level provenance work remains available in the repository, but it is not part of the current release process.
 
 Current official GitHub Actions and Cloudflare documentation could not be fetched from the audit environment because the available network paths returned authorization/403 responses. No changing platform quota is treated as verified. Artifact upload/download integration remains gated on an official-documentation review and a credential-free non-production transfer experiment with the current 1.1 GB export.
 
