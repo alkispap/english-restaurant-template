@@ -12,7 +12,7 @@ import { createArtifactManifest, serializeArtifactManifest } from "./release-art
 const FULL_COMMIT_PATTERN = /^[0-9a-f]{40}$/;
 const SHA256_PATTERN = /^[0-9a-f]{64}$/;
 export const WORKERS_PREVIEW_NAME = "indianrestaurantlondon-workers";
-export const WORKERS_PREVIEW_CONFIG = "wrangler.workers.jsonc";
+export const WORKERS_PREVIEW_CONFIG = "wrangler.workers.preview.jsonc";
 
 type PreviewRequest = {
   artifactId: number;
