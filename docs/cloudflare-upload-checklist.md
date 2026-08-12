@@ -1,6 +1,10 @@
-# Cloudflare Production Release Checklist
+# Legacy Cloudflare Pages Direct Upload Checklist
 
-This is the authoritative commit-to-production workflow. Do not upload `out/` with a raw Wrangler command: the folder is ignored by Git and may be stale even when the source tree is clean.
+> **Superseded.** Normal releases use [the GitHub-to-Cloudflare Workers release process](release-process.md): merge an approved pull request into `main`, then Cloudflare Workers Builds deploys automatically. Do not follow this document for a normal production release.
+>
+> This checklist is retained only as historical reference for the former Cloudflare Pages Direct Upload setup. A manual deployment is allowed only for a deliberate emergency recovery, recorded on its Trello card.
+
+This historical document describes the former Pages-based deployment workflow.
 
 Production releases must be rebuilt from the protected `main` branch in a fresh isolated checkout. Do not replace the Code Quality worktree's `node_modules` junction for a release, and do not publish from a feature branch even if the Cloudflare `--branch` argument says `main`.
 
