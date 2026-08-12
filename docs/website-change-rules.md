@@ -2,8 +2,8 @@
 
 Use this before changing the website. The goal is to keep Google/PageSpeed, SEO, static export, Cloudflare upload, accessibility, and template reuse from breaking during future edits.
 
-For full history, see `docs/pagespeed-performance-report-2026-06-19.md`.  
-For upload steps, see `docs/cloudflare-upload-checklist.md`.
+For the current publishing workflow, see [release-process.md](release-process.md).
+For historical performance evidence only, see `docs/pagespeed-performance-report-2026-06-19.md` and `docs/deployment-performance-audit-2026-08-06.md`.
 
 ## Golden Rules
 

@@ -337,11 +337,8 @@ Deployment status:
 - Next action:
   - Rerun Google PageSpeed for desktop and mobile and save the third report for comparison.
 - Future upload rule:
-  - **Superseded:** do not use the raw direct-upload instructions below. The guarded workflow in `docs/cloudflare-upload-checklist.md` replaced this advice on 2026-07-15 because an ignored `out/` directory can be stale and cannot prove source or artifact provenance.
-  - If `npm run prepare:cloudflare` has already passed and no files changed after it, use direct upload only:
-    - `npx wrangler pages deploy out --project-name indianrestaurantlondon`
-  - Do not rerun the full publish workflow in that case, because it repeats typecheck, tests, static export, Cloudflare checks, and then upload.
-  - The direct upload can still take a long time because the static export currently contains about `7,351` files.
+  - **Historical and superseded:** the direct-upload guidance below applied to the former Pages setup. Do not use it. Current releases follow [release-process.md](release-process.md): merge an approved PR into `main`, then Cloudflare Workers Builds deploys automatically.
+  - The historical export had about `7,351` files; this remains useful only as a point-in-time performance measurement.
 
 ## Third Google PageSpeed Check - 2026-06-21
 
@@ -1622,8 +1619,8 @@ Recommended first fix target, not implemented yet:
   - `/_next/static/*`: `Cache-Control: public, max-age=31536000, immutable`
   - `/vendor/leaflet/*`: evaluate long cache, likely `Cache-Control: public, max-age=31536000, immutable`
   - `/`, HTML pages, `/sitemap.xml`, `/robots.txt`: keep short-cache or revalidate.
-- Upload checklist:
-  - `docs/cloudflare-upload-checklist.md`
+- Current release process:
+  - [release-process.md](release-process.md)
 - Keep third-party caching documented as limited-control:
   - Googleusercontent image caching should be handled through the image strategy if we want control.
   - Cloudflare Insights script caching can only be avoided by removing/disabling that analytics script, which is probably not worth doing for this small warning unless PageSpeed still complains after bigger fixes.
