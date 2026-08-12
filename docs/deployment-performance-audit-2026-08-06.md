@@ -464,7 +464,7 @@ These are targets, not guarantees. A later implementation is successful only if 
 
 ## Implementation foundation status
 
-The former non-production artifact-handoff experiment was retired with the Pages Direct Upload workflow. Its code-level provenance work remains available in the repository, but it is not part of the current release process.
+The former non-production artifact-handoff experiment and its manually dispatchable GitHub workflows were retired with the Pages Direct Upload workflow. Its code-level provenance work remains available in the repository, but it is not part of the current release process.
 
 Current official GitHub Actions and Cloudflare documentation could not be fetched from the audit environment because the available network paths returned authorization/403 responses. No changing platform quota is treated as verified. Artifact upload/download integration remains gated on an official-documentation review and a credential-free non-production transfer experiment with the current 1.1 GB export.
 
