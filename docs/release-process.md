@@ -25,3 +25,7 @@ Production serves both `indianrestaurantlondon.co.uk` and `www.indianrestaurantl
 ## Rule
 
 Do not use a manual local Wrangler production upload for a normal release. The GitHub-to-Cloudflare process is the source of truth. Use a manual deployment only for a deliberate emergency recovery, then document it on the related Trello card.
+
+## Historical records
+
+`deployment-performance-audit-2026-08-06.md` and `pagespeed-performance-report-2026-06-19.md` retain useful historical timing and performance evidence. They are not deployment instructions: their Pages Direct Upload commands and estimates predate Workers Builds.
