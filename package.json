@@ -7,6 +7,7 @@
     "dev:next": "next dev --turbo --hostname 127.0.0.1 --port 3000",
     "build": "next build --webpack && npm run audit:payload",
     "build:static": "npm run generate:redirects && tsx scripts/run-static-build.ts && npm run audit:payload",
+    "deduplicate:cloudflare": "tsx scripts/deduplicate-next-static-export.ts",
     "start": "next start",
     "lint": "eslint .",
     "test": "tsx scripts/run-tests.ts",
