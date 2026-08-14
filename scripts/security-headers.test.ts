@@ -46,14 +46,16 @@ for (const { key, value } of securityHeaders) {
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  "script-src 'self' 'unsafe-inline'",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+  "script-src 'self' 'unsafe-inline' https://www.highperformanceformat.com https://pl30196195.effectivecpmnetwork.com",
+  "connect-src 'self' https: wss://*.supabase.co",
+  "frame-src 'self' https:",
   "img-src 'self' data: blob: https:",
   "upgrade-insecure-requests"
 ].forEach((directive) => assert.ok(contentSecurityPolicy.includes(directive), `CSP should include ${directive}`));
 
 assert.doesNotMatch(contentSecurityPolicy, /unsafe-eval/, "production scripts should not permit eval");
-assert.doesNotMatch(contentSecurityPolicy, /script-src[^;]*https:/, "external scripts should stay blocked while ads and analytics are disabled");
+assert.match(contentSecurityPolicy, /script-src[^;]*https:\/\/www\.highperformanceformat\.com/, "Adsterra display scripts should be allowed");
+assert.match(contentSecurityPolicy, /script-src[^;]*https:\/\/pl30196195\.effectivecpmnetwork\.com/, "Adsterra native scripts should be allowed");
 assert.match(exportCheck, /securityHeaders/, "Cloudflare validation should enforce the shared security policy");
 
   console.log("security header tests passed");
