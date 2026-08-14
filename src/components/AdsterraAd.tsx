@@ -1,55 +1,21 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { adsterraAds, adsterraAdsEnabled, type AdsterraAdConfig, type AdsterraPlacement } from "@/config/adsterra";
-
-declare global {
-  interface Window {
-    atOptions?: {
-      key: string;
-      format: "iframe";
-      height: number;
-      width: number;
-      params: Record<string, unknown>;
-    };
-  }
-}
 
 type AdsterraAdProps = {
   placement: AdsterraPlacement;
   className?: string;
 };
 
-let iframeAdQueue = Promise.resolve();
-
 export function AdsterraAd({ placement, className = "" }: AdsterraAdProps) {
   const config = adsterraAds[placement];
-  const containerRef = useRef<HTMLDivElement>(null);
   const maxWidth = config.width === "fluid" ? "100%" : `${config.width}px`;
+  const [useNetworkAd, setUseNetworkAd] = useState(false);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container || isLocalPreview() || !adsterraAdsEnabled) return;
-
-    container.replaceChildren();
-
-    if (config.kind === "native") {
-      if (!config.scriptSrc) return;
-
-      const nativeContainer = document.createElement("div");
-      nativeContainer.id = config.containerId;
-      container.appendChild(nativeContainer);
-
-      const script = document.createElement("script");
-      script.async = true;
-      script.dataset.cfasync = "false";
-      script.src = config.scriptSrc;
-      container.appendChild(script);
-      return;
-    }
-
-    iframeAdQueue = iframeAdQueue.then(() => loadIframeAd(container, config));
-  }, [config]);
+    setUseNetworkAd(adsterraAdsEnabled && !isLocalPreview());
+  }, []);
 
   return (
     <div
@@ -58,9 +24,19 @@ export function AdsterraAd({ placement, className = "" }: AdsterraAdProps) {
       aria-label="Advertisement"
       style={{ width: "100%", maxWidth, minHeight: config.height }}
     >
-      <div ref={containerRef} className="grid h-full place-items-center">
+      {useNetworkAd ? (
+        <iframe
+          className="block border-0"
+          height={config.height}
+          scrolling="no"
+          srcDoc={createAdDocument(config)}
+          style={{ width: "100%" }}
+          title={`Advertisement ${placement}`}
+          width={config.width === "fluid" ? undefined : config.width}
+        />
+      ) : (
         <LocalAdPlaceholder placement={placement} height={config.height} />
-      </div>
+      )}
     </div>
   );
 }
@@ -80,25 +56,18 @@ function isLocalPreview() {
   return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 }
 
-function loadIframeAd(container: HTMLDivElement, config: Extract<AdsterraAdConfig, { kind: "iframe" }>) {
-  return new Promise<void>((resolve) => {
-    if (!config.scriptSrc) {
-      resolve();
-      return;
-    }
+function createAdDocument(config: AdsterraAdConfig) {
+  const scriptAttributes = config.kind === "native" ? ' async data-cfasync="false"' : "";
+  const options =
+    config.kind === "iframe"
+      ? `<script>atOptions=${JSON.stringify({
+          key: config.key,
+          format: "iframe",
+          height: config.height,
+          width: config.width,
+          params: {}
+        })};</script>`
+      : `<div id="${config.containerId}"></div>`;
 
-    window.atOptions = {
-      key: config.key,
-      format: "iframe",
-      height: config.height,
-      width: config.width,
-      params: {}
-    };
-
-    const script = document.createElement("script");
-    script.src = config.scriptSrc;
-    script.onload = () => resolve();
-    script.onerror = () => resolve();
-    container.appendChild(script);
-  });
+  return `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;overflow:hidden}</style></head><body>${options}<script${scriptAttributes} src="${config.scriptSrc}"></script></body></html>`;
 }
