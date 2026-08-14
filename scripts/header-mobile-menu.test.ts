@@ -18,7 +18,7 @@ assert.match(headerSource, /w-\[min\(calc\(100vw-2rem\),20rem\)\]/, "mobile menu
 assert.match(siteHeaderSource, /className="hidden sm:inline"/, "mobile header should keep logo initials visible but hide long site name on narrow screens");
 assert.deepEqual(
   siteConfig.navigation.map((item) => item.label),
-  ["Restaurants", "Areas", "Categories"],
+  ["Restaurants", "Areas", "Cuisines"],
   "mobile navigation should render the three primary site links"
 );
 
