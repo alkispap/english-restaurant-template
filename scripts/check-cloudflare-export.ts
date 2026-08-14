@@ -5,7 +5,7 @@ import { securityHeaders } from "../src/config/security-headers.mjs";
 import { activeDirectoryPack } from "../src/config/directory-packs";
 
 const outDir = path.join(process.cwd(), "out");
-const maxFiles = 100_000;
+const maxFiles = 20_000;
 const maxFileBytes = 25 * 1024 * 1024;
 
 assert.ok(fs.existsSync(outDir), "out folder is missing. Run npm run build first.");
@@ -14,7 +14,7 @@ const files = listFiles(outDir);
 assert.ok(files.length > 0, "out folder is empty. Run npm run build first.");
 assert.ok(
   files.length <= maxFiles,
-  `Cloudflare Pages paid plans support up to ${maxFiles} files when PAGES_WRANGLER_MAJOR_VERSION=4 is configured; found ${files.length}.`
+  `The configured Cloudflare Pages account supports up to ${maxFiles} files per deployment; found ${files.length}.`
 );
 
 const oversizedFiles = files
@@ -83,6 +83,15 @@ assert.ok(
 assert.ok(
   redirects.includes("/restaurants/hyderabad-darbar-2/ /restaurants/hyderabad-darbar-redbridge/ 301"),
   "out/_redirects must send renamed restaurant slugs directly to their canonical URL."
+);
+assert.ok(
+  redirects.includes("/__next._full.txt /index.txt 200") && redirects.includes("/*/__next._full.txt /:splat/index.txt 200"),
+  "out/_redirects must proxy deduplicated Next.js full-route payloads to their matching index.txt files."
+);
+assert.equal(
+  files.filter((file) => path.basename(file) === "__next._full.txt").length,
+  0,
+  "out must not contain duplicate Next.js __next._full.txt payloads."
 );
 
 console.log(`Cloudflare export checks passed: ${files.length.toLocaleString()} files, no asset over 25 MiB.`);

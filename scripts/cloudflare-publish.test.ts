@@ -27,6 +27,7 @@ assert.equal(
   packageJson.scripts?.["build:static"],
   "npm run generate:redirects && tsx scripts/run-static-build.ts && npm run audit:payload"
 );
+assert.equal(packageJson.scripts?.["deduplicate:cloudflare"], "tsx scripts/deduplicate-next-static-export.ts");
 assert.equal(packageJson.scripts?.["audit:payload"], "tsx scripts/check-client-payload.ts");
 assert.equal(packageJson.scripts?.["generate:redirects"], "tsx scripts/generate-cloudflare-redirects.ts");
 assert.equal(packageJson.scripts?.["diagnose:static"], "tsx scripts/static-export-diagnostics.ts");
@@ -52,6 +53,7 @@ assert.ok(!prepareScript.includes("indianrestaurantlondon.co.uk"), "prepare scri
 assert.ok(fs.existsSync(path.join(process.cwd(), "scripts", "run-static-build.ts")), "static builds should use the directory-pack-aware wrapper");
 assert.ok(prepareScript.includes("npm.cmd") && prepareScript.includes("run") && prepareScript.includes("build:static"), "prepare script should run the static export build");
 assert.ok(prepareScript.includes("check:cloudflare"), "prepare script should run Cloudflare export checks");
+assert.ok(prepareScript.includes("deduplicate:cloudflare"), "prepare script should deduplicate only the Cloudflare upload artifact");
 assert.ok(prepareScript.includes("Upload-ready folder:"), "prepare script should report the upload-ready out folder");
 
 const publishScript = fs.readFileSync(path.join(process.cwd(), "scripts", "publish-cloudflare.ts"), "utf8");
@@ -194,6 +196,10 @@ assert.ok(
   exportCheckScript.includes("_redirects"),
   "Cloudflare export checks should verify redirect rules are present in out/_redirects"
 );
+assert.ok(
+  exportCheckScript.includes("__next._full.txt") && exportCheckScript.includes("maxFiles = 20_000"),
+  "Cloudflare export checks should reject duplicate full-route payloads and enforce this account's file limit"
+);
 
 const headersPath = path.join(process.cwd(), "public", "_headers");
 const headers = fs.readFileSync(headersPath, "utf8");
@@ -228,6 +234,10 @@ assert.ok(
 assert.ok(
   redirects.includes("/restaurants/hyderabad-darbar-2/ /restaurants/hyderabad-darbar-redbridge/ 301"),
   "renamed restaurant URLs should use one-hop permanent redirects"
+);
+assert.ok(
+  redirects.includes("/*/__next._full.txt /:splat/index.txt 200"),
+  "deduplicated full-route payloads should proxy to their matching index.txt files"
 );
 
 const commit = "a".repeat(40);

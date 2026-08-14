@@ -73,6 +73,7 @@ if ($StopDevServers) {
 }
 
 Run-Step "Static export build" @("run", "build:static")
+Run-Step "Cloudflare export deduplication" @("run", "deduplicate:cloudflare")
 Run-Step "Cloudflare export checks" @("run", "check:cloudflare")
 
 if (-not (Test-Path $OutDir)) {
